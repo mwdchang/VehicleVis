@@ -239,6 +239,9 @@ public class EventManager implements KeyListener, MouseListener, MouseMotionList
    //  r - reset           ... keep
    //  m - swap models     ... keep
    //  ; - swap sorting    ... keep
+   //  w - swap glow filter
+   //  o - swap depth-peel/normal rendering
+   //  f - switch focus mode
    //
    //  c - alternates colouring 
    //  a - switch aggregation
@@ -262,6 +265,9 @@ public class EventManager implements KeyListener, MouseListener, MouseMotionList
       }
       if (e.getKeyChar() == '1')  {
          SSM.instance().useConstantAlpha = ! SSM.instance().useConstantAlpha;   
+      }
+      if (e.getKeyChar() == 'f') {
+         SSM.instance().useLocalFocus = ! SSM.instance().useLocalFocus;    
       }
       
       if (e.getKeyChar() == 'a') {

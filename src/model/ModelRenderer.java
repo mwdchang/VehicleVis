@@ -239,6 +239,18 @@ public class ModelRenderer extends BaseModelRenderer {
       // We have hit something
       // This can be a select or a de-select
       if (obj != null) {
+         
+         
+         // Disable any action if in local focus mode and 
+         // the part clicked is not related nor selected
+         if (SSM.instance().useLocalFocus == true) {
+            if (SSM.instance().selectedGroup.size() > 0 &&  !SSM.instance().relatedList.contains(obj)) 
+               return;
+         }
+         
+         
+         
+         
          if (SSM.instance().selectedGroup.size() > 0 ) {
             //if ( SSM.instance().selectedGroup.intValue() == obj.intValue()) {
             if (SSM.instance().selectedGroup.contains(obj)) {
@@ -350,6 +362,17 @@ public class ModelRenderer extends BaseModelRenderer {
          
          // If the object has 0 occurrences, do not render the label
          if (comp.hasContext == false) continue;         
+         
+         // If local mode than don't render components that are not related
+         if (SSM.instance().useLocalFocus == true) {
+            if (SSM.instance().selectedGroup.size() > 0 && ! SSM.instance().relatedList.contains(comp.id)) {
+               comp.cchart.active = false;   
+            } else {
+               comp.cchart.active = true;   
+            }
+         }
+         
+         
          
          
          // Check parent and model table capability in aggregation mode
@@ -636,6 +659,17 @@ public class ModelRenderer extends BaseModelRenderer {
          
          // If the object has 0 occurrences, do not render the label
          if (comp.hasContext == false) continue;
+         
+         
+         // If local mode than don't render components that are not related
+         if (SSM.instance().useLocalFocus == true) {
+            if (SSM.instance().selectedGroup.size() > 0 && ! SSM.instance().relatedList.contains(comp.id))  {
+               comp.cchart.active = false;
+            } else {
+               comp.cchart.active = true;   
+            }
+         } 
+            
          
          
          // Check parent and model table capability in aggregation mode

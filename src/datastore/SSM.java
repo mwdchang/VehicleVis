@@ -192,6 +192,10 @@ public class SSM {
    public boolean useGlow = false;
    
    
+   public boolean useLocalFocus = false;       // Whether to nor to render based on current selected components 
+   
+   
+   
    
    ///////////////////////////////////////////////////////////////////////////////// 
    // Indicates the global selected time period

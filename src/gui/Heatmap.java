@@ -34,13 +34,14 @@ public class Heatmap extends ComponentChart {
    public void render(GL2 gl2) {
       renderSelected(gl2);   
       
+      
       // Draw the selected/related components
       if (SSM.instance().selectedGroup.size() > 0 && SSM.instance().selectedGroup.contains(this.id)) {
-         gl2.glLineWidth(1.5f);
+         gl2.glLineWidth(2.0f);
          renderBorder(gl2, SchemeManager.colour_blue, GL2.GL_LINE);
          gl2.glLineWidth(0.5f);
       } else if (SSM.instance().relatedList != null && SSM.instance().relatedList.contains(this.id))  {
-         gl2.glLineWidth(1.5f);
+         gl2.glLineWidth(2.0f);
          renderBorder(gl2, SchemeManager.colour_related, GL2.GL_LINE);
          gl2.glLineWidth(0.5f);
       }        
@@ -52,9 +53,15 @@ public class Heatmap extends ComponentChart {
       calcMaxMin();
       
       // Draw a shaded grey as the back drop
-      renderBorder(gl2, DCColour.fromDouble(0.9, 0.9, 0.9, 0.3), GL2.GL_FILL);
       gl2.glPolygonMode(GL2.GL_FRONT_AND_BACK, GL2.GL_FILL);
-      gl2.glDisable(GL2.GL_BLEND);
+      if (active) {
+         gl2.glDisable(GL2.GL_BLEND);
+         renderBorder(gl2, DCColour.fromDouble(0.9, 0.9, 0.9, 0.3), GL2.GL_FILL);
+      } else {
+         gl2.glEnable(GL2.GL_BLEND);
+         gl2.glBlendFunc(GL2.GL_SRC_ALPHA, GL2.GL_ONE_MINUS_SRC_ALPHA);
+         renderBorder(gl2, DCColour.fromDouble(0.5, 0.5, 0.5, 0.5), GL2.GL_FILL);
+      }
       
       int origin = CacheManager.instance().timeLineStartYear;
       int sYear  = SSM.instance().startYear;

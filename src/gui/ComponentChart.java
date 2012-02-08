@@ -47,6 +47,8 @@ public abstract class ComponentChart {
    public float minValue = 0;
    public DCColour colour;   
    
+   public boolean active = true;
+   
    // For labels and font
    public static Color labelColour = Color.BLACK;
    public static Font  labelFont  = new Font("Arial", Font.PLAIN, 12);

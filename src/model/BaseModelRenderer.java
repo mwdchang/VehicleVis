@@ -645,6 +645,10 @@ public abstract class BaseModelRenderer implements RenderTask {
       Iterator<Integer> iter = CacheManager.instance().groupOccurrence.values().iterator();
       while (iter.hasNext()) {
          Integer v = iter.next();
+         //if (SSM.instance().useLocalFocus ==  true) {
+         //   if (SSM.instance().selectedGroup.size() > 0 && ! SSM.instance().relatedList.contains(v)) continue;     
+         //} 
+         
          if (SSM.instance().maxOccurrence < v) SSM.instance().maxOccurrence = v;
          if (SSM.instance().minOccurrence > v) SSM.instance().minOccurrence = v;
       }     

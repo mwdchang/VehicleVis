@@ -64,18 +64,20 @@ void main(void) {
    
    
    // If has some value, make it transparent
+   /*
    vec4 texC = texture2D(tex, pass_texcoord.xy).rgba;
    if (texC.r > 0.1 || texC.g > 0.1 || texC.b > 0.1) {
       outColour = vec4(0,0,0,0.0);
       return; 
    }
+   */
    
 
 
-   for (int y=-2; y <=2; y++) {
-      for (int x=-2; x <=2; x++) {
-         offset.x = 5.0 * x * distW;
-         offset.y = 5.0 * y * distH;
+   for (int y=-4; y <=4; y++) {
+      for (int x=-4; x <=4; x++) {
+         offset.x = 1.0 * x * distW;
+         offset.y = 1.0 * y * distH;
          //c += bloom[cnt] * texture2D( tex , pass_texcoord.xy + offset).rgba;
          c +=  texture2D( tex , pass_texcoord.xy + offset).rgba;
          
@@ -84,7 +86,8 @@ void main(void) {
          //c += (vec4(1,1,1,1) - texture2D( tex , pass_texcoord.xy + offset).rgba);
       }
    }
-   c /= 25;
+   //c /= 25;
+   c /= 81;
 
    //outColour = 0.6*texture2D(tex, pass_texcoord.xy).rgba + 0.4*c; 
    outColour = c; 
