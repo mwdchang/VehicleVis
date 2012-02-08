@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>
+	<classpathentry kind="lib" path="C:/Users/Daniel/Dropbox/Resources/MySQL/mysql-connector-java-5.1.9.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Daniel/Dropbox/Resources/lib_stemmerjava/lib_stemmerjava.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Daniel/Dropbox/Resources/jogl_unstable_64/jar/gluegen.jar">
+		<attributes>
+			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="C:/Users/Daniel/Dropbox/Resources/jogl20_64/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="C:/Users/Daniel/Dropbox/Resources/jogl_unstable_64/jar/jogl.all.jar">
+		<attributes>
+			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="C:/Users/Daniel/Dropbox/Resources/jogl20_64/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="C:/Users/Daniel/Dropbox/Resources/Jama/Jama-1.0.2.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Daniel/Dropbox/Resources/stanford-parser/stanford-parser.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Daniel/Dropbox/Resources/Time/TimingFramework.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>
