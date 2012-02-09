@@ -185,9 +185,9 @@ public class SSM {
    public int sortingMethod = 0;            // Controls how the components are sorted (with respect to rendering order)
    public int colouringMethod = 4;
    public int sparklineMode = 1;
-   public boolean useAggregate = false;      // Whether the occurrence count should crawl the parts hierarchy
-   public boolean useFullTimeLine = true;    // Whether to use the entire timeline for the component chart
-   public boolean useDualDepthPeeling = false; // Whether to use OIT transparency
+   public boolean useAggregate = false;        // Whether the occurrence count should crawl the parts hierarchy
+   public boolean useFullTimeLine = true;      // Whether to use the entire timeline for the component chart
+   public boolean useDualDepthPeeling = true;  // Whether to use OIT transparency
    public boolean useConstantAlpha = false;    // Whether or not to use OIT constant alpha
    public boolean useGlow = false;
    

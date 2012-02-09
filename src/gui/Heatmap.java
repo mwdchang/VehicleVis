@@ -56,11 +56,11 @@ public class Heatmap extends ComponentChart {
       gl2.glPolygonMode(GL2.GL_FRONT_AND_BACK, GL2.GL_FILL);
       if (active) {
          gl2.glDisable(GL2.GL_BLEND);
-         renderBorder(gl2, DCColour.fromDouble(0.9, 0.9, 0.9, 0.3), GL2.GL_FILL);
+         renderBorder(gl2, DCColour.fromDouble(0.9, 0.9, 0.9, 0.2), GL2.GL_FILL);
       } else {
          gl2.glEnable(GL2.GL_BLEND);
          gl2.glBlendFunc(GL2.GL_SRC_ALPHA, GL2.GL_ONE_MINUS_SRC_ALPHA);
-         renderBorder(gl2, DCColour.fromDouble(0.5, 0.5, 0.5, 0.5), GL2.GL_FILL);
+         renderBorder(gl2, DCColour.fromDouble(0.4, 0.4, 0.4, 0.6), GL2.GL_FILL);
       }
       
       int origin = CacheManager.instance().timeLineStartYear;

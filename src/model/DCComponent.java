@@ -1073,6 +1073,7 @@ public class DCComponent extends DCObj {
    public int toonTextureId;
    
    
+   public boolean active = true;
    public boolean hasContext = true;
    public DCBoundingBox boundingBox;
    public Vector<DCFace> faceList;

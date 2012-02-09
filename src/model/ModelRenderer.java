@@ -364,6 +364,7 @@ public class ModelRenderer extends BaseModelRenderer {
          if (comp.hasContext == false) continue;         
          
          // If local mode than don't render components that are not related
+         comp.cchart.active = true;
          if (SSM.instance().useLocalFocus == true) {
             if (SSM.instance().selectedGroup.size() > 0 && ! SSM.instance().relatedList.contains(comp.id)) {
                comp.cchart.active = false;   
@@ -371,7 +372,6 @@ public class ModelRenderer extends BaseModelRenderer {
                comp.cchart.active = true;   
             }
          }
-         
          
          
          
@@ -404,15 +404,18 @@ public class ModelRenderer extends BaseModelRenderer {
             if (tmp.contains(comp.baseName)) continue; 
             tmp.put(comp.baseName, comp.baseName);
 
-            this.dualSideLayout(comp, la, rightList, leftList, new float[]{rpadding, lpadding});
+            this.alternateSideLayout(comp, rightList, leftList, i);
+            //this.dualSideLayout(comp, la, rightList, leftList, new float[]{rpadding, lpadding});
             //this.singleSideLayout(comp, la, rightList, leftList, new float[]{rpadding, lpadding});
             
          }
       } // end for
       
       // Now actually render the labels
-      rightHeight = (SSM.instance().windowHeight-la.magicLensY) + (rightList.size()/2)*(SSM.instance().sparkLineHeight + vpadding);
-      leftHeight  = (SSM.instance().windowHeight-la.magicLensY) + (leftList.size()/2)*(SSM.instance().sparkLineHeight + vpadding);
+      rightHeight = Math.min((SSM.instance().windowHeight-la.magicLensY) + (rightList.size()/2)*(SSM.instance().sparkLineHeight + vpadding),
+                              SSM.instance().windowHeight-SSM.instance().sparkLineHeight-vpadding);
+      leftHeight  = Math.min((SSM.instance().windowHeight-la.magicLensY) + (leftList.size()/2)*(SSM.instance().sparkLineHeight + vpadding),
+                              SSM.instance().windowHeight-SSM.instance().sparkLineHeight-vpadding); 
       
       
       // Right side
@@ -496,64 +499,6 @@ public class ModelRenderer extends BaseModelRenderer {
    }
    
    
-/*   
-    public void renderBSPTree(GL2 gl2, BSPTree root) {
-      if (root == null) return;   
-      
-      DCTriple tmp = DCCamera.instance().eye.sub(root.face.p1);
-      
-      //if (SSM.instance().dirVector.dot(root.face.fn) >= 0) {
-      if (tmp.dot(root.face.fn) >= 0) {
-         renderBSPTree( gl2, root.front );
-      } else {
-         renderBSPTree( gl2, root.back );
-      }
-      
-      if (root.compObj != null) {
-         String partName = root.compObj.cname;
-         
-         DCComponent modelComp = model.componentTable.get(partName);
-         gl2.glColor4f(modelComp.colour.r, 
-               modelComp.colour.g, 
-               modelComp.colour.b, 
-               modelComp.colour.a);
-         
-         
-         gl2.glPushMatrix();
-            //if (noValue) {
-            if (!modelComp.hasContext) {
-               gl2.glLineWidth(1.5f);
-               gl2.glUseProgram(shader_program);                  
-               setShaderUniform(gl2);
-               //model.componentTable.get(partName).renderTriangleWithAdj(gl2);
-               gl2.glUseProgram(0);
-            } else {
-               gl2.glUseProgram(0);
-               root.compObj.renderBasicMeshWithNormal(gl2);
-               if (SSM.instance().renderSihoulette) {
-                  gl2.glLineWidth(1.5f);
-                  gl2.glUseProgram(shader_program);
-                  setShaderUniform(gl2);
-                  //model.componentTable.get(partName).renderTriangleWithAdj(gl2);
-                  gl2.glUseProgram(0);
-               }
-            }
-        gl2.glPopMatrix();
-      }
-      
-//      if (SSM.instance().dirVector.dot(root.face.fn) >= 0) {
-      if (tmp.dot(root.face.fn) >= 0) {
-         renderBSPTree( gl2, root.back);
-      } else {
-         renderBSPTree( gl2, root.front);
-      }
-      
-      return;
-   }
-   */
-
-   
-   
    
    ////////////////////////////////////////////////////////////////////////////////
    // Layout that places on either the left or the right side
@@ -597,6 +542,18 @@ public class ModelRenderer extends BaseModelRenderer {
          else
             right.add( comp );
       }      
+   }
+   
+   
+   ///////////////////////////////////////////////////////////////////////////////// 
+   // Alternate between right and left
+   ///////////////////////////////////////////////////////////////////////////////// 
+   public void alternateSideLayout(DCComponent comp, Vector<DCComponent> right, Vector<DCComponent> left, int index) {
+      if (index % 2 == 0) {
+         right.add(comp);
+      } else {
+         left.add(comp); 
+      }
    }
    
    
@@ -662,6 +619,7 @@ public class ModelRenderer extends BaseModelRenderer {
          
          
          // If local mode than don't render components that are not related
+         comp.cchart.active = true;
          if (SSM.instance().useLocalFocus == true) {
             if (SSM.instance().selectedGroup.size() > 0 && ! SSM.instance().relatedList.contains(comp.id))  {
                comp.cchart.active = false;
@@ -702,7 +660,8 @@ public class ModelRenderer extends BaseModelRenderer {
             if (tmp.contains(comp.baseName)) continue; 
             tmp.put(comp.baseName, comp.baseName);
                
-            this.dualSideLayout(comp, la, rightList, leftList, new float[]{rpadding, lpadding});
+            this.alternateSideLayout(comp, rightList, leftList, i);
+            //this.dualSideLayout(comp, la, rightList, leftList, new float[]{rpadding, lpadding});
             //this.singleSideLayout(comp, la, rightList, leftList, new float[]{rpadding, lpadding});
             
          }
@@ -712,8 +671,14 @@ public class ModelRenderer extends BaseModelRenderer {
       
       
       // Now actually render the labels
+      /*
       rightHeight = (SSM.instance().windowHeight-la.magicLensY) + (rightList.size()/2)*(SSM.instance().sparkLineHeight + vpadding);
       leftHeight  = (SSM.instance().windowHeight-la.magicLensY) + (leftList.size()/2)*(SSM.instance().sparkLineHeight + vpadding);
+      */
+      rightHeight = Math.min((SSM.instance().windowHeight-la.magicLensY) + (rightList.size()/2)*(SSM.instance().sparkLineHeight + vpadding),
+                              SSM.instance().windowHeight-SSM.instance().sparkLineHeight-vpadding);
+      leftHeight  = Math.min((SSM.instance().windowHeight-la.magicLensY) + (leftList.size()/2)*(SSM.instance().sparkLineHeight + vpadding),
+                              SSM.instance().windowHeight-SSM.instance().sparkLineHeight-vpadding); 
       
       
       gl2.glEnable(GL2.GL_BLEND);
@@ -1373,7 +1338,7 @@ public class ModelRenderer extends BaseModelRenderer {
          
          gl2.glPushMatrix();
             //gl2.glScalef( 1.0f/modelComp.scaleFactor.x, 1.0f/modelComp.scaleFactor.x, 1.0f/modelComp.scaleFactor.x);
-            if (! modelComp.hasContext) {
+            if (! modelComp.hasContext || ! modelComp.active) {
                gl2.glLineWidth(0.5f);
                modelComp.renderBufferAdj(gl2, null);
             } else {

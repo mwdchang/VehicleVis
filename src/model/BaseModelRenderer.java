@@ -663,8 +663,8 @@ public abstract class BaseModelRenderer implements RenderTask {
       String[] clist = getComponentUnsorted( null ); //passing in null (no context)
       for (int i = 0; i < clist.length; i++) {
          String partName = clist[i];
-         MM.currentModel.componentTable.get(partName).hasContext = true; // Reset context
          DCComponent comp = MM.currentModel.componentTable.get(partName);
+         comp.hasContext = true;
          
          
          // Calc based on an frequency to intensity colour scale
@@ -691,7 +691,14 @@ public abstract class BaseModelRenderer implements RenderTask {
          
          if (occ == 0.0 || comp.id < 0) 
             comp.hasContext = false;
-            //MM.currentModel.componentTable.get(partName).hasContext = false;
+         
+         comp.active = true;
+         if (SSM.instance().useLocalFocus == true) {
+            if (SSM.instance().selectedGroup.size() > 0 && ! SSM.instance().relatedList.contains(comp.id)) {
+               comp.active= false;
+            }
+         }
+         
          
          //model.componentTable.get(partName).colour = SchemeManager.instance().intensityRamp02(partId, occ, maxOccurrence);
          //MM.currentModel.componentTable.get(partName).colour = SchemeManager.instance().intensityRamp03(partId, occ, maxOccurrence);
@@ -702,18 +709,20 @@ public abstract class BaseModelRenderer implements RenderTask {
          
          // Adjust based on the current focus
          //Integer selected = SSM.instance().selectedGroup;
-         if (SSM.instance().useAggregate) {
-            if (SSM.instance().selectedGroup.size() > 0) {
-               Vector<Integer> v = HierarchyTable.instance().getAgg(SSM.instance().selectedGroup);
-               if ( ! v.contains(comp.id)) {
-                  nextColour = nextColour.adjustAlpha(0.3f);
+         if (SSM.instance().useLocalFocus != true) {
+            if (SSM.instance().useAggregate) {
+               if (SSM.instance().selectedGroup.size() > 0) {
+                  Vector<Integer> v = HierarchyTable.instance().getAgg(SSM.instance().selectedGroup);
+                  if ( ! v.contains(comp.id)) {
+                     nextColour = nextColour.adjustAlpha(0.3f);
+                  }
                }
+            } else {
+               // If not the selected group, make it out of focus
+               //if (selected != null && selected != comp.id)
+               if (SSM.instance().selectedGroup.size() > 0 && ! SSM.instance().selectedGroup.contains(comp.id)) 
+                  nextColour = nextColour.adjustAlpha(0.3f);
             }
-         } else {
-            // If not the selected group, make it out of focus
-            //if (selected != null && selected != comp.id)
-            if (SSM.instance().selectedGroup.size() > 0 && ! SSM.instance().selectedGroup.contains(comp.id)) 
-               nextColour = nextColour.adjustAlpha(0.3f);
          }
          
          // Reset sparline for any colouring changes
@@ -928,6 +937,8 @@ public abstract class BaseModelRenderer implements RenderTask {
          } else {
             segSize = 24;
          }
+         
+         
          
          
          
@@ -1400,7 +1411,7 @@ public abstract class BaseModelRenderer implements RenderTask {
         gl.glEnable(GL2.GL_DEPTH_TEST);
         gl.glEnable(GL2.GL_BLEND);
         for (DCComponent comp : MM.currentModel.componentTable.values()) {
-           if (!comp.hasContext) {
+           if (!comp.hasContext || !comp.active) {
               comp.renderBufferAdj(gl, null);
            } else if (SSM.instance().relatedList.size() > 0 && SSM.instance().relatedList.contains(comp.id) && !SSM.instance().selectedGroup.contains(comp.id)){
               //comp.renderBufferAdj(gl, SchemeManager.colour_related.adjustAlpha(0.6f));   
@@ -1454,7 +1465,7 @@ public abstract class BaseModelRenderer implements RenderTask {
      
      public void DrawModel(GL2 gl2) {
         for (DCComponent comp : MM.currentModel.componentTable.values()) {
-           if (! comp.hasContext) continue; // Dont' render if it does not have associated values
+           if (! comp.hasContext || ! comp.active) continue; // Dont' render if it does not have associated values
            
            g_shaderDualPeel.setUniformf(gl2, "compColour", comp.colour.r, comp.colour.g, comp.colour.b, comp.colour.a);
            g_shaderDualPeel.setUniform1i(gl2, "useLight", 1);
