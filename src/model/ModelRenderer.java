@@ -921,7 +921,8 @@ public class ModelRenderer extends BaseModelRenderer {
             setPerspectiveView(gl2); 
             gl2.glPushMatrix();
             for (DCComponent comp : MM.currentModel.componentTable.values()) {
-               if (SSM.instance().relatedList.contains(comp.id) && ! SSM.instance().selectedGroup.contains(comp.id)) {
+               //if (SSM.instance().relatedList.contains(comp.id) && ! SSM.instance().selectedGroup.contains(comp.id)) {
+               if ( SSM.instance().selectedGroup.contains(comp.id) ) {
                   //gl2.glScaled(1.2, 1.2, 1.2);
                   comp.renderBuffer(gl2, DCColour.fromInt(0, 10, 210));
                   //comp.renderBufferAdj(gl2, DCColour.fromInt(20, 10, 210));
@@ -950,8 +951,6 @@ public class ModelRenderer extends BaseModelRenderer {
          }
       }
       
-      
-     
       
       
       

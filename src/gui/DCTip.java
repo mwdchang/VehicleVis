@@ -2,9 +2,11 @@ package gui;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.util.Hashtable;
 
 import javax.media.opengl.GL2;
 
+import util.DCUtil;
 import util.TextureFont;
 
 /////////////////////////////////////////////////////////////////////////////////
@@ -97,7 +99,6 @@ public class DCTip {
       //tf.addMark(txt, c, f, 5, tf.height-25); 
    }
    
-   
    public static void clear() {
       tf.clearMark();
    }
@@ -105,6 +106,8 @@ public class DCTip {
       tf.addMark( txt, c, f, 5, tf.height-20-tf.marks.size()*buffer);
    }
    
+   
+   public static Hashtable<String, String> translateTable = DCUtil.getMonthTranslationTable();
    
    public static TextureFont tf;
    public static Font f  = new Font( "Arial", Font.PLAIN, 16);    

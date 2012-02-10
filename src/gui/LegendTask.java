@@ -32,6 +32,7 @@ public class LegendTask implements RenderTask {
       
       // Draws the distinct colours
       gl2.glBegin(GL2.GL_QUADS);
+      gl2.glEnable(GL2.GL_BLEND);
       for (float i=0; i < buckets; i++) {
          DCColour c = SchemeManager.instance().getColour(1, i*interval, 1.0f);
          gl2.glColor4fv(c.toArray(), 0);

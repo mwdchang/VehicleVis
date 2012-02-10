@@ -89,8 +89,12 @@ public class Heatmap extends ComponentChart {
                if (DCUtil.between(SSM.instance().windowHeight - SSM.instance().mouseY, anchorY+height-(1+tmpY)*blockHeight-labelBuffer, anchorY+height-tmpY*blockHeight-labelBuffer)) {
                   DCTip.visible = true;
                   DCTip.clear();
-                  DCTip.addText("Year:" +  (int)((tmpY) + SSM.instance().startYear));
-                  DCTip.addText("Month:" + (int)((1+tmpX) + SSM.instance().startMonth));
+                  //DCTip.addText("Year:" +  (int)((tmpY) + SSM.instance().startYear));
+                  //DCTip.addText("Month:" + (int)((1+tmpX) + SSM.instance().startMonth));
+                  int cYear  = (int)((tmpY) + SSM.instance().startYear); 
+                  int cMonth = (int)((1+tmpX) + SSM.instance().startMonth);
+                  
+                  DCTip.addText("Time:" + DCTip.translateTable.get(cMonth+"") + "-" + cYear); 
                   DCTip.addText("Value:" + (int)v);
                   DCTip.setTip( SSM.instance().mouseX, 
                         (SSM.instance().windowHeight-SSM.instance().mouseY), 
