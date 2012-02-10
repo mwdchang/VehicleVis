@@ -73,198 +73,21 @@ public class ModelRenderer extends BaseModelRenderer {
       
       
       // Check the UI elements first
-//      float mf_anchorX = SSM.instance().manufactureAnchorX;
-//      float mf_anchorY = SSM.instance().manufactureAnchorY;
-      float mf_anchorX = SSM.instance().manufactureAttrib.anchorX;
-      float mf_anchorY = SSM.instance().manufactureAttrib.anchorY;
-      /*
-      if (DCUtil.between(mx, mf_anchorX, mf_anchorX+SSM.instance().scrollWidth)) {
-         //if (DCUtil.between(my, mf_anchorY, mf_anchorY+SSM.instance().manufactureHeight)) {
-         if (DCUtil.between(my, mf_anchorY, mf_anchorY+SSM.instance().manufactureAttrib.height)) {
-            
-            // 1) Calculate the texture coordinate
-            float texX = mx - mf_anchorX;
-            float texY = my - mf_anchorY;
-            
-            // 2) Adjust for Y-offset
-            //texY = SSM.instance().manufactureYOffset - (texY);
-            texY = SSM.instance().manufactureAttrib.yOffset - (texY);
-            System.out.println("Tex : " + texX + " " + texY);
-            
-            for (int i=0; i < manufactureScroll.tagList.size(); i++) {
-               GTag t = manufactureScroll.tagList.elementAt(i);                
-               // Window system is upside down
-               if (texY >= t.yPrime && texY <= t.y) {
-                  SSM.instance().dirtyDateFilter = 1;
-                  manufactureScroll.current = i; 
-                  manufactureScroll.currentStr = t.val;
-                  manufactureScroll.dirty  = true;
-                  
-                  SSM.instance().dirty = 1;
-                  SSM.instance().dirtyGL = 1;
-                  SSM.instance().selectedManufacture = i==0? null:t.val;
-                  
-                  
-                  // Clear the children
-                  makeScroll.current = 0;
-                  SSM.instance().selectedMake = null;
-                  modelScroll.current = 0;
-                  SSM.instance().selectedModel = null;
-                  
-                  
-                  break;
-               }
-            }            
-            return;
-         }
-      }      
-      */
+      
+      // Handling vehicle manufacture
       this.pickingScrollPane(mx, my, manufactureScroll, SSM.instance().manufactureAttrib, 
             makeScroll, SSM.instance().makeAttrib,
             modelScroll, SSM.instance().modelAttrib);
       this.scrollPaneTransition(mx, my, manufactureScroll, SSM.instance().manufactureAttrib);
-      /*
-      if (DCUtil.between(mx, mf_anchorX, mf_anchorX+SSM.instance().scrollWidth)) {
-         if (DCUtil.between(my, mf_anchorY-20, mf_anchorY)) {
-            //SSM.instance().manufactureActive = ! SSM.instance().manufactureActive;
-            SSM.instance().manufactureAttrib.active = ! SSM.instance().manufactureAttrib.active;
-            //if (SSM.instance().manufactureActive) {
-            if (SSM.instance().manufactureAttrib.active) {
-               //manufactureScroll.animator = PropertySetter.createAnimator(600, manufactureScroll, "height", new FloatEval(), manufactureScroll.height, SSM.instance().manufactureHeight); 
-               manufactureScroll.animator = PropertySetter.createAnimator(600, manufactureScroll, "height", new FloatEval(), manufactureScroll.height, SSM.instance().manufactureAttrib.height); 
-               manufactureScroll.animator.start();
-            } else {
-               manufactureScroll.animator = PropertySetter.createAnimator(600, manufactureScroll, "height", new FloatEval(), manufactureScroll.height, 0.0f); 
-               manufactureScroll.animator.start();
-            }
-         }
-      }
-      */
       
-      
-      //float mk_anchorX = SSM.instance().makeAnchorX;
-      //float mk_anchorY = SSM.instance().makeAnchorY;
-      float mk_anchorX = SSM.instance().makeAttrib.anchorX;
-      float mk_anchorY = SSM.instance().makeAttrib.anchorY;
-      /*
-      if (DCUtil.between(mx, mk_anchorX, mk_anchorX+SSM.instance().scrollWidth)) {
-         //if (DCUtil.between(my, mk_anchorY, mk_anchorY+SSM.instance().makeHeight)) {
-         if (DCUtil.between(my, mk_anchorY, mk_anchorY+SSM.instance().makeAttrib.height)) {
-            
-            // 1) Calculate the texture coordinate
-            float texX = mx - mk_anchorX;
-            float texY = my - mk_anchorY;
-            
-            // 2) Adjust for Y-offset
-            //texY = SSM.instance().makeYOffset - (texY);
-            texY = SSM.instance().makeAttrib.yOffset - (texY);
-            
-            for (int i=0; i < makeScroll.tagList.size(); i++) {
-               GTag t = makeScroll.tagList.elementAt(i);                
-               
-               // Window system is upside down
-               if (texY >= t.yPrime && texY <= t.y) {
-                  SSM.instance().dirtyDateFilter = 1;
-                  makeScroll.current = i;
-                  makeScroll.currentStr = t.val;
-                  makeScroll.dirty = true;
-                  
-                  SSM.instance().dirty = 1;
-                  SSM.instance().dirtyGL = 1;
-                  SSM.instance().selectedMake = i==0? null:t.val;
-                  
-                  // Clear the children
-                  SSM.instance().selectedModel = null;
-                  modelScroll.current = 0;
-                  
-                  break;
-               }
-            }            
-            return;
-         }
-      }      
-      */
+      // Handling vehicle make
       this.pickingScrollPane(mx, my, makeScroll, SSM.instance().makeAttrib, 
             modelScroll, SSM.instance().modelAttrib);
       this.scrollPaneTransition(mx, my, makeScroll, SSM.instance().makeAttrib);
-      /*
-      if (DCUtil.between(mx, mk_anchorX, mk_anchorX+SSM.instance().scrollWidth)) {
-         if (DCUtil.between(my, mk_anchorY-20, mk_anchorY)) {
-            //SSM.instance().makeActive = ! SSM.instance().makeActive;
-            SSM.instance().makeAttrib.active = ! SSM.instance().makeAttrib.active;
-            //if ( SSM.instance().makeActive ) {
-            if ( SSM.instance().makeAttrib.active ) {
-               //makeScroll.animator = PropertySetter.createAnimator(500, makeScroll, "height", new FloatEval(), makeScroll.height, SSM.instance().makeHeight); 
-               makeScroll.animator = PropertySetter.createAnimator(500, makeScroll, "height", new FloatEval(), makeScroll.height, SSM.instance().makeAttrib.height); 
-               makeScroll.animator.start();
-            } else {
-               makeScroll.animator = PropertySetter.createAnimator(500, makeScroll, "height", new FloatEval(), makeScroll.height, 0.0f); 
-               makeScroll.animator.start();
-            }
-         }
-      }      
-      */
       
-      
-      
-      //float md_anchorX = SSM.instance().modelAnchorX;
-      //float md_anchorY = SSM.instance().modelAnchorY;
-      /*
-      float md_anchorX = SSM.instance().modelAttrib.anchorX;
-      float md_anchorY = SSM.instance().modelAttrib.anchorY;
-      if (DCUtil.between(mx, md_anchorX, md_anchorX+SSM.instance().scrollWidth)) {
-         //if (DCUtil.between(my, md_anchorY, md_anchorY+SSM.instance().modelHeight)) {
-         if (DCUtil.between(my, md_anchorY, md_anchorY+SSM.instance().modelAttrib.height)) {
-            
-            // 1) Calculate the texture coordinate
-            float texX = mx - md_anchorX;
-            float texY = my - md_anchorY;
-            
-            // 2) Adjust for Y-offset
-            //texY = SSM.instance().modelYOffset - (texY);
-            texY = SSM.instance().modelAttrib.yOffset - (texY);
-            
-            for (int i=0; i < modelScroll.tagList.size(); i++) {
-               GTag t = modelScroll.tagList.elementAt(i);                
-               
-               // Window system is upside down
-               if (texY >= t.yPrime && texY <= t.y) {
-                  SSM.instance().dirtyDateFilter = 1;
-                  modelScroll.current = i;
-                  modelScroll.currentStr = t.val;
-                  modelScroll.dirty = true;
-                  
-                  SSM.instance().dirty = 1;
-                  SSM.instance().dirtyGL = 1;
-                  SSM.instance().selectedModel = i==0? null : t.val;
-                  break;
-               }
-            }            
-            return;
-         }
-      }      
-      */
+      // Handling vehicle model
       this.pickingScrollPane(mx, my, modelScroll, SSM.instance().modelAttrib);
       this.scrollPaneTransition(mx, my, modelScroll, SSM.instance().modelAttrib);
-      
-      /*
-      if (DCUtil.between(mx, md_anchorX, md_anchorX+SSM.instance().scrollWidth)) {
-         if (DCUtil.between(my, md_anchorY-20, md_anchorY)) {
-            //SSM.instance().modelActive = ! SSM.instance().modelActive;
-            SSM.instance().modelAttrib.active = ! SSM.instance().modelAttrib.active;
-            //if ( SSM.instance().modelActive ) {
-            if ( SSM.instance().modelAttrib.active ) {
-               //modelScroll.animator = PropertySetter.createAnimator(600, modelScroll, "height", new FloatEval(), modelScroll.height, SSM.instance().modelHeight); 
-               modelScroll.animator = PropertySetter.createAnimator(600, modelScroll, "height", new FloatEval(), modelScroll.height, SSM.instance().modelAttrib.height); 
-               modelScroll.animator.start();
-            } else {
-               modelScroll.animator = PropertySetter.createAnimator(600, modelScroll, "height", new FloatEval(), modelScroll.height, 0.0f); 
-               modelScroll.animator.start();
-            }
-         }
-      }      
-      */
-      
       
       
       

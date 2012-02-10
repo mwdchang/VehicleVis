@@ -216,6 +216,95 @@ public abstract class BaseModelRenderer implements RenderTask {
    
    
    ////////////////////////////////////////////////////////////////////////////////
+   // Reset a scroll-able panel
+   ////////////////////////////////////////////////////////////////////////////////
+   public void resetPane(Hashtable<String, Integer> table, DCScrollPane widget, PaneAttrib attrib) {
+      int counter = 0;
+      int prevManufacture = -1;
+      widget.tagList.add( new GTag(10.0f, (counter+1)*DCScrollPane.spacing, counter*DCScrollPane.spacing, "--- ALL ---", "--- ALL ---"));
+      counter++;
+      
+      Vector<String> list = new Vector<String>();
+      for (String s : table.keySet()) {
+         list.add( s );  
+      }
+      Collections.sort(list);
+      for (int i=0; i < list.size(); i++) {
+         String s = list.elementAt(i);
+         String txt = s + " (" + table.get(s) + ")";
+         GTag t = new GTag(10.0f, (counter+1)*DCScrollPane.spacing, counter*DCScrollPane.spacing, txt, s);
+         if (t.val.equals(attrib.selected)) {
+            prevManufacture = i;
+            widget.currentStr = t.val;
+         }
+         widget.tagList.add( t );
+         counter++;   
+      }
+      widget.texPanelHeight = widget.tagList.lastElement().y;
+      attrib.textureHeight = widget.texPanelHeight;
+      attrib.height = Math.min(attrib.textureHeight, SSM.instance().defaultScrollHeight);
+      
+      if (widget.height > 0) widget.height = attrib.height;
+      widget.dirty = true;       
+      if (prevManufacture < 0) {
+         widget.current = 0;   
+         widget.currentStr = widget.tagList.elementAt(0).val;
+         attrib.selected = null;
+         attrib.yOffset = attrib.height;
+      }
+      
+      // Final adjustment
+      if (prevManufacture >= 0) {
+         float tempY = 0;
+         tempY = widget.tagList.elementAt(prevManufacture).y + DCScrollPane.spacing;
+         attrib.yOffset = Math.max( tempY, attrib.height);
+      }
+
+   }
+   
+   
+   ////////////////////////////////////////////////////////////////////////////////
+   // Get a list of available filters, based on hierarchical order
+   //  - startIdx : starting time frame
+   //  - endIdx   : ending time frame
+   //  - ancestor : higher level options that is applied to the current filter 
+   ////////////////////////////////////////////////////////////////////////////////
+   public Hashtable<String, Integer> getHierFilter(int startIdx, int endIdx, Object... ancestor) {
+      Hashtable<String, Integer> result = new Hashtable<String, Integer>();
+      
+      for (int i=startIdx; i <= endIdx; i++) {
+         String dtStr = CacheManager.instance().getTimeByIndex(i); 
+         int month = Integer.parseInt(dtStr.substring(4,6)) - 1;
+         if (month < SSM.instance().startMonth || month > SSM.instance().endMonth) continue;      
+         
+         QueryObj root = CacheManager.instance().queryTableU.elementAt(i);
+         QueryObj qobj = root;
+         QueryObj current = root;
+         
+         for (int j=0; j < ancestor.length; j++) {
+            qobj = current.get( ((DCScrollPane)ancestor[j]).currentStr);
+            if (qobj == null) break;
+            current = qobj;
+         }
+         if (qobj == null) continue;
+         
+         for (String s: qobj.children.keySet()) {
+            int count = qobj.children.get(s).count;
+            if (result.containsKey(s)) {
+               int prev = result.get(s);
+               result.put(s, count+prev);
+            } else {
+               result.put(s, count);
+            }
+         } // end for qobj
+         
+      }
+      
+      return result;
+   }
+   
+   
+   ////////////////////////////////////////////////////////////////////////////////
    // Reset the groupOccurrence dataset 
    // using the updated date strings in SSM
    ////////////////////////////////////////////////////////////////////////////////
@@ -232,9 +321,11 @@ public abstract class BaseModelRenderer implements RenderTask {
       modelScroll.tagList.clear();
       
       DWin.instance().error(SSM.instance().startMonth + " " + SSM.instance().endMonth);
+      DWin.instance().error("Starting indices: " + startIdx + " " + endIdx );
       
       
       // Manufacture information
+      /*
       Hashtable<String, Integer> manufactureHash = new Hashtable<String, Integer>();
       for (int i=startIdx; i <= endIdx; i++) {
          String dtStr = CacheManager.instance().getTimeByIndex(i); 
@@ -255,70 +346,19 @@ public abstract class BaseModelRenderer implements RenderTask {
             }
          }
          
-         /* 
-         Hashtable<Integer, QueryObj> obj = CacheManager.instance().queryTable.elementAt(i);
-         Enumeration<Integer> e1 = obj.keys();
-         while (e1.hasMoreElements()) {
-            QueryObj query1 = obj.get( e1.nextElement() );   
-            Enumeration<String> manufactureEnum = query1.children.keys();
-            while (manufactureEnum.hasMoreElements()) {
-               String str = manufactureEnum.nextElement();
-               int count = query1.children.get(str).count;
-               
-               if (manufactureHash.containsKey(str)) {
-               	int prev = manufactureHash.get(str);
-                  manufactureHash.put( str, count + prev); 
-               } else {
-                  manufactureHash.put( str, count); 
-               }
-            }
-         }
-         */
       }      
+      */
+      Hashtable<String, Integer> manufactureHash = this.getHierFilter(startIdx, endIdx);
       // Hack: Trim down the outliers
       DCUtil.removeLowerBound(manufactureHash, 100);
       
-      int counterManufacture = 0;
-      int prevManufacture = -1;
-      manufactureScroll.tagList.add( new GTag(10.0f, (counterManufacture+1)*DCScrollPane.spacing, counterManufacture*DCScrollPane.spacing, "--- ALL ---", "--- ALL ---"));
-      counterManufacture++;
+      this.resetPane(manufactureHash, manufactureScroll, SSM.instance().manufactureAttrib);
       
-      Vector<String> manufactureList = new Vector<String>();
-      for (String s : manufactureHash.keySet()) {
-         manufactureList.add( s );	
-      }
-      Collections.sort(manufactureList);
-      for (int i=0; i < manufactureList.size(); i++) {
-      	String s = manufactureList.elementAt(i);
-      	String txt = s + " (" + manufactureHash.get(s) + ")";
-         GTag t = new GTag(10.0f, (counterManufacture+1)*DCScrollPane.spacing, counterManufacture*DCScrollPane.spacing, txt, s);
-         if (t.val.equals(SSM.instance().manufactureAttrib.selected)) {
-            prevManufacture = i;
-            manufactureScroll.currentStr = t.val;
-         }
-         manufactureScroll.tagList.add( t );
-         counterManufacture ++;   
-      }
-      manufactureScroll.texPanelHeight = manufactureScroll.tagList.lastElement().y;
-      //SSM.instance().manufactureTexHeight = manufactureScroll.texPanelHeight;
-      //SSM.instance().manufactureHeight = Math.min(SSM.instance().manufactureTexHeight, SSM.instance().defaultScrollHeight);
       
-      SSM.instance().manufactureAttrib.textureHeight = manufactureScroll.texPanelHeight;
-      SSM.instance().manufactureAttrib.height = Math.min(SSM.instance().manufactureAttrib.textureHeight, SSM.instance().defaultScrollHeight);
-      
-      //if (manufactureScroll.height > 0) manufactureScroll.height = SSM.instance().manufactureHeight;
-      if (manufactureScroll.height > 0) manufactureScroll.height = SSM.instance().manufactureAttrib.height;
-      manufactureScroll.dirty = true;       
-      if (prevManufacture < 0) {
-         manufactureScroll.current = 0;   
-         manufactureScroll.currentStr = manufactureScroll.tagList.elementAt(0).val;
-         SSM.instance().manufactureAttrib.selected = null;
-         //SSM.instance().manufactureYOffset = SSM.instance().manufactureHeight;
-         SSM.instance().manufactureAttrib.yOffset = SSM.instance().manufactureAttrib.height;
-      }
       
       
       // Make information
+      /*
       Hashtable<String, Integer> makeHash = new Hashtable<String, Integer>();
       if (SSM.instance().manufactureAttrib.selected != null) {
          String manufactureName = manufactureScroll.currentStr;
@@ -349,81 +389,21 @@ public abstract class BaseModelRenderer implements RenderTask {
                }
             }
             
-            
-            /*
-            Hashtable<Integer, QueryObj> obj = CacheManager.instance().queryTable.elementAt(i);
-            Enumeration<Integer> e1 = obj.keys();
-            while (e1.hasMoreElements()) {
-               QueryObj query1 = obj.get( e1.nextElement() );   
-               Enumeration<String> manufactureEnum = query1.children.keys();
-               while (manufactureEnum.hasMoreElements()) {
-                  String str = manufactureEnum.nextElement();
-                  if (str.equals(manufactureName)) {
-                     QueryObj query2 = query1.get(manufactureName);   
-                     Enumeration<String> makeEnum = query2.children.keys();
-                     while (makeEnum.hasMoreElements()) {
-                        String makeStr = makeEnum.nextElement(); 
-                        int count = query2.children.get(makeStr).count;
-                        if (makeHash.containsKey(makeStr)) {
-                           int prev = makeHash.get(makeStr);
-                           makeHash.put(makeStr, count+prev);
-                        } else {
-	                        makeHash.put(makeStr, count);
-                        }
-                     }
-                  }
-               }
-            } // end e1
-            */
-            
-            
          } // end for      
          System.out.println( manufactureName + " : " +  makeHash.size());
       }
+      */
+      
+      
+      Hashtable<String, Integer> makeHash = this.getHierFilter(startIdx, endIdx, manufactureScroll);
       // Trim down the outliers
       //DCUtil.removeLowerBound(makeHash, 0);
-      
-      int counterMake = 0;
-      int prevMake = -1;
-      makeScroll.tagList.add( new GTag(10.0f, (counterMake+1)*DCScrollPane.spacing, counterMake*DCScrollPane.spacing, "--- ALL ---", "--- ALL ---"));
-      counterMake++;
-      Vector<String> makeList = new Vector<String>();
-      for (String s: makeHash.keySet()) {
-         makeList.add( s );	
-      }
-      
-      Collections.sort(makeList);
-      for (int i=0; i < makeList.size(); i++) {
-      	String s = makeList.elementAt(i);
-      	String txt = s +" (" + makeHash.get(s) + ")";
-         GTag t = new GTag(10.0f, (counterMake+1)*DCScrollPane.spacing, counterMake*DCScrollPane.spacing, txt, s);
-         if (t.val.equals(SSM.instance().makeAttrib.selected)) {
-            prevMake = i;
-            makeScroll.currentStr = t.val;
-         }
-         makeScroll.tagList.add( t );
-         counterMake ++;   
-      }
-      makeScroll.texPanelHeight = makeScroll.tagList.lastElement().y;
-      //SSM.instance().makeTexHeight = makeScroll.tagList.lastElement().y;
-      //SSM.instance().makeHeight = Math.min(SSM.instance().makeTexHeight, SSM.instance().defaultScrollHeight);
-      SSM.instance().makeAttrib.textureHeight = makeScroll.tagList.lastElement().y;
-      SSM.instance().makeAttrib.height = Math.min(SSM.instance().makeAttrib.textureHeight, SSM.instance().defaultScrollHeight);
-      //if (makeScroll.height > 0) { makeScroll.height = SSM.instance().makeHeight; }
-      if (makeScroll.height > 0) { makeScroll.height = SSM.instance().makeAttrib.height; }
-      makeScroll.dirty = true;      
-      if ( prevMake < 0) {
-         makeScroll.current = 0;
-         makeScroll.currentStr = makeScroll.tagList.elementAt(0).val;
-         SSM.instance().makeAttrib.selected= null;
-         //SSM.instance().makeYOffset = SSM.instance().makeHeight;
-         SSM.instance().makeAttrib.yOffset = SSM.instance().makeAttrib.height;
-      }
-      
+      this.resetPane(makeHash, makeScroll, SSM.instance().makeAttrib);
       
       
       
       // Model information
+      /*
       Hashtable<String, Integer> modelHash = new Hashtable<String, Integer>();
       if (SSM.instance().makeAttrib.selected!= null) {
          String manufactureName = manufactureScroll.currentStr;
@@ -451,103 +431,21 @@ public abstract class BaseModelRenderer implements RenderTask {
                }
             }
         
-            /*
-            Hashtable<Integer, QueryObj> obj = CacheManager.instance().queryTable.elementAt(i);
-            Enumeration<Integer> e1 = obj.keys();
-            while (e1.hasMoreElements()) {
-               QueryObj query1 = obj.get( e1.nextElement() );   
-               QueryObj mf = query1.get( manufactureName);
-               if (mf == null) continue;
-               QueryObj make = mf.get(makeName);
-               if (make == null) continue;
-               
-               Enumeration<String> e2 = make.children.keys();
-               while (e2.hasMoreElements()) {
-                  String s = e2.nextElement();    
-                  int count = make.children.get(s).count;
-                  if (modelHash.containsKey(s)) {
-                  	int prev = modelHash.get(s);
-                     modelHash.put(s, count+prev);
-                  } else {
-                     modelHash.put(s, count);
-                  }
-               }
-               
-            } // end e1
-            */
          } // end for      
       }
+      */
+      
+      
+      Hashtable<String, Integer> modelHash = this.getHierFilter(startIdx, endIdx, manufactureScroll, makeScroll);
       // Trim the outliers
       //DCUtil.removeLowerBound(modelHash, 0);
-      
-      //System.out.println("Model hash size is : " + modelHash.size());
-      int counterModel = 0;
-      int prevModel = -1;
-      modelScroll.tagList.add( new GTag(10.0f, (counterModel+1)*DCScrollPane.spacing, counterModel*DCScrollPane.spacing, "--- ALL ---", "--- ALL ---"));
-      counterModel++;
-      
-      Vector<String> modelList = new Vector<String>();
-      for (String s: modelHash.keySet()) {
-         modelList.add(s);    	
-      }
-      
-      Collections.sort(modelList); 
-      for (int i=0; i < modelList.size(); i++ ) {
-      	String s = modelList.elementAt(i);
-      	String txt = s + " (" + modelHash.get(s) + ")";
-         GTag t = new GTag(10.0f, (counterModel+1)*DCScrollPane.spacing, counterModel*DCScrollPane.spacing, txt, s);
-         if (t.val.equals(SSM.instance().modelAttrib.selected)) {
-            prevModel = i;
-            modelScroll.currentStr = t.val;
-         }
-         modelScroll.tagList.add( t );
-         counterModel ++;   
-      }
-      modelScroll.texPanelHeight = modelScroll.tagList.lastElement().y;
-      //SSM.instance().modelTexHeight = modelScroll.texPanelHeight;
-      //SSM.instance().modelHeight = Math.min(SSM.instance().modelTexHeight, SSM.instance().defaultScrollHeight);
-      SSM.instance().modelAttrib.textureHeight = modelScroll.texPanelHeight;
-      SSM.instance().modelAttrib.height = Math.min(SSM.instance().modelAttrib.textureHeight, SSM.instance().defaultScrollHeight);
-      //if (modelScroll.height > 0) modelScroll.height = SSM.instance().modelHeight;      
-      if (modelScroll.height > 0) modelScroll.height = SSM.instance().modelAttrib.height;      
-      modelScroll.dirty = true;      
-      if ( prevModel < 0 ) {
-         modelScroll.current = 0;
-         modelScroll.currentStr = modelScroll.tagList.elementAt(0).val;
-         SSM.instance().modelAttrib.selected = null;
-         //SSM.instance().modelYOffset = SSM.instance().modelHeight;
-         SSM.instance().modelAttrib.yOffset = SSM.instance().modelAttrib.height;
-      }
-      
+      this.resetPane(modelHash, modelScroll, SSM.instance().modelAttrib);
       
 
             
       
-      // Make final adjustment to y-offsets so the selected item is always visible the
-      // next time users select the scroll bar
-      float tempY = 0;
-      if (prevManufacture >= 0) {
-         tempY = manufactureScroll.tagList.elementAt(prevManufacture).y + DCScrollPane.spacing;
-         //SSM.instance().manufactureYOffset = Math.max( tempY, SSM.instance().manufactureHeight);
-         SSM.instance().manufactureAttrib.yOffset = Math.max( tempY, SSM.instance().manufactureAttrib.height);
-      }
-      if (prevMake >= 0) {
-         tempY = makeScroll.tagList.elementAt(prevMake).y + DCScrollPane.spacing;
-         //SSM.instance().makeYOffset = Math.max( tempY, SSM.instance().makeHeight);
-         SSM.instance().makeAttrib.yOffset = Math.max( tempY, SSM.instance().makeAttrib.height);
-      }
-      if (prevModel >= 0) {
-         tempY = modelScroll.tagList.elementAt(prevModel).y + DCScrollPane.spacing;
-         //SSM.instance().modelYOffset = Math.max( tempY, SSM.instance().modelHeight);
-         SSM.instance().modelAttrib.yOffset = Math.max( tempY, SSM.instance().modelAttrib.height);
-      }
       
       
-      /*
-      System.out.println( "Manufacture: " + manufactureScroll.texPanelHeight);
-      System.out.println( "Make:" + makeScroll.texPanelHeight);
-      System.out.println( "Model: " + modelScroll.texPanelHeight);
-      */
       
       // Set up the month data for the selected criteria
       CacheManager.instance().filterMonthData = 
@@ -561,15 +459,6 @@ public abstract class BaseModelRenderer implements RenderTask {
                SSM.instance().manufactureAttrib.selected,
                SSM.instance().makeAttrib.selected,
                SSM.instance().modelAttrib.selected);
-      
-      
-      /* 
-      Vector<DCPair> yV = CacheManager.instance().getFilterYearlyStat(
-            SSM.instance().selectedManufacture,
-            SSM.instance().selectedMake,
-            SSM.instance().selectedModel
-            );
-      */
       
       
       
@@ -604,15 +493,6 @@ public abstract class BaseModelRenderer implements RenderTask {
           CacheManager.instance().monthMaximum = 
              CacheManager.instance().getMonthMaximumAgg(SSM.instance().manufactureAttrib.selected, SSM.instance().makeAttrib.selected, SSM.instance().modelAttrib.selected);
       }
-      /*
-      CacheManager.instance().groupOccurrence = CacheManager.instance().getPartOccurrence(SSM.instance().startTimeFrame,
-                                                                  SSM.instance().endTimeFrame,
-                                                                  SSM.instance().startMonth,
-                                                                  SSM.instance().endMonth);
-                                                                  */
-      
-      
-      
       
       
       // Pick up the related group(s) if there is a user
@@ -629,25 +509,6 @@ public abstract class BaseModelRenderer implements RenderTask {
                SSM.instance().makeAttrib.selected,
                SSM.instance().modelAttrib.selected);
                
-               
-         /*
-         SSM.instance().relatedList = CacheManager.instance().getRelatedComponent3(
-            startIdx, endIdx,
-            SSM.instance().startMonth, SSM.instance().endMonth,
-            SSM.instance().selectedGroup,
-            SSM.instance().selectedManufacture,
-            SSM.instance().selectedMake,
-            SSM.instance().selectedModel
-         );
-         */
-         /*
-         SSM.instance().relatedList = CacheManager.instance().getRelatedComponent2(
-               SSM.instance().startTimeFrame, 
-               SSM.instance().endTimeFrame,
-               SSM.instance().startMonth,
-               SSM.instance().endMonth,
-               SSM.instance().selectedGroup);
-          */
       } else {
          // Remove all 
          SSM.instance().relatedList.clear(); 
@@ -1486,6 +1347,7 @@ public abstract class BaseModelRenderer implements RenderTask {
            
            g_shaderDualPeel.setUniformf(gl2, "compColour", comp.colour.r, comp.colour.g, comp.colour.b, comp.colour.a);
            g_shaderDualPeel.setUniform1i(gl2, "useLight", 1);
+           //g_shaderDualPeel.setUniform1i(gl2, "useLight", 0);
            
            // Hack Test
            if (SSM.instance().useConstantAlpha == false) {
@@ -1546,7 +1408,7 @@ public abstract class BaseModelRenderer implements RenderTask {
      public boolean g_useOQ = false;
      public int[] g_queryId = new int[1];
 //     public float[] g_opacity = new float[]{0.6f};     
-     public float[] g_opacity = new float[]{0.2f};     
+     public float[] g_opacity = new float[]{0.5f};     
 //     public int g_numPasses = 4;
 //     public int g_numPasses = 8;
      public int g_numPasses = 8;
