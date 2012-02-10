@@ -292,7 +292,7 @@ public abstract class BaseModelRenderer implements RenderTask {
       	String s = manufactureList.elementAt(i);
       	String txt = s + " (" + manufactureHash.get(s) + ")";
          GTag t = new GTag(10.0f, (counterManufacture+1)*DCScrollPane.spacing, counterManufacture*DCScrollPane.spacing, txt, s);
-         if (t.val.equals(SSM.instance().selectedManufacture)) {
+         if (t.val.equals(SSM.instance().manufactureAttrib.selected)) {
             prevManufacture = i;
             manufactureScroll.currentStr = t.val;
          }
@@ -300,21 +300,27 @@ public abstract class BaseModelRenderer implements RenderTask {
          counterManufacture ++;   
       }
       manufactureScroll.texPanelHeight = manufactureScroll.tagList.lastElement().y;
-      SSM.instance().manufactureTexHeight = manufactureScroll.texPanelHeight;
-      SSM.instance().manufactureHeight = Math.min(SSM.instance().manufactureTexHeight, SSM.instance().defaultScrollHeight);
-      if (manufactureScroll.height > 0) manufactureScroll.height = SSM.instance().manufactureHeight;
+      //SSM.instance().manufactureTexHeight = manufactureScroll.texPanelHeight;
+      //SSM.instance().manufactureHeight = Math.min(SSM.instance().manufactureTexHeight, SSM.instance().defaultScrollHeight);
+      
+      SSM.instance().manufactureAttrib.textureHeight = manufactureScroll.texPanelHeight;
+      SSM.instance().manufactureAttrib.height = Math.min(SSM.instance().manufactureAttrib.textureHeight, SSM.instance().defaultScrollHeight);
+      
+      //if (manufactureScroll.height > 0) manufactureScroll.height = SSM.instance().manufactureHeight;
+      if (manufactureScroll.height > 0) manufactureScroll.height = SSM.instance().manufactureAttrib.height;
       manufactureScroll.dirty = true;       
       if (prevManufacture < 0) {
          manufactureScroll.current = 0;   
          manufactureScroll.currentStr = manufactureScroll.tagList.elementAt(0).val;
-         SSM.instance().selectedManufacture = null;
-         SSM.instance().manufactureYOffset = SSM.instance().manufactureHeight;
+         SSM.instance().manufactureAttrib.selected = null;
+         //SSM.instance().manufactureYOffset = SSM.instance().manufactureHeight;
+         SSM.instance().manufactureAttrib.yOffset = SSM.instance().manufactureAttrib.height;
       }
       
       
       // Make information
       Hashtable<String, Integer> makeHash = new Hashtable<String, Integer>();
-      if (SSM.instance().selectedManufacture != null) {
+      if (SSM.instance().manufactureAttrib.selected != null) {
          String manufactureName = manufactureScroll.currentStr;
          
          for (int i=startIdx; i <= endIdx; i++) {
@@ -391,7 +397,7 @@ public abstract class BaseModelRenderer implements RenderTask {
       	String s = makeList.elementAt(i);
       	String txt = s +" (" + makeHash.get(s) + ")";
          GTag t = new GTag(10.0f, (counterMake+1)*DCScrollPane.spacing, counterMake*DCScrollPane.spacing, txt, s);
-         if (t.val.equals(SSM.instance().selectedMake)) {
+         if (t.val.equals(SSM.instance().makeAttrib.selected)) {
             prevMake = i;
             makeScroll.currentStr = t.val;
          }
@@ -399,15 +405,19 @@ public abstract class BaseModelRenderer implements RenderTask {
          counterMake ++;   
       }
       makeScroll.texPanelHeight = makeScroll.tagList.lastElement().y;
-      SSM.instance().makeTexHeight = makeScroll.tagList.lastElement().y;
-      SSM.instance().makeHeight = Math.min(SSM.instance().makeTexHeight, SSM.instance().defaultScrollHeight);
-      if (makeScroll.height > 0) { makeScroll.height = SSM.instance().makeHeight; }
+      //SSM.instance().makeTexHeight = makeScroll.tagList.lastElement().y;
+      //SSM.instance().makeHeight = Math.min(SSM.instance().makeTexHeight, SSM.instance().defaultScrollHeight);
+      SSM.instance().makeAttrib.textureHeight = makeScroll.tagList.lastElement().y;
+      SSM.instance().makeAttrib.height = Math.min(SSM.instance().makeAttrib.textureHeight, SSM.instance().defaultScrollHeight);
+      //if (makeScroll.height > 0) { makeScroll.height = SSM.instance().makeHeight; }
+      if (makeScroll.height > 0) { makeScroll.height = SSM.instance().makeAttrib.height; }
       makeScroll.dirty = true;      
       if ( prevMake < 0) {
          makeScroll.current = 0;
          makeScroll.currentStr = makeScroll.tagList.elementAt(0).val;
-         SSM.instance().selectedMake = null;
-         SSM.instance().makeYOffset = SSM.instance().makeHeight;
+         SSM.instance().makeAttrib.selected= null;
+         //SSM.instance().makeYOffset = SSM.instance().makeHeight;
+         SSM.instance().makeAttrib.yOffset = SSM.instance().makeAttrib.height;
       }
       
       
@@ -415,7 +425,7 @@ public abstract class BaseModelRenderer implements RenderTask {
       
       // Model information
       Hashtable<String, Integer> modelHash = new Hashtable<String, Integer>();
-      if (SSM.instance().selectedMake != null) {
+      if (SSM.instance().makeAttrib.selected!= null) {
          String manufactureName = manufactureScroll.currentStr;
          String makeName = makeScroll.currentStr;
          
@@ -486,7 +496,7 @@ public abstract class BaseModelRenderer implements RenderTask {
       	String s = modelList.elementAt(i);
       	String txt = s + " (" + modelHash.get(s) + ")";
          GTag t = new GTag(10.0f, (counterModel+1)*DCScrollPane.spacing, counterModel*DCScrollPane.spacing, txt, s);
-         if (t.val.equals(SSM.instance().selectedModel)) {
+         if (t.val.equals(SSM.instance().modelAttrib.selected)) {
             prevModel = i;
             modelScroll.currentStr = t.val;
          }
@@ -494,15 +504,19 @@ public abstract class BaseModelRenderer implements RenderTask {
          counterModel ++;   
       }
       modelScroll.texPanelHeight = modelScroll.tagList.lastElement().y;
-      SSM.instance().modelTexHeight = modelScroll.texPanelHeight;
-      SSM.instance().modelHeight = Math.min(SSM.instance().modelTexHeight, SSM.instance().defaultScrollHeight);
-      if (modelScroll.height > 0) modelScroll.height = SSM.instance().modelHeight;      
+      //SSM.instance().modelTexHeight = modelScroll.texPanelHeight;
+      //SSM.instance().modelHeight = Math.min(SSM.instance().modelTexHeight, SSM.instance().defaultScrollHeight);
+      SSM.instance().modelAttrib.textureHeight = modelScroll.texPanelHeight;
+      SSM.instance().modelAttrib.height = Math.min(SSM.instance().modelAttrib.textureHeight, SSM.instance().defaultScrollHeight);
+      //if (modelScroll.height > 0) modelScroll.height = SSM.instance().modelHeight;      
+      if (modelScroll.height > 0) modelScroll.height = SSM.instance().modelAttrib.height;      
       modelScroll.dirty = true;      
       if ( prevModel < 0 ) {
          modelScroll.current = 0;
          modelScroll.currentStr = modelScroll.tagList.elementAt(0).val;
-         SSM.instance().selectedModel = null;
-         SSM.instance().modelYOffset = SSM.instance().modelHeight;
+         SSM.instance().modelAttrib.selected = null;
+         //SSM.instance().modelYOffset = SSM.instance().modelHeight;
+         SSM.instance().modelAttrib.yOffset = SSM.instance().modelAttrib.height;
       }
       
       
@@ -514,15 +528,18 @@ public abstract class BaseModelRenderer implements RenderTask {
       float tempY = 0;
       if (prevManufacture >= 0) {
          tempY = manufactureScroll.tagList.elementAt(prevManufacture).y + DCScrollPane.spacing;
-         SSM.instance().manufactureYOffset = Math.max( tempY, SSM.instance().manufactureHeight);
+         //SSM.instance().manufactureYOffset = Math.max( tempY, SSM.instance().manufactureHeight);
+         SSM.instance().manufactureAttrib.yOffset = Math.max( tempY, SSM.instance().manufactureAttrib.height);
       }
       if (prevMake >= 0) {
          tempY = makeScroll.tagList.elementAt(prevMake).y + DCScrollPane.spacing;
-         SSM.instance().makeYOffset = Math.max( tempY, SSM.instance().makeHeight);
+         //SSM.instance().makeYOffset = Math.max( tempY, SSM.instance().makeHeight);
+         SSM.instance().makeAttrib.yOffset = Math.max( tempY, SSM.instance().makeAttrib.height);
       }
       if (prevModel >= 0) {
          tempY = modelScroll.tagList.elementAt(prevModel).y + DCScrollPane.spacing;
-         SSM.instance().modelYOffset = Math.max( tempY, SSM.instance().modelHeight);
+         //SSM.instance().modelYOffset = Math.max( tempY, SSM.instance().modelHeight);
+         SSM.instance().modelAttrib.yOffset = Math.max( tempY, SSM.instance().modelAttrib.height);
       }
       
       
@@ -535,15 +552,15 @@ public abstract class BaseModelRenderer implements RenderTask {
       // Set up the month data for the selected criteria
       CacheManager.instance().filterMonthData = 
          CacheManager.instance().getFilterMonthlyStat(SSM.instance().startTimeFrame, SSM.instance().endTimeFrame, 
-               SSM.instance().selectedManufacture, 
-               SSM.instance().selectedMake, 
-               SSM.instance().selectedModel);
+               SSM.instance().manufactureAttrib.selected, 
+               SSM.instance().makeAttrib.selected, 
+               SSM.instance().modelAttrib.selected);
       
       CacheManager.instance().filterYearData = 
          CacheManager.instance().getFilterYearStatArray(
-               SSM.instance().selectedManufacture,
-               SSM.instance().selectedMake,
-               SSM.instance().selectedModel);
+               SSM.instance().manufactureAttrib.selected,
+               SSM.instance().makeAttrib.selected,
+               SSM.instance().modelAttrib.selected);
       
       
       /* 
@@ -568,24 +585,24 @@ public abstract class BaseModelRenderer implements RenderTask {
                startIdx, endIdx, 
                SSM.instance().startMonth,
                SSM.instance().endMonth, 
-               SSM.instance().selectedManufacture, 
-               SSM.instance().selectedMake, 
-               SSM.instance().selectedModel);
+               SSM.instance().manufactureAttrib.selected, 
+               SSM.instance().makeAttrib.selected, 
+               SSM.instance().modelAttrib.selected);
          
          CacheManager.instance().monthMaximum = 
-            CacheManager.instance().getMonthMaximum(SSM.instance().selectedManufacture, SSM.instance().selectedMake, SSM.instance().selectedModel);
+            CacheManager.instance().getMonthMaximum(SSM.instance().manufactureAttrib.selected, SSM.instance().makeAttrib.selected, SSM.instance().modelAttrib.selected);
       } else {
           CacheManager.instance().groupOccurrence = 
             CacheManager.instance().getPartOccurrenceFilterAgg(
                startIdx, endIdx, 
                SSM.instance().startMonth,
                SSM.instance().endMonth, 
-               SSM.instance().selectedManufacture, 
-               SSM.instance().selectedMake, 
-               SSM.instance().selectedModel);
+               SSM.instance().manufactureAttrib.selected, 
+               SSM.instance().makeAttrib.selected, 
+               SSM.instance().modelAttrib.selected);
           
           CacheManager.instance().monthMaximum = 
-             CacheManager.instance().getMonthMaximumAgg(SSM.instance().selectedManufacture, SSM.instance().selectedMake, SSM.instance().selectedModel);
+             CacheManager.instance().getMonthMaximumAgg(SSM.instance().manufactureAttrib.selected, SSM.instance().makeAttrib.selected, SSM.instance().modelAttrib.selected);
       }
       /*
       CacheManager.instance().groupOccurrence = CacheManager.instance().getPartOccurrence(SSM.instance().startTimeFrame,
@@ -608,9 +625,9 @@ public abstract class BaseModelRenderer implements RenderTask {
                startIdx, endIdx,
                SSM.instance().startMonth, SSM.instance().endMonth,
                t,
-               SSM.instance().selectedManufacture,
-               SSM.instance().selectedMake,
-               SSM.instance().selectedModel);
+               SSM.instance().manufactureAttrib.selected,
+               SSM.instance().makeAttrib.selected,
+               SSM.instance().modelAttrib.selected);
                
                
          /*
@@ -903,14 +920,14 @@ public abstract class BaseModelRenderer implements RenderTask {
             
             if (SSM.instance().useAggregate == false) {
                value = CacheManager.instance().getOcc(idx, comp.id, 
-                     SSM.instance().selectedManufacture, 
-                     SSM.instance().selectedMake, 
-                     SSM.instance().selectedModel);
+                     SSM.instance().manufactureAttrib.selected, 
+                     SSM.instance().makeAttrib.selected, 
+                     SSM.instance().modelAttrib.selected);
             } else {
                 value = CacheManager.instance().getOccAgg(idx, comp.id, 
-                     SSM.instance().selectedManufacture, 
-                     SSM.instance().selectedMake, 
-                     SSM.instance().selectedModel);              
+                     SSM.instance().manufactureAttrib.selected, 
+                     SSM.instance().makeAttrib.selected, 
+                     SSM.instance().modelAttrib.selected);              
             }
             
             if (value > localMax) localMax = value;

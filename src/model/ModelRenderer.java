@@ -73,17 +73,22 @@ public class ModelRenderer extends BaseModelRenderer {
       
       
       // Check the UI elements first
-      float mf_anchorX = SSM.instance().manufactureAnchorX;
-      float mf_anchorY = SSM.instance().manufactureAnchorY;
+//      float mf_anchorX = SSM.instance().manufactureAnchorX;
+//      float mf_anchorY = SSM.instance().manufactureAnchorY;
+      float mf_anchorX = SSM.instance().manufactureAttrib.anchorX;
+      float mf_anchorY = SSM.instance().manufactureAttrib.anchorY;
+      /*
       if (DCUtil.between(mx, mf_anchorX, mf_anchorX+SSM.instance().scrollWidth)) {
-         if (DCUtil.between(my, mf_anchorY, mf_anchorY+SSM.instance().manufactureHeight)) {
+         //if (DCUtil.between(my, mf_anchorY, mf_anchorY+SSM.instance().manufactureHeight)) {
+         if (DCUtil.between(my, mf_anchorY, mf_anchorY+SSM.instance().manufactureAttrib.height)) {
             
             // 1) Calculate the texture coordinate
             float texX = mx - mf_anchorX;
             float texY = my - mf_anchorY;
             
             // 2) Adjust for Y-offset
-            texY = SSM.instance().manufactureYOffset - (texY);
+            //texY = SSM.instance().manufactureYOffset - (texY);
+            texY = SSM.instance().manufactureAttrib.yOffset - (texY);
             System.out.println("Tex : " + texX + " " + texY);
             
             for (int i=0; i < manufactureScroll.tagList.size(); i++) {
@@ -113,11 +118,20 @@ public class ModelRenderer extends BaseModelRenderer {
             return;
          }
       }      
+      */
+      this.pickingScrollPane(mx, my, manufactureScroll, SSM.instance().manufactureAttrib, 
+            makeScroll, SSM.instance().makeAttrib,
+            modelScroll, SSM.instance().modelAttrib);
+      this.scrollPaneTransition(mx, my, manufactureScroll, SSM.instance().manufactureAttrib);
+      /*
       if (DCUtil.between(mx, mf_anchorX, mf_anchorX+SSM.instance().scrollWidth)) {
          if (DCUtil.between(my, mf_anchorY-20, mf_anchorY)) {
-            SSM.instance().manufactureActive = ! SSM.instance().manufactureActive;
-            if (SSM.instance().manufactureActive) {
-               manufactureScroll.animator = PropertySetter.createAnimator(600, manufactureScroll, "height", new FloatEval(), manufactureScroll.height, SSM.instance().manufactureHeight); 
+            //SSM.instance().manufactureActive = ! SSM.instance().manufactureActive;
+            SSM.instance().manufactureAttrib.active = ! SSM.instance().manufactureAttrib.active;
+            //if (SSM.instance().manufactureActive) {
+            if (SSM.instance().manufactureAttrib.active) {
+               //manufactureScroll.animator = PropertySetter.createAnimator(600, manufactureScroll, "height", new FloatEval(), manufactureScroll.height, SSM.instance().manufactureHeight); 
+               manufactureScroll.animator = PropertySetter.createAnimator(600, manufactureScroll, "height", new FloatEval(), manufactureScroll.height, SSM.instance().manufactureAttrib.height); 
                manufactureScroll.animator.start();
             } else {
                manufactureScroll.animator = PropertySetter.createAnimator(600, manufactureScroll, "height", new FloatEval(), manufactureScroll.height, 0.0f); 
@@ -125,19 +139,25 @@ public class ModelRenderer extends BaseModelRenderer {
             }
          }
       }
+      */
       
       
-      float mk_anchorX = SSM.instance().makeAnchorX;
-      float mk_anchorY = SSM.instance().makeAnchorY;
+      //float mk_anchorX = SSM.instance().makeAnchorX;
+      //float mk_anchorY = SSM.instance().makeAnchorY;
+      float mk_anchorX = SSM.instance().makeAttrib.anchorX;
+      float mk_anchorY = SSM.instance().makeAttrib.anchorY;
+      /*
       if (DCUtil.between(mx, mk_anchorX, mk_anchorX+SSM.instance().scrollWidth)) {
-         if (DCUtil.between(my, mk_anchorY, mk_anchorY+SSM.instance().makeHeight)) {
+         //if (DCUtil.between(my, mk_anchorY, mk_anchorY+SSM.instance().makeHeight)) {
+         if (DCUtil.between(my, mk_anchorY, mk_anchorY+SSM.instance().makeAttrib.height)) {
             
             // 1) Calculate the texture coordinate
             float texX = mx - mk_anchorX;
             float texY = my - mk_anchorY;
             
             // 2) Adjust for Y-offset
-            texY = SSM.instance().makeYOffset - (texY);
+            //texY = SSM.instance().makeYOffset - (texY);
+            texY = SSM.instance().makeAttrib.yOffset - (texY);
             
             for (int i=0; i < makeScroll.tagList.size(); i++) {
                GTag t = makeScroll.tagList.elementAt(i);                
@@ -163,11 +183,19 @@ public class ModelRenderer extends BaseModelRenderer {
             return;
          }
       }      
+      */
+      this.pickingScrollPane(mx, my, makeScroll, SSM.instance().makeAttrib, 
+            modelScroll, SSM.instance().modelAttrib);
+      this.scrollPaneTransition(mx, my, makeScroll, SSM.instance().makeAttrib);
+      /*
       if (DCUtil.between(mx, mk_anchorX, mk_anchorX+SSM.instance().scrollWidth)) {
          if (DCUtil.between(my, mk_anchorY-20, mk_anchorY)) {
-            SSM.instance().makeActive = ! SSM.instance().makeActive;
-            if ( SSM.instance().makeActive ) {
-               makeScroll.animator = PropertySetter.createAnimator(500, makeScroll, "height", new FloatEval(), makeScroll.height, SSM.instance().makeHeight); 
+            //SSM.instance().makeActive = ! SSM.instance().makeActive;
+            SSM.instance().makeAttrib.active = ! SSM.instance().makeAttrib.active;
+            //if ( SSM.instance().makeActive ) {
+            if ( SSM.instance().makeAttrib.active ) {
+               //makeScroll.animator = PropertySetter.createAnimator(500, makeScroll, "height", new FloatEval(), makeScroll.height, SSM.instance().makeHeight); 
+               makeScroll.animator = PropertySetter.createAnimator(500, makeScroll, "height", new FloatEval(), makeScroll.height, SSM.instance().makeAttrib.height); 
                makeScroll.animator.start();
             } else {
                makeScroll.animator = PropertySetter.createAnimator(500, makeScroll, "height", new FloatEval(), makeScroll.height, 0.0f); 
@@ -175,20 +203,26 @@ public class ModelRenderer extends BaseModelRenderer {
             }
          }
       }      
+      */
       
       
       
-      float md_anchorX = SSM.instance().modelAnchorX;
-      float md_anchorY = SSM.instance().modelAnchorY;
+      //float md_anchorX = SSM.instance().modelAnchorX;
+      //float md_anchorY = SSM.instance().modelAnchorY;
+      /*
+      float md_anchorX = SSM.instance().modelAttrib.anchorX;
+      float md_anchorY = SSM.instance().modelAttrib.anchorY;
       if (DCUtil.between(mx, md_anchorX, md_anchorX+SSM.instance().scrollWidth)) {
-         if (DCUtil.between(my, md_anchorY, md_anchorY+SSM.instance().modelHeight)) {
+         //if (DCUtil.between(my, md_anchorY, md_anchorY+SSM.instance().modelHeight)) {
+         if (DCUtil.between(my, md_anchorY, md_anchorY+SSM.instance().modelAttrib.height)) {
             
             // 1) Calculate the texture coordinate
             float texX = mx - md_anchorX;
             float texY = my - md_anchorY;
             
             // 2) Adjust for Y-offset
-            texY = SSM.instance().modelYOffset - (texY);
+            //texY = SSM.instance().modelYOffset - (texY);
+            texY = SSM.instance().modelAttrib.yOffset - (texY);
             
             for (int i=0; i < modelScroll.tagList.size(); i++) {
                GTag t = modelScroll.tagList.elementAt(i);                
@@ -209,11 +243,19 @@ public class ModelRenderer extends BaseModelRenderer {
             return;
          }
       }      
+      */
+      this.pickingScrollPane(mx, my, modelScroll, SSM.instance().modelAttrib);
+      this.scrollPaneTransition(mx, my, modelScroll, SSM.instance().modelAttrib);
+      
+      /*
       if (DCUtil.between(mx, md_anchorX, md_anchorX+SSM.instance().scrollWidth)) {
          if (DCUtil.between(my, md_anchorY-20, md_anchorY)) {
-            SSM.instance().modelActive = ! SSM.instance().modelActive;
-            if ( SSM.instance().modelActive ) {
-               modelScroll.animator = PropertySetter.createAnimator(600, modelScroll, "height", new FloatEval(), modelScroll.height, SSM.instance().modelHeight); 
+            //SSM.instance().modelActive = ! SSM.instance().modelActive;
+            SSM.instance().modelAttrib.active = ! SSM.instance().modelAttrib.active;
+            //if ( SSM.instance().modelActive ) {
+            if ( SSM.instance().modelAttrib.active ) {
+               //modelScroll.animator = PropertySetter.createAnimator(600, modelScroll, "height", new FloatEval(), modelScroll.height, SSM.instance().modelHeight); 
+               modelScroll.animator = PropertySetter.createAnimator(600, modelScroll, "height", new FloatEval(), modelScroll.height, SSM.instance().modelAttrib.height); 
                modelScroll.animator.start();
             } else {
                modelScroll.animator = PropertySetter.createAnimator(600, modelScroll, "height", new FloatEval(), modelScroll.height, 0.0f); 
@@ -221,6 +263,7 @@ public class ModelRenderer extends BaseModelRenderer {
             }
          }
       }      
+      */
       
       
       
@@ -710,9 +753,10 @@ public class ModelRenderer extends BaseModelRenderer {
                      SSM.instance().startMonth, SSM.instance().endMonth, 
                      HierarchyTable.instance().getAgg(comp.id),
                      selectedGroup,
-                     SSM.instance().selectedManufacture, 
-                     SSM.instance().selectedMake, 
-                     SSM.instance().selectedModel);
+                     //SSM.instance().selectedManufacture, 
+                     SSM.instance().manufactureAttrib.selected,
+                     SSM.instance().makeAttrib.selected, 
+                     SSM.instance().modelAttrib.selected);
 //System.out.println(">>>> " + comp.id + " " + related + " " + HierarchyTable.instance().getAgg(comp.id));               
             } else {
                Vector<Integer> related =  new Vector<Integer>();
@@ -730,9 +774,10 @@ public class ModelRenderer extends BaseModelRenderer {
                      SSM.instance().startMonth, SSM.instance().endMonth, 
                      t,
                      related,
-                     SSM.instance().selectedManufacture, 
-                     SSM.instance().selectedMake, 
-                     SSM.instance().selectedModel);              
+                     //SSM.instance().selectedManufacture, 
+                     SSM.instance().manufactureAttrib.selected,
+                     SSM.instance().makeAttrib.selected, 
+                     SSM.instance().modelAttrib.selected);              
                
             }
          }
@@ -814,9 +859,10 @@ public class ModelRenderer extends BaseModelRenderer {
                      SSM.instance().startMonth, SSM.instance().endMonth, 
                      HierarchyTable.instance().getAgg(comp.id),
                      selectedGroup,
-                     SSM.instance().selectedManufacture, 
-                     SSM.instance().selectedMake, 
-                     SSM.instance().selectedModel);               
+                     //SSM.instance().selectedManufacture, 
+                     SSM.instance().manufactureAttrib.selected,
+                     SSM.instance().makeAttrib.selected, 
+                     SSM.instance().modelAttrib.selected);               
             } else {
                Vector<Integer> related =  new Vector<Integer>();
                related.addAll(SSM.instance().selectedGroup.keySet());
@@ -833,9 +879,10 @@ public class ModelRenderer extends BaseModelRenderer {
                      SSM.instance().startMonth, SSM.instance().endMonth, 
                      t,
                      related,
-                     SSM.instance().selectedManufacture, 
-                     SSM.instance().selectedMake, 
-                     SSM.instance().selectedModel);                   
+                     SSM.instance().manufactureAttrib.selected,
+                     //SSM.instance().selectedManufacture, 
+                     SSM.instance().makeAttrib.selected, 
+                     SSM.instance().modelAttrib.selected);                   
             }
          }
          String txt = comp.baseName+"(" + relatedOccNew + "/" + relatedOcc + "/" + occ + ")";
@@ -1150,9 +1197,12 @@ public class ModelRenderer extends BaseModelRenderer {
       ////////////////////////////////////////////////////////////////////////////////
       setOrthonormalView(gl2, 0, SSM.instance().windowWidth, 0, SSM.instance().windowHeight); {
          // Update the yoffset before rendering
-         manufactureScroll.yoffset = SSM.instance().manufactureYOffset;
-         makeScroll.yoffset  = SSM.instance().makeYOffset;
-         modelScroll.yoffset = SSM.instance().modelYOffset;
+         //manufactureScroll.yoffset = SSM.instance().manufactureYOffset;
+         manufactureScroll.yoffset = SSM.instance().manufactureAttrib.yOffset;
+         //makeScroll.yoffset  = SSM.instance().makeYOffset;
+         makeScroll.yoffset  = SSM.instance().makeAttrib.yOffset;
+         //modelScroll.yoffset = SSM.instance().modelYOffset;
+         modelScroll.yoffset = SSM.instance().modelAttrib.yOffset;
          
          manufactureScroll.render(gl2);   
          makeScroll.render(gl2);
@@ -1405,20 +1455,26 @@ public class ModelRenderer extends BaseModelRenderer {
       dcTextPanel.init(gl2);
       
       manufactureScroll = new DCScrollPane("MFR");
-      manufactureScroll.anchorX = SSM.instance().manufactureAnchorX;
-      manufactureScroll.anchorY = SSM.instance().manufactureAnchorY;
+      //manufactureScroll.anchorX = SSM.instance().manufactureAnchorX;
+      //manufactureScroll.anchorY = SSM.instance().manufactureAnchorY;
+      manufactureScroll.anchorX = SSM.instance().manufactureAttrib.anchorX;
+      manufactureScroll.anchorY = SSM.instance().manufactureAttrib.anchorY;
       manufactureScroll.calculate();
       manufactureScroll.renderToTexture(SchemeManager.colour_red.convertToAWT());
       
       makeScroll = new DCScrollPane("MAKE");
-      makeScroll.anchorX = SSM.instance().makeAnchorX;
-      makeScroll.anchorY = SSM.instance().makeAnchorY;
+      //makeScroll.anchorX = SSM.instance().makeAnchorX;
+      //makeScroll.anchorY = SSM.instance().makeAnchorY;
+      makeScroll.anchorX = SSM.instance().makeAttrib.anchorX;
+      makeScroll.anchorY = SSM.instance().makeAttrib.anchorY;
       makeScroll.calculate();
       makeScroll.renderToTexture(SchemeManager.colour_green.convertToAWT());
       
       modelScroll = new DCScrollPane("MODEL");
-      modelScroll.anchorX = SSM.instance().modelAnchorX;
-      modelScroll.anchorY = SSM.instance().modelAnchorY;
+      //modelScroll.anchorX = SSM.instance().modelAnchorX;
+      //modelScroll.anchorY = SSM.instance().modelAnchorY;
+      modelScroll.anchorX = SSM.instance().modelAttrib.anchorX;
+      modelScroll.anchorY = SSM.instance().modelAttrib.anchorY;
       modelScroll.calculate();
       modelScroll.renderToTexture(SchemeManager.colour_blue.convertToAWT());
       
@@ -1429,6 +1485,66 @@ public class ModelRenderer extends BaseModelRenderer {
    
    
    
+   
+   ////////////////////////////////////////////////////////////////////////////////
+   // 
+   ////////////////////////////////////////////////////////////////////////////////
+   public void scrollPaneTransition(float mx, float my, DCScrollPane widget, PaneAttrib attrib ) {
+      if (DCUtil.between(mx, widget.anchorX, widget.anchorX+SSM.instance().scrollWidth)) {
+         if (DCUtil.between(my, widget.anchorY-20, widget.anchorY)) {
+            attrib.active = ! attrib.active;
+            
+            if (attrib.active) {
+               widget.animator = PropertySetter.createAnimator(600, widget, "height", new FloatEval(), widget.height, attrib.height); 
+               widget.animator.start();
+            } else {
+               widget.animator = PropertySetter.createAnimator(600, widget, "height", new FloatEval(), widget.height, 0.0f); 
+               widget.animator.start();
+            }
+         }
+      }   
+   }
+   
+   public void pickingScrollPane(float mx, float my, DCScrollPane widget, PaneAttrib attrib, Object ...childrenPair) {
+      System.out.println("blah...");
+      if (DCUtil.between(mx, attrib.anchorX, attrib.anchorX+SSM.instance().scrollWidth)) {
+         if (DCUtil.between(my, attrib.anchorY, attrib.anchorY+attrib.height)) {
+            
+            // 1) Calculate the texture coordinate
+            float texX = mx - attrib.anchorX;
+            float texY = my - attrib.anchorY;
+            
+            // 2) Adjust for Y-offset
+            texY = attrib.yOffset - (texY);
+            System.out.println("Tex : " + texX + " " + texY);
+            
+            for (int i=0; i < widget.tagList.size(); i++) {
+               GTag t = widget.tagList.elementAt(i);                
+               // Window system is upside down
+               if (texY >= t.yPrime && texY <= t.y) {
+                  SSM.instance().dirtyDateFilter = 1;
+                  widget.current = i; 
+                  widget.currentStr = t.val;
+                  widget.dirty  = true;
+                  
+                  SSM.instance().dirty = 1;
+                  SSM.instance().dirtyGL = 1;
+                  attrib.selected = i==0? null:t.val; 
+                  
+                  // Clear the children
+                  for (int j=0; j < childrenPair.length; j+=2) {
+                     ((DCScrollPane)childrenPair[j]).current = 0;
+                     ((PaneAttrib)childrenPair[j+1]).selected = null;
+                  }
+                  
+                  break;
+               }
+            }            
+            return;
+         }
+      } 
+      System.out.println("blah...end");
+   }
    
 
    

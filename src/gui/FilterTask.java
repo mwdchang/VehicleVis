@@ -144,9 +144,9 @@ public class FilterTask implements RenderTask {
       // Get all 
       //Vector<DCPair> yV = CacheManager.instance().getFilterYearlyStat(null, null, null);
       Vector<DCPair> yV = CacheManager.instance().getFilterYearlyStat(
-            SSM.instance().selectedManufacture, 
-            SSM.instance().selectedMake, 
-            SSM.instance().selectedModel);
+            SSM.instance().manufactureAttrib.selected, 
+            SSM.instance().makeAttrib.selected, 
+            SSM.instance().modelAttrib.selected);
       
       yearData = new DCPair[ yV.size()];
       double max = 0;
@@ -177,9 +177,9 @@ public class FilterTask implements RenderTask {
       int max = 0;
       //int[] mdata = CacheManager.instance().getFilterMonthlyStat(SSM.instance().startTimeFrame, SSM.instance().endTimeFrame, null, null, null);
       int[] mdata = CacheManager.instance().getFilterMonthlyStat(SSM.instance().startTimeFrame, SSM.instance().endTimeFrame, 
-            SSM.instance().selectedManufacture,
-            SSM.instance().selectedMake,
-            SSM.instance().selectedModel); 
+            SSM.instance().manufactureAttrib.selected,
+            SSM.instance().makeAttrib.selected,
+            SSM.instance().modelAttrib.selected); 
       
       monthData = new DCPair[mdata.length];
       for (int i=0; i < mdata.length; i++) {

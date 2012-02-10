@@ -132,31 +132,43 @@ public class EventManager implements KeyListener, MouseListener, MouseMotionList
             }
          }
          
-         float mf_anchorX = SSM.instance().manufactureAnchorX;
-         float mf_anchorY = SSM.instance().manufactureAnchorY;
+         //float mf_anchorX = SSM.instance().manufactureAnchorX;
+         //float mf_anchorY = SSM.instance().manufactureAnchorY;
+         float mf_anchorX = SSM.instance().manufactureAttrib.anchorX;
+         float mf_anchorY = SSM.instance().manufactureAttrib.anchorY;
          if (DCUtil.between(mx, mf_anchorX, mf_anchorX+SSM.instance().scrollWidth)) {
-            if (DCUtil.between(my, mf_anchorY, mf_anchorY+SSM.instance().manufactureHeight)) {
-               if (SSM.instance().manufactureActive) {
+            //if (DCUtil.between(my, mf_anchorY, mf_anchorY+SSM.instance().manufactureHeight)) {
+            if (DCUtil.between(my, mf_anchorY, mf_anchorY+SSM.instance().manufactureAttrib.height)) {
+               //if (SSM.instance().manufactureActive) {
+               if (SSM.instance().manufactureAttrib.active) {
                   SSM.instance().topElement = SSM.ELEMENT_MANUFACTURE_SCROLL;
                }
             }
          }
          
-         float mk_anchorX = SSM.instance().makeAnchorX;
-         float mk_anchorY = SSM.instance().makeAnchorY;
+         //float mk_anchorX = SSM.instance().makeAnchorX;
+         //float mk_anchorY = SSM.instance().makeAnchorY;
+         float mk_anchorX = SSM.instance().makeAttrib.anchorX;
+         float mk_anchorY = SSM.instance().makeAttrib.anchorY;
          if (DCUtil.between(mx, mk_anchorX, mk_anchorX+SSM.instance().scrollWidth)) {
-            if (DCUtil.between(my, mk_anchorY, mk_anchorY+SSM.instance().makeHeight)) {
-               if (SSM.instance().makeActive) {
+            //if (DCUtil.between(my, mk_anchorY, mk_anchorY+SSM.instance().makeHeight)) {
+            if (DCUtil.between(my, mk_anchorY, mk_anchorY+SSM.instance().makeAttrib.height)) {
+               //if (SSM.instance().makeActive) {
+               if (SSM.instance().makeAttrib.active) {
                   SSM.instance().topElement = SSM.ELEMENT_MAKE_SCROLL;
                }
             }
          }
          
-         float md_anchorX = SSM.instance().modelAnchorX;
-         float md_anchorY = SSM.instance().modelAnchorY;
+         //float md_anchorX = SSM.instance().modelAnchorX;
+         //float md_anchorY = SSM.instance().modelAnchorY;
+         float md_anchorX = SSM.instance().modelAttrib.anchorX;
+         float md_anchorY = SSM.instance().modelAttrib.anchorY;
          if (DCUtil.between(mx, md_anchorX, md_anchorX+SSM.instance().scrollWidth)) {
-            if (DCUtil.between(my, md_anchorY, md_anchorY+SSM.instance().modelHeight)) {
-               if (SSM.instance().modelActive) {
+            //if (DCUtil.between(my, md_anchorY, md_anchorY+SSM.instance().modelHeight)) {
+            if (DCUtil.between(my, md_anchorY, md_anchorY+SSM.instance().modelAttrib.height)) {
+               //if (SSM.instance().modelActive) {
+               if (SSM.instance().modelAttrib.active) {
                   SSM.instance().topElement = SSM.ELEMENT_MODEL_SCROLL;
                }
             }
@@ -342,9 +354,9 @@ public class EventManager implements KeyListener, MouseListener, MouseMotionList
         DWin.instance().error("SSM ending   year :" + SSM.instance().endYear);   
         DWin.instance().error("SSM starting month :" + SSM.instance().startMonth);   
         DWin.instance().error("SSM ending month   :" + SSM.instance().endMonth);   
-        DWin.instance().error("SSM selected manufacture : " + SSM.instance().selectedManufacture);
-        DWin.instance().error("SSM selected make: " + SSM.instance().selectedMake);
-        DWin.instance().error("SSM selected model: " + SSM.instance().selectedModel);
+        DWin.instance().error("SSM selected manufacture : " + SSM.instance().manufactureAttrib.selected);
+        DWin.instance().error("SSM selected make: " + SSM.instance().makeAttrib.selected);
+        DWin.instance().error("SSM selected model: " + SSM.instance().modelAttrib.selected);
         DWin.instance().error("________________________________________");
         DWin.instance().error("Total Vertices : "  + MM.currentModel.getTotalVertices());
         
@@ -585,23 +597,45 @@ public class EventManager implements KeyListener, MouseListener, MouseMotionList
          SSM.instance().docAnchorX += (SSM.instance().mouseX - SSM.instance().oldMouseX);   
          SSM.instance().docAnchorY -= (SSM.instance().mouseY - SSM.instance().oldMouseY);   
       } else if (SSM.instance().topElement == SSM.ELEMENT_MANUFACTURE_SCROLL) {
+         SSM.instance().manufactureAttrib.yOffset -= (SSM.instance().mouseY - SSM.instance().oldMouseY);   
+         if (SSM.instance().manufactureAttrib.yOffset < SSM.instance().manufactureAttrib.height)
+            SSM.instance().manufactureAttrib.yOffset = SSM.instance().manufactureAttrib.height;
+         if (SSM.instance().manufactureAttrib.yOffset > SSM.instance().manufactureAttrib.textureHeight)
+            SSM.instance().manufactureAttrib.yOffset = SSM.instance().manufactureAttrib.textureHeight;
+        
+         /*
          SSM.instance().manufactureYOffset -= (SSM.instance().mouseY - SSM.instance().oldMouseY);   
          if (SSM.instance().manufactureYOffset < SSM.instance().manufactureHeight)
             SSM.instance().manufactureYOffset = SSM.instance().manufactureHeight;
          if (SSM.instance().manufactureYOffset > SSM.instance().manufactureTexHeight)
             SSM.instance().manufactureYOffset = SSM.instance().manufactureTexHeight;
+         */
       } else if (SSM.instance().topElement == SSM.ELEMENT_MAKE_SCROLL) {
+         SSM.instance().makeAttrib.yOffset -= (SSM.instance().mouseY - SSM.instance().oldMouseY);   
+         if (SSM.instance().makeAttrib.yOffset < SSM.instance().makeAttrib.height)
+            SSM.instance().makeAttrib.yOffset = SSM.instance().makeAttrib.height;
+         if (SSM.instance().makeAttrib.yOffset > SSM.instance().makeAttrib.textureHeight)
+            SSM.instance().makeAttrib.yOffset = SSM.instance().makeAttrib.textureHeight;
+         /*
          SSM.instance().makeYOffset -= (SSM.instance().mouseY - SSM.instance().oldMouseY);   
          if (SSM.instance().makeYOffset < SSM.instance().makeHeight)
             SSM.instance().makeYOffset = SSM.instance().makeHeight;
          if (SSM.instance().makeYOffset > SSM.instance().makeTexHeight)
             SSM.instance().makeYOffset = SSM.instance().makeTexHeight;
+            */
       } else if (SSM.instance().topElement == SSM.ELEMENT_MODEL_SCROLL)  {
+         SSM.instance().modelAttrib.yOffset -= (SSM.instance().mouseY - SSM.instance().oldMouseY);   
+         if (SSM.instance().modelAttrib.yOffset < SSM.instance().modelAttrib.height)
+            SSM.instance().modelAttrib.yOffset = SSM.instance().modelAttrib.height;
+         if (SSM.instance().modelAttrib.yOffset > SSM.instance().modelAttrib.textureHeight)
+            SSM.instance().modelAttrib.yOffset = SSM.instance().modelAttrib.textureHeight;
+         /*
          SSM.instance().modelYOffset -= (SSM.instance().mouseY - SSM.instance().oldMouseY);   
          if (SSM.instance().modelYOffset < SSM.instance().modelHeight)
             SSM.instance().modelYOffset = SSM.instance().modelHeight;
          if (SSM.instance().modelYOffset > SSM.instance().modelTexHeight)
             SSM.instance().modelYOffset = SSM.instance().modelTexHeight;
+            */
       } else if (SSM.instance().topElement == SSM.ELEMENT_SAVELOAD_SCROLL) {
          SSM.instance().saveLoadYOffset -= (SSM.instance().mouseY - SSM.instance().oldMouseY);   
          if (SSM.instance().saveLoadYOffset < SSM.instance().saveLoadHeight)

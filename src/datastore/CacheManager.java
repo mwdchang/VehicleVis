@@ -397,14 +397,14 @@ public class CacheManager {
                       "AND   MONTH(a.datea) <= " + (toMonth+1) + " ";
          
          // Dynamic clause filter
-         if (SSM.instance().selectedManufacture != null) {
-            sql += "AND a.mfr_txt = '" + SSM.instance().selectedManufacture + "' ";
+         if (SSM.instance().manufactureAttrib.selected != null) {
+            sql += "AND a.mfr_txt = '" + SSM.instance().manufactureAttrib.selected + "' ";
          }
-         if (SSM.instance().selectedMake != null) {
-            sql += "AND a.make_txt = '" + SSM.instance().selectedMake + "' ";
+         if (SSM.instance().makeAttrib.selected != null) {
+            sql += "AND a.make_txt = '" + SSM.instance().makeAttrib.selected + "' ";
          }
-         if (SSM.instance().selectedModel != null) {
-            sql += "AND a.model_txt = '" + SSM.instance().selectedModel + "' ";
+         if (SSM.instance().modelAttrib.selected != null) {
+            sql += "AND a.model_txt = '" + SSM.instance().modelAttrib.selected + "' ";
          }
          
          // Work around to get dimensionalized view
@@ -447,14 +447,14 @@ public class CacheManager {
                       "AND   MONTH(a.datea) <= " + (toMonth+1) + " ";
          
          // Dynamic clause filter
-         if (SSM.instance().selectedManufacture != null) {
-            sql += "AND a.mfr_txt = '" + SSM.instance().selectedManufacture + "' ";
+         if (SSM.instance().manufactureAttrib.selected != null) {
+            sql += "AND a.mfr_txt = '" + SSM.instance().manufactureAttrib.selected + "' ";
          }
-         if (SSM.instance().selectedMake != null) {
-            sql += "AND a.make_txt = '" + SSM.instance().selectedMake + "' ";
+         if (SSM.instance().makeAttrib.selected != null) {
+            sql += "AND a.make_txt = '" + SSM.instance().makeAttrib.selected + "' ";
          }
-         if (SSM.instance().selectedModel != null) {
-            sql += "AND a.model_txt = '" + SSM.instance().selectedModel + "' ";
+         if (SSM.instance().modelAttrib.selected != null) {
+            sql += "AND a.model_txt = '" + SSM.instance().modelAttrib.selected + "' ";
          }
          
          // Work around to get dimensionalized view
@@ -501,14 +501,14 @@ public class CacheManager {
                       "and   MONTH(a.datea) >= " + (fromMonth+1) + " " +
                       "and   MONTH(a.datea) <= " + (toMonth+1) + " ";
          
-         if (SSM.instance().selectedManufacture != null) {
-            sql += "AND a.mfr_txt = '" + SSM.instance().selectedManufacture + "' ";
+         if (SSM.instance().manufactureAttrib.selected != null) {
+            sql += "AND a.mfr_txt = '" + SSM.instance().manufactureAttrib.selected + "' ";
          }
-         if (SSM.instance().selectedMake != null) {
-            sql += "AND a.make_txt = '" + SSM.instance().selectedMake + "' ";
+         if (SSM.instance().makeAttrib.selected != null) {
+            sql += "AND a.make_txt = '" + SSM.instance().makeAttrib.selected + "' ";
          }
-         if (SSM.instance().selectedModel != null) {
-            sql += "AND a.model_txt = '" + SSM.instance().selectedModel + "' ";
+         if (SSM.instance().modelAttrib.selected != null) {
+            sql += "AND a.model_txt = '" + SSM.instance().modelAttrib.selected + "' ";
          }
                       
          sql += "limit " + idx + ", " + SSM.instance().globalFetchSize;

@@ -72,9 +72,9 @@ public class SaveLoadTask implements RenderTask {
 		SSM.instance().endMonth       = ss.endMonth;
 		SSM.instance().startYear      = ss.startYear;
 		SSM.instance().endYear        = ss.endYear;
-		SSM.instance().selectedManufacture = ss.selectedManufacture;
-		SSM.instance().selectedMake = ss.selectedMake;
-		SSM.instance().selectedModel = ss.selectedModel;
+		SSM.instance().manufactureAttrib.selected = ss.selectedManufacture;
+		SSM.instance().makeAttrib.selected = ss.selectedMake;
+		SSM.instance().modelAttrib.selected = ss.selectedModel;
 		
 		// Reset all views
 		SSM.instance().dirty = 1;
@@ -97,9 +97,9 @@ public class SaveLoadTask implements RenderTask {
 		ss.endMonth       = SSM.instance().endMonth;
 		ss.startYear      = SSM.instance().startYear;
 		ss.endYear        = SSM.instance().endYear;
-		ss.selectedManufacture = SSM.instance().selectedManufacture;
-		ss.selectedMake = SSM.instance().selectedMake;
-		ss.selectedModel = SSM.instance().selectedModel;
+		ss.selectedManufacture = SSM.instance().manufactureAttrib.selected;
+		ss.selectedMake = SSM.instance().makeAttrib.selected;
+		ss.selectedModel = SSM.instance().modelAttrib.selected;
 		ss.label = ss.startTimeFrame + "-" + ss.endTimeFrame;
 		stateList.add(ss);
 		

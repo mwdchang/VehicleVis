@@ -10,6 +10,7 @@ import util.DCUtil;
 import util.DWin;
 import model.DCTriple;
 import model.LensAttrib;
+import model.PaneAttrib;
 
 /////////////////////////////////////////////////////////////////////////////////
 // SSM (System State Manager)
@@ -76,9 +77,9 @@ public class SSM {
       refreshOITBuffers = true;
       
       
-      selectedManufacture = null;
-      selectedMake = null;
-      selectedModel = null;
+      manufactureAttrib.selected = null;
+      makeAttrib.selected = null;
+      modelAttrib.selected = null;
       selectedGroup = new Hashtable<Integer, Integer>();
       relatedList.clear();
    }
@@ -216,28 +217,39 @@ public class SSM {
    
    
    ////////////////////////////////////////////////////////////////////////////////
-   // Scroll panel management
+   // Panel management
    ////////////////////////////////////////////////////////////////////////////////
+   public PaneAttrib manufactureAttrib = new PaneAttrib(300, 50, 200, 200);
+   public PaneAttrib makeAttrib = new PaneAttrib(550, 50, 200, 200);
+   public PaneAttrib modelAttrib = new PaneAttrib(800, 50, 200, 200);
+   
+   
+   /*
    public float manufactureAnchorX = 300;
    public float manufactureAnchorY = 50;
    public float manufactureYOffset = 200;
    public float manufactureHeight = 200;
    public float manufactureTexHeight = 200;
    public boolean manufactureActive = false;
+   */
    
+   /*
    public float makeAnchorX = 550;
    public float makeAnchorY = 50;
    public float makeYOffset = 200;
    public float makeHeight = 200;
    public float makeTexHeight = 200;
    public boolean makeActive = false;
+   */
    
+   /*
    public float modelAnchorX = 800;
    public float modelAnchorY = 50;
    public float modelYOffset = 200;
    public float modelHeight = 200;
    public float modelTexHeight = 200;
    public boolean modelActive = false;
+   */
    
    public float saveLoadAnchorX = 850;
    public float saveLoadAnchorY = 950;
@@ -252,9 +264,9 @@ public class SSM {
    public float defaultScrollHeight = 200;
    
    
-   public String selectedManufacture = null;
-   public String selectedMake = null;
-   public String selectedModel = null;
+   //public String selectedManufacture = null;
+   //public String selectedMake = null;
+   //public String selectedModel = null;
    public String selectedSaveLoad = null;
    
    
@@ -404,9 +416,9 @@ public class SSM {
             eidx, 
             startMonth, 
             endMonth, 
-            selectedManufacture, 
-            selectedMake, 
-            selectedModel);   
+            manufactureAttrib.selected, 
+            makeAttrib.selected, 
+            modelAttrib.selected);   
       
       DWin.instance().debug("====================================");
       Enumeration<Integer> e = h.keys();
