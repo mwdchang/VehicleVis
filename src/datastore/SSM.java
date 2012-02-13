@@ -222,6 +222,7 @@ public class SSM {
    public PaneAttrib manufactureAttrib = new PaneAttrib(300, 50, 200, 200);
    public PaneAttrib makeAttrib = new PaneAttrib(550, 50, 200, 200);
    public PaneAttrib modelAttrib = new PaneAttrib(800, 50, 200, 200);
+   public PaneAttrib yearAttrib = new PaneAttrib(1050, 50, 200, 200);
    
    
    /*
@@ -388,7 +389,8 @@ public class SSM {
    public static int ELEMENT_MANUFACTURE_SCROLL = 3;
    public static int ELEMENT_MAKE_SCROLL = 4;
    public static int ELEMENT_MODEL_SCROLL = 5;
-   public static int ELEMENT_SAVELOAD_SCROLL = 6;
+   public static int ELEMENT_YEAR_SCROLL = 6;
+   public static int ELEMENT_SAVELOAD_SCROLL = 7;
    
    public int topElement = ELEMENT_NONE;
    

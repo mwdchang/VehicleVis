@@ -55,6 +55,8 @@ public abstract class BaseModelRenderer implements RenderTask {
    public DCScrollPane manufactureScroll; 
    public DCScrollPane makeScroll;
    public DCScrollPane modelScroll;
+   public DCScrollPane yearScroll;
+   
    
    // Flow effect filter
    public FrameBufferTexture glowTexture;
@@ -319,6 +321,7 @@ public abstract class BaseModelRenderer implements RenderTask {
       manufactureScroll.tagList.clear();
       makeScroll.tagList.clear();
       modelScroll.tagList.clear();
+      yearScroll.tagList.clear();
       
       DWin.instance().error(SSM.instance().startMonth + " " + SSM.instance().endMonth);
       DWin.instance().error("Starting indices: " + startIdx + " " + endIdx );
@@ -441,6 +444,11 @@ public abstract class BaseModelRenderer implements RenderTask {
       //DCUtil.removeLowerBound(modelHash, 0);
       this.resetPane(modelHash, modelScroll, SSM.instance().modelAttrib);
       
+      
+      
+      
+      Hashtable<String, Integer> yearHash = this.getHierFilter(startIdx, endIdx, manufactureScroll, makeScroll, modelScroll);
+      this.resetPane(yearHash, yearScroll, SSM.instance().yearAttrib);
 
             
       
@@ -452,13 +460,22 @@ public abstract class BaseModelRenderer implements RenderTask {
          CacheManager.instance().getFilterMonthlyStat(SSM.instance().startTimeFrame, SSM.instance().endTimeFrame, 
                SSM.instance().manufactureAttrib.selected, 
                SSM.instance().makeAttrib.selected, 
-               SSM.instance().modelAttrib.selected);
+               SSM.instance().modelAttrib.selected,
+               SSM.instance().yearAttrib.selected);
       
+      System.out.print("??? Month: "); 
+      for (int x=0; x < CacheManager.instance().filterMonthData.length; x++) {
+         System.out.print( CacheManager.instance().filterMonthData[x]+  " " );   
+      } System.out.println("\n");
+      
+      // Set up the year data for the selected criteria
       CacheManager.instance().filterYearData = 
          CacheManager.instance().getFilterYearStatArray(
                SSM.instance().manufactureAttrib.selected,
                SSM.instance().makeAttrib.selected,
-               SSM.instance().modelAttrib.selected);
+               SSM.instance().modelAttrib.selected,
+               SSM.instance().yearAttrib.selected);
+      
       
       
       
@@ -476,10 +493,15 @@ public abstract class BaseModelRenderer implements RenderTask {
                SSM.instance().endMonth, 
                SSM.instance().manufactureAttrib.selected, 
                SSM.instance().makeAttrib.selected, 
-               SSM.instance().modelAttrib.selected);
+               SSM.instance().modelAttrib.selected,
+               SSM.instance().yearAttrib.selected);
          
          CacheManager.instance().monthMaximum = 
-            CacheManager.instance().getMonthMaximum(SSM.instance().manufactureAttrib.selected, SSM.instance().makeAttrib.selected, SSM.instance().modelAttrib.selected);
+            CacheManager.instance().getMonthMaximum(
+                  SSM.instance().manufactureAttrib.selected, 
+                  SSM.instance().makeAttrib.selected, 
+                  SSM.instance().modelAttrib.selected,
+                  SSM.instance().yearAttrib.selected);
       } else {
           CacheManager.instance().groupOccurrence = 
             CacheManager.instance().getPartOccurrenceFilterAgg(
@@ -488,10 +510,15 @@ public abstract class BaseModelRenderer implements RenderTask {
                SSM.instance().endMonth, 
                SSM.instance().manufactureAttrib.selected, 
                SSM.instance().makeAttrib.selected, 
-               SSM.instance().modelAttrib.selected);
+               SSM.instance().modelAttrib.selected,
+               SSM.instance().yearAttrib.selected);
           
           CacheManager.instance().monthMaximum = 
-             CacheManager.instance().getMonthMaximumAgg(SSM.instance().manufactureAttrib.selected, SSM.instance().makeAttrib.selected, SSM.instance().modelAttrib.selected);
+             CacheManager.instance().getMonthMaximumAgg(
+                   SSM.instance().manufactureAttrib.selected, 
+                   SSM.instance().makeAttrib.selected, 
+                   SSM.instance().modelAttrib.selected,
+                   SSM.instance().yearAttrib.selected);
       }
       
       
@@ -507,7 +534,8 @@ public abstract class BaseModelRenderer implements RenderTask {
                t,
                SSM.instance().manufactureAttrib.selected,
                SSM.instance().makeAttrib.selected,
-               SSM.instance().modelAttrib.selected);
+               SSM.instance().modelAttrib.selected,
+               SSM.instance().yearAttrib.selected);
                
       } else {
          // Remove all 
@@ -715,27 +743,6 @@ public abstract class BaseModelRenderer implements RenderTask {
                   SSM.instance().t2Start);
          }
          
-        /*
-         CacheManager.instance().setDocumentData2( 
-               SSM.instance().startTimeFrame, 
-               SSM.instance().endTimeFrame, 
-               SSM.instance().startMonth, SSM.instance().endMonth, 
-               groupList,
-               dcTextPanel.t1.documentList, 
-               SSM.instance().t1Start
-         );
-         
-         CacheManager.instance().setDocumentData2( 
-               SSM.instance().startTimeFrame, 
-               SSM.instance().endTimeFrame, 
-               SSM.instance().startMonth, SSM.instance().endMonth,
-               groupList,
-               dcTextPanel.t2.documentList, 
-               SSM.instance().t2Start
-         );
-         */
-         
-         
          
          DWin.instance().debug("Panel 1 size : " + dcTextPanel.t1.documentList.size());
          DWin.instance().debug("Panel 2 size : " + dcTextPanel.t2.documentList.size());
@@ -783,12 +790,14 @@ public abstract class BaseModelRenderer implements RenderTask {
                value = CacheManager.instance().getOcc(idx, comp.id, 
                      SSM.instance().manufactureAttrib.selected, 
                      SSM.instance().makeAttrib.selected, 
-                     SSM.instance().modelAttrib.selected);
+                     SSM.instance().modelAttrib.selected,
+                     SSM.instance().yearAttrib.selected);
             } else {
                 value = CacheManager.instance().getOccAgg(idx, comp.id, 
                      SSM.instance().manufactureAttrib.selected, 
                      SSM.instance().makeAttrib.selected, 
-                     SSM.instance().modelAttrib.selected);              
+                     SSM.instance().modelAttrib.selected,
+                     SSM.instance().yearAttrib.selected);              
             }
             
             if (value > localMax) localMax = value;

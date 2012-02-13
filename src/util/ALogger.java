@@ -22,31 +22,39 @@ public class ALogger {
    }
    
    
+   public static boolean active = false;
+   
    
    // Only call this at program end
    public void cleanup() {
-      try {
-         writer.flush();
-         writer.close();
-      } catch (Exception e) {
-         e.printStackTrace(); 
+      if (active) {
+         try {
+            writer.flush();
+            writer.close();
+         } catch (Exception e) {
+            e.printStackTrace(); 
+         }
       }
    }
    
    
    
    public void log(String s) {
-      Calendar cal = Calendar.getInstance();
-      String time = this.prefixFormatter.format(cal.getTime());
-      try {
-         writer.write(time + "\t" + s);    
-         writer.newLine();
-         writer.flush();
-      } catch (Exception e) {}
+      if (active) {
+         Calendar cal = Calendar.getInstance();
+         String time = this.prefixFormatter.format(cal.getTime());
+         try {
+            writer.write(time + "\t" + s);    
+            writer.newLine();
+            writer.flush();
+         } catch (Exception e) {}
+      }
    }
    
    
    protected ALogger() {
+      
+      if (! active) return;
       
       // Get a usable file name
       String name = "";

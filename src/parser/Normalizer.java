@@ -102,6 +102,7 @@ public class Normalizer {
                Const.MFR_IDX,
                Const.MAKE_IDX,
                Const.MODEL_IDX,
+               Const.YEAR_IDX,
                Const.DESC_IDX
             );
             

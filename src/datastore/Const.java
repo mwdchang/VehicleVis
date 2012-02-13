@@ -18,7 +18,7 @@ public class Const {
    public static final int MODEL_IDX = 4;
    public static final int DESC_IDX = 19;
    public static final int DATEA_IDX = 15;
-   public static final int YEAR_IDX = 4;
+   public static final int YEAR_IDX = 5;
    public static final int PROD_TYPE_IDX = 45;
    
    public static final String SWN_FILE = "C:\\Users\\Daniel\\DropBox\\Resources\\SentiWordNet\\SentiWordNet_3.txt";

@@ -76,18 +76,31 @@ public class ModelRenderer extends BaseModelRenderer {
       
       // Handling vehicle manufacture
       this.pickingScrollPane(mx, my, manufactureScroll, SSM.instance().manufactureAttrib, 
-            makeScroll, SSM.instance().makeAttrib,
-            modelScroll, SSM.instance().modelAttrib);
+            makeScroll, SSM.instance().makeAttrib,     // level 1
+            modelScroll, SSM.instance().modelAttrib,   // level 2
+            yearScroll,  SSM.instance().yearAttrib     // level 3
+      );
       this.scrollPaneTransition(mx, my, manufactureScroll, SSM.instance().manufactureAttrib);
+      
       
       // Handling vehicle make
       this.pickingScrollPane(mx, my, makeScroll, SSM.instance().makeAttrib, 
-            modelScroll, SSM.instance().modelAttrib);
+            modelScroll, SSM.instance().modelAttrib,   // level 2
+            yearScroll, SSM.instance().yearAttrib      // level 3
+      );
       this.scrollPaneTransition(mx, my, makeScroll, SSM.instance().makeAttrib);
       
+      
       // Handling vehicle model
-      this.pickingScrollPane(mx, my, modelScroll, SSM.instance().modelAttrib);
+      this.pickingScrollPane(mx, my, modelScroll, SSM.instance().modelAttrib,
+            yearScroll, SSM.instance().yearAttrib      // level 3
+      );
       this.scrollPaneTransition(mx, my, modelScroll, SSM.instance().modelAttrib);
+      
+      
+      // Handling vehicle year
+      this.pickingScrollPane(mx, my, yearScroll, SSM.instance().yearAttrib);
+      this.scrollPaneTransition(mx, my, yearScroll, SSM.instance().yearAttrib);
       
       
       
@@ -579,7 +592,8 @@ public class ModelRenderer extends BaseModelRenderer {
                      //SSM.instance().selectedManufacture, 
                      SSM.instance().manufactureAttrib.selected,
                      SSM.instance().makeAttrib.selected, 
-                     SSM.instance().modelAttrib.selected);
+                     SSM.instance().modelAttrib.selected,
+                     SSM.instance().yearAttrib.selected);
 //System.out.println(">>>> " + comp.id + " " + related + " " + HierarchyTable.instance().getAgg(comp.id));               
             } else {
                Vector<Integer> related =  new Vector<Integer>();
@@ -600,7 +614,8 @@ public class ModelRenderer extends BaseModelRenderer {
                      //SSM.instance().selectedManufacture, 
                      SSM.instance().manufactureAttrib.selected,
                      SSM.instance().makeAttrib.selected, 
-                     SSM.instance().modelAttrib.selected);              
+                     SSM.instance().modelAttrib.selected,
+                     SSM.instance().yearAttrib.selected);              
                
             }
          }
@@ -685,7 +700,8 @@ public class ModelRenderer extends BaseModelRenderer {
                      //SSM.instance().selectedManufacture, 
                      SSM.instance().manufactureAttrib.selected,
                      SSM.instance().makeAttrib.selected, 
-                     SSM.instance().modelAttrib.selected);               
+                     SSM.instance().modelAttrib.selected,
+                     SSM.instance().yearAttrib.selected);               
             } else {
                Vector<Integer> related =  new Vector<Integer>();
                related.addAll(SSM.instance().selectedGroup.keySet());
@@ -705,7 +721,8 @@ public class ModelRenderer extends BaseModelRenderer {
                      SSM.instance().manufactureAttrib.selected,
                      //SSM.instance().selectedManufacture, 
                      SSM.instance().makeAttrib.selected, 
-                     SSM.instance().modelAttrib.selected);                   
+                     SSM.instance().modelAttrib.selected,
+                     SSM.instance().yearAttrib.selected);                   
             }
          }
          String txt = comp.baseName+"(" + relatedOccNew + "/" + relatedOcc + "/" + occ + ")";
@@ -1019,16 +1036,15 @@ public class ModelRenderer extends BaseModelRenderer {
       ////////////////////////////////////////////////////////////////////////////////
       setOrthonormalView(gl2, 0, SSM.instance().windowWidth, 0, SSM.instance().windowHeight); {
          // Update the yoffset before rendering
-         //manufactureScroll.yoffset = SSM.instance().manufactureYOffset;
          manufactureScroll.yoffset = SSM.instance().manufactureAttrib.yOffset;
-         //makeScroll.yoffset  = SSM.instance().makeYOffset;
          makeScroll.yoffset  = SSM.instance().makeAttrib.yOffset;
-         //modelScroll.yoffset = SSM.instance().modelYOffset;
          modelScroll.yoffset = SSM.instance().modelAttrib.yOffset;
+         yearScroll.yoffset  = SSM.instance().yearAttrib.yOffset;
          
          manufactureScroll.render(gl2);   
          makeScroll.render(gl2);
          modelScroll.render(gl2);
+         yearScroll.render(gl2);
       }
       
       ////////////////////////////////////////////////////////////////////////////////
@@ -1277,28 +1293,29 @@ public class ModelRenderer extends BaseModelRenderer {
       dcTextPanel.init(gl2);
       
       manufactureScroll = new DCScrollPane("MFR");
-      //manufactureScroll.anchorX = SSM.instance().manufactureAnchorX;
-      //manufactureScroll.anchorY = SSM.instance().manufactureAnchorY;
       manufactureScroll.anchorX = SSM.instance().manufactureAttrib.anchorX;
       manufactureScroll.anchorY = SSM.instance().manufactureAttrib.anchorY;
       manufactureScroll.calculate();
       manufactureScroll.renderToTexture(SchemeManager.colour_red.convertToAWT());
       
       makeScroll = new DCScrollPane("MAKE");
-      //makeScroll.anchorX = SSM.instance().makeAnchorX;
-      //makeScroll.anchorY = SSM.instance().makeAnchorY;
       makeScroll.anchorX = SSM.instance().makeAttrib.anchorX;
       makeScroll.anchorY = SSM.instance().makeAttrib.anchorY;
       makeScroll.calculate();
       makeScroll.renderToTexture(SchemeManager.colour_green.convertToAWT());
       
       modelScroll = new DCScrollPane("MODEL");
-      //modelScroll.anchorX = SSM.instance().modelAnchorX;
-      //modelScroll.anchorY = SSM.instance().modelAnchorY;
       modelScroll.anchorX = SSM.instance().modelAttrib.anchorX;
       modelScroll.anchorY = SSM.instance().modelAttrib.anchorY;
       modelScroll.calculate();
       modelScroll.renderToTexture(SchemeManager.colour_blue.convertToAWT());
+      
+      yearScroll = new DCScrollPane("YEAR");
+      yearScroll.anchorX = SSM.instance().yearAttrib.anchorX;
+      yearScroll.anchorY = SSM.instance().yearAttrib.anchorY;
+      yearScroll.calculate();
+      yearScroll.renderToTexture(SchemeManager.colour_blue.convertToAWT());
+      
       
       MM.instance().initGPU(gl2);
       SSM.instance().dirty = 1;
