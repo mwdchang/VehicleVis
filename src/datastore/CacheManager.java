@@ -74,6 +74,40 @@ public class CacheManager {
       
    }
    
+   ////////////////////////////////////////////////////////////////////////////////
+   // Iteratively get the queryObj specified by params
+   // It is assumed that params will be given in hierarchical order and 
+   // that it is sane !!!
+   ////////////////////////////////////////////////////////////////////////////////
+   public QueryObj getQueryObj(int idx, int groupId, String ... params) {
+      QueryObj root = queryTable.elementAt(idx).get(groupId);
+      if (root == null) return root;
+      
+      for (int i=0; i < params.length; i++) {
+         if (params[i] == null) break;
+         root = root.children.get(params[i]);   
+         if (root == null) break;
+      }
+      return root; 
+   }
+   
+   
+   ////////////////////////////////////////////////////////////////////////////////
+   // Iteratively get the queryObj at the filter level specified by params
+   // It is assumed that params will be given in hierarchical order and 
+   // that it is sane !!!
+   ////////////////////////////////////////////////////////////////////////////////
+   public QueryObj getQueryObjU(int idx, String ...params ) {
+      QueryObj root = queryTableU.elementAt(idx);   
+      if (root == null) return root;
+      
+      for (int i=0; i < params.length; i++) {
+         if (params[i] == null) break;
+         root = root.children.get(params[i]);   
+         if (root == null) break;
+      }
+      return root;
+   }
    
    
    ////////////////////////////////////////////////////////////////////////////////
@@ -288,12 +322,6 @@ public class CacheManager {
       dupe.clear();
       dupe = null;
       System.gc();
-      
-      
-         
-
-      
-      
 
    }
    
@@ -485,50 +513,6 @@ public class CacheManager {
       return result; 
    }
    
-   public void setDocumentData2(String from, String to, int fromMonth, int toMonth, Vector<Integer> groupIds, Vector<DCDoc> list, int idx) {
-      //docList.clear();   
-      list.clear();
-      DBWrapper dbh = new DBWrapper();
-      try {
-         String sql = "select a.cmplid, a.cdescr " + 
-                      "from projectv3.cmp_clean a " + 
-                      ",    projectv3.cmp_x_grp_clean b " + 
-                      "where a.datea >= '" + DCUtil.formatDateStr(from) + "' " +
-                      "and   a.datea <= '" + DCUtil.formatDateStr(to) + "' " +
-                      "and   a.cmplid = b.cmplid " + 
-                      //"and   b.groupId = " + groupId +  " " + 
-                      "and   b.groupId in " + DCUtil.makeInClause(groupIds) +  " " + 
-                      "and   MONTH(a.datea) >= " + (fromMonth+1) + " " +
-                      "and   MONTH(a.datea) <= " + (toMonth+1) + " ";
-         
-         if (SSM.instance().manufactureAttrib.selected != null) {
-            sql += "AND a.mfr_txt = '" + SSM.instance().manufactureAttrib.selected + "' ";
-         }
-         if (SSM.instance().makeAttrib.selected != null) {
-            sql += "AND a.make_txt = '" + SSM.instance().makeAttrib.selected + "' ";
-         }
-         if (SSM.instance().modelAttrib.selected != null) {
-            sql += "AND a.model_txt = '" + SSM.instance().modelAttrib.selected + "' ";
-         }
-                      
-         sql += "limit " + idx + ", " + SSM.instance().globalFetchSize;
-        
-         ResultSet rs = dbh.execute( sql, true );
-         while (rs.next()) {
-            int id  = rs.getInt(1);
-            String txt = rs.getString(2); 
-            list.add( new DCDoc(id, txt));
-         }
-         Collections.sort(list, new DCDocComparator<DCDoc>());
-         
-      } catch (Exception e) {
-         e.printStackTrace();
-         System.exit(0);
-      }
-   }
-
-   
-   
    
    ////////////////////////////////////////////////////////////////////////////////
    // Get the group occurrence, including month range, with filtering
@@ -612,39 +596,12 @@ public class CacheManager {
    
    
    
-   /////////////////////////////////////////////////////////////////////////////////  
-   // Get the group occurrence, but include a month range 
-   // so we can for example select only march but for year ranging from 2000 to 2005
-   //
-   // TODO: Should be deprecated
-   /////////////////////////////////////////////////////////////////////////////////  
-   public Hashtable<Integer, Integer> getPartOccurrence(String fromStr, String toStr, int fromMonthIdx, int toMonthIdx) {
-      Integer keyStart = getDateKey(fromStr) == null ? 0 : getDateKey(fromStr);
-      Integer keyEnd   = getDateKey(toStr) == null ? occurrenceTable.size()-1 : getDateKey(toStr);
-      Hashtable<Integer, Integer> result = new Hashtable<Integer, Integer>(); 
-      
-      for (int i=keyStart.intValue(); i <= keyEnd.intValue(); i++) {
-         String dateStr = this.getTimeByIndex(i);
-         int m = Integer.parseInt(dateStr.substring(4,6)) - 1;
-         if (m >= fromMonthIdx && m <= toMonthIdx) {
-            Enumeration<Integer> e = occurrenceTable.get(i).keys();
-            while (e.hasMoreElements()) {
-               Integer key = e.nextElement();
-               Integer val = occurrenceTable.get(i).get(key);
-               
-               if (result.get(key) != null) {
-                  val += result.get(key);
-               } 
-               result.put(key, val);
-            }            
-         }
-      }
-      return result;
-   }
    
    
-   
+   ////////////////////////////////////////////////////////////////////////////////
+   // Returns the data for the year slider widget
    // Returns a vector, as we do not know ahead of time how many years are there
+   ////////////////////////////////////////////////////////////////////////////////
    public int[] getFilterYearStatArray(String manufacture, String make, String model) {
       Vector<DCPair> yV = getFilterYearlyStat(manufacture, make, model);
       int result[] = new int[yV.size()]; 
@@ -667,6 +624,13 @@ public class CacheManager {
             if (pair != null) result.add(pair);
             pair = new DCPair(year+"", 0);
          }
+         
+         QueryObj query = this.getQueryObjU(i, manufacture, make, model);
+         if (query == null) continue;
+         pair.value += query.count;
+         
+         
+         /*
          QueryObj partQuery = queryTableU.elementAt(i);
          // Nothing selected, get the overall count
          if (manufacture == null && make == null && model == null) {
@@ -697,7 +661,8 @@ public class CacheManager {
             pair.value += manufactureQuery.count;
             continue;
          }
-      }
+         */
+      } // end for i
       result.add(pair);
       
       return result;
@@ -706,6 +671,7 @@ public class CacheManager {
    
    
    ////////////////////////////////////////////////////////////////////////////////
+   // Controls the data for the month range slider
    // fromStr and toStr should be yearly based
    ////////////////////////////////////////////////////////////////////////////////
    public int[] getFilterMonthlyStat(String fromStr, String toStr, String manufacture, String make, String model) {
@@ -721,6 +687,11 @@ public class CacheManager {
          String dtStr = getTimeByIndex(i); 
          int month = Integer.parseInt(dtStr.substring(4,6)) - 1;          
          
+         QueryObj query = this.getQueryObjU(i, manufacture, make, model);
+         if (query == null) continue;
+         result[month] += query.count;
+         
+         /*
          QueryObj partQuery = queryTableU.elementAt(i);
             
          // Nothing selected, get the overall count
@@ -752,8 +723,9 @@ public class CacheManager {
             result[month] += manufactureQuery.count;
             continue;
          }
+         */
         
-      }
+      } // end for i
       return result;
    }
    
@@ -769,6 +741,11 @@ public class CacheManager {
    
    
    public int getOcc(int index, int partID, String manufacture, String make, String model) {
+      QueryObj query = this.getQueryObj(index, partID, manufacture, make, model);
+      if (query == null) return 0;
+      return query.count;
+      
+      /*
       QueryObj partQ = queryTable.elementAt(index).get(partID);
       if (partQ == null) return 0;
       
@@ -794,6 +771,7 @@ public class CacheManager {
          //System.out.println( "getOCC " + partID + " " + partQ.count);
          return partQ.count;   
       }
+      */
    }
    
    
@@ -947,6 +925,13 @@ public class CacheManager {
       Vector<Integer> result = new Vector<Integer>();
       
       for (Integer compId : queryTable.elementAt(idx).keySet()) {
+         
+         QueryObj query = this.getQueryObj(idx, compId, mfr, make, model);
+         if (query == null) continue;
+         
+         
+         // Out-dated querying method
+         /*
          QueryObj root = queryTable.elementAt(idx).get(compId);
          if (root == null) continue;   
          QueryObj query;
@@ -972,6 +957,7 @@ public class CacheManager {
          } else {
             query = root;
          }               
+         */
          
          // Check if this query object contains groupIds
          for (int i=0; i < query.lookup2.size(); i++) {
@@ -982,6 +968,9 @@ public class CacheManager {
       return result;
    }
    
+   
+   
+  
    
    /////////////////////////////////////////////////////////////////////////////////   
    // Get co-occuring with strict AND clause
@@ -1008,6 +997,12 @@ public class CacheManager {
       // 0) Check for 0's
       Hashtable<Integer, Integer> ids = new Hashtable<Integer, Integer>();
       for (int i=0; i < groupIds.size(); i++) {
+         
+         query = this.getQueryObj(idx, groupIds.elementAt(i), mfr, make, model);
+         if (query == null) continue;
+         
+         //out-dated query method
+         /*
          root = queryTable.elementAt(idx).get(groupIds.elementAt(i));
          if (root == null) continue;
          
@@ -1032,6 +1027,8 @@ public class CacheManager {
          } else {
             query = root;
          }      
+         */
+         
          
          // If the query contains all relatedIds then it is a co-occurrence
          for (int j=0; j < query.lookup2.size(); j++) {
@@ -1065,6 +1062,12 @@ public class CacheManager {
       // 0) Check for 0's
       Hashtable<Integer, Integer> ids = new Hashtable<Integer, Integer>();
       for (int i=0; i < groupIds.size(); i++) {
+         
+         query = this.getQueryObj(idx, groupIds.elementAt(i), mfr, make, model);
+         if (query == null) continue;
+         
+         //out-dated querying method
+         /*
          root = queryTable.elementAt(idx).get(groupIds.elementAt(i));
          if (root == null) continue;
          
@@ -1089,6 +1092,7 @@ public class CacheManager {
          } else {
             query = root;
          }      
+         */
          
          // If the query contains all relatedIds then it is a co-occurrence
          for (int j=0; j < query.lookup2.size(); j++) {

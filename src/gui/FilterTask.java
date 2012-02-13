@@ -217,7 +217,6 @@ public class FilterTask implements RenderTask {
    
    public void pickSliderIndicator(GL2 gl2) {
       
-      if (SSM.instance().l_mouseClicked == false) return;
       
       int hits;
       IntBuffer buffer = (IntBuffer) GLBuffers.newDirectGLBuffer(GL2.GL_UNSIGNED_INT, 512);
@@ -304,6 +303,7 @@ public class FilterTask implements RenderTask {
             monthSlider.sitem = choose%100;
             monthSlider.anchor = SSM.instance().mouseX;
          } else if (choose < 2000) {
+            if (SSM.instance().l_mouseClicked == false) return;
             int index = choose%1000;
             
             System.out.println("................................." + yearSlider.lowIdx + " " + yearSlider.highIdx);
@@ -317,6 +317,7 @@ public class FilterTask implements RenderTask {
             yearSlider.lowIdx = index;
             yearSlider.highIdx = index;
          } else if (choose < 3000) {
+            if (SSM.instance().l_mouseClicked == false) return;
             int index = choose%1000;
             monthSlider.lowIdx = index;
             monthSlider.highIdx = index;
