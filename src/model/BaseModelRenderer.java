@@ -411,12 +411,21 @@ public abstract class BaseModelRenderer implements RenderTask {
                SSM.instance().modelAttrib.selected,
                SSM.instance().yearAttrib.selected);
          
-         CacheManager.instance().monthMaximum = 
-            CacheManager.instance().getMonthMaximum(
-                  SSM.instance().manufactureAttrib.selected, 
-                  SSM.instance().makeAttrib.selected, 
-                  SSM.instance().modelAttrib.selected,
-                  SSM.instance().yearAttrib.selected);
+          if (SSM.instance().selectedGroup.size() > 0) {
+             CacheManager.instance().monthMaximum = 
+               CacheManager.instance().getMonthMaximumSelected(
+                     SSM.instance().manufactureAttrib.selected, 
+                     SSM.instance().makeAttrib.selected, 
+                     SSM.instance().modelAttrib.selected,
+                     SSM.instance().yearAttrib.selected);
+          } else {
+             CacheManager.instance().monthMaximum = 
+               CacheManager.instance().getMonthMaximum(
+                     SSM.instance().manufactureAttrib.selected, 
+                     SSM.instance().makeAttrib.selected, 
+                     SSM.instance().modelAttrib.selected,
+                     SSM.instance().yearAttrib.selected);
+          }
       } else {
           CacheManager.instance().groupOccurrence = 
             CacheManager.instance().getPartOccurrenceFilterAgg(
@@ -428,12 +437,21 @@ public abstract class BaseModelRenderer implements RenderTask {
                SSM.instance().modelAttrib.selected,
                SSM.instance().yearAttrib.selected);
           
-          CacheManager.instance().monthMaximum = 
-             CacheManager.instance().getMonthMaximumAgg(
-                   SSM.instance().manufactureAttrib.selected, 
-                   SSM.instance().makeAttrib.selected, 
-                   SSM.instance().modelAttrib.selected,
-                   SSM.instance().yearAttrib.selected);
+           if (SSM.instance().selectedGroup.size() > 0) {
+              CacheManager.instance().monthMaximum = 
+                CacheManager.instance().getMonthMaximumSelectedAgg(
+                      SSM.instance().manufactureAttrib.selected, 
+                      SSM.instance().makeAttrib.selected, 
+                      SSM.instance().modelAttrib.selected,
+                      SSM.instance().yearAttrib.selected);
+           } else {
+              CacheManager.instance().monthMaximum = 
+                CacheManager.instance().getMonthMaximumAgg(
+                      SSM.instance().manufactureAttrib.selected, 
+                      SSM.instance().makeAttrib.selected, 
+                      SSM.instance().modelAttrib.selected,
+                      SSM.instance().yearAttrib.selected);
+           }
       }
       
       
@@ -702,17 +720,48 @@ public abstract class BaseModelRenderer implements RenderTask {
             float value = 0;
             
             if (SSM.instance().useAggregate == false) {
-               value = CacheManager.instance().getOcc(idx, comp.id, 
-                     SSM.instance().manufactureAttrib.selected, 
-                     SSM.instance().makeAttrib.selected, 
-                     SSM.instance().modelAttrib.selected,
-                     SSM.instance().yearAttrib.selected);
+               if (SSM.instance().selectedGroup.size() > 0) {
+                  Vector<Integer> selectedGroup =  new Vector<Integer>();
+                  selectedGroup.addAll( SSM.instance().selectedGroup.values());
+                  Vector<Integer> t = new Vector<Integer>();
+                  t.add(comp.id);                  
+                  
+                  value = CacheManager.instance().getCoOccurring(
+                        idx, 
+                        t, 
+                        selectedGroup, 
+                        SSM.instance().manufactureAttrib.selected,
+                        SSM.instance().makeAttrib.selected,
+                        SSM.instance().modelAttrib.selected,
+                        SSM.instance().yearAttrib.selected);
+               } else {
+                  value = CacheManager.instance().getOcc(idx, comp.id, 
+                        SSM.instance().manufactureAttrib.selected, 
+                        SSM.instance().makeAttrib.selected, 
+                        SSM.instance().modelAttrib.selected,
+                        SSM.instance().yearAttrib.selected);
+               }
             } else {
-                value = CacheManager.instance().getOccAgg(idx, comp.id, 
-                     SSM.instance().manufactureAttrib.selected, 
-                     SSM.instance().makeAttrib.selected, 
-                     SSM.instance().modelAttrib.selected,
-                     SSM.instance().yearAttrib.selected);              
+               if (SSM.instance().selectedGroup.size() > 0) {
+                  Vector<Integer> selectedGroup =  new Vector<Integer>();
+                  selectedGroup.addAll( SSM.instance().selectedGroup.values());                  
+                 
+                  value = CacheManager.instance().getCoOccurringAgg(
+                        idx, 
+                        HierarchyTable.instance().getAgg(comp.id), 
+                        selectedGroup,
+                        SSM.instance().manufactureAttrib.selected,
+                        SSM.instance().makeAttrib.selected,
+                        SSM.instance().modelAttrib.selected,
+                        SSM.instance().yearAttrib.selected);
+                 
+               } else {
+                  value = CacheManager.instance().getOccAgg(idx, comp.id, 
+                        SSM.instance().manufactureAttrib.selected, 
+                        SSM.instance().makeAttrib.selected, 
+                        SSM.instance().modelAttrib.selected,
+                        SSM.instance().yearAttrib.selected);              
+               }
             }
             
             if (value > localMax) localMax = value;

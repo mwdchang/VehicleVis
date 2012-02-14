@@ -581,6 +581,45 @@ public class CacheManager {
    }
    
    
+   ////////////////////////////////////////////////////////////////////////////////
+   // Get the monthly maximum based on what is currently selected
+   // That is, the maximum is exactly the amount of co-occurring documents
+   // of the selected parts with itself in any given month index
+   ////////////////////////////////////////////////////////////////////////////////
+   public Vector<Integer> getMonthMaximumSelected(String ... params) {
+      Vector<Integer> result = new Vector<Integer>();
+      for (int i=0; i < queryTable.size(); i++) result.add(0);   
+      
+      Vector<Integer> selectedGroup = new Vector<Integer>();
+      selectedGroup.addAll(SSM.instance().selectedGroup.values());
+      
+      for (int i=0; i < result.size(); i++) {
+         int value = this.getCoOccurring(i, selectedGroup, selectedGroup, params);
+         result.set(i, value);
+      }
+      return result;
+   }
+   
+   ////////////////////////////////////////////////////////////////////////////////
+   // Get the monthly maximum based on what is currently selected with aggregates
+   // That is, the maximum is exactly the amount of co-occurring documents
+   // of the selected parts with itself in any given month index
+   ////////////////////////////////////////////////////////////////////////////////
+   public Vector<Integer> getMonthMaximumSelectedAgg(String ... params) {
+      Vector<Integer> result = new Vector<Integer>();
+      for (int i=0; i < queryTable.size(); i++) result.add(0);   
+      
+      Vector<Integer> selectedGroup = HierarchyTable.instance().getAgg(SSM.instance().selectedGroup);
+      Vector<Integer> relatedGroup = new Vector<Integer>();
+      relatedGroup.addAll(SSM.instance().selectedGroup.values());
+      
+      for (int i=0; i < result.size(); i++) {
+         int value = this.getCoOccurringAgg(i, selectedGroup, relatedGroup, params);
+         result.set(i, value);
+      }
+      return result;
+   }
+   
    
    public Vector<Integer> getMonthMaximum(String ... params) {
       Vector<Integer> result = new Vector<Integer>();
