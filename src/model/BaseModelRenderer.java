@@ -261,6 +261,19 @@ public abstract class BaseModelRenderer implements RenderTask {
          tempY = widget.tagList.elementAt(prevManufacture).y + DCScrollPane.spacing;
          attrib.yOffset = Math.max( tempY, attrib.height);
       }
+      
+      // If the list only contains one element ==> IE: "ALL", then that means we did not select an item
+      // in the upper hierarchy somewhere. So this means that we might as well hide it. 
+      // We will still do the calculations above, just so everything is synchronized
+      if (widget.tagList.size() == 1 ) {
+         widget.visible = false;   
+         widget.height = 0.0f;
+         attrib.active = false;
+      } else {
+         widget.visible = true;
+      }
+      System.out.println(widget.label + " " + widget.tagList.size());
+      
 
    }
    
@@ -327,75 +340,11 @@ public abstract class BaseModelRenderer implements RenderTask {
       DWin.instance().error("Starting indices: " + startIdx + " " + endIdx );
       
       
-      // Manufacture information
-      /*
-      Hashtable<String, Integer> manufactureHash = new Hashtable<String, Integer>();
-      for (int i=startIdx; i <= endIdx; i++) {
-         String dtStr = CacheManager.instance().getTimeByIndex(i); 
-         int month = Integer.parseInt(dtStr.substring(4,6)) - 1;
-         if (month < SSM.instance().startMonth || month > SSM.instance().endMonth) continue;
-         
-         
-         QueryObj obj = CacheManager.instance().queryTableU.elementAt(i);
-         Enumeration<String> manufactureEnum = obj.children.keys();
-         while (manufactureEnum.hasMoreElements()) {
-            String str = manufactureEnum.nextElement();
-            int count = obj.children.get(str).count;
-            if (manufactureHash.containsKey(str)) {
-            	int prev = manufactureHash.get(str);
-               manufactureHash.put( str, count + prev); 
-            } else {
-               manufactureHash.put( str, count); 
-            }
-         }
-         
-      }      
-      */
       Hashtable<String, Integer> manufactureHash = this.getHierFilter(startIdx, endIdx);
       // Hack: Trim down the outliers
       DCUtil.removeLowerBound(manufactureHash, 100);
-      
       this.resetPane(manufactureHash, manufactureScroll, SSM.instance().manufactureAttrib);
       
-      
-      
-      
-      // Make information
-      /*
-      Hashtable<String, Integer> makeHash = new Hashtable<String, Integer>();
-      if (SSM.instance().manufactureAttrib.selected != null) {
-         String manufactureName = manufactureScroll.currentStr;
-         
-         for (int i=startIdx; i <= endIdx; i++) {
-            String dtStr = CacheManager.instance().getTimeByIndex(i); 
-            int month = Integer.parseInt(dtStr.substring(4,6)) - 1;
-            if (month < SSM.instance().startMonth || month > SSM.instance().endMonth) continue;
-            
-            
-            QueryObj query1 = CacheManager.instance().queryTableU.elementAt(i);
-            Enumeration<String> manufactureEnum = query1.children.keys();
-            while (manufactureEnum.hasMoreElements()) {
-               String str = manufactureEnum.nextElement();
-               if (str.equals(manufactureName)) {
-                  QueryObj query2 = query1.get(manufactureName);   
-                  Enumeration<String> makeEnum = query2.children.keys();
-                  while (makeEnum.hasMoreElements()) {
-                     String makeStr = makeEnum.nextElement(); 
-                     int count = query2.children.get(makeStr).count;
-                     if (makeHash.containsKey(makeStr)) {
-                        int prev = makeHash.get(makeStr);
-                        makeHash.put(makeStr, count+prev);
-                     } else {
-                        makeHash.put(makeStr, count);
-                     }
-                  }                 
-               }
-            }
-            
-         } // end for      
-         System.out.println( manufactureName + " : " +  makeHash.size());
-      }
-      */
       
       
       Hashtable<String, Integer> makeHash = this.getHierFilter(startIdx, endIdx, manufactureScroll);
@@ -403,40 +352,6 @@ public abstract class BaseModelRenderer implements RenderTask {
       //DCUtil.removeLowerBound(makeHash, 0);
       this.resetPane(makeHash, makeScroll, SSM.instance().makeAttrib);
       
-      
-      
-      // Model information
-      /*
-      Hashtable<String, Integer> modelHash = new Hashtable<String, Integer>();
-      if (SSM.instance().makeAttrib.selected!= null) {
-         String manufactureName = manufactureScroll.currentStr;
-         String makeName = makeScroll.currentStr;
-         
-         for (int i=startIdx; i <= endIdx; i++) {
-            String dtStr = CacheManager.instance().getTimeByIndex(i); 
-            int month = Integer.parseInt(dtStr.substring(4,6)) - 1;
-            if (month < SSM.instance().startMonth || month > SSM.instance().endMonth) continue;
-            
-            QueryObj query1 = CacheManager.instance().queryTableU.elementAt(i);
-            QueryObj mf = query1.get( manufactureName);
-            if (mf == null) continue;
-            QueryObj make = mf.get(makeName);
-            if (make == null) continue;
-            Enumeration<String> e2 = make.children.keys();
-            while (e2.hasMoreElements()) {
-               String s = e2.nextElement();    
-               int count = make.children.get(s).count;
-               if (modelHash.containsKey(s)) {
-               	int prev = modelHash.get(s);
-                  modelHash.put(s, count+prev);
-               } else {
-                  modelHash.put(s, count);
-               }
-            }
-        
-         } // end for      
-      }
-      */
       
       
       Hashtable<String, Integer> modelHash = this.getHierFilter(startIdx, endIdx, manufactureScroll, makeScroll);

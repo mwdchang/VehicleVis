@@ -169,6 +169,9 @@ public class DCScrollPane {
    // Renders the texture, take into account the current offset (scroll amount)
    ////////////////////////////////////////////////////////////////////////////////
    public void render(GL2 gl2) {
+      // If not visible, don't render....duh ?
+      if (! this.visible) return;
+      
       if (dirty) {
          this.renderToTexture(Color.BLACK);
          this.dirty = false;

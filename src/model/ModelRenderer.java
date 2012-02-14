@@ -1326,7 +1326,8 @@ public class ModelRenderer extends BaseModelRenderer {
    
    
    ////////////////////////////////////////////////////////////////////////////////
-   // 
+   // Handles the animated transition for scrolling panels, specifically those
+   // in the hierarchical search filter
    ////////////////////////////////////////////////////////////////////////////////
    public void scrollPaneTransition(float mx, float my, DCScrollPane widget, PaneAttrib attrib ) {
       if (DCUtil.between(mx, widget.anchorX, widget.anchorX+SSM.instance().scrollWidth)) {
@@ -1344,6 +1345,10 @@ public class ModelRenderer extends BaseModelRenderer {
       }   
    }
    
+   
+   ////////////////////////////////////////////////////////////////////////////////
+   // Handles select action for hierarchical scrolling panel filters
+   ////////////////////////////////////////////////////////////////////////////////
    public void pickingScrollPane(float mx, float my, DCScrollPane widget, PaneAttrib attrib, Object ...childrenPair) {
       System.out.println("blah...");
       if (DCUtil.between(mx, attrib.anchorX, attrib.anchorX+SSM.instance().scrollWidth)) {
