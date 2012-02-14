@@ -231,7 +231,7 @@ public class DCRSlider {
    	// Add the value labels (total amounts for each time period)
    	for (int i=0; i < tempData.length; i++) {
    		float v = (float)(tempData[i].value*height/tempMaxValue);
-   		String s = DCUtil.abbreviation((int)tempData[i].value);
+   		String s = tempData[i].value > 1000 ? DCUtil.abbreviation((int)tempData[i].value) : (int)tempData[i].value+"";
    	   //tf.addMark( (int)tempData[i].value+"", labelColour, labelFont, (float)(3+(i*interval)), v+13);	
    	   tf.addMark( s, labelColour, labelFont, (float)(3+(i*interval)), v+15);	
    	}

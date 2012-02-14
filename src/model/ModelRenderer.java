@@ -128,8 +128,6 @@ public class ModelRenderer extends BaseModelRenderer {
          }
          
          
-         
-         
          if (SSM.instance().selectedGroup.size() > 0 ) {
             //if ( SSM.instance().selectedGroup.intValue() == obj.intValue()) {
             if (SSM.instance().selectedGroup.contains(obj)) {
@@ -1352,7 +1350,8 @@ public class ModelRenderer extends BaseModelRenderer {
    public void pickingScrollPane(float mx, float my, DCScrollPane widget, PaneAttrib attrib, Object ...childrenPair) {
       System.out.println("blah...");
       if (DCUtil.between(mx, attrib.anchorX, attrib.anchorX+SSM.instance().scrollWidth)) {
-         if (DCUtil.between(my, attrib.anchorY, attrib.anchorY+attrib.height)) {
+         //if (DCUtil.between(my, attrib.anchorY, attrib.anchorY+attrib.height)) {
+         if (DCUtil.between(my, attrib.anchorY, attrib.anchorY+widget.height)) {
             
             // 1) Calculate the texture coordinate
             float texX = mx - attrib.anchorX;

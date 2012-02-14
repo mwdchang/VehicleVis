@@ -268,6 +268,7 @@ public abstract class BaseModelRenderer implements RenderTask {
       if (widget.tagList.size() == 1 ) {
          widget.visible = false;   
          widget.height = 0.0f;
+         attrib.height = 0.0f;
          attrib.active = false;
       } else {
          widget.visible = true;
