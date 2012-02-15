@@ -883,10 +883,14 @@ public class ModelRenderer extends BaseModelRenderer {
                // We already have transparency and it is too expensive
                if ( ! SSM.instance().useDualDepthPeeling) {
                   setPerspectiveView(gl2, la.nearPlane, la.farPlane); {
+                     gl2.glRotated(SSM.instance().rotateX, 1, 0, 0);
+                     gl2.glRotated(SSM.instance().rotateY, 0, 1, 0);
                      gl2.glEnable(GL2.GL_BLEND);
                      renderColourRamp(gl2, la);
                   }
                   setPerspectiveView(gl2, 0.01f, la.nearPlane); {
+                     gl2.glRotated(SSM.instance().rotateX, 1, 0, 0);
+                     gl2.glRotated(SSM.instance().rotateY, 0, 1, 0);
                      renderSil(gl2);   
                   }
                }
@@ -901,6 +905,8 @@ public class ModelRenderer extends BaseModelRenderer {
       // Render the default scene we want to show
       ////////////////////////////////////////////////////////////////////////////////
       setPerspectiveView(gl2); {
+         gl2.glRotated(SSM.instance().rotateX, 1, 0, 0);
+         gl2.glRotated(SSM.instance().rotateY, 0, 1, 0);
          gl2.glEnable(GL2.GL_BLEND);
          
          if (SSM.instance().useDualDepthPeeling) {
@@ -934,6 +940,8 @@ public class ModelRenderer extends BaseModelRenderer {
       if (SSM.instance().useGlow && SSM.instance().selectedGroup.size() > 0) {
          glowTexture.startRecording(gl2); 
             setPerspectiveView(gl2); 
+            gl2.glRotated(SSM.instance().rotateX, 1, 0, 0);
+            gl2.glRotated(SSM.instance().rotateY, 0, 1, 0);
             gl2.glPushMatrix();
             for (DCComponent comp : MM.currentModel.componentTable.values()) {
                //if (SSM.instance().relatedList.contains(comp.id) && ! SSM.instance().selectedGroup.contains(comp.id)) {

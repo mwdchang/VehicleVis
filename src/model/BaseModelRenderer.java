@@ -165,6 +165,9 @@ public abstract class BaseModelRenderer implements RenderTask {
       GraphicUtil.setPerspectiveView(gl2, aspect, SSM.instance().fov, 
             1, 1000, 
             DCCamera.instance().eye.toArray3f(), new float[]{0,0,0}, DCCamera.instance().up.toArray3f());
+      
+      //gl2.glRotated(SSM.instance().rotateX, 1, 0, 0);
+      //gl2.glRotated(SSM.instance().rotateY, 0, 1, 0);
    }
    
    
@@ -176,6 +179,7 @@ public abstract class BaseModelRenderer implements RenderTask {
       GraphicUtil.setPerspectiveView(gl2, aspect, SSM.instance().fov, 
             near, far, 
             DCCamera.instance().eye.toArray3f(), new float[]{0,0,0}, DCCamera.instance().up.toArray3f());
+      
    }
    
    public void setOrthonormalView(GL2 gl2) {

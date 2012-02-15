@@ -35,11 +35,11 @@ public class CacheManager {
    public static int timeLineStartYear = 1995;
    public static int timeLineEndYear   = 2011;
    
-   public static boolean DEBUG = true;
+   public static boolean DEBUG = false;
 //   public static boolean DEBUG = false;
    
    public static void main(String argsp[]) {
-      CacheManager.DEBUG = true;
+      CacheManager.DEBUG = false;
       CacheManager.instance();
       CacheManager.instance().initSystem();
       
@@ -175,7 +175,24 @@ public class CacheManager {
    // Initialize the system 
    ////////////////////////////////////////////////////////////////////////////////
    public void initSystem()  {
+      long start = System.currentTimeMillis();
+      try {
+         initTimeLine(timeLineStartYear, timeLineEndYear);
+         initOccurrenceTable2();   
+         initQueryTable();
+         setDocumentTag();
+         initRelatedTable();
+      } catch (Exception e) {
+         e.printStackTrace();
+         System.exit(0);
+      }
+      long end = System.currentTimeMillis();
+      
+      System.out.println("Total time to bring up system : " + (end-start));
+      
+      
       // Attempt initialize the system from on disk cache
+      /*
       if (readCache() == false)  {
          initTimeLine(timeLineStartYear, timeLineEndYear);
          try {
@@ -190,6 +207,7 @@ public class CacheManager {
       // Initialize the runtime cache
       setDocumentTag();
       initRelatedTable();
+      */
    }
    
    
@@ -316,6 +334,7 @@ public class CacheManager {
          System.out.println("Processed " + counter + " records");
          end   = System.currentTimeMillis();
          
+         /*
          if (DEBUG) {
             SerializeUtil.objOut(queryTable, "debug_queryTable.ser");
             SerializeUtil.objOut(queryTableU, "debug_queryTableU.ser");
@@ -323,6 +342,7 @@ public class CacheManager {
             SerializeUtil.objOut(queryTable, "queryTable.ser");
             SerializeUtil.objOut(queryTableU, "queryTableU.ser");
          }            
+         */
          
       } catch (Exception e) {
          e.printStackTrace();

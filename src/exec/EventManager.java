@@ -281,6 +281,12 @@ public class EventManager implements KeyListener, MouseListener, MouseMotionList
    @Override
    public void keyPressed(KeyEvent e) {
       
+      // Special meta
+      if (e.isShiftDown()) {
+         shiftKeyPressed = true;
+         return; 
+      }
+      
      
       if (e.getKeyChar() == 'w') {
          SSM.instance().useGlow = ! SSM.instance().useGlow;   
@@ -433,6 +439,11 @@ public class EventManager implements KeyListener, MouseListener, MouseMotionList
    
    @Override
    public void keyReleased(KeyEvent e) {
+      
+      if ( ! e.isShiftDown()) {
+         shiftKeyPressed = false;   
+      }
+      
       if (e.getKeyCode() == KeyEvent.VK_ESCAPE){
          ALogger.instance().cleanup();
          System.out.println("ESC exit...");
@@ -451,9 +462,11 @@ public class EventManager implements KeyListener, MouseListener, MouseMotionList
          SSM.instance().useLight = false;
       }
       */
+      /*
       if (e.getKeyChar() == KeyEvent.VK_SHIFT) {
          shiftKeyPressed = false;   
       }
+      */
    }
    
 
@@ -502,10 +515,6 @@ public class EventManager implements KeyListener, MouseListener, MouseMotionList
                SSM.instance().yoffset += val;
             }
             
-//            if (yoffset <= t1.textPaneHeight) {
-//               System.out.println("Switch...");
-//               yoffset += t3.textPaneHeight;
-//            }
          } else {
             // Check to see if T2 even exist
             if (SSM.instance().yoffset > SSM.instance().t1Height && SSM.instance().t2Height <= 0) return;
@@ -518,7 +527,6 @@ public class EventManager implements KeyListener, MouseListener, MouseMotionList
             
             if (SSM.instance().yoffset - SSM.instance().docHeight > SSM.instance().t1Height) {
                
-               
                System.out.println("Getting next text");
                SSM.instance().yoffset -= SSM.instance().t1Height;
                SSM.instance().t1Start += SSM.instance().globalFetchSize;
@@ -528,22 +536,7 @@ public class EventManager implements KeyListener, MouseListener, MouseMotionList
             } else {
                SSM.instance().yoffset += val;
             }
-//            if (yoffset - displayH > t1.textPaneHeight) {
-//               System.out.println("Switch...");
-//               yoffset -= t1.textPaneHeight;
-//            }
          }
-         
-         /*
-         if (lastPressY - SSM.instance().mouseY < -10) {
-            lastPressY = SSM.instance().mouseY;
-            SSM.instance().nextDoc();
-         }
-         if (lastPressY - SSM.instance().mouseY > 10) {
-            lastPressY = SSM.instance().mouseY;
-            SSM.instance().previousDoc();
-         }
-         */
          return;
       }
       
@@ -562,6 +555,21 @@ public class EventManager implements KeyListener, MouseListener, MouseMotionList
          Matrix m_basis      = new Matrix(basis);
          Matrix m_basisT     = m_basis.inverse();
          
+         if ( this.shiftKeyPressed && (SSM.instance().oldMouseX > SSM.instance().mouseX ||
+              SSM.instance().oldMouseX < SSM.instance().mouseX)) {
+            float val = (float)(SSM.instance().mouseX - SSM.instance().oldMouseX);
+            SSM.instance().rotateY += val;
+            System.out.println("Shift + X");
+            return;
+         }
+         if ( this.shiftKeyPressed && (SSM.instance().oldMouseY > SSM.instance().mouseY ||
+              SSM.instance().oldMouseY < SSM.instance().mouseY)) {
+            float val = (float)(SSM.instance().mouseY - SSM.instance().oldMouseY);
+            SSM.instance().rotateX += val;
+            System.out.println("Shift + Y");
+            return;
+         }
+ 
          if ( SSM.instance().oldMouseX > SSM.instance().mouseX ||
               SSM.instance().oldMouseX < SSM.instance().mouseX) {
             float factor; 

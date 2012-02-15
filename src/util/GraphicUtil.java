@@ -407,6 +407,10 @@ public class GraphicUtil {
    ////////////////////////////////////////////////////////////////////////////////
    public static void drawAxis(GL2 gl2, float x, float y, float z) {
       gl2.glDisable(GL2.GL_LIGHTING);
+      gl2.glDisable(GL2.GL_TEXTURE_2D);
+      gl2.glDisable(GL2.GL_CULL_FACE);
+      gl2.glDisable(GL2.GL_DEPTH_TEST);
+      
       gl2.glBegin(GL2.GL_LINES);
          // x-axis
          gl2.glColor4fv(new float[]{1.0f, 0.0f, 0.0f, 0.5f}, 0);

@@ -100,12 +100,11 @@ public class SSM {
    public float nearPlane = 1.0f;
    public float farPlane  = 1000.0f; 
    
-   
-   
    public boolean  renderSihoulette;
    public boolean  useLight;
    public float rotateX = 0.0f;
    public float rotateY = 0.0f;
+   
    
 //   public float adjustAlphaValue(Integer groupId, float alpha) {
 //      if (groupId == null || currentGroup == null || currentGroup.intValue() == groupId.intValue()) return alpha;
