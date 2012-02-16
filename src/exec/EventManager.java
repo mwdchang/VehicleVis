@@ -566,6 +566,7 @@ public class EventManager implements KeyListener, MouseListener, MouseMotionList
             System.out.println("Shift + X");
             return;
          }
+         /* Ignore the Y rotation
          if ( this.shiftKeyPressed && (SSM.instance().oldMouseY > SSM.instance().mouseY ||
               SSM.instance().oldMouseY < SSM.instance().mouseY)) {
             float val = (float)(SSM.instance().mouseY - SSM.instance().oldMouseY);
@@ -573,6 +574,7 @@ public class EventManager implements KeyListener, MouseListener, MouseMotionList
             System.out.println("Shift + Y");
             return;
          }
+         */
  
          if ( SSM.instance().oldMouseX > SSM.instance().mouseX ||
               SSM.instance().oldMouseX < SSM.instance().mouseX) {

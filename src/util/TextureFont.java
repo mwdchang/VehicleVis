@@ -102,7 +102,7 @@ public class TextureFont {
    // Fetch an openGL texture and renders to the screen
    public void render(GL2 gl2) {
       if (dirty == 1) {
-         System.out.println("Detected dirty texture");
+         //System.out.println("Detected dirty texture");
          renderToTexture(Color.BLACK);
          dirty = 0;
       }         

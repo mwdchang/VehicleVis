@@ -443,7 +443,7 @@ public class ModelRenderer extends BaseModelRenderer {
       
       int startIdx = CacheManager.instance().getDateKey( SSM.instance().startTimeFrame ) == null ? 0:
          CacheManager.instance().getDateKey( SSM.instance().startTimeFrame );
-      int endIdx   = CacheManager.instance().getDateKey( SSM.instance().endTimeFrame) == null ? CacheManager.instance().occurrenceTable.size():
+      int endIdx   = CacheManager.instance().getDateKey( SSM.instance().endTimeFrame) == null ? CacheManager.instance().timeLineSize:
          CacheManager.instance().getDateKey( SSM.instance().endTimeFrame );      
       
      

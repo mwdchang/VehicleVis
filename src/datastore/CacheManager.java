@@ -123,12 +123,12 @@ public class CacheManager {
       try {
          System.err.println("Trying to resurrect seriarlized cache");
          
-         DCUtil.startTimer("Getting occurrence table...");
-         if(DEBUG) {
-            occurrenceTable = (Vector<Hashtable<Integer, Integer>>) SerializeUtil.objIn("debug_occurenceTable.ser");
-         } else {
-            occurrenceTable = (Vector<Hashtable<Integer, Integer>>) SerializeUtil.objIn("occurenceTable.ser");
-         } DCUtil.endTimer("Done");
+//         DCUtil.startTimer("Getting occurrence table...");
+//         if(DEBUG) {
+//            occurrenceTable = (Vector<Hashtable<Integer, Integer>>) SerializeUtil.objIn("debug_occurenceTable.ser");
+//         } else {
+//            occurrenceTable = (Vector<Hashtable<Integer, Integer>>) SerializeUtil.objIn("occurenceTable.ser");
+//         } DCUtil.endTimer("Done");
          
          
          DCUtil.startTimer("Getting dateTable...");
@@ -178,7 +178,7 @@ public class CacheManager {
       long start = System.currentTimeMillis();
       try {
          initTimeLine(timeLineStartYear, timeLineEndYear);
-         initOccurrenceTable2();   
+         //initOccurrenceTable2();   
          initQueryTable();
          setDocumentTag();
          initRelatedTable();
@@ -756,7 +756,7 @@ public class CacheManager {
       }
       
       Integer keyStart = getDateKey(fromStr) == null ? 0 : getDateKey(fromStr);
-      Integer keyEnd   = getDateKey(toStr) == null ? occurrenceTable.size()-1 : getDateKey(toStr);
+      Integer keyEnd   = getDateKey(toStr) == null ? this.timeLineSize-1 : getDateKey(toStr);
       
       for (int i=keyStart; i <= keyEnd; i++) {
          String dtStr = getTimeByIndex(i); 
@@ -808,7 +808,7 @@ public class CacheManager {
    
    public String getTimeByIndex(int i) {
       // Prevent max and min overflow
-      if (i >= occurrenceTable.size()) return keyTable.get( occurrenceTable.size()-1);
+      if (i >= this.timeLineSize) return keyTable.get( this.timeLineSize-1);
       if (i < 0) return keyTable.get(0);
       
       return keyTable.get(i);         
@@ -873,7 +873,7 @@ public class CacheManager {
    ////////////////////////////////////////////////////////////////////////////////
    public void initTimeLine(int startYear, int endYear) {
       System.out.println("Initialize time line from " + startYear + " to " + endYear);
-      occurrenceTable = new Vector<Hashtable<Integer, Integer>>();
+      //occurrenceTable = new Vector<Hashtable<Integer, Integer>>();
       queryTable = new Vector<Hashtable<Integer, QueryObj>>();
       queryTableU = new Vector<QueryObj>();
       
@@ -899,7 +899,7 @@ public class CacheManager {
             if (dateTable.get(dateStr) == null) {
                dateTable.put(dateStr, counter);
                keyTable.put(counter, dateStr);
-               occurrenceTable.add(new Hashtable<Integer, Integer>());
+               //occurrenceTable.add(new Hashtable<Integer, Integer>());
                queryTable.add( new Hashtable<Integer, QueryObj>());
                queryTableU.add( new QueryObj());
                
@@ -909,7 +909,7 @@ public class CacheManager {
          } else if (dateRange == DATE_RANGE_DAY) {
             dateTable.put(dateStr, counter);
             keyTable.put(counter, dateStr);
-            occurrenceTable.add(new Hashtable<Integer, Integer>());
+            //occurrenceTable.add(new Hashtable<Integer, Integer>());
             queryTable.add( new Hashtable<Integer, QueryObj>());
             queryTableU.add( new QueryObj());
             cal.add(Calendar.DAY_OF_MONTH, 1);
@@ -917,9 +917,11 @@ public class CacheManager {
          }
          
       }
+      this.timeLineSize = queryTable.size();
+      
       System.out.println("dateTable: " + dateTable.size());
       System.out.println("keyTable : " + keyTable.size());
-      System.out.println("occurrenceTable : " + occurrenceTable.size());
+      //System.out.println("occurrenceTable : " + occurrenceTable.size());
    }
    
    
@@ -934,40 +936,40 @@ public class CacheManager {
    // Instead of reverse engineering the timeline, just give a giant timeline
    // and plug stuff in
    ////////////////////////////////////////////////////////////////////////////////
-   public void initOccurrenceTable2() throws Exception {
-      System.out.println("Caching group occurrences....version 2");   
-      DBWrapper dbh = new DBWrapper();
-      ResultSet rs = dbh.execute("call projectv3.get_total_occurrence(null, null)");
-      
-      while (rs.next()) {
-         Date dateStr = rs.getDate(1);
-         int groupId = rs.getInt(2);
-         int occ     = rs.getInt(3);
-         
-         // Get the index key
-         //int idx = getDateKey(dateStr);
-         Integer idx = this.getDateKey( DCUtil.formatDateYYYYMMDD( dateStr ));
-         if (idx == null) continue;
-         
-         
-         if (occurrenceTable.elementAt(idx).get(groupId) == null) {
-            occurrenceTable.elementAt(idx).put( groupId, occ);
-         } else {
-            int val = occurrenceTable.elementAt(idx).get(groupId);
-            occurrenceTable.elementAt(idx).put( groupId, occ+val);
-         }
-      }
-      // Serialize this out to disk
-      if (DEBUG) {
-         SerializeUtil.objOut(occurrenceTable, "debug_occurenceTable.ser");
-         SerializeUtil.objOut(dateTable, "debug_dateTable.ser");
-         SerializeUtil.objOut(keyTable, "debug_keyTable.ser");      
-      } else {
-         SerializeUtil.objOut(occurrenceTable, "occurenceTable.ser");
-         SerializeUtil.objOut(dateTable, "dateTable.ser");
-         SerializeUtil.objOut(keyTable, "keyTable.ser");      
-      }
-   }
+//   public void initOccurrenceTable2() throws Exception {
+//      System.out.println("Caching group occurrences....version 2");   
+//      DBWrapper dbh = new DBWrapper();
+//      ResultSet rs = dbh.execute("call projectv3.get_total_occurrence(null, null)");
+//      
+//      while (rs.next()) {
+//         Date dateStr = rs.getDate(1);
+//         int groupId = rs.getInt(2);
+//         int occ     = rs.getInt(3);
+//         
+//         // Get the index key
+//         //int idx = getDateKey(dateStr);
+//         Integer idx = this.getDateKey( DCUtil.formatDateYYYYMMDD( dateStr ));
+//         if (idx == null) continue;
+//         
+//         
+//         if (occurrenceTable.elementAt(idx).get(groupId) == null) {
+//            occurrenceTable.elementAt(idx).put( groupId, occ);
+//         } else {
+//            int val = occurrenceTable.elementAt(idx).get(groupId);
+//            occurrenceTable.elementAt(idx).put( groupId, occ+val);
+//         }
+//      }
+//      // Serialize this out to disk
+//      if (DEBUG) {
+//         SerializeUtil.objOut(occurrenceTable, "debug_occurenceTable.ser");
+//         SerializeUtil.objOut(dateTable, "debug_dateTable.ser");
+//         SerializeUtil.objOut(keyTable, "debug_keyTable.ser");      
+//      } else {
+//         SerializeUtil.objOut(occurrenceTable, "occurenceTable.ser");
+//         SerializeUtil.objOut(dateTable, "dateTable.ser");
+//         SerializeUtil.objOut(keyTable, "keyTable.ser");      
+//      }
+//   }
    
    
    /////////////////////////////////////////////////////////////////////////////////   
@@ -1004,35 +1006,6 @@ public class CacheManager {
          QueryObj query = this.getQueryObj(idx, compId, params);
          if (query == null) continue;
          
-         
-         // Out-dated querying method
-         /*
-         QueryObj root = queryTable.elementAt(idx).get(compId);
-         if (root == null) continue;   
-         QueryObj query;
-         
-         if (model != null) {
-            QueryObj mfrObj = root.get(mfr);   
-            if (mfrObj == null) continue;
-            QueryObj makeObj = mfrObj.get(make);
-            if (makeObj == null) continue;
-            QueryObj modelObj = makeObj.get(model);
-            if (modelObj == null) continue;
-            query = modelObj;
-         } else if (make != null) {
-            QueryObj mfrObj = root.get(mfr);   
-            if (mfrObj == null) continue;
-            QueryObj makeObj = mfrObj.get(make);
-            if (makeObj == null) continue;
-            query = makeObj;
-         } else if (mfr != null) {
-            QueryObj mfrObj = root.get(mfr);   
-            if (mfrObj == null) continue;
-            query = mfrObj;
-         } else {
-            query = root;
-         }               
-         */
          
          // Check if this query object contains groupIds
          for (int i=0; i < query.lookup2.size(); i++) {
@@ -1075,34 +1048,6 @@ public class CacheManager {
          
          query = this.getQueryObj(idx, groupIds.elementAt(i), params);
          if (query == null) continue;
-         
-         //out-dated query method
-         /*
-         root = queryTable.elementAt(idx).get(groupIds.elementAt(i));
-         if (root == null) continue;
-         
-         if (model != null) {
-            QueryObj mfrObj = root.get(mfr);   
-            if (mfrObj == null) continue;
-            QueryObj makeObj = mfrObj.get(make);
-            if (makeObj == null) continue;
-            QueryObj modelObj = makeObj.get(model);
-            if (modelObj == null) continue;
-            query = modelObj;
-         } else if (make != null) {
-            QueryObj mfrObj = root.get(mfr);   
-            if (mfrObj == null) continue;
-            QueryObj makeObj = mfrObj.get(make);
-            if (makeObj == null) continue;
-            query = makeObj;
-         } else if (mfr != null) {
-            QueryObj mfrObj = root.get(mfr);   
-            if (mfrObj == null) continue;
-            query = mfrObj;
-         } else {
-            query = root;
-         }      
-         */
          
          
          // If the query contains all relatedIds then it is a co-occurrence
@@ -1197,6 +1142,10 @@ public class CacheManager {
       
    
    
+   public int timeLineSize = 0;
+   
+   
+   
    ////////////////////////////////////////////////////////////////////////////////
    // Date string to vector index lookup
    ////////////////////////////////////////////////////////////////////////////////
@@ -1211,16 +1160,9 @@ public class CacheManager {
    //////////////////////////////////////////////////////////////////////////////// 
    // A list of lookup tables by time period. Look up absolute group occurrence
    //////////////////////////////////////////////////////////////////////////////// 
-   public Vector<Hashtable<Integer, Integer>> occurrenceTable;
+   //public Vector<Hashtable<Integer, Integer>> occurrenceTable;
    
    
-   //////////////////////////////////////////////////////////////////////////////// 
-   // A list of lookup tables by time period. Look up aggregated and absolute group occurrence
-   //////////////////////////////////////////////////////////////////////////////// 
-   public Vector<Hashtable<Integer, Integer>> occurrenceTableAgg;
-   
-   
- 
    
    //////////////////////////////////////////////////////////////////////////////// 
    // A list of lookup objects. Nested lookup by partId->manufacture->make->model

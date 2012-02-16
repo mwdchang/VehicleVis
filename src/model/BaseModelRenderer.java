@@ -332,7 +332,7 @@ public abstract class BaseModelRenderer implements RenderTask {
       
       int startIdx = CacheManager.instance().getDateKey( SSM.instance().startTimeFrame ) == null ? 0:
          CacheManager.instance().getDateKey( SSM.instance().startTimeFrame );
-      int endIdx   = CacheManager.instance().getDateKey( SSM.instance().endTimeFrame) == null ? CacheManager.instance().occurrenceTable.size():
+      int endIdx   = CacheManager.instance().getDateKey( SSM.instance().endTimeFrame) == null ? CacheManager.instance().timeLineSize:
          CacheManager.instance().getDateKey( SSM.instance().endTimeFrame);
 
       
@@ -685,7 +685,7 @@ public abstract class BaseModelRenderer implements RenderTask {
                      CacheManager.instance().getDateKey( SSM.instance().startTimeFrame );
       
       //TODO: Need to fix this later, as dates may not be exact
-      int endIdx   = CacheManager.instance().getDateKey( SSM.instance().endTimeFrame) == null ? CacheManager.instance().occurrenceTable.size():
+      int endIdx   = CacheManager.instance().getDateKey( SSM.instance().endTimeFrame) == null ? CacheManager.instance().timeLineSize:
                      CacheManager.instance().getDateKey( SSM.instance().endTimeFrame );
       int size = (endIdx - startIdx) + 1;      
       
@@ -1343,7 +1343,7 @@ public abstract class BaseModelRenderer implements RenderTask {
         gl.glEnable(GL2.GL_BLEND);
         for (DCComponent comp : MM.currentModel.componentTable.values()) {
            if (!comp.hasContext || !comp.active) {
-              comp.renderBufferAdj(gl, null);
+              comp.renderBufferAdj(gl, DCColour.fromInt(200, 200, 200, 50));
            } else if (SSM.instance().relatedList.size() > 0 && SSM.instance().relatedList.contains(comp.id) && !SSM.instance().selectedGroup.contains(comp.id)){
               //comp.renderBufferAdj(gl, SchemeManager.colour_related.adjustAlpha(0.6f));   
            } 

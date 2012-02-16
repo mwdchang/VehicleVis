@@ -216,40 +216,13 @@ public class SSM {
    
    
    ////////////////////////////////////////////////////////////////////////////////
-   // Panel management
+   // Filter Panel management
    ////////////////////////////////////////////////////////////////////////////////
    public PaneAttrib manufactureAttrib = new PaneAttrib(300, 50, 200, 200);
    public PaneAttrib makeAttrib = new PaneAttrib(550, 50, 200, 200);
    public PaneAttrib modelAttrib = new PaneAttrib(800, 50, 200, 200);
    public PaneAttrib yearAttrib = new PaneAttrib(1050, 50, 200, 200);
    
-   
-   /*
-   public float manufactureAnchorX = 300;
-   public float manufactureAnchorY = 50;
-   public float manufactureYOffset = 200;
-   public float manufactureHeight = 200;
-   public float manufactureTexHeight = 200;
-   public boolean manufactureActive = false;
-   */
-   
-   /*
-   public float makeAnchorX = 550;
-   public float makeAnchorY = 50;
-   public float makeYOffset = 200;
-   public float makeHeight = 200;
-   public float makeTexHeight = 200;
-   public boolean makeActive = false;
-   */
-   
-   /*
-   public float modelAnchorX = 800;
-   public float modelAnchorY = 50;
-   public float modelYOffset = 200;
-   public float modelHeight = 200;
-   public float modelTexHeight = 200;
-   public boolean modelActive = false;
-   */
    
    public float saveLoadAnchorX = 850;
    public float saveLoadAnchorY = 950;
@@ -259,14 +232,10 @@ public class SSM {
    public boolean saveLoadActive = false;
    
    
-   
    public float scrollWidth = 200;
    public float defaultScrollHeight = 200;
    
    
-   //public String selectedManufacture = null;
-   //public String selectedMake = null;
-   //public String selectedModel = null;
    public String selectedSaveLoad = null;
    
    
@@ -342,37 +311,6 @@ public class SSM {
       */
       return false;
    }
-   
-   // Move to the next document (currently will overflow if it get past the maximum)
-//   public void nextDoc() {
-//      docStartIdx ++;   
-//      System.out.println("Doc Index is : " + docStartIdx);
-//      if (docStartIdx == 30) {
-//         System.out.println("Pagination up");
-//         globalFetchIdx += 10;
-//         docStartIdx = 20; 
-//         dirty = 1;
-//      }
-//   }
-   
-   // Move to the previous document
-//   public void previousDoc() {
-//      if (docStartIdx > 0) {
-//         docStartIdx --;
-//         System.out.println("Doc Index is : " + docStartIdx);
-//         if (docStartIdx  == 10 ) {
-//            System.out.println("Pagination down");   
-//            globalFetchIdx -= 10;
-//            docStartIdx = 20; 
-//            
-//            if (globalFetchIdx < 0) {
-//                globalFetchIdx = 0;   
-//                docStartIdx = 10; 
-//            }
-//            dirty = 1;
-//         } 
-//      }      
-//   }
    
    
    
