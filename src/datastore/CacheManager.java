@@ -35,11 +35,11 @@ public class CacheManager {
    public static int timeLineStartYear = 1995;
    public static int timeLineEndYear   = 2011;
    
-   public static boolean DEBUG = false;
+   public static boolean DEBUG = true;
 //   public static boolean DEBUG = false;
    
    public static void main(String argsp[]) {
-      CacheManager.DEBUG = false;
+      //CacheManager.DEBUG = false;
       CacheManager.instance();
       CacheManager.instance().initSystem();
       

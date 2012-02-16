@@ -28,7 +28,7 @@ public class Fractal extends JOGLBase implements MouseWheelListener, KeyListener
       f.run("Test Fractal", 400, 400);
    }
    
-   public boolean use64 = true;
+   public boolean use64 = false;
 
    @Override
    public void display(GLAutoDrawable a) {
@@ -203,7 +203,7 @@ public class Fractal extends JOGLBase implements MouseWheelListener, KeyListener
    public int width;
    public int height;
    public ShaderObj shader = new ShaderObj();
-   public int iteration = 128;
+   public int iteration = 64;
    public float cminx = -2.0f;
    public float cminy = -2.0f;
    public float cmaxx = 2.0f;

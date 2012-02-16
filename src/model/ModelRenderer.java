@@ -284,7 +284,6 @@ public class ModelRenderer extends BaseModelRenderer {
             this.alternateSideLayout(comp, rightList, leftList, i);
             //this.dualSideLayout(comp, la, rightList, leftList, new float[]{rpadding, lpadding});
             //this.singleSideLayout(comp, la, rightList, leftList, new float[]{rpadding, lpadding});
-            
          }
       } // end for
       

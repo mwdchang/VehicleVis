@@ -67,7 +67,6 @@ public class InitDB {
       ////////////////////////////////////////////////////////////////////////////////
       // 3) Run keywords and component extractions
       ////////////////////////////////////////////////////////////////////////////////
-      /*
       try {
          System.out.println("\n\nStarting phase 3");
          keywordParser.parseKeyword();
@@ -81,7 +80,6 @@ public class InitDB {
          e.printStackTrace();
          System.exit(0);
       }
-      */
       
       
       ////////////////////////////////////////////////////////////////////////////////

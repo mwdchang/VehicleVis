@@ -416,7 +416,7 @@ public abstract class BaseModelRenderer implements RenderTask {
                SSM.instance().modelAttrib.selected,
                SSM.instance().yearAttrib.selected);
          
-          if (SSM.instance().selectedGroup.size() > 0) {
+          if (SSM.instance().selectedGroup.size() > 0 && SSM.instance().useLocalFocus == true) {
              CacheManager.instance().monthMaximum = 
                CacheManager.instance().getMonthMaximumSelected(
                      SSM.instance().manufactureAttrib.selected, 
@@ -442,7 +442,7 @@ public abstract class BaseModelRenderer implements RenderTask {
                SSM.instance().modelAttrib.selected,
                SSM.instance().yearAttrib.selected);
           
-           if (SSM.instance().selectedGroup.size() > 0) {
+           if (SSM.instance().selectedGroup.size() > 0 && SSM.instance().useLocalFocus) {
               CacheManager.instance().monthMaximum = 
                 CacheManager.instance().getMonthMaximumSelectedAgg(
                       SSM.instance().manufactureAttrib.selected, 
@@ -482,20 +482,49 @@ public abstract class BaseModelRenderer implements RenderTask {
       
    
       
-      
-      
-      
-      
-      Iterator<Integer> iter = CacheManager.instance().groupOccurrence.values().iterator();
-      while (iter.hasNext()) {
-         Integer v = iter.next();
-         //if (SSM.instance().useLocalFocus ==  true) {
-         //   if (SSM.instance().selectedGroup.size() > 0 && ! SSM.instance().relatedList.contains(v)) continue;     
-         //} 
+      // Finding the maximum and minimum
+      // If we are using the selected components as a base point, than the maximum is the total 
+      // occurrences for the selected components, otherwise it is the 
+      if (SSM.instance().useLocalFocus && SSM.instance().selectedGroup.size() >  0) {
+         Vector<Integer> self = new Vector<Integer>();
+         self.addAll(SSM.instance().selectedGroup.values());
          
-         if (SSM.instance().maxOccurrence < v) SSM.instance().maxOccurrence = v;
-         if (SSM.instance().minOccurrence > v) SSM.instance().minOccurrence = v;
-      }     
+         Vector<Integer> selfAgg = HierarchyTable.instance().getAgg(SSM.instance().selectedGroup);
+         
+         if (SSM.instance().useAggregate) {
+            SSM.instance().maxOccurrence = CacheManager.instance().getCoOccurringAgg(
+                  startIdx, endIdx, 
+                  SSM.instance().startMonth, SSM.instance().endMonth, 
+                  selfAgg, 
+                  self, 
+                  SSM.instance().manufactureAttrib.selected,
+                  SSM.instance().makeAttrib.selected,
+                  SSM.instance().modelAttrib.selected,
+                  SSM.instance().yearAttrib.selected
+                  );
+         } else {
+            SSM.instance().maxOccurrence = CacheManager.instance().getCoOccurring(
+                  startIdx, endIdx, 
+                  SSM.instance().startMonth, SSM.instance().endMonth,
+                  self, 
+                  self, 
+                  SSM.instance().manufactureAttrib.selected,
+                  SSM.instance().makeAttrib.selected,
+                  SSM.instance().modelAttrib.selected,
+                  SSM.instance().yearAttrib.selected);
+         }
+      } else {
+         Iterator<Integer> iter = CacheManager.instance().groupOccurrence.values().iterator();
+         while (iter.hasNext()) {
+            Integer v = iter.next();
+            if (SSM.instance().maxOccurrence < v) SSM.instance().maxOccurrence = v;
+            if (SSM.instance().minOccurrence > v) SSM.instance().minOccurrence = v;
+         }     
+      }
+      
+      
+      
+      
       
       System.out.println("Resetting Model Renderer Data");
       System.out.println("Max occurrence : " + SSM.instance().maxOccurrence);
@@ -513,8 +542,59 @@ public abstract class BaseModelRenderer implements RenderTask {
          
          // Calc based on an frequency to intensity colour scale
          //Integer partId  = HierarchyTable.instance().getGroupId(comp.baseName).size() > 0 ? HierarchyTable.instance().getGroupId(comp.baseName).elementAt(0) : null;
-         float occ  = 0.0f;
-         float mOcc = SSM.instance().maxOccurrence;
+         
+         float occ  = 0;
+         if (comp.id > 0) {
+            if (SSM.instance().useLocalFocus == true && SSM.instance().selectedGroup.size() > 0) {
+               Vector<Integer> self = new Vector<Integer>();
+               Vector<Integer> selfAgg = HierarchyTable.instance().getAgg(comp.id);
+               Vector<Integer> selected = new Vector<Integer>();
+               
+               self.add(comp.id);
+               selected.addAll(SSM.instance().selectedGroup.values());
+               
+               if (SSM.instance().useAggregate) {
+                  occ = CacheManager.instance().getCoOccurringAgg(
+                        startIdx, endIdx, 
+                        SSM.instance().startMonth, SSM.instance().endMonth, 
+                        selfAgg, 
+                        selected, 
+                        SSM.instance().manufactureAttrib.selected,
+                        SSM.instance().makeAttrib.selected,
+                        SSM.instance().modelAttrib.selected,
+                        SSM.instance().yearAttrib.selected
+                        );
+               } else {
+                  occ = CacheManager.instance().getCoOccurring(
+                        startIdx, endIdx, 
+                        SSM.instance().startMonth, SSM.instance().endMonth,
+                        self, 
+                        selected, 
+                        SSM.instance().manufactureAttrib.selected,
+                        SSM.instance().makeAttrib.selected,
+                        SSM.instance().modelAttrib.selected,
+                        SSM.instance().yearAttrib.selected);
+               }               
+            } else {
+               if (null != CacheManager.instance().groupOccurrence.get(comp.id)) {
+                  occ =  CacheManager.instance().groupOccurrence.get(comp.id);     
+               }
+            }
+         } 
+            
+         
+         // Check whether the component should take part at all in the visualization, there are several exclusion criteria
+         // 1) if the comp.id < 0, this happens for parts of models that are not linked to the logical hierarchy
+         // 2) if the overall occurrence over the period equals to 0, note this is the overall number, not the number we
+         //    get based off selected groups
+         if ( comp.id < 0 ) 
+            comp.hasContext = false;
+         Integer t = CacheManager.instance().groupOccurrence.get(comp.id);
+         if ( null == t || t == 0) 
+            comp.hasContext = false;
+         
+         
+         /*
          if (comp.id > 0 && CacheManager.instance().groupOccurrence.get(comp.id) != null) {
             occ = (float)CacheManager.instance().groupOccurrence.get(comp.id).intValue(); 
             
@@ -531,10 +611,9 @@ public abstract class BaseModelRenderer implements RenderTask {
                } // end while
             } // end if agg
          }
+         */
          
          
-         if (occ == 0.0 || comp.id < 0) 
-            comp.hasContext = false;
          
          comp.active = true;
          if (SSM.instance().useLocalFocus == true) {
@@ -543,16 +622,11 @@ public abstract class BaseModelRenderer implements RenderTask {
             }
          }
          
-         
-         //model.componentTable.get(partName).colour = SchemeManager.instance().intensityRamp02(partId, occ, maxOccurrence);
-         //MM.currentModel.componentTable.get(partName).colour = SchemeManager.instance().intensityRamp03(partId, occ, maxOccurrence);
-         //DCColour nextColour = SchemeManager.instance().intensityRamp03(partId, occ, maxOccurrence);
          DCColour nextColour = SchemeManager.instance().getColour(comp.id, occ, SSM.instance().maxOccurrence);
-         //comp.occurrence = occ;
-         
          
          // Adjust based on the current focus
          //Integer selected = SSM.instance().selectedGroup;
+         /*
          if (SSM.instance().useLocalFocus != true) {
             if (SSM.instance().useAggregate) {
                if (SSM.instance().selectedGroup.size() > 0) {
@@ -568,6 +642,7 @@ public abstract class BaseModelRenderer implements RenderTask {
                   nextColour = nextColour.adjustAlpha(0.3f);
             }
          }
+         */
          
          // Reset sparline for any colouring changes
          comp.cchart.colour = comp.colour;
@@ -725,7 +800,7 @@ public abstract class BaseModelRenderer implements RenderTask {
             float value = 0;
             
             if (SSM.instance().useAggregate == false) {
-               if (SSM.instance().selectedGroup.size() > 0) {
+               if (SSM.instance().selectedGroup.size() > 0 && SSM.instance().useLocalFocus == true) {
                   Vector<Integer> selectedGroup =  new Vector<Integer>();
                   selectedGroup.addAll( SSM.instance().selectedGroup.values());
                   Vector<Integer> t = new Vector<Integer>();
@@ -747,7 +822,7 @@ public abstract class BaseModelRenderer implements RenderTask {
                         SSM.instance().yearAttrib.selected);
                }
             } else {
-               if (SSM.instance().selectedGroup.size() > 0) {
+               if (SSM.instance().selectedGroup.size() > 0 && SSM.instance().useLocalFocus == true) {
                   Vector<Integer> selectedGroup =  new Vector<Integer>();
                   selectedGroup.addAll( SSM.instance().selectedGroup.values());                  
                  

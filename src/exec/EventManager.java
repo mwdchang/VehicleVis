@@ -298,8 +298,12 @@ public class EventManager implements KeyListener, MouseListener, MouseMotionList
       if (e.getKeyChar() == '1')  {
          SSM.instance().useConstantAlpha = ! SSM.instance().useConstantAlpha;   
       }
+      
       if (e.getKeyChar() == 'f') {
          SSM.instance().useLocalFocus = ! SSM.instance().useLocalFocus;    
+         SSM.instance().dirty = 1;
+         SSM.instance().dirtyGL = 1;
+         SSM.instance().refreshMagicLens = true;
       }
       
       if (e.getKeyChar() == 'a') {

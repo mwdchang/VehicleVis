@@ -130,7 +130,8 @@ void main(void) {
          //(float)result / 1024.0,
          log(result)/2.0,
          mod((float)result, 85)/85.0,
-         0.1
+         juliaReal/juliaImaginary
+         //0.1
       );
       /*
       gl_FragColor.rgb += vec3(
