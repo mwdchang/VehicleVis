@@ -126,56 +126,42 @@ public class EventManager implements KeyListener, MouseListener, MouseMotionList
          }
          
          if (DCUtil.between(my, anchorY-padding, anchorY) || DCUtil.between(my, anchorY+docHeight, anchorY+docHeight+padding)) {
-            System.out.println("blah");
             if (DCUtil.between(mx, anchorX-padding, anchorX+docWidth+padding)) {
                SSM.instance().topElement = SSM.ELEMENT_DOCUMENT;   
             }
          }
          
-         //float mf_anchorX = SSM.instance().manufactureAnchorX;
-         //float mf_anchorY = SSM.instance().manufactureAnchorY;
+         // For default filter
          float mf_anchorX = SSM.instance().manufactureAttrib.anchorX;
          float mf_anchorY = SSM.instance().manufactureAttrib.anchorY;
          if (DCUtil.between(mx, mf_anchorX, mf_anchorX+SSM.instance().scrollWidth)) {
-            //if (DCUtil.between(my, mf_anchorY, mf_anchorY+SSM.instance().manufactureHeight)) {
             if (DCUtil.between(my, mf_anchorY, mf_anchorY+SSM.instance().manufactureAttrib.height)) {
-               //if (SSM.instance().manufactureActive) {
                if (SSM.instance().manufactureAttrib.active) {
                   SSM.instance().topElement = SSM.ELEMENT_MANUFACTURE_SCROLL;
                }
             }
          }
          
-         //float mk_anchorX = SSM.instance().makeAnchorX;
-         //float mk_anchorY = SSM.instance().makeAnchorY;
          float mk_anchorX = SSM.instance().makeAttrib.anchorX;
          float mk_anchorY = SSM.instance().makeAttrib.anchorY;
          if (DCUtil.between(mx, mk_anchorX, mk_anchorX+SSM.instance().scrollWidth)) {
-            //if (DCUtil.between(my, mk_anchorY, mk_anchorY+SSM.instance().makeHeight)) {
             if (DCUtil.between(my, mk_anchorY, mk_anchorY+SSM.instance().makeAttrib.height)) {
-               //if (SSM.instance().makeActive) {
                if (SSM.instance().makeAttrib.active) {
                   SSM.instance().topElement = SSM.ELEMENT_MAKE_SCROLL;
                }
             }
          }
          
-         //float md_anchorX = SSM.instance().modelAnchorX;
-         //float md_anchorY = SSM.instance().modelAnchorY;
          float md_anchorX = SSM.instance().modelAttrib.anchorX;
          float md_anchorY = SSM.instance().modelAttrib.anchorY;
          if (DCUtil.between(mx, md_anchorX, md_anchorX+SSM.instance().scrollWidth)) {
-            //if (DCUtil.between(my, md_anchorY, md_anchorY+SSM.instance().modelHeight)) {
             if (DCUtil.between(my, md_anchorY, md_anchorY+SSM.instance().modelAttrib.height)) {
-               //if (SSM.instance().modelActive) {
                if (SSM.instance().modelAttrib.active) {
                   SSM.instance().topElement = SSM.ELEMENT_MODEL_SCROLL;
                }
             }
          }
          
-         //float md_anchorX = SSM.instance().modelAnchorX;
-         //float md_anchorY = SSM.instance().modelAnchorY;
          float year_anchorX = SSM.instance().yearAttrib.anchorX;
          float year_anchorY = SSM.instance().yearAttrib.anchorY;
          if (DCUtil.between(mx, year_anchorX, year_anchorX+SSM.instance().scrollWidth)) {
@@ -187,6 +173,47 @@ public class EventManager implements KeyListener, MouseListener, MouseMotionList
          }
         
          
+         // For comparision filter
+         mf_anchorX = SSM.instance().c_manufactureAttrib.anchorX;
+         mf_anchorY = SSM.instance().c_manufactureAttrib.anchorY;
+         if (DCUtil.between(mx, mf_anchorX, mf_anchorX+SSM.instance().scrollWidth)) {
+            if (DCUtil.between(my, mf_anchorY, mf_anchorY+SSM.instance().c_manufactureAttrib.height)) {
+               if (SSM.instance().c_manufactureAttrib.active) {
+                  SSM.instance().topElement = SSM.ELEMENT_CMANUFACTURE_SCROLL;
+               }
+            }
+         }
+         mk_anchorX = SSM.instance().c_makeAttrib.anchorX;
+         mk_anchorY = SSM.instance().c_makeAttrib.anchorY;
+         if (DCUtil.between(mx, mk_anchorX, mk_anchorX+SSM.instance().scrollWidth)) {
+            if (DCUtil.between(my, mk_anchorY, mk_anchorY+SSM.instance().c_makeAttrib.height)) {
+               if (SSM.instance().c_makeAttrib.active) {
+                  SSM.instance().topElement = SSM.ELEMENT_CMAKE_SCROLL;
+               }
+            }
+         }
+         md_anchorX = SSM.instance().c_modelAttrib.anchorX;
+         md_anchorY = SSM.instance().c_modelAttrib.anchorY;
+         if (DCUtil.between(mx, md_anchorX, md_anchorX+SSM.instance().scrollWidth)) {
+            if (DCUtil.between(my, md_anchorY, md_anchorY+SSM.instance().c_modelAttrib.height)) {
+               if (SSM.instance().c_modelAttrib.active) {
+                  SSM.instance().topElement = SSM.ELEMENT_CMODEL_SCROLL;
+               }
+            }
+         }
+         year_anchorX = SSM.instance().yearAttrib.anchorX;
+         year_anchorY = SSM.instance().yearAttrib.anchorY;
+         if (DCUtil.between(mx, year_anchorX, year_anchorX+SSM.instance().scrollWidth)) {
+            if (DCUtil.between(my, year_anchorY, year_anchorY+SSM.instance().c_yearAttrib.height)) {
+               if (SSM.instance().c_yearAttrib.active) {
+                  SSM.instance().topElement = SSM.ELEMENT_CYEAR_SCROLL;
+               }
+            }
+         }
+        
+         
+         
+         
          
          float sl_anchorX = SSM.instance().saveLoadAnchorX;
          float sl_anchorY = SSM.instance().saveLoadAnchorY;
@@ -197,6 +224,10 @@ public class EventManager implements KeyListener, MouseListener, MouseMotionList
                }
             }
          }
+         
+         
+         
+         
          
          /*
          if ( (mx >= SSM.instance().docAnchorX && mx <= SSM.instance().docAnchorX+SSM.instance().docPadding) ||

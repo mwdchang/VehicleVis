@@ -218,10 +218,16 @@ public class SSM {
    ////////////////////////////////////////////////////////////////////////////////
    // Filter Panel management
    ////////////////////////////////////////////////////////////////////////////////
-   public PaneAttrib manufactureAttrib = new PaneAttrib(300, 50, 200, 200);
-   public PaneAttrib makeAttrib = new PaneAttrib(550, 50, 200, 200);
-   public PaneAttrib modelAttrib = new PaneAttrib(800, 50, 200, 200);
-   public PaneAttrib yearAttrib = new PaneAttrib(1050, 50, 200, 200);
+   public PaneAttrib manufactureAttrib = new PaneAttrib(300, 70, 200, 200);
+   public PaneAttrib makeAttrib = new PaneAttrib(550, 70, 200, 200);
+   public PaneAttrib modelAttrib = new PaneAttrib(800, 70, 200, 200);
+   public PaneAttrib yearAttrib = new PaneAttrib(1050, 70, 200, 200);
+   
+   public PaneAttrib c_manufactureAttrib = new PaneAttrib(300, 30, 200, 200);
+   public PaneAttrib c_makeAttrib = new PaneAttrib(550, 30, 200, 200);
+   public PaneAttrib c_modelAttrib = new PaneAttrib(800, 30, 200, 200);
+   public PaneAttrib c_yearAttrib = new PaneAttrib(1050, 30, 200, 200);
+   
    
    
    public float saveLoadAnchorX = 850;
@@ -328,6 +334,11 @@ public class SSM {
    public static int ELEMENT_MODEL_SCROLL = 5;
    public static int ELEMENT_YEAR_SCROLL = 6;
    public static int ELEMENT_SAVELOAD_SCROLL = 7;
+   
+   public static int ELEMENT_CMANUFACTURE_SCROLL = 13;
+   public static int ELEMENT_CMAKE_SCROLL = 14;
+   public static int ELEMENT_CMODEL_SCROLL = 15;
+   public static int ELEMENT_CYEAR_SCROLL = 16;
    
    public int topElement = ELEMENT_NONE;
    

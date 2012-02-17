@@ -73,7 +73,6 @@ public class ModelRenderer extends BaseModelRenderer {
       
       
       // Check the UI elements first
-      
       // Handling vehicle manufacture
       this.pickingScrollPane(mx, my, manufactureScroll, SSM.instance().manufactureAttrib, 
             makeScroll, SSM.instance().makeAttrib,     // level 1
@@ -102,6 +101,37 @@ public class ModelRenderer extends BaseModelRenderer {
       this.pickingScrollPane(mx, my, yearScroll, SSM.instance().yearAttrib);
       this.scrollPaneTransition(mx, my, yearScroll, SSM.instance().yearAttrib);
       
+      
+      
+      
+      
+      this.pickingScrollPane(mx, my, c_manufactureScroll, SSM.instance().c_manufactureAttrib, 
+            c_makeScroll, SSM.instance().c_makeAttrib,     // level 1
+            c_modelScroll, SSM.instance().c_modelAttrib,   // level 2
+            c_yearScroll,  SSM.instance().c_yearAttrib     // level 3
+      );
+      this.scrollPaneTransition(mx, my, c_manufactureScroll, SSM.instance().c_manufactureAttrib);
+      
+      
+      // Handling vehicle make
+      this.pickingScrollPane(mx, my, c_makeScroll, SSM.instance().c_makeAttrib, 
+            c_modelScroll, SSM.instance().c_modelAttrib,   // level 2
+            c_yearScroll, SSM.instance().c_yearAttrib      // level 3
+      );
+      this.scrollPaneTransition(mx, my, c_makeScroll, SSM.instance().c_makeAttrib);
+      
+      
+      // Handling vehicle model
+      this.pickingScrollPane(mx, my, c_modelScroll, SSM.instance().c_modelAttrib,
+            c_yearScroll, SSM.instance().c_yearAttrib      // level 3
+      );
+      this.scrollPaneTransition(mx, my, c_modelScroll, SSM.instance().c_modelAttrib);
+      
+      
+      // Handling vehicle year
+      this.pickingScrollPane(mx, my, c_yearScroll, SSM.instance().c_yearAttrib);
+      this.scrollPaneTransition(mx, my, c_yearScroll, SSM.instance().c_yearAttrib);
+     
       
       
       // Check 3D first, then 2D
@@ -591,7 +621,6 @@ public class ModelRenderer extends BaseModelRenderer {
                      SSM.instance().makeAttrib.selected, 
                      SSM.instance().modelAttrib.selected,
                      SSM.instance().yearAttrib.selected);
-//System.out.println(">>>> " + comp.id + " " + related + " " + HierarchyTable.instance().getAgg(comp.id));               
             } else {
                Vector<Integer> related =  new Vector<Integer>();
                related.addAll( SSM.instance().selectedGroup.values());
@@ -1050,6 +1079,17 @@ public class ModelRenderer extends BaseModelRenderer {
          makeScroll.render(gl2);
          modelScroll.render(gl2);
          yearScroll.render(gl2);
+         
+         
+         c_manufactureScroll.yoffset = SSM.instance().c_manufactureAttrib.yOffset;
+         c_makeScroll.yoffset  = SSM.instance().c_makeAttrib.yOffset;
+         c_modelScroll.yoffset = SSM.instance().c_modelAttrib.yOffset;
+         c_yearScroll.yoffset  = SSM.instance().c_yearAttrib.yOffset;
+         
+         c_manufactureScroll.render(gl2);   
+         c_makeScroll.render(gl2);
+         c_modelScroll.render(gl2);
+         c_yearScroll.render(gl2);
       }
       
       ////////////////////////////////////////////////////////////////////////////////
@@ -1322,6 +1362,34 @@ public class ModelRenderer extends BaseModelRenderer {
       yearScroll.renderToTexture(SchemeManager.colour_blue.convertToAWT());
       
       
+      
+      
+      c_manufactureScroll = new DCScrollPane("CMFR");
+      c_manufactureScroll.anchorX = SSM.instance().c_manufactureAttrib.anchorX;
+      c_manufactureScroll.anchorY = SSM.instance().c_manufactureAttrib.anchorY;
+      c_manufactureScroll.calculate();
+      c_manufactureScroll.renderToTexture(SchemeManager.colour_red.convertToAWT());
+      
+      c_makeScroll = new DCScrollPane("CMAKE");
+      c_makeScroll.anchorX = SSM.instance().c_makeAttrib.anchorX;
+      c_makeScroll.anchorY = SSM.instance().c_makeAttrib.anchorY;
+      c_makeScroll.calculate();
+      c_makeScroll.renderToTexture(SchemeManager.colour_green.convertToAWT());
+      
+      c_modelScroll = new DCScrollPane("CMODEL");
+      c_modelScroll.anchorX = SSM.instance().c_modelAttrib.anchorX;
+      c_modelScroll.anchorY = SSM.instance().c_modelAttrib.anchorY;
+      c_modelScroll.calculate();
+      c_modelScroll.renderToTexture(SchemeManager.colour_blue.convertToAWT());
+      
+      c_yearScroll = new DCScrollPane("CYEAR");
+      c_yearScroll.anchorX = SSM.instance().c_yearAttrib.anchorX;
+      c_yearScroll.anchorY = SSM.instance().c_yearAttrib.anchorY;
+      c_yearScroll.calculate();
+      c_yearScroll.renderToTexture(SchemeManager.colour_blue.convertToAWT());
+      
+      
+      
       MM.instance().initGPU(gl2);
       SSM.instance().dirty = 1;
       SSM.instance().dirtyGL = 1;
@@ -1355,7 +1423,6 @@ public class ModelRenderer extends BaseModelRenderer {
    // Handles select action for hierarchical scrolling panel filters
    ////////////////////////////////////////////////////////////////////////////////
    public void pickingScrollPane(float mx, float my, DCScrollPane widget, PaneAttrib attrib, Object ...childrenPair) {
-      System.out.println("blah...");
       if (DCUtil.between(mx, attrib.anchorX, attrib.anchorX+SSM.instance().scrollWidth)) {
          //if (DCUtil.between(my, attrib.anchorY, attrib.anchorY+attrib.height)) {
          if (DCUtil.between(my, attrib.anchorY, attrib.anchorY+widget.height)) {
@@ -1393,7 +1460,6 @@ public class ModelRenderer extends BaseModelRenderer {
             return;
          }
       } 
-      System.out.println("blah...end");
    }
    
 

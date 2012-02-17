@@ -57,6 +57,11 @@ public abstract class BaseModelRenderer implements RenderTask {
    public DCScrollPane modelScroll;
    public DCScrollPane yearScroll;
    
+   public DCScrollPane c_manufactureScroll; 
+   public DCScrollPane c_makeScroll;
+   public DCScrollPane c_modelScroll;
+   public DCScrollPane c_yearScroll;
+   
    
    // Flow effect filter
    public FrameBufferTexture glowTexture;
@@ -278,9 +283,8 @@ public abstract class BaseModelRenderer implements RenderTask {
          widget.visible = true;
       }
       System.out.println(widget.label + " " + widget.tagList.size());
-      
-
    }
+   
    
    
    ////////////////////////////////////////////////////////////////////////////////
@@ -341,36 +345,46 @@ public abstract class BaseModelRenderer implements RenderTask {
       modelScroll.tagList.clear();
       yearScroll.tagList.clear();
       
+      c_manufactureScroll.tagList.clear();
+      c_makeScroll.tagList.clear();
+      c_modelScroll.tagList.clear();
+      c_yearScroll.tagList.clear();
+      
+      
       DWin.instance().error(SSM.instance().startMonth + " " + SSM.instance().endMonth);
       DWin.instance().error("Starting indices: " + startIdx + " " + endIdx );
       
-      
+      // Set up default 
       Hashtable<String, Integer> manufactureHash = this.getHierFilter(startIdx, endIdx);
-      // Hack: Trim down the outliers
       DCUtil.removeLowerBound(manufactureHash, 100);
       this.resetPane(manufactureHash, manufactureScroll, SSM.instance().manufactureAttrib);
       
-      
-      
       Hashtable<String, Integer> makeHash = this.getHierFilter(startIdx, endIdx, manufactureScroll);
-      // Trim down the outliers
-      //DCUtil.removeLowerBound(makeHash, 0);
       this.resetPane(makeHash, makeScroll, SSM.instance().makeAttrib);
       
-      
-      
       Hashtable<String, Integer> modelHash = this.getHierFilter(startIdx, endIdx, manufactureScroll, makeScroll);
-      // Trim the outliers
-      //DCUtil.removeLowerBound(modelHash, 0);
       this.resetPane(modelHash, modelScroll, SSM.instance().modelAttrib);
-      
-      
-      
       
       Hashtable<String, Integer> yearHash = this.getHierFilter(startIdx, endIdx, manufactureScroll, makeScroll, modelScroll);
       this.resetPane(yearHash, yearScroll, SSM.instance().yearAttrib);
 
             
+      
+      // Set up the comparisons
+      Hashtable<String, Integer> c_manufactureHash = this.getHierFilter(startIdx, endIdx);
+      DCUtil.removeLowerBound(c_manufactureHash, 100);
+      this.resetPane(c_manufactureHash, c_manufactureScroll, SSM.instance().c_manufactureAttrib);
+      
+      Hashtable<String, Integer> c_makeHash = this.getHierFilter(startIdx, endIdx, c_manufactureScroll);
+      this.resetPane(c_makeHash, c_makeScroll, SSM.instance().c_makeAttrib);
+      
+      Hashtable<String, Integer> c_modelHash = this.getHierFilter(startIdx, endIdx, c_manufactureScroll, c_makeScroll);
+      this.resetPane(c_modelHash, c_modelScroll, SSM.instance().c_modelAttrib);
+      
+      Hashtable<String, Integer> c_yearHash = this.getHierFilter(startIdx, endIdx, c_manufactureScroll, c_makeScroll, c_modelScroll);
+      this.resetPane(c_yearHash, c_yearScroll, SSM.instance().c_yearAttrib);
+      
+     
       
       
       

@@ -43,35 +43,7 @@ public class CacheManager {
       CacheManager.instance();
       CacheManager.instance().initSystem();
       
-      /*
-      Vector<Integer> self = new Vector<Integer>();
-      Vector<Integer> related1 = new Vector<Integer>();
-      Vector<Integer> related2 = new Vector<Integer>();
-      
-      self.add(19);
-      
-      CacheManager.instance().setDocumentData("19950101", "19951231", 1, 1, self, 0);
-      self.add(22);
-         System.out.println("22" + CacheManager.instance().getCoOccurring(0, self, related1, null, null, null));
-      self.clear();
-      self.add(23);
-         System.out.println("23" + CacheManager.instance().getCoOccurring(0, self, related1, null, null, null));
-      self.clear();
-      self.add(24);
-         System.out.println("24" + CacheManager.instance().getCoOccurring(0, self, related1, null, null, null));
-      self.clear();
-      self.add(25);
-         System.out.println("25" + CacheManager.instance().getCoOccurring(0, self, related1, null, null, null));
-      self.clear();
-      */
-      /*
-      System.out.println(CacheManager.instance().getCoOccurring(0, self, related2, null, null, null));
-      System.out.println(CacheManager.instance().getRelatedGroup(0, self, null, null, null));
-      
-      
-      25, 24, 23, 22
-      */
-      
+     
    }
    
    ////////////////////////////////////////////////////////////////////////////////
