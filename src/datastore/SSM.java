@@ -207,6 +207,8 @@ public class SSM {
    public int endMonth = 0;    // 0 - 11
    public int startYear = 0;
    public int endYear = 0;
+   public int startIdx = 0;
+   public int endIdx = 0;
    
    
    ////////////////////////////////////////////////////////////////////////////////

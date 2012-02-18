@@ -43,6 +43,27 @@ public class DCUtil {
 //   }
    
    
+   public static Hashtable<Integer, Integer> mergeHash(Hashtable<Integer, Integer> a, Hashtable<Integer, Integer> b) {
+      Hashtable<Integer, Integer> result = new Hashtable<Integer, Integer>();
+      
+      // setup a new one
+      for (Integer key: a.keySet()) {
+         result.put(key, a.get(key));   
+      }
+      
+      // merge in the second one
+      for (Integer key: b.keySet()) {
+         if (result.containsKey(key)) {
+            Integer t = result.get(key);
+            result.put(key, t+b.get(key));
+         } else {
+            result.put(key, b.get(key)); 
+         }
+      }
+      return result;
+   }
+   
+   
    public static void checkPoint(String s) {
       // Just a hack here to check mem usage
       InputStreamReader cin = new InputStreamReader(System.in);

@@ -370,7 +370,6 @@ public class EventManager implements KeyListener, MouseListener, MouseMotionList
       
       // information
       if (e.getKeyChar() == 'i') {
-        
         DWin.instance().error("________________________________________");
         DWin.instance().error("Selected :" + SSM.instance().selectedGroup);   
         DWin.instance().error("SSM starting year :" + SSM.instance().startYear);   
@@ -383,9 +382,8 @@ public class EventManager implements KeyListener, MouseListener, MouseMotionList
         DWin.instance().error("SSM selected year: " + SSM.instance().yearAttrib.selected);
         DWin.instance().error("________________________________________");
         DWin.instance().error("Total Vertices : "  + MM.currentModel.getTotalVertices());
-        
-        
       }
+      
       
       // Turn on/off guides
       if (e.getKeyChar() == 'g') {
