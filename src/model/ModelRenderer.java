@@ -1081,6 +1081,7 @@ public class ModelRenderer extends BaseModelRenderer {
          yearScroll.render(gl2);
          
          
+         
          c_manufactureScroll.yoffset = SSM.instance().c_manufactureAttrib.yOffset;
          c_makeScroll.yoffset  = SSM.instance().c_makeAttrib.yOffset;
          c_modelScroll.yoffset = SSM.instance().c_modelAttrib.yOffset;
@@ -1090,6 +1091,7 @@ public class ModelRenderer extends BaseModelRenderer {
          c_makeScroll.render(gl2);
          c_modelScroll.render(gl2);
          c_yearScroll.render(gl2);
+         
       }
       
       ////////////////////////////////////////////////////////////////////////////////
@@ -1365,24 +1367,28 @@ public class ModelRenderer extends BaseModelRenderer {
       
       
       c_manufactureScroll = new DCScrollPane("CMFR");
+      c_manufactureScroll.direction = DCScrollPane.DOWN;
       c_manufactureScroll.anchorX = SSM.instance().c_manufactureAttrib.anchorX;
       c_manufactureScroll.anchorY = SSM.instance().c_manufactureAttrib.anchorY;
       c_manufactureScroll.calculate();
       c_manufactureScroll.renderToTexture(SchemeManager.colour_red.convertToAWT());
       
       c_makeScroll = new DCScrollPane("CMAKE");
+      c_makeScroll.direction = DCScrollPane.DOWN;
       c_makeScroll.anchorX = SSM.instance().c_makeAttrib.anchorX;
       c_makeScroll.anchorY = SSM.instance().c_makeAttrib.anchorY;
       c_makeScroll.calculate();
       c_makeScroll.renderToTexture(SchemeManager.colour_green.convertToAWT());
       
       c_modelScroll = new DCScrollPane("CMODEL");
+      c_modelScroll.direction = DCScrollPane.DOWN;
       c_modelScroll.anchorX = SSM.instance().c_modelAttrib.anchorX;
       c_modelScroll.anchorY = SSM.instance().c_modelAttrib.anchorY;
       c_modelScroll.calculate();
       c_modelScroll.renderToTexture(SchemeManager.colour_blue.convertToAWT());
       
       c_yearScroll = new DCScrollPane("CYEAR");
+      c_yearScroll.direction = DCScrollPane.DOWN;
       c_yearScroll.anchorX = SSM.instance().c_yearAttrib.anchorX;
       c_yearScroll.anchorY = SSM.instance().c_yearAttrib.anchorY;
       c_yearScroll.calculate();
@@ -1425,11 +1431,24 @@ public class ModelRenderer extends BaseModelRenderer {
    public void pickingScrollPane(float mx, float my, DCScrollPane widget, PaneAttrib attrib, Object ...childrenPair) {
       if (DCUtil.between(mx, attrib.anchorX, attrib.anchorX+SSM.instance().scrollWidth)) {
          //if (DCUtil.between(my, attrib.anchorY, attrib.anchorY+attrib.height)) {
-         if (DCUtil.between(my, attrib.anchorY, attrib.anchorY+widget.height)) {
+         boolean yCheck = false;
+         if (widget.direction == DCScrollPane.UP ) {
+            yCheck = DCUtil.between(my, attrib.anchorY, attrib.anchorY+widget.height); 
+         } else {
+            yCheck = DCUtil.between(my, attrib.anchorY-20-widget.height, attrib.anchorY-20);
+            System.out.println( (attrib.anchorY-20-widget.height) + " " + (attrib.anchorY-20));
+         }
+                  
+         //if (DCUtil.between(my, attrib.anchorY, attrib.anchorY+widget.height)) {
+         if (yCheck) {
             
             // 1) Calculate the texture coordinate
             float texX = mx - attrib.anchorX;
-            float texY = my - attrib.anchorY;
+            float texY = 0; 
+            if (widget.direction == DCScrollPane.UP)
+               texY = my - attrib.anchorY;
+            else
+               texY = widget.height - Math.abs(my - (widget.anchorY-20));
             
             // 2) Adjust for Y-offset
             texY = attrib.yOffset - (texY);

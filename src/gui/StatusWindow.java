@@ -56,6 +56,8 @@ public class StatusWindow {
       addText("Use Full Time  : " + convert(SSM.instance().useFullTimeLine));
       addText("Constant Alpha : " + convert(SSM.instance().useConstantAlpha)); 
       addText("Local mode     : " + convert(SSM.instance().useLocalFocus));
+      addText("Compare mode   : " + convert(SSM.instance().useComparisonMode));
+      addText("================="); 
       addText("Num selected   : " + SSM.instance().selectedGroup.size());
       addText("Num related    : " + SSM.instance().relatedList.size());
       

@@ -386,31 +386,24 @@ public abstract class BaseModelRenderer implements RenderTask {
       
      
       
-      
+      // Set up the year data for the selected criteria
+//      CacheManager.instance().filterYearData = 
+//         CacheManager.instance().getFilterYearStatArray(
+//               SSM.instance().manufactureAttrib.selected,
+//               SSM.instance().makeAttrib.selected,
+//               SSM.instance().modelAttrib.selected,
+//               SSM.instance().yearAttrib.selected);
+//     
       
       
       // Set up the month data for the selected criteria
-      CacheManager.instance().filterMonthData = 
-         CacheManager.instance().getFilterMonthlyStat(SSM.instance().startTimeFrame, SSM.instance().endTimeFrame, 
-               SSM.instance().manufactureAttrib.selected, 
-               SSM.instance().makeAttrib.selected, 
-               SSM.instance().modelAttrib.selected,
-               SSM.instance().yearAttrib.selected);
-      
-      System.out.print("??? Month: "); 
-      for (int x=0; x < CacheManager.instance().filterMonthData.length; x++) {
-         System.out.print( CacheManager.instance().filterMonthData[x]+  " " );   
-      } System.out.println("\n");
-      
-      // Set up the year data for the selected criteria
-      CacheManager.instance().filterYearData = 
-         CacheManager.instance().getFilterYearStatArray(
-               SSM.instance().manufactureAttrib.selected,
-               SSM.instance().makeAttrib.selected,
-               SSM.instance().modelAttrib.selected,
-               SSM.instance().yearAttrib.selected);
-      
-      
+//      CacheManager.instance().filterMonthData = 
+//         CacheManager.instance().getFilterMonthlyStat(SSM.instance().startTimeFrame, SSM.instance().endTimeFrame, 
+//               SSM.instance().manufactureAttrib.selected, 
+//               SSM.instance().makeAttrib.selected, 
+//               SSM.instance().modelAttrib.selected,
+//               SSM.instance().yearAttrib.selected);
+//      
       
       
       // Reset the occurrence frequency table

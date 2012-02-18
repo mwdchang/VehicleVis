@@ -13,15 +13,17 @@ public class PaneAttrib {
       active = false;
    }
    
-   public PaneAttrib(float _anchorX, float _anchorY, float _width, float _height) {
+   public PaneAttrib(float _anchorX, float _anchorY, float _width, float _height, int _direction) {
       anchorX = _anchorX;
       anchorY = _anchorY;
       width   = _width;
       height  = _height;
+      direction = _direction;
       
       textureHeight = height;
       yOffset = height;
       active = false;
+      
    }
    
    
@@ -36,5 +38,7 @@ public class PaneAttrib {
    
    public float yOffset;
    public String selected = null;
+   
+   public int direction = 0;
 
 }

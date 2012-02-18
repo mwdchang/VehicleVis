@@ -53,6 +53,20 @@ public class DCUtil {
    }
    
    
+   public static int[] subArray(int a[], int b[]) {
+      // Sanity check
+      if (a.length != b.length) {
+         System.err.println("Cannot operate on array of different sizes : " + a.length + " " + b.length);
+      }
+      
+      // Returns a new array that is the difference of a-b
+      int result[] = new int[a.length];
+      for (int i=0; i < a.length; i++) {
+         result[i] = a[i] - b[i];
+      }
+      return result;
+   }
+   
    
    ////////////////////////////////////////////////////////////////////////////////
    // Get the time elapsed with System.currentTimeMillis

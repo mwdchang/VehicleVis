@@ -149,10 +149,18 @@ public class FilterTask implements RenderTask {
             SSM.instance().modelAttrib.selected,
             SSM.instance().yearAttrib.selected);
       
+      Vector<DCPair> cyV = CacheManager.instance().getFilterYearlyStat(
+            SSM.instance().c_manufactureAttrib.selected, 
+            SSM.instance().c_makeAttrib.selected, 
+            SSM.instance().c_modelAttrib.selected,
+            SSM.instance().c_yearAttrib.selected);
+      
+      
       yearData = new DCPair[ yV.size()];
       double max = 0;
       for (int i=0; i < yV.size(); i++) {
-         yearData[i] = new DCPair( yV.elementAt(i).key, yV.elementAt(i).value);         
+         //yearData[i] = new DCPair( yV.elementAt(i).key, yV.elementAt(i).value-cyV.elementAt(i).value);         
+         yearData[i] = new DCPair( yV.elementAt(i).key, yV.elementAt(i).value);
          if (max < yV.elementAt(i).value) max = yV.elementAt(i).value;
       }
       yearSlider.tempMaxValue = max;
@@ -176,15 +184,21 @@ public class FilterTask implements RenderTask {
    ////////////////////////////////////////////////////////////////////////////////
    public void setMonthData() {
       int max = 0;
-      //int[] mdata = CacheManager.instance().getFilterMonthlyStat(SSM.instance().startTimeFrame, SSM.instance().endTimeFrame, null, null, null);
       int[] mdata = CacheManager.instance().getFilterMonthlyStat(SSM.instance().startTimeFrame, SSM.instance().endTimeFrame, 
             SSM.instance().manufactureAttrib.selected,
             SSM.instance().makeAttrib.selected,
             SSM.instance().modelAttrib.selected,
             SSM.instance().yearAttrib.selected); 
       
+      int[] cmdata = CacheManager.instance().getFilterMonthlyStat(SSM.instance().startTimeFrame, SSM.instance().endTimeFrame, 
+            SSM.instance().c_manufactureAttrib.selected,
+            SSM.instance().c_makeAttrib.selected,
+            SSM.instance().c_modelAttrib.selected,
+            SSM.instance().c_yearAttrib.selected); 
+     
       monthData = new DCPair[mdata.length];
       for (int i=0; i < mdata.length; i++) {
+         //monthData[i] = new DCPair((i+1)+"", mdata[i]-cmdata[i]);   
          monthData[i] = new DCPair((i+1)+"", mdata[i]);   
          if (max < mdata[i]) max = mdata[i];
       }

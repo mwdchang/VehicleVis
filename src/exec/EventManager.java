@@ -17,6 +17,7 @@ import javax.swing.event.MouseInputListener;
 
 import model.DCTriple;
 import model.LensAttrib;
+import model.PaneAttrib;
 
 import Jama.Matrix;
 
@@ -81,6 +82,38 @@ public class EventManager implements KeyListener, MouseListener, MouseMotionList
    }
 
    
+   
+   // Set the top element to id if mouse is clicked over the panel
+   public void checkScrollPanels(PaneAttrib attrib, int id) {
+      float mx = SSM.instance().mouseX;
+      float my = SSM.instance().windowHeight - SSM.instance().mouseY;
+      
+      float anchorX = attrib.anchorX;
+      float anchorY = attrib.anchorY;
+      
+      if (DCUtil.between(mx, anchorX, anchorX+SSM.instance().scrollWidth)) {
+         if (attrib.direction == 1) {
+            if (DCUtil.between(my, anchorY-20, anchorY+attrib.height)) {
+               if (attrib.active) SSM.instance().topElement = id;
+            }
+         } else {
+            if (DCUtil.between(my, anchorY-20-attrib.height, anchorY)) {
+               if (attrib.active) SSM.instance().topElement = id;
+            }
+         }
+      }
+   }
+   
+   public void setScrollPanelOffset(PaneAttrib attrib) {
+      attrib.yOffset -= (SSM.instance().mouseY - SSM.instance().oldMouseY);   
+      if (attrib.yOffset < attrib.height)
+         attrib.yOffset = attrib.height;
+      if (attrib.yOffset > attrib.textureHeight)
+         attrib.yOffset = attrib.textureHeight;   
+   }
+   
+   
+   
    @Override
    public void mousePressed(MouseEvent e) {
       lastPressX = SSM.instance().mouseX;
@@ -132,87 +165,15 @@ public class EventManager implements KeyListener, MouseListener, MouseMotionList
          }
          
          // For default filter
-         float mf_anchorX = SSM.instance().manufactureAttrib.anchorX;
-         float mf_anchorY = SSM.instance().manufactureAttrib.anchorY;
-         if (DCUtil.between(mx, mf_anchorX, mf_anchorX+SSM.instance().scrollWidth)) {
-            if (DCUtil.between(my, mf_anchorY, mf_anchorY+SSM.instance().manufactureAttrib.height)) {
-               if (SSM.instance().manufactureAttrib.active) {
-                  SSM.instance().topElement = SSM.ELEMENT_MANUFACTURE_SCROLL;
-               }
-            }
-         }
+         this.checkScrollPanels(SSM.instance().manufactureAttrib, SSM.ELEMENT_MANUFACTURE_SCROLL);
+         this.checkScrollPanels(SSM.instance().makeAttrib, SSM.ELEMENT_MAKE_SCROLL);
+         this.checkScrollPanels(SSM.instance().modelAttrib, SSM.ELEMENT_MODEL_SCROLL);
+         this.checkScrollPanels(SSM.instance().yearAttrib, SSM.ELEMENT_YEAR_SCROLL);
          
-         float mk_anchorX = SSM.instance().makeAttrib.anchorX;
-         float mk_anchorY = SSM.instance().makeAttrib.anchorY;
-         if (DCUtil.between(mx, mk_anchorX, mk_anchorX+SSM.instance().scrollWidth)) {
-            if (DCUtil.between(my, mk_anchorY, mk_anchorY+SSM.instance().makeAttrib.height)) {
-               if (SSM.instance().makeAttrib.active) {
-                  SSM.instance().topElement = SSM.ELEMENT_MAKE_SCROLL;
-               }
-            }
-         }
-         
-         float md_anchorX = SSM.instance().modelAttrib.anchorX;
-         float md_anchorY = SSM.instance().modelAttrib.anchorY;
-         if (DCUtil.between(mx, md_anchorX, md_anchorX+SSM.instance().scrollWidth)) {
-            if (DCUtil.between(my, md_anchorY, md_anchorY+SSM.instance().modelAttrib.height)) {
-               if (SSM.instance().modelAttrib.active) {
-                  SSM.instance().topElement = SSM.ELEMENT_MODEL_SCROLL;
-               }
-            }
-         }
-         
-         float year_anchorX = SSM.instance().yearAttrib.anchorX;
-         float year_anchorY = SSM.instance().yearAttrib.anchorY;
-         if (DCUtil.between(mx, year_anchorX, year_anchorX+SSM.instance().scrollWidth)) {
-            if (DCUtil.between(my, year_anchorY, year_anchorY+SSM.instance().yearAttrib.height)) {
-               if (SSM.instance().yearAttrib.active) {
-                  SSM.instance().topElement = SSM.ELEMENT_YEAR_SCROLL;
-               }
-            }
-         }
-        
-         
-         // For comparision filter
-         mf_anchorX = SSM.instance().c_manufactureAttrib.anchorX;
-         mf_anchorY = SSM.instance().c_manufactureAttrib.anchorY;
-         if (DCUtil.between(mx, mf_anchorX, mf_anchorX+SSM.instance().scrollWidth)) {
-            if (DCUtil.between(my, mf_anchorY, mf_anchorY+SSM.instance().c_manufactureAttrib.height)) {
-               if (SSM.instance().c_manufactureAttrib.active) {
-                  SSM.instance().topElement = SSM.ELEMENT_CMANUFACTURE_SCROLL;
-               }
-            }
-         }
-         mk_anchorX = SSM.instance().c_makeAttrib.anchorX;
-         mk_anchorY = SSM.instance().c_makeAttrib.anchorY;
-         if (DCUtil.between(mx, mk_anchorX, mk_anchorX+SSM.instance().scrollWidth)) {
-            if (DCUtil.between(my, mk_anchorY, mk_anchorY+SSM.instance().c_makeAttrib.height)) {
-               if (SSM.instance().c_makeAttrib.active) {
-                  SSM.instance().topElement = SSM.ELEMENT_CMAKE_SCROLL;
-               }
-            }
-         }
-         md_anchorX = SSM.instance().c_modelAttrib.anchorX;
-         md_anchorY = SSM.instance().c_modelAttrib.anchorY;
-         if (DCUtil.between(mx, md_anchorX, md_anchorX+SSM.instance().scrollWidth)) {
-            if (DCUtil.between(my, md_anchorY, md_anchorY+SSM.instance().c_modelAttrib.height)) {
-               if (SSM.instance().c_modelAttrib.active) {
-                  SSM.instance().topElement = SSM.ELEMENT_CMODEL_SCROLL;
-               }
-            }
-         }
-         year_anchorX = SSM.instance().yearAttrib.anchorX;
-         year_anchorY = SSM.instance().yearAttrib.anchorY;
-         if (DCUtil.between(mx, year_anchorX, year_anchorX+SSM.instance().scrollWidth)) {
-            if (DCUtil.between(my, year_anchorY, year_anchorY+SSM.instance().c_yearAttrib.height)) {
-               if (SSM.instance().c_yearAttrib.active) {
-                  SSM.instance().topElement = SSM.ELEMENT_CYEAR_SCROLL;
-               }
-            }
-         }
-        
-         
-         
+         this.checkScrollPanels(SSM.instance().c_manufactureAttrib, SSM.ELEMENT_CMANUFACTURE_SCROLL);
+         this.checkScrollPanels(SSM.instance().c_makeAttrib, SSM.ELEMENT_CMAKE_SCROLL);
+         this.checkScrollPanels(SSM.instance().c_modelAttrib, SSM.ELEMENT_CMODEL_SCROLL);
+         this.checkScrollPanels(SSM.instance().c_yearAttrib, SSM.ELEMENT_CYEAR_SCROLL);
          
          
          float sl_anchorX = SSM.instance().saveLoadAnchorX;
@@ -224,7 +185,6 @@ public class EventManager implements KeyListener, MouseListener, MouseMotionList
                }
             }
          }
-         
          
          
          
@@ -336,6 +296,13 @@ public class EventManager implements KeyListener, MouseListener, MouseMotionList
          SSM.instance().dirtyGL = 1;
          SSM.instance().refreshMagicLens = true;
       }
+      if (e.getKeyChar() == 's') {
+         SSM.instance().useComparisonMode =! SSM.instance().useComparisonMode;   
+         SSM.instance().dirty = 1;
+         SSM.instance().dirtyGL = 1;
+         SSM.instance().refreshMagicLens = true;
+      }
+      
       
       if (e.getKeyChar() == 'a') {
          SSM.instance().useAggregate = ! SSM.instance().useAggregate;
@@ -343,7 +310,6 @@ public class EventManager implements KeyListener, MouseListener, MouseMotionList
          SSM.instance().dirtyGL = 1;
          SSM.instance().refreshMagicLens = true;
       }
-      
       if (e.getKeyChar() == ';') {
          SSM.instance().sortingMethod ++;
          SSM.instance().sortingMethod %= 3;
@@ -386,6 +352,7 @@ public class EventManager implements KeyListener, MouseListener, MouseMotionList
          SSM.instance().showLabels = ! SSM.instance().showLabels;   
       }
       
+      /*
       if (e.getKeyChar() == '0') {
          SSM.instance().sparklineMode = 0;   
          SSM.instance().dirtyGL = 1;
@@ -394,6 +361,7 @@ public class EventManager implements KeyListener, MouseListener, MouseMotionList
          SSM.instance().sparklineMode = 1;   
          SSM.instance().dirtyGL = 1;
       }
+      */
       
       if (e.getKeyChar() == '?') {
          SSM.instance().timeFrameStatistics();   
@@ -597,6 +565,7 @@ public class EventManager implements KeyListener, MouseListener, MouseMotionList
             System.out.println("Shift + X");
             return;
          }
+         
          /* Ignore the Y rotation
          if ( this.shiftKeyPressed && (SSM.instance().oldMouseY > SSM.instance().mouseY ||
               SSM.instance().oldMouseY < SSM.instance().mouseY)) {
@@ -656,30 +625,25 @@ public class EventManager implements KeyListener, MouseListener, MouseMotionList
       if (SSM.instance().topElement == SSM.ELEMENT_DOCUMENT) {
          SSM.instance().docAnchorX += (SSM.instance().mouseX - SSM.instance().oldMouseX);   
          SSM.instance().docAnchorY -= (SSM.instance().mouseY - SSM.instance().oldMouseY);   
+      // For default filter   
       } else if (SSM.instance().topElement == SSM.ELEMENT_MANUFACTURE_SCROLL) {
-         SSM.instance().manufactureAttrib.yOffset -= (SSM.instance().mouseY - SSM.instance().oldMouseY);   
-         if (SSM.instance().manufactureAttrib.yOffset < SSM.instance().manufactureAttrib.height)
-            SSM.instance().manufactureAttrib.yOffset = SSM.instance().manufactureAttrib.height;
-         if (SSM.instance().manufactureAttrib.yOffset > SSM.instance().manufactureAttrib.textureHeight)
-            SSM.instance().manufactureAttrib.yOffset = SSM.instance().manufactureAttrib.textureHeight;
+         this.setScrollPanelOffset(SSM.instance().manufactureAttrib);
       } else if (SSM.instance().topElement == SSM.ELEMENT_MAKE_SCROLL) {
-         SSM.instance().makeAttrib.yOffset -= (SSM.instance().mouseY - SSM.instance().oldMouseY);   
-         if (SSM.instance().makeAttrib.yOffset < SSM.instance().makeAttrib.height)
-            SSM.instance().makeAttrib.yOffset = SSM.instance().makeAttrib.height;
-         if (SSM.instance().makeAttrib.yOffset > SSM.instance().makeAttrib.textureHeight)
-            SSM.instance().makeAttrib.yOffset = SSM.instance().makeAttrib.textureHeight;
+         this.setScrollPanelOffset(SSM.instance().makeAttrib);
       } else if (SSM.instance().topElement == SSM.ELEMENT_MODEL_SCROLL)  {
-         SSM.instance().modelAttrib.yOffset -= (SSM.instance().mouseY - SSM.instance().oldMouseY);   
-         if (SSM.instance().modelAttrib.yOffset < SSM.instance().modelAttrib.height)
-            SSM.instance().modelAttrib.yOffset = SSM.instance().modelAttrib.height;
-         if (SSM.instance().modelAttrib.yOffset > SSM.instance().modelAttrib.textureHeight)
-            SSM.instance().modelAttrib.yOffset = SSM.instance().modelAttrib.textureHeight;
-       } else if (SSM.instance().topElement == SSM.ELEMENT_YEAR_SCROLL)  {
-         SSM.instance().yearAttrib.yOffset -= (SSM.instance().mouseY - SSM.instance().oldMouseY);   
-         if (SSM.instance().yearAttrib.yOffset < SSM.instance().yearAttrib.height)
-            SSM.instance().yearAttrib.yOffset = SSM.instance().yearAttrib.height;
-         if (SSM.instance().yearAttrib.yOffset > SSM.instance().yearAttrib.textureHeight)
-            SSM.instance().yearAttrib.yOffset = SSM.instance().yearAttrib.textureHeight;
+         this.setScrollPanelOffset(SSM.instance().modelAttrib);
+      } else if (SSM.instance().topElement == SSM.ELEMENT_YEAR_SCROLL)  {
+         this.setScrollPanelOffset(SSM.instance().yearAttrib);
+      // For comparisons   
+      } else if (SSM.instance().topElement == SSM.ELEMENT_CMANUFACTURE_SCROLL) {
+         this.setScrollPanelOffset(SSM.instance().c_manufactureAttrib);
+      } else if (SSM.instance().topElement == SSM.ELEMENT_CMAKE_SCROLL) {
+         this.setScrollPanelOffset(SSM.instance().c_makeAttrib);
+      } else if (SSM.instance().topElement == SSM.ELEMENT_CMODEL_SCROLL)  {
+         this.setScrollPanelOffset(SSM.instance().c_modelAttrib);
+      } else if (SSM.instance().topElement == SSM.ELEMENT_CYEAR_SCROLL)  {
+         this.setScrollPanelOffset(SSM.instance().c_yearAttrib);
+      // Save and load stuff         
       } else if (SSM.instance().topElement == SSM.ELEMENT_SAVELOAD_SCROLL) {
          SSM.instance().saveLoadYOffset -= (SSM.instance().mouseY - SSM.instance().oldMouseY);   
          if (SSM.instance().saveLoadYOffset < SSM.instance().saveLoadHeight)

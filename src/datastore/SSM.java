@@ -191,6 +191,7 @@ public class SSM {
    public boolean useConstantAlpha = false;    // Whether or not to use OIT constant alpha
    public boolean useGlow = false;
    
+   public boolean useComparisonMode = false;   // Whether to compare across time lines
    
    public boolean useLocalFocus = false;       // Whether to nor to render based on current selected components 
    
@@ -218,15 +219,15 @@ public class SSM {
    ////////////////////////////////////////////////////////////////////////////////
    // Filter Panel management
    ////////////////////////////////////////////////////////////////////////////////
-   public PaneAttrib manufactureAttrib = new PaneAttrib(300, 70, 200, 200);
-   public PaneAttrib makeAttrib = new PaneAttrib(550, 70, 200, 200);
-   public PaneAttrib modelAttrib = new PaneAttrib(800, 70, 200, 200);
-   public PaneAttrib yearAttrib = new PaneAttrib(1050, 70, 200, 200);
+   public PaneAttrib manufactureAttrib = new PaneAttrib(300, 150, 200, 200, 1);
+   public PaneAttrib makeAttrib = new PaneAttrib(550, 150, 200, 200, 1);
+   public PaneAttrib modelAttrib = new PaneAttrib(800, 150, 200, 200, 1);
+   public PaneAttrib yearAttrib = new PaneAttrib(1050, 150, 200, 200, 1);
    
-   public PaneAttrib c_manufactureAttrib = new PaneAttrib(300, 30, 200, 200);
-   public PaneAttrib c_makeAttrib = new PaneAttrib(550, 30, 200, 200);
-   public PaneAttrib c_modelAttrib = new PaneAttrib(800, 30, 200, 200);
-   public PaneAttrib c_yearAttrib = new PaneAttrib(1050, 30, 200, 200);
+   public PaneAttrib c_manufactureAttrib = new PaneAttrib(300, 120, 200, 200, 0);
+   public PaneAttrib c_makeAttrib = new PaneAttrib(550, 120, 200, 200, 0);
+   public PaneAttrib c_modelAttrib = new PaneAttrib(800, 120, 200, 200, 0);
+   public PaneAttrib c_yearAttrib = new PaneAttrib(1050, 120, 200, 200, 0);
    
    
    
