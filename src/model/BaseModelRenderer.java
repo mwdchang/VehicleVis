@@ -1531,9 +1531,11 @@ public abstract class BaseModelRenderer implements RenderTask {
                  float v2 = CacheManager.instance().c_groupOccurrence.get(comp.id);
                  
                  if (v1 > v2) {
-                    comp.renderBufferAdj(gl, DCColour.fromInt(0, 0, 200, 110));
+                    //comp.renderBufferAdj(gl, DCColour.fromInt(0, 0, 200, 110));
+                    comp.renderBufferAdj(gl, SchemeManager.comp_1);
                  } else if (v2 > v1){
-                    comp.renderBufferAdj(gl, DCColour.fromInt(200, 0, 200, 110));
+                    //comp.renderBufferAdj(gl, DCColour.fromInt(200, 0, 200, 110));
+                    comp.renderBufferAdj(gl, SchemeManager.comp_2);
                  }
               }
            }

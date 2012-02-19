@@ -739,38 +739,6 @@ public class CacheManager {
          pair.value += query.count;
          
          
-         /*
-         QueryObj partQuery = queryTableU.elementAt(i);
-         // Nothing selected, get the overall count
-         if (manufacture == null && make == null && model == null) {
-            pair.value += partQuery.count;               
-            continue;
-         }
-         if (model != null) {
-            QueryObj manufactureQuery = partQuery.get(manufacture);
-            if (manufactureQuery == null) continue;
-            QueryObj makeQuery = manufactureQuery.get(make);
-            if (makeQuery == null) continue;
-            QueryObj modelQuery = makeQuery.get(model);
-            if (modelQuery == null) continue;
-            pair.value += modelQuery.count;
-            continue;   
-         }
-         if (make != null) {
-            QueryObj manufactureQuery = partQuery.get(manufacture);
-            if (manufactureQuery == null) continue;
-            QueryObj makeQuery = manufactureQuery.get(make);
-            if (makeQuery == null) continue;
-            pair.value += makeQuery.count;
-            continue;
-         }
-         if (manufacture != null) {
-            QueryObj manufactureQuery = partQuery.get(manufacture);
-            if (manufactureQuery == null) continue;
-            pair.value += manufactureQuery.count;
-            continue;
-         }
-         */
       } // end for i
       result.add(pair);
       
@@ -800,39 +768,6 @@ public class CacheManager {
          if (query == null) continue;
          result[month] += query.count;
          
-         /*
-         QueryObj partQuery = queryTableU.elementAt(i);
-            
-         // Nothing selected, get the overall count
-         if (manufacture == null && make == null && model == null) {
-            result[month] += partQuery.count;               
-            continue;
-         }
-         if (model != null) {
-            QueryObj manufactureQuery = partQuery.get(manufacture);
-            if (manufactureQuery == null) continue;
-            QueryObj makeQuery = manufactureQuery.get(make);
-            if (makeQuery == null) continue;
-            QueryObj modelQuery = makeQuery.get(model);
-            if (modelQuery == null) continue;
-            result[month] += modelQuery.count;
-            continue;   
-         }
-         if (make != null) {
-            QueryObj manufactureQuery = partQuery.get(manufacture);
-            if (manufactureQuery == null) continue;
-            QueryObj makeQuery = manufactureQuery.get(make);
-            if (makeQuery == null) continue;
-            result[month] += makeQuery.count;
-            continue;
-         }
-         if (manufacture != null) {
-            QueryObj manufactureQuery = partQuery.get(manufacture);
-            if (manufactureQuery == null) continue;
-            result[month] += manufactureQuery.count;
-            continue;
-         }
-         */
         
       } // end for i
       return result;
@@ -965,46 +900,6 @@ public class CacheManager {
    }
    
    
-   ////////////////////////////////////////////////////////////////////////////////
-   // Hopefully a clearner version than version 1
-   // Instead of reverse engineering the timeline, just give a giant timeline
-   // and plug stuff in
-   ////////////////////////////////////////////////////////////////////////////////
-//   public void initOccurrenceTable2() throws Exception {
-//      System.out.println("Caching group occurrences....version 2");   
-//      DBWrapper dbh = new DBWrapper();
-//      ResultSet rs = dbh.execute("call projectv3.get_total_occurrence(null, null)");
-//      
-//      while (rs.next()) {
-//         Date dateStr = rs.getDate(1);
-//         int groupId = rs.getInt(2);
-//         int occ     = rs.getInt(3);
-//         
-//         // Get the index key
-//         //int idx = getDateKey(dateStr);
-//         Integer idx = this.getDateKey( DCUtil.formatDateYYYYMMDD( dateStr ));
-//         if (idx == null) continue;
-//         
-//         
-//         if (occurrenceTable.elementAt(idx).get(groupId) == null) {
-//            occurrenceTable.elementAt(idx).put( groupId, occ);
-//         } else {
-//            int val = occurrenceTable.elementAt(idx).get(groupId);
-//            occurrenceTable.elementAt(idx).put( groupId, occ+val);
-//         }
-//      }
-//      // Serialize this out to disk
-//      if (DEBUG) {
-//         SerializeUtil.objOut(occurrenceTable, "debug_occurenceTable.ser");
-//         SerializeUtil.objOut(dateTable, "debug_dateTable.ser");
-//         SerializeUtil.objOut(keyTable, "debug_keyTable.ser");      
-//      } else {
-//         SerializeUtil.objOut(occurrenceTable, "occurenceTable.ser");
-//         SerializeUtil.objOut(dateTable, "dateTable.ser");
-//         SerializeUtil.objOut(keyTable, "keyTable.ser");      
-//      }
-//   }
-   
    
    /////////////////////////////////////////////////////////////////////////////////   
    // Get related groups by a range of indexed dates
@@ -1119,34 +1014,6 @@ public class CacheManager {
          
          query = this.getQueryObj(idx, groupIds.elementAt(i), params);
          if (query == null) continue;
-         
-         //out-dated querying method
-         /*
-         root = queryTable.elementAt(idx).get(groupIds.elementAt(i));
-         if (root == null) continue;
-         
-         if (model != null) {
-            QueryObj mfrObj = root.get(mfr);   
-            if (mfrObj == null) continue;
-            QueryObj makeObj = mfrObj.get(make);
-            if (makeObj == null) continue;
-            QueryObj modelObj = makeObj.get(model);
-            if (modelObj == null) continue;
-            query = modelObj;
-         } else if (make != null) {
-            QueryObj mfrObj = root.get(mfr);   
-            if (mfrObj == null) continue;
-            QueryObj makeObj = mfrObj.get(make);
-            if (makeObj == null) continue;
-            query = makeObj;
-         } else if (mfr != null) {
-            QueryObj mfrObj = root.get(mfr);   
-            if (mfrObj == null) continue;
-            query = mfrObj;
-         } else {
-            query = root;
-         }      
-         */
          
          // If the query contains all relatedIds then it is a co-occurrence
          for (int j=0; j < query.lookup2.size(); j++) {

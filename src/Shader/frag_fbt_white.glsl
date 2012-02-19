@@ -64,13 +64,12 @@ void main(void) {
    
    
    // If has some value, make it transparent
-   /*
    vec4 texC = texture2D(tex, pass_texcoord.xy).rgba;
    if (texC.r > 0.1 || texC.g > 0.1 || texC.b > 0.1) {
       outColour = vec4(0,0,0,0.0);
       return; 
    }
-   */
+   
    
 
 

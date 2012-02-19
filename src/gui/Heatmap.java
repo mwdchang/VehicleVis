@@ -116,9 +116,11 @@ public class Heatmap extends ComponentChart {
             gl2.glBegin(GL2.GL_QUADS);
                if (SSM.instance().useComparisonMode == true) {
                   if (v > c_v) {
-                     gl2.glColor4fv(DCColour.fromInt(0, 0, 200, 110).toArray(), 0);                     
+                     //gl2.glColor4fv(DCColour.fromInt(0, 0, 200, 110).toArray(), 0);                     
+                     gl2.glColor4fv(SchemeManager.comp_1.toArray(), 0);
                   } else if (v < c_v) {
-                     gl2.glColor4fv(DCColour.fromInt(200, 0, 200, 110).toArray(), 0);                     
+                     //gl2.glColor4fv(DCColour.fromInt(200, 0, 200, 110).toArray(), 0);                     
+                     gl2.glColor4fv(SchemeManager.comp_2.toArray(), 0);
                   } else {
                      gl2.glColor4fv(SchemeManager.silhouette_default.toArray(), 0);
                   }

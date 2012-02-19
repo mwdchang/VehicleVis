@@ -9,13 +9,13 @@ import javax.media.opengl.GLAutoDrawable;
 import test.JOGLBase;
 
 /////////////////////////////////////////////////////////////////////////////////
-// 
+// Rotate a polygon in 2D space
 /////////////////////////////////////////////////////////////////////////////////
 public class SqRot extends JOGLBase implements KeyListener {
    
    public static void main(String[] args) {
       SqRot sqrot = new SqRot();
-      sqrot.run("SQ Rot", 800, 800, 20);
+      sqrot.run("SQ Rot", 800, 800, 30);
    }
 
    public double D2R( double degree ) {
@@ -62,7 +62,7 @@ public class SqRot extends JOGLBase implements KeyListener {
                   tmp/50.0,
                   1.0-tmp/50.0,
                   c_radius1/c_radius2,
-                  0.2); 
+                  0.5); 
             
             gl2.glVertex3d( Math.cos(D2R(c_angle1))*c_radius1, Math.sin(D2R(c_angle1))*c_radius1, 0.0);
             gl2.glVertex3d( Math.cos(D2R(c_angle2))*c_radius2, Math.sin(D2R(c_angle2))*c_radius2, 0.0);
@@ -101,8 +101,10 @@ public class SqRot extends JOGLBase implements KeyListener {
       gl2.glBlendFunc(GL2.GL_SRC_ALPHA, GL2.GL_ONE_MINUS_SRC_ALPHA);
       
       gl2.glDisable(GL2.GL_DEPTH_TEST);
+      gl2.glDisable(GL2.GL_TEXTURE_2D);
       
-      gl2.glLineWidth(4.0f);
+      
+      gl2.glLineWidth(2.0f);
    }
    
    
@@ -124,6 +126,9 @@ public class SqRot extends JOGLBase implements KeyListener {
    }
    
    
+   ////////////////////////////////////////////////////////////////////////////////
+   // Reset the vertices and rotation parameters
+   ////////////////////////////////////////////////////////////////////////////////
    public void resetStage() {
       numPoint = 2+(int)(Math.random()*8.0); // ensure at least 2 points
       radius = new double[numPoint];

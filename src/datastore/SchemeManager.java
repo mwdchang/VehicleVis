@@ -190,13 +190,16 @@ public class SchemeManager {
    public static DCColour car_normal1        = new DCColour(0.3, 0.3, 0.3, 0.1);     
    public static DCColour component_selected = new DCColour(1.0f, 0.8f, 0.0f, 0.5f);  
    
-   public static DCColour font_default = new DCColour(0.3, .3, 0.3, 0.9);
-   
    
    public static DCColour silhouette_default = new DCColour(0.5f, 0.5f, 0.5f, 0.15);
    
    public static DCColour gl_clear = new DCColour(1.0, 1.0 ,1.0 ,0.0);
    public static DCColour not_used = new DCColour(0.0, 0.0, 0.0, 0.0);
+   
+   
+   // Outline/silhouette colour for comparison mode
+   public static DCColour comp_1 = new DCColour(1.0, 1.0, 0.0, 0.5);
+   public static DCColour comp_2 = new DCColour(0.0, 1.0, 1.0, 0.5);
    
    
    public static DCColour textPane_normal   = new DCColour(0.3, 0.3, 0.3, 1.0);
