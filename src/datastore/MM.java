@@ -77,9 +77,9 @@ public class MM {
       Enumeration<String> keys = model.componentTable.keys();
       while(keys.hasMoreElements()) {
          String k = keys.nextElement();
-         DWin.instance().debug(k + " Creating vbo for adjacency (6v) format");
+         //DWin.instance().debug(k + " Creating vbo for adjacency (6v) format");
          model.componentTable.get(k).createBuffersAdj(gl2);
-         DWin.instance().debug(k + " Creating vbo for normal format");
+         //DWin.instance().debug(k + " Creating vbo for normal format");
          model.componentTable.get(k).createBuffers(gl2);
          
          // OIT

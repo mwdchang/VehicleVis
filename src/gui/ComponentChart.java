@@ -38,7 +38,9 @@ public abstract class ComponentChart {
    }
    
    public int id;
-   public float data[];
+   public float data[];    // Default data set
+   public float c_data[];  // Comparative data set
+   
    public float width;
    public float height;   
    public float anchorX = 0;

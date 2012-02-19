@@ -57,6 +57,7 @@ public class Heatmap extends ComponentChart {
       if (active) {
          gl2.glDisable(GL2.GL_BLEND);
          renderBorder(gl2, DCColour.fromDouble(0.9, 0.9, 0.9, 0.2), GL2.GL_FILL);
+         //renderBorder(gl2, DCColour.fromDouble(0.0, 0.8, 0.0, 0.2), GL2.GL_FILL);
       } else {
          gl2.glEnable(GL2.GL_BLEND);
          gl2.glBlendFunc(GL2.GL_SRC_ALPHA, GL2.GL_ONE_MINUS_SRC_ALPHA);
@@ -82,7 +83,10 @@ public class Heatmap extends ComponentChart {
          float tmpY = i-start;
          for (int j=sMonth; j <= eMonth; j++) {
             float v = data[12*i + j];      
-            float gMax = CacheManager.instance().monthMaximum.elementAt(12*i+j);
+            float c_v = c_data[12*i + j];
+            
+            float max = CacheManager.instance().monthMaximum.elementAt(12*i+j);
+            float c_max = CacheManager.instance().monthMaximum.elementAt(12*i + j);
             
             // Tool Tip !
             if ( DCUtil.between(SSM.instance().mouseX, anchorX+tmpX*blockWidth, anchorX+(1+tmpX)*blockWidth)) {
@@ -95,28 +99,50 @@ public class Heatmap extends ComponentChart {
                   int cMonth = (int)((1+tmpX) + SSM.instance().startMonth);
                   
                   DCTip.addText("Time:" + DCTip.translateTable.get(cMonth+"") + "-" + cYear); 
-                  DCTip.addText("Value:" + (int)v);
+                  if (SSM.instance().useComparisonMode == true) {
+                     DCTip.addText("Value:" + (int)(v+c_v));
+                  } else {
+                     DCTip.addText("Value:" + (int)v);
+                  }
                   DCTip.setTip( SSM.instance().mouseX, 
                         (SSM.instance().windowHeight-SSM.instance().mouseY), 
                         SSM.instance().windowWidth, SSM.instance().windowHeight);   
                }
             }
             
+            
+            // Render an out line to separate the grids
             gl2.glPolygonMode(GL2.GL_FRONT_AND_BACK, GL2.GL_FILL);
             gl2.glBegin(GL2.GL_QUADS);
-               gl2.glColor4fv(SchemeManager.instance().getColour(0, v, gMax).toArray(), 0);
-               gl2.glVertex2f(anchorX + tmpX*blockWidth,     anchorY+height-tmpY*blockHeight-labelBuffer);
-               gl2.glVertex2f(anchorX + (1+tmpX)*blockWidth, anchorY+height-tmpY*blockHeight-labelBuffer);
-               gl2.glVertex2f(anchorX + (1+tmpX)*blockWidth, anchorY+height-(1+tmpY)*blockHeight-labelBuffer);
-               gl2.glVertex2f(anchorX + tmpX*blockWidth,     anchorY+height-(1+tmpY)*blockHeight-labelBuffer);
+               if (SSM.instance().useComparisonMode == true) {
+                  if (v > c_v) {
+                     gl2.glColor4fv(DCColour.fromInt(0, 0, 200, 110).toArray(), 0);                     
+                  } else if (v < c_v) {
+                     gl2.glColor4fv(DCColour.fromInt(200, 0, 200, 110).toArray(), 0);                     
+                  } else {
+                     gl2.glColor4fv(SchemeManager.silhouette_default.toArray(), 0);
+                  }
+               } else {
+                  gl2.glColor4fv(SchemeManager.silhouette_default.toArray(), 0);
+               }
+               gl2.glVertex2i((int)(anchorX + tmpX*blockWidth),     (int)(anchorY+height-tmpY*blockHeight-labelBuffer));
+               gl2.glVertex2i((int)(anchorX + (1+tmpX)*blockWidth), (int)(anchorY+height-tmpY*blockHeight-labelBuffer));
+               gl2.glVertex2i((int)(anchorX + (1+tmpX)*blockWidth), (int)(anchorY+height-(1+tmpY)*blockHeight-labelBuffer));
+               gl2.glVertex2i((int)(anchorX + tmpX*blockWidth),     (int)(anchorY+height-(1+tmpY)*blockHeight-labelBuffer));
             gl2.glEnd();
-            gl2.glPolygonMode(GL2.GL_FRONT_AND_BACK, GL2.GL_LINE);
+            
+            // Render the individual grid
+            gl2.glPolygonMode(GL2.GL_FRONT_AND_BACK, GL2.GL_FILL);
             gl2.glBegin(GL2.GL_QUADS);
-               gl2.glColor4fv(SchemeManager.silhouette_default.toArray(), 0);
-               gl2.glVertex2f(anchorX + tmpX*blockWidth,     anchorY+height-tmpY*blockHeight-labelBuffer);
-               gl2.glVertex2f(anchorX + (1+tmpX)*blockWidth, anchorY+height-tmpY*blockHeight-labelBuffer);
-               gl2.glVertex2f(anchorX + (1+tmpX)*blockWidth, anchorY+height-(1+tmpY)*blockHeight-labelBuffer);
-               gl2.glVertex2f(anchorX + tmpX*blockWidth,     anchorY+height-(1+tmpY)*blockHeight-labelBuffer);
+               if (SSM.instance().useComparisonMode == true) {
+                  gl2.glColor4fv(SchemeManager.instance().getColour(0, v+c_v, max+c_max).toArray(), 0);
+               } else {
+                  gl2.glColor4fv(SchemeManager.instance().getColour(0, v, max).toArray(), 0);
+               }
+               gl2.glVertex2i((int)(anchorX + tmpX*blockWidth+1),     (int)(anchorY+height-tmpY*blockHeight-labelBuffer-1));
+               gl2.glVertex2i((int)(anchorX + (1+tmpX)*blockWidth-1), (int)(anchorY+height-tmpY*blockHeight-labelBuffer-1));
+               gl2.glVertex2i((int)(anchorX + (1+tmpX)*blockWidth-1), (int)(anchorY+height-(1+tmpY)*blockHeight-labelBuffer+1));
+               gl2.glVertex2i((int)(anchorX + tmpX*blockWidth+1),     (int)(anchorY+height-(1+tmpY)*blockHeight-labelBuffer+1));
             gl2.glEnd();
             tmpX++;
          }
@@ -197,63 +223,23 @@ public class Heatmap extends ComponentChart {
       if (tf.marks.size() == 0 || ! tf.marks.elementAt(0).str.equalsIgnoreCase(label)) {
          tf.clearMark();
          tf.addMark(label, labelColour, new Font("Consolas", Font.PLAIN, 11), 1, height-labelBuffer+5);
-         //tf.addMark(label, labelColour, new Font("Arial", Font.PLAIN, 12), 150, 2);
-         //System.out.println("Setting sparkline label: " + label);
-         
-         /*
-         Hashtable<String, String> translation = DCUtil.getMonthTranslationTable();
-         int layers = (int) Math.floor(data.length/12.0f);
-         for (int i=0; i < 12; i++) {
-            String s = (i+1) +"";
-            //tf.addMark( translation.get(s).substring(0,1), labelColour, smallFont, i*blockWidth, height - layers*blockHeight - 10);   
-            tf.addMark(translation.get(s).substring(0,1), labelColour, smallFont, i*blockWidth, layers*blockHeight+10, false);
-         }
-         */
-         
-         //int yearStart = SSM.instance().startYear;
-         //int yearEnd   = SSM.instance().endYear;
-         /*
-         int yearStart = CacheManager.timeLineStartYear;
-         int yearEnd = CacheManager.timeLineEndYear;
-         for (int i=0; i < (yearEnd-yearStart)+1; i++) {
-            if (i == 0 || i == (yearEnd-yearStart)) {
-               String s = (yearStart+i)+"";   
-               tf.addMark(s, labelColour, smallFont, 12*blockWidth, height-(i+1)*blockHeight-labelBuffer, false);
-            }
-         }
-         */
       }
       
-      
-      // Also add the axis labels for the heat map
-      //int layers = (int) Math.floor(data.length/12.0f);
-      //for (int i=0; i < layers; i++) {
-      //   String s = (i+1)+"";
-      //   tf.addMark( translation.get(s), labelColour, smallFont, 150, height - i*blockHeight);   
-      //}
    }   
    
    public void renderBorder(GL2 gl2, DCColour c, int mode) {
       gl2.glPolygonMode(GL2.GL_FRONT_AND_BACK, mode);
       gl2.glColor4fv(c.toArray(), 0);
       gl2.glBegin(GL2.GL_QUADS);
-         gl2.glVertex2f(anchorX+0.0f, anchorY+0.0f);
-         gl2.glVertex2f(anchorX+width, anchorY+0.0f);
-         gl2.glVertex2f(anchorX+width, anchorY+height);
-         gl2.glVertex2f(anchorX+0.0f,  anchorY+height);
+         gl2.glVertex2i((int)(anchorX+0.0f-1),  (int)(anchorY+0.0f-1));
+         gl2.glVertex2i((int)(anchorX+width+1), (int)(anchorY+0.0f-1));
+         gl2.glVertex2i((int)(anchorX+width+1), (int)(anchorY+height+1));
+         gl2.glVertex2i((int)(anchorX+0.0f-1),  (int)(anchorY+height+1));
       gl2.glEnd();       
       gl2.glPolygonMode(GL2.GL_FRONT_AND_BACK, GL2.GL_FILL);
    }   
    public void renderBorder(GL2 gl2) {
       renderBorder(gl2, DCColour.fromDouble(0.5, 0.5, 0.5, 0.5), GL2.GL_FILL);
-      /*
-      gl2.glBegin(GL2.GL_QUADS);
-         gl2.glVertex2f(anchorX, anchorY);
-         gl2.glVertex2f(anchorX+width, anchorY);
-         gl2.glVertex2f(anchorX+width, anchorY+height);
-         gl2.glVertex2f(anchorX, anchorY+height);
-      gl2.glEnd();;   
-      */
    }
    
    

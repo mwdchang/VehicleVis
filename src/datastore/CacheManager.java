@@ -19,6 +19,7 @@ import db.DCTag;
 import db.QueryObj;
 
 import util.DCUtil;
+import util.DWin;
 import util.SerializeUtil;
 
 
@@ -161,6 +162,7 @@ public class CacheManager {
       long end = System.currentTimeMillis();
       
       System.out.println("Total time to bring up system : " + (end-start));
+      DWin.instance().msg("Total time to bring up cache : " + (end-start));
       
       
       // Attempt initialize the system from on disk cache
@@ -428,17 +430,47 @@ public class CacheManager {
                       "AND   MONTH(a.datea) <= " + (toMonth+1) + " ";
          
          // Dynamic clause filter
-         if (SSM.instance().manufactureAttrib.selected != null) {
-            sql += "AND a.mfr_txt = '" + SSM.instance().manufactureAttrib.selected + "' ";
-         }
-         if (SSM.instance().makeAttrib.selected != null) {
-            sql += "AND a.make_txt = '" + SSM.instance().makeAttrib.selected + "' ";
-         }
-         if (SSM.instance().modelAttrib.selected != null) {
-            sql += "AND a.model_txt = '" + SSM.instance().modelAttrib.selected + "' ";
-         }
-         if (SSM.instance().yearAttrib.selected != null) {
-            sql += "AND a.year_txt = '" + SSM.instance().yearAttrib.selected + "' ";
+         if (SSM.instance().useComparisonMode == true ) {
+            sql += "AND ((" ;
+            if (SSM.instance().manufactureAttrib.selected == null) {
+               sql += "1 = 1"; // Dummy pass thru   
+            } else {
+               if (SSM.instance().manufactureAttrib.selected != null) 
+                  sql += "AND a.mfr_txt = '" + SSM.instance().manufactureAttrib.selected + "' ";
+               if (SSM.instance().makeAttrib.selected != null) 
+                  sql += "AND a.make_txt = '" + SSM.instance().makeAttrib.selected + "' ";
+               if (SSM.instance().modelAttrib.selected != null) 
+                  sql += "AND a.model_txt = '" + SSM.instance().modelAttrib.selected + "' ";
+               if (SSM.instance().yearAttrib.selected != null) 
+                  sql += "AND a.year_txt = '" + SSM.instance().yearAttrib.selected + "' ";
+            }
+            sql += " ) OR ( "; 
+            if (SSM.instance().c_manufactureAttrib.selected == null) {
+               sql += "1 = 1"; // Dummy pass thru   
+            } else {
+               if (SSM.instance().c_manufactureAttrib.selected != null) 
+                  sql += "AND a.mfr_txt = '" + SSM.instance().c_manufactureAttrib.selected + "' ";
+               if (SSM.instance().c_makeAttrib.selected != null) 
+                  sql += "AND a.make_txt = '" + SSM.instance().c_makeAttrib.selected + "' ";
+               if (SSM.instance().c_modelAttrib.selected != null) 
+                  sql += "AND a.model_txt = '" + SSM.instance().c_modelAttrib.selected + "' ";
+               if (SSM.instance().c_yearAttrib.selected != null) 
+                  sql += "AND a.year_txt = '" + SSM.instance().c_yearAttrib.selected + "' ";
+            }
+            sql += " )) ";
+         } else {
+            if (SSM.instance().manufactureAttrib.selected != null) {
+               sql += "AND a.mfr_txt = '" + SSM.instance().manufactureAttrib.selected + "' ";
+            }
+            if (SSM.instance().makeAttrib.selected != null) {
+               sql += "AND a.make_txt = '" + SSM.instance().makeAttrib.selected + "' ";
+            }
+            if (SSM.instance().modelAttrib.selected != null) {
+               sql += "AND a.model_txt = '" + SSM.instance().modelAttrib.selected + "' ";
+            }
+            if (SSM.instance().yearAttrib.selected != null) {
+               sql += "AND a.year_txt = '" + SSM.instance().yearAttrib.selected + "' ";
+            }
          }
          
          // Work around to get dimensionalized view
@@ -481,18 +513,48 @@ public class CacheManager {
                       "AND   MONTH(a.datea) <= " + (toMonth+1) + " ";
          
          // Dynamic clause filter
-         if (SSM.instance().manufactureAttrib.selected != null) {
-            sql += "AND a.mfr_txt = '" + SSM.instance().manufactureAttrib.selected + "' ";
+         if (SSM.instance().useComparisonMode == true ) {
+            sql += "AND ((" ;
+            if (SSM.instance().manufactureAttrib.selected == null) {
+               sql += " 1=1 ";
+            } else {
+               if (SSM.instance().manufactureAttrib.selected != null) 
+                  sql += "a.mfr_txt = '" + SSM.instance().manufactureAttrib.selected + "' ";
+               if (SSM.instance().makeAttrib.selected != null) 
+                  sql += "AND a.make_txt = '" + SSM.instance().makeAttrib.selected + "' ";
+               if (SSM.instance().modelAttrib.selected != null) 
+                  sql += "AND a.model_txt = '" + SSM.instance().modelAttrib.selected + "' ";
+               if (SSM.instance().yearAttrib.selected != null) 
+                  sql += "AND a.year_txt = '" + SSM.instance().yearAttrib.selected + "' ";
+            }
+            sql += " ) OR ( "; 
+            if (SSM.instance().c_manufactureAttrib.selected == null) {
+               sql += "1=1";
+            } else {
+               if (SSM.instance().c_manufactureAttrib.selected != null) 
+                  sql += "a.mfr_txt = '" + SSM.instance().c_manufactureAttrib.selected + "' ";
+               if (SSM.instance().c_makeAttrib.selected != null) 
+                  sql += "AND a.make_txt = '" + SSM.instance().c_makeAttrib.selected + "' ";
+               if (SSM.instance().c_modelAttrib.selected != null) 
+                  sql += "AND a.model_txt = '" + SSM.instance().c_modelAttrib.selected + "' ";
+               if (SSM.instance().c_yearAttrib.selected != null) 
+                  sql += "AND a.year_txt = '" + SSM.instance().c_yearAttrib.selected + "' ";
+            }
+            sql += " )) "; 
+         } else {
+            if (SSM.instance().manufactureAttrib.selected != null) {
+               sql += "AND a.mfr_txt = '" + SSM.instance().manufactureAttrib.selected + "' ";
+            }
+            if (SSM.instance().makeAttrib.selected != null) {
+               sql += "AND a.make_txt = '" + SSM.instance().makeAttrib.selected + "' ";
+            }
+            if (SSM.instance().modelAttrib.selected != null) {
+               sql += "AND a.model_txt = '" + SSM.instance().modelAttrib.selected + "' ";
+            }
+            if (SSM.instance().yearAttrib.selected != null) {
+               sql += "AND a.year_txt = '" + SSM.instance().yearAttrib.selected + "' ";
+            }         
          }
-         if (SSM.instance().makeAttrib.selected != null) {
-            sql += "AND a.make_txt = '" + SSM.instance().makeAttrib.selected + "' ";
-         }
-         if (SSM.instance().modelAttrib.selected != null) {
-            sql += "AND a.model_txt = '" + SSM.instance().modelAttrib.selected + "' ";
-         }
-         if (SSM.instance().yearAttrib.selected != null) {
-            sql += "AND a.year_txt = '" + SSM.instance().yearAttrib.selected + "' ";
-         }         
          
          // Work around to get dimensionalized view
          for (int i=0; i < groupIds.size(); i++) {

@@ -395,6 +395,9 @@ public class ModelRenderer extends BaseModelRenderer {
          
          gl2.glLoadName(partId);
          gl2.glPushMatrix();
+            // Make sure the transform is also in picking mode 
+            gl2.glRotated(SSM.instance().rotateX, 1, 0, 0);
+            gl2.glRotated(SSM.instance().rotateY, 0, 1, 0);
             if (MM.currentModel.componentTable.get(partName).level >= SSM.instance().occlusionLevel) 
                 MM.currentModel.componentTable.get(partName).renderBasicMesh(gl2);
             //model.componentTable.get(partName).boundingBox.renderBoundingBox(gl2);  
@@ -598,8 +601,11 @@ public class ModelRenderer extends BaseModelRenderer {
             
          //String txt = comp.cname+"(" + comp.selectedTotal + "/" + groupOccurrence.get(id) + ")";
          int occ = CacheManager.instance().groupOccurrence.get(comp.id); 
+         int c_occ = CacheManager.instance().c_groupOccurrence.get(comp.id);
+         
          int relatedOcc = 0;
          int relatedOccNew = 0;
+         int c_relatedOccNew = 0;
          if (SSM.instance().selectedGroup.size() > 0 ) {
             
             if (SSM.instance().useAggregate == true) {
@@ -616,11 +622,21 @@ public class ModelRenderer extends BaseModelRenderer {
                      SSM.instance().startMonth, SSM.instance().endMonth, 
                      HierarchyTable.instance().getAgg(comp.id),
                      selectedGroup,
-                     //SSM.instance().selectedManufacture, 
                      SSM.instance().manufactureAttrib.selected,
                      SSM.instance().makeAttrib.selected, 
                      SSM.instance().modelAttrib.selected,
                      SSM.instance().yearAttrib.selected);
+               
+               c_relatedOccNew = CacheManager.instance().getCoOccurringAgg(
+                     startIdx, endIdx, 
+                     SSM.instance().startMonth, SSM.instance().endMonth, 
+                     HierarchyTable.instance().getAgg(comp.id),
+                     selectedGroup,
+                     SSM.instance().c_manufactureAttrib.selected,
+                     SSM.instance().c_makeAttrib.selected, 
+                     SSM.instance().c_modelAttrib.selected,
+                     SSM.instance().c_yearAttrib.selected);
+              
             } else {
                Vector<Integer> related =  new Vector<Integer>();
                related.addAll( SSM.instance().selectedGroup.values());
@@ -637,15 +653,29 @@ public class ModelRenderer extends BaseModelRenderer {
                      SSM.instance().startMonth, SSM.instance().endMonth, 
                      t,
                      related,
-                     //SSM.instance().selectedManufacture, 
                      SSM.instance().manufactureAttrib.selected,
                      SSM.instance().makeAttrib.selected, 
                      SSM.instance().modelAttrib.selected,
                      SSM.instance().yearAttrib.selected);              
                
+               c_relatedOccNew = CacheManager.instance().getCoOccurring(
+                     startIdx, endIdx, 
+                     SSM.instance().startMonth, SSM.instance().endMonth, 
+                     t,
+                     related,
+                     SSM.instance().c_manufactureAttrib.selected,
+                     SSM.instance().c_makeAttrib.selected, 
+                     SSM.instance().c_modelAttrib.selected,
+                     SSM.instance().c_yearAttrib.selected);              
+              
             }
          }
-         String txt = comp.baseName+"(" + relatedOccNew + "/" + relatedOcc + "/" + occ + ")";
+         String txt = "";
+         if (SSM.instance().useComparisonMode == true) {
+            txt = comp.baseName+"(" + (relatedOccNew+c_relatedOccNew) + "/" + relatedOcc + "/" + (c_occ+occ) + ")";
+         } else {
+            txt = comp.baseName+"(" + relatedOccNew + "/" + relatedOcc + "/" + occ + ")";
+         }
             
          double size[] = GraphicUtil.getFontDim(txt);
          rightHeight -= Math.max(size[1], comp.cchart.height);
@@ -665,7 +695,7 @@ public class ModelRenderer extends BaseModelRenderer {
          
          comp.cchart.setLabel(txt);
          comp.cchart.tf.render(gl2);
-         comp.cchart.tf.renderBorder(gl2);
+         //comp.cchart.tf.renderBorder(gl2);
          
          
          // doodle
@@ -705,8 +735,12 @@ public class ModelRenderer extends BaseModelRenderer {
             
          //String txt = comp.cname+"(" + comp.selectedTotal + "/" + groupOccurrence.get(id) + ")";
          int occ = CacheManager.instance().groupOccurrence.get(comp.id); 
+         int c_occ = CacheManager.instance().c_groupOccurrence.get(comp.id);
+         
          int relatedOcc = 0;
          int relatedOccNew = 0;
+         int c_relatedOccNew = 0;
+         
          if (SSM.instance().selectedGroup.size() > 0 ) {
             
             if (SSM.instance().useAggregate == true) {
@@ -723,11 +757,21 @@ public class ModelRenderer extends BaseModelRenderer {
                      SSM.instance().startMonth, SSM.instance().endMonth, 
                      HierarchyTable.instance().getAgg(comp.id),
                      selectedGroup,
-                     //SSM.instance().selectedManufacture, 
                      SSM.instance().manufactureAttrib.selected,
                      SSM.instance().makeAttrib.selected, 
                      SSM.instance().modelAttrib.selected,
                      SSM.instance().yearAttrib.selected);               
+               
+               c_relatedOccNew = CacheManager.instance().getCoOccurringAgg(
+                     startIdx, endIdx, 
+                     SSM.instance().startMonth, SSM.instance().endMonth, 
+                     HierarchyTable.instance().getAgg(comp.id),
+                     selectedGroup,
+                     SSM.instance().c_manufactureAttrib.selected,
+                     SSM.instance().c_makeAttrib.selected, 
+                     SSM.instance().c_modelAttrib.selected,
+                     SSM.instance().c_yearAttrib.selected);               
+               
             } else {
                Vector<Integer> related =  new Vector<Integer>();
                related.addAll(SSM.instance().selectedGroup.keySet());
@@ -745,13 +789,29 @@ public class ModelRenderer extends BaseModelRenderer {
                      t,
                      related,
                      SSM.instance().manufactureAttrib.selected,
-                     //SSM.instance().selectedManufacture, 
                      SSM.instance().makeAttrib.selected, 
                      SSM.instance().modelAttrib.selected,
                      SSM.instance().yearAttrib.selected);                   
+               
+               c_relatedOccNew = CacheManager.instance().getCoOccurring(
+                     startIdx, endIdx, 
+                     SSM.instance().startMonth, SSM.instance().endMonth, 
+                     t,
+                     related,
+                     SSM.instance().c_manufactureAttrib.selected,
+                     SSM.instance().c_makeAttrib.selected, 
+                     SSM.instance().c_modelAttrib.selected,
+                     SSM.instance().c_yearAttrib.selected);                   
+              
             }
          }
-         String txt = comp.baseName+"(" + relatedOccNew + "/" + relatedOcc + "/" + occ + ")";
+         String txt = "";
+         if (SSM.instance().useComparisonMode == true) {
+            txt = comp.baseName+"(" + (relatedOccNew+c_relatedOccNew) + "/" + relatedOcc + "/" + (occ+c_occ) + ")";
+         } else {
+            txt = comp.baseName+"(" + relatedOccNew + "/" + relatedOcc + "/" + occ + ")";
+         }
+            
             
          double size[] = GraphicUtil.getFontDim(txt);
          leftHeight -= Math.max(size[1], comp.cchart.height);
@@ -767,7 +827,7 @@ public class ModelRenderer extends BaseModelRenderer {
          comp.cchart.tf.anchorY = comp.cchart.anchorY;         
          comp.cchart.setLabel(txt);
          comp.cchart.tf.render(gl2);
-         comp.cchart.tf.renderBorder(gl2);
+         //comp.cchart.tf.renderBorder(gl2);
          
             
          // Doodle

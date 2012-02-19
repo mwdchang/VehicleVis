@@ -585,10 +585,10 @@ public abstract class BaseModelRenderer implements RenderTask {
                      SSM.instance().startMonth, SSM.instance().endMonth, 
                      selfAgg, 
                      self, 
-                     SSM.instance().manufactureAttrib.selected,
-                     SSM.instance().makeAttrib.selected,
-                     SSM.instance().modelAttrib.selected,
-                     SSM.instance().yearAttrib.selected
+                     SSM.instance().c_manufactureAttrib.selected,
+                     SSM.instance().c_makeAttrib.selected,
+                     SSM.instance().c_modelAttrib.selected,
+                     SSM.instance().c_yearAttrib.selected
                      );
                 
             }
@@ -598,13 +598,13 @@ public abstract class BaseModelRenderer implements RenderTask {
                   SSM.instance().startMonth, SSM.instance().endMonth,
                   self, 
                   self, 
-                  SSM.instance().c_manufactureAttrib.selected,
-                  SSM.instance().c_makeAttrib.selected,
-                  SSM.instance().c_modelAttrib.selected,
-                  SSM.instance().c_yearAttrib.selected);
+                  SSM.instance().manufactureAttrib.selected,
+                  SSM.instance().makeAttrib.selected,
+                  SSM.instance().modelAttrib.selected,
+                  SSM.instance().yearAttrib.selected);
             
             if (SSM.instance().useComparisonMode == true ) {
-               SSM.instance().maxOccurrence = CacheManager.instance().getCoOccurring(
+               SSM.instance().maxOccurrence += CacheManager.instance().getCoOccurring(
                      startIdx, endIdx, 
                      SSM.instance().startMonth, SSM.instance().endMonth,
                      self, 
@@ -802,11 +802,6 @@ public abstract class BaseModelRenderer implements RenderTask {
          //if (comp.lineAnimator != null && comp.lineAnimator.isRunning()) {
          //   comp.lineAnimator.stop();   
          //}
-         //comp.lineAnimator = PropertySetter.createAnimator(1200, comp, "occurrence", new FloatEval(), 0.0f, occ);
-//         DCColour nextSilColour = SchemeManager.silhouette_default.add(new DCColour( occ/SSM.instance().maxOccurrence, -occ/SSM.instance().maxOccurrence, -occ/SSM.instance().maxOccurrence, 1));
-//         comp.lineAnimator = PropertySetter.createAnimator(1500, comp.silhouetteColour, "colour", new DCColourEval(), SchemeManager.silhouette_default, nextSilColour);
-//         comp.lineAnimator.setRepeatBehavior(RepeatBehavior.REVERSE);
-//         comp.lineAnimator.setRepeatCount(Animator.INFINITE);
       }
       
       MM.currentModel.startAnimation();
@@ -904,10 +899,8 @@ public abstract class BaseModelRenderer implements RenderTask {
                   SSM.instance().t2Start);
          }
          
-         
          DWin.instance().debug("Panel 1 size : " + dcTextPanel.t1.documentList.size());
          DWin.instance().debug("Panel 2 size : " + dcTextPanel.t2.documentList.size());
-         
       }         
       
       
@@ -941,11 +934,14 @@ public abstract class BaseModelRenderer implements RenderTask {
          if (comp.id < 0) continue;
          
          float data[] = new float[chartSize];
+         float c_data[] = new float[chartSize];
+         
          short h[] = new short[chartSize];
          
          float localMax = 0.0f;
          for (int idx = chartStartIdx; idx <= chartEndIdx; idx++) {
             float value = 0;
+            float value2 = 0;
             
             if (SSM.instance().useAggregate == false) {
                if (SSM.instance().selectedGroup.size() > 0 && SSM.instance().useLocalFocus == true) {
@@ -962,12 +958,28 @@ public abstract class BaseModelRenderer implements RenderTask {
                         SSM.instance().makeAttrib.selected,
                         SSM.instance().modelAttrib.selected,
                         SSM.instance().yearAttrib.selected);
+                  
+                   value2 = CacheManager.instance().getCoOccurring(
+                        idx, 
+                        t, 
+                        selectedGroup, 
+                        SSM.instance().c_manufactureAttrib.selected,
+                        SSM.instance().c_makeAttrib.selected,
+                        SSM.instance().c_modelAttrib.selected,
+                        SSM.instance().c_yearAttrib.selected);
+                 
                } else {
                   value = CacheManager.instance().getOcc(idx, comp.id, 
                         SSM.instance().manufactureAttrib.selected, 
                         SSM.instance().makeAttrib.selected, 
                         SSM.instance().modelAttrib.selected,
                         SSM.instance().yearAttrib.selected);
+                  
+                  value2 = CacheManager.instance().getOcc(idx, comp.id, 
+                        SSM.instance().c_manufactureAttrib.selected, 
+                        SSM.instance().c_makeAttrib.selected, 
+                        SSM.instance().c_modelAttrib.selected,
+                        SSM.instance().c_yearAttrib.selected);
                }
             } else {
                if (SSM.instance().selectedGroup.size() > 0 && SSM.instance().useLocalFocus == true) {
@@ -982,18 +994,33 @@ public abstract class BaseModelRenderer implements RenderTask {
                         SSM.instance().makeAttrib.selected,
                         SSM.instance().modelAttrib.selected,
                         SSM.instance().yearAttrib.selected);
-                 
+                  
+                  value2 = CacheManager.instance().getCoOccurringAgg(
+                        idx, 
+                        HierarchyTable.instance().getAgg(comp.id), 
+                        selectedGroup,
+                        SSM.instance().c_manufactureAttrib.selected,
+                        SSM.instance().c_makeAttrib.selected,
+                        SSM.instance().c_modelAttrib.selected,
+                        SSM.instance().c_yearAttrib.selected);
                } else {
                   value = CacheManager.instance().getOccAgg(idx, comp.id, 
                         SSM.instance().manufactureAttrib.selected, 
                         SSM.instance().makeAttrib.selected, 
                         SSM.instance().modelAttrib.selected,
                         SSM.instance().yearAttrib.selected);              
+                  
+                  value2 = CacheManager.instance().getOccAgg(idx, comp.id, 
+                        SSM.instance().c_manufactureAttrib.selected, 
+                        SSM.instance().c_makeAttrib.selected, 
+                        SSM.instance().c_modelAttrib.selected,
+                        SSM.instance().c_yearAttrib.selected);              
                }
             }
             
             if (value > localMax) localMax = value;
             data[idx-chartStartIdx] = value;
+            c_data[idx-chartStartIdx] = value2;
             
             int y = Integer.parseInt(CacheManager.instance().getTimeByIndex(idx).substring(0, 4));
             int m = Integer.parseInt(CacheManager.instance().getTimeByIndex(idx).substring(4, 6))-1;
@@ -1006,6 +1033,7 @@ public abstract class BaseModelRenderer implements RenderTask {
                   h[idx-chartStartIdx] = 0;
                }
             }
+            
              
          }
          
@@ -1020,24 +1048,20 @@ public abstract class BaseModelRenderer implements RenderTask {
          
          
          
-         
          comp.cchart.setHighlight(h);
          if (SSM.instance().sparklineMode == 0) {
             comp.cchart.setData( DCUtil.getDeriv(data) );
          } else if (SSM.instance().sparklineMode == 1){
             comp.cchart.setData( data ); // Original
          }
-         //comp.sparkLine.setData( data ); // Original
+         comp.cchart.c_data = c_data;
+         
          comp.cchart.setMaxValue(localMax);
          //if (SSM.instance().selectedGroup!= null && comp.id == SSM.instance().selectedGroup) {
          if (SSM.instance().selectedGroup.size() > 0 && SSM.instance().selectedGroup.contains(comp.id)) {
-            //comp.cchart.resize(SSM.instance().sparkLineWidth*1.2f, SSM.instance().sparkLineHeight*1.2f);
-            //comp.cchart.resize(5*range*1.2f, SSM.instance().sparkLineHeight*1.2f);
-            comp.cchart.resize(SSM.instance().sparkLineWidth*1.2f, 5*range*1.2f+20);
+            comp.cchart.resize(SSM.instance().sparkLineWidth*1.2f, 8*range*1.2f+20);
          } else {
-            //comp.cchart.resize(SSM.instance().sparkLineWidth, SSM.instance().sparkLineHeight);
-            //comp.cchart.resize(5*range, SSM.instance().sparkLineHeight);
-            comp.cchart.resize(SSM.instance().sparkLineWidth, 5*range+20);
+            comp.cchart.resize(SSM.instance().sparkLineWidth, 8*range+20);
          }
          comp.cchart.createSegment( segSize ); // needs to go after setData and setHeight
          
@@ -1500,16 +1524,16 @@ public abstract class BaseModelRenderer implements RenderTask {
         
         // Attempt to draw borders in comparative mode
         if (SSM.instance().useComparisonMode == true) {
-           gl.glLineWidth(2.0f);
+           gl.glLineWidth(1.1f);
            for (DCComponent comp : MM.currentModel.componentTable.values()) {
               if (comp.hasContext && comp.active) {
                  float v1 = CacheManager.instance().groupOccurrence.get(comp.id);
                  float v2 = CacheManager.instance().c_groupOccurrence.get(comp.id);
                  
                  if (v1 > v2) {
-                    comp.renderBufferAdj(gl, DCColour.fromInt(0, 0, 200, 150));
+                    comp.renderBufferAdj(gl, DCColour.fromInt(0, 0, 200, 110));
                  } else if (v2 > v1){
-                    comp.renderBufferAdj(gl, DCColour.fromInt(200, 0, 200, 150));
+                    comp.renderBufferAdj(gl, DCColour.fromInt(200, 0, 200, 110));
                  }
               }
            }
