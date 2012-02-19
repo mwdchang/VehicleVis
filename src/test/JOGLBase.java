@@ -41,8 +41,11 @@ public abstract class JOGLBase implements GLEventListener {
       run(title, 600, 600);   
    }
    
-   
    public void run(String title, int width, int height) {
+      run(title, width, height, 0);   
+   }
+   
+   public void run(String title, int width, int height, int pause) {
       this.title = title;
       GLProfile profile = GLProfile.get(GLProfile.GL3bc); 
       GLCapabilities capabilities = new GLCapabilities(profile);
@@ -84,6 +87,12 @@ public abstract class JOGLBase implements GLEventListener {
             fps = 0;
             lastTime = currentTime; 
          }         
+         
+         // Experimental pause
+         if (pause > 0) {
+            try { Thread.sleep(pause); } catch(Exception e) {}      
+         }
+         
       }
       
    }
