@@ -16,6 +16,8 @@ uniform sampler2D tex;
 uniform int height;
 uniform int width;
 
+uniform float sampleRate;
+
 
 in vec4 pass_colour;
 in vec2 pass_texcoord; 
@@ -58,17 +60,18 @@ void main(void) {
 
    vec4 c = vec4(0,0,0,0);
    vec2 offset;
-   float distW = 1.0/width;
-   float distH = 1.0/height;
+   float distW = sampleRate/width;
+   float distH = sampleRate/height;
    int cnt;
    
    
    // If has some value, make it transparent
    vec4 texC = texture2D(tex, pass_texcoord.xy).rgba;
-   if (texC.r > 0.1 || texC.g > 0.1 || texC.b > 0.1) {
-      outColour = vec4(0,0,0,0.0);
+   if (texC.r <= 0.9 || texC.g <= 0.9 || texC.b <= 0.9) {
+      outColour = vec4(0, 0, 0, 0);
       return; 
    }
+   
    
    
 
@@ -85,21 +88,17 @@ void main(void) {
          //c += (vec4(1,1,1,1) - texture2D( tex , pass_texcoord.xy + offset).rgba);
       }
    }
-   //c /= 25;
    c /= 81;
 
-   //outColour = 0.6*texture2D(tex, pass_texcoord.xy).rgba + 0.4*c; 
    outColour = c; 
-   //outColour.rgb += 0.4*texture2D(tex, pass_texcoord.xy).rgb;
 
-   if (outColour.r+outColour.g+outColour.b < 0.3)
+   if (outColour.r+outColour.g+outColour.b > 2.7)
       outColour.a = 0.0;
    else
-      outColour.a = 0.5;
+      outColour.a = 0.8;
 
-   //outColour.a = 1.0;
-  
-   //outColour.r = 0.4;
+   
+   //outColour.rgb = vec3(1) - outColour.rgb;
 
 
 

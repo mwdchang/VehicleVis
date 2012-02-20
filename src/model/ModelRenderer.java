@@ -1030,24 +1030,21 @@ public class ModelRenderer extends BaseModelRenderer {
             setPerspectiveView(gl2); 
             gl2.glRotated(SSM.instance().rotateX, 1, 0, 0);
             gl2.glRotated(SSM.instance().rotateY, 0, 1, 0);
+            gl2.glClearColor(1, 1, 1, 0);
+            gl2.glClear(GL2.GL_COLOR_BUFFER_BIT);
             gl2.glPushMatrix();
             for (DCComponent comp : MM.currentModel.componentTable.values()) {
-               //if (SSM.instance().relatedList.contains(comp.id) && ! SSM.instance().selectedGroup.contains(comp.id)) {
                if ( SSM.instance().selectedGroup.contains(comp.id) ) {
                   //gl2.glScaled(1.2, 1.2, 1.2);
-                  comp.renderBuffer(gl2, DCColour.fromInt(0, 10, 210));
-                  //comp.renderBufferAdj(gl2, DCColour.fromInt(20, 10, 210));
+                  comp.renderBuffer(gl2, DCColour.fromInt(20, 20, 210));
                   //gl2.glScaled(1.0/1.2, 1.0/1.2, 1.0/1.2);
                }
-                  //comp.renderFNormal(gl2);
-                  //comp.renderBuffer(gl2, DCColour.fromInt(0, 10, 210));
-                  //comp.renderBufferAdj(gl2, DCColour.fromInt(200, 200, 0));
             }          
          glowTexture.stopRecording(gl2);
          
          GraphicUtil.setOrthonormalView(gl2, 0, 1, 0, 1, -10, 10);
          gl2.glBlendFunc(GL2.GL_SRC_ALPHA, GL2.GL_ONE_MINUS_SRC_ALPHA);
-         glowTexture.render(gl2);
+         glowTexture.render(gl2, 2);
       }         
       
       

@@ -53,7 +53,8 @@ public class TestModel extends JOGLBase implements KeyListener {
       if (useHalo) {
          fbt.startRecording(gl2); 
          GraphicUtil.setPerspectiveView(gl2, w/h, 30.0f, 1.0f, 500.0f, new float[]{10.0f, 40.0f, 0.0f}, new float[]{0,0,0}, new float[]{0, 1, 0} );
-         gl2.glClearColor(0, 0, 0, 0);
+         //gl2.glClearColor(0, 0, 0, 0);
+         gl2.glClearColor(1, 1, 1, 0);
          gl2.glClear(GL2.GL_COLOR_BUFFER_BIT);
          gl2.glPushMatrix();
             gl2.glRotated(rotY, 0, 1, 0);
@@ -78,7 +79,7 @@ public class TestModel extends JOGLBase implements KeyListener {
          //this.basicClear(gl2);
          //fbt.shader.setUniform1i(gl2, "height", a.getHeight());
          //fbt.shader.setUniform1i(gl2, "width", a.getWidth());
-         fbt.render(gl2);
+         fbt.render(gl2, 4.0f);
       } else {
          GraphicUtil.setPerspectiveView(gl2, w/h, 30.0f, 1.0f, 500.0f, new float[]{10.0f, 40.0f, 0.0f}, new float[]{0,0,0}, new float[]{0, 1, 0} );
          gl2.glPushMatrix();

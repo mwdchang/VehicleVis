@@ -1615,11 +1615,11 @@ public abstract class BaseModelRenderer implements RenderTask {
            if (SSM.instance().selectedGroup.size() > 0 && SSM.instance().selectedGroup.contains(comp.id)){
               //g_opacity[0] = comp.colour.a;
               //g_shaderDualPeel.setUniform1fv(gl2, "Alpha", g_opacity);
-              g_shaderDualPeel.setUniformf(gl2, "compColour", SchemeManager.colour_blue.r, SchemeManager.colour_blue.g, SchemeManager.colour_blue.b, 1.0f);
-              g_shaderDualPeel.setUniform1fv(gl2, "Alpha", new float[]{1.0f});
-              g_shaderDualPeel.setUniform1i(gl2, "useLight", 0);
-              comp.boundingBox.renderBoundingBox(gl2);   
-              g_shaderDualPeel.setUniform1fv(gl2, "Alpha", g_opacity);
+              //g_shaderDualPeel.setUniformf(gl2, "compColour", SchemeManager.colour_blue.r, SchemeManager.colour_blue.g, SchemeManager.colour_blue.b, 1.0f);
+              //g_shaderDualPeel.setUniform1fv(gl2, "Alpha", new float[]{1.0f});
+              //g_shaderDualPeel.setUniform1i(gl2, "useLight", 0);
+              //comp.boundingBox.renderBoundingBox(gl2);   
+              //g_shaderDualPeel.setUniform1fv(gl2, "Alpha", g_opacity);
            } else if (SSM.instance().relatedList.size() > 0 && SSM.instance().relatedList.contains(comp.id)) {
               //g_shaderDualPeel.setUniform1i(gl2, "useLight", 0);
               //g_shaderDualPeel.setUniformf(gl2, "compColour", SchemeManager.colour_related.r, SchemeManager.colour_related.g, SchemeManager.colour_related.b, 1.0f);
