@@ -106,10 +106,6 @@ public class SSM {
    public float rotateY = 0.0f;
    
    
-//   public float adjustAlphaValue(Integer groupId, float alpha) {
-//      if (groupId == null || currentGroup == null || currentGroup.intValue() == groupId.intValue()) return alpha;
-//      return alpha*0.75f;
-//   }
 //   
    // Need to sync this because graphics
    // and logic are running in different threads ... thanks Java !!!
@@ -154,7 +150,6 @@ public class SSM {
    ///////////////////////////////////////////////////////////////////////////////// 
    public float sparkLineHeight  = 80;
    public float sparkLineWidth   = 170.0f;
-   //public float sparkLineWidth   = 120.0f;
    public int   sparkLineSegment = 50; 
    
    
@@ -320,6 +315,15 @@ public class SSM {
       */
       return false;
    }
+   
+   
+   ////////////////////////////////////////////////////////////////////////////////
+   // Animation controls
+   // Durations are in milliseconds
+   ////////////////////////////////////////////////////////////////////////////////
+   public static int SCROLL_DURATION = 500;
+   public static int PART_CHANGE_DURATION = 1000;
+   public static int TIME_CHANGE_DURATION = 1000;
    
    
    

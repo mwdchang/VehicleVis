@@ -167,8 +167,8 @@ public class FilterTask implements RenderTask {
       yearSlider.tempData = yearData;
       
       if (yearSlider.data != null) {
-         yearAnimator = PropertySetter.createAnimator(1200, yearSlider, "data", new SliderEval(), yearSlider.data, yearData);
-         yearAnimator2 = PropertySetter.createAnimator(1200, yearSlider, "maxValue", new DoubleEval(), yearSlider.maxValue, (double)max);
+         yearAnimator = PropertySetter.createAnimator(SSM.TIME_CHANGE_DURATION, yearSlider, "data", new SliderEval(), yearSlider.data, yearData);
+         yearAnimator2 = PropertySetter.createAnimator(SSM.TIME_CHANGE_DURATION, yearSlider, "maxValue", new DoubleEval(), yearSlider.maxValue, (double)max);
          yearAnimator.start();
          yearAnimator2.start();
       } else {
@@ -207,8 +207,8 @@ public class FilterTask implements RenderTask {
       monthSlider.tempData = monthData;
       
       if (monthSlider.data != null) {
-         monthAnimator = PropertySetter.createAnimator(1200, monthSlider, "data", new SliderEval(), monthSlider.data, monthData);
-         monthAnimator2 = PropertySetter.createAnimator(1200, monthSlider, "maxValue", new DoubleEval(), monthSlider.maxValue, (double)max);
+         monthAnimator = PropertySetter.createAnimator(SSM.TIME_CHANGE_DURATION, monthSlider, "data", new SliderEval(), monthSlider.data, monthData);
+         monthAnimator2 = PropertySetter.createAnimator(SSM.TIME_CHANGE_DURATION, monthSlider, "maxValue", new DoubleEval(), monthSlider.maxValue, (double)max);
          monthAnimator.start();
          monthAnimator2.start();
       } else {

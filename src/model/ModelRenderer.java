@@ -987,6 +987,7 @@ public class ModelRenderer extends BaseModelRenderer {
          }
          SSM.instance().refreshMagicLens = false;
       }
+      
      
       
       ////////////////////////////////////////////////////////////////////////////////
@@ -1007,18 +1008,8 @@ public class ModelRenderer extends BaseModelRenderer {
          } else {
             renderColourRamp(gl2, null);
          }
-         //renderNormal(gl2);
-         //nderFNormal(gl2);
-         //renderVNormal(gl2);
-         //renderSil(gl2);
-         //renderSilLineWidth(gl2);
-         //renderBoundingBox(gl2);
          setProjectedCoord(gl2);
          float coord[] = MM.currentModel.getMaxMinScreenX(gl2);
-         //System.out.println(coord[0] + " " + coord[1]);
-         
-         //MM.instance().currentModel.setProjectedCoord(gl2);
-         //System.out.println(MM.instance().currentModel.projbox);
       }
       
       
@@ -1039,6 +1030,21 @@ public class ModelRenderer extends BaseModelRenderer {
                   comp.renderBuffer(gl2, DCColour.fromInt(20, 20, 210));
                   //gl2.glScaled(1.0/1.2, 1.0/1.2, 1.0/1.2);
                }
+               
+               // TODO : Test test
+               /*
+               if (SSM.instance().useComparisonMode == true) {
+                  if (comp.hasContext && comp.active) {
+                     float v1 = CacheManager.instance().groupOccurrence.get(comp.id);
+                     float v2 = CacheManager.instance().c_groupOccurrence.get(comp.id);                  
+                     
+                     if (v1 > v2) 
+                        comp.renderBuffer(gl2, SchemeManager.comp_1);
+                     else if (v1 < v2) 
+                        comp.renderBuffer(gl2, SchemeManager.comp_2);
+                  }
+               }
+               */
             }          
          glowTexture.stopRecording(gl2);
          
@@ -1046,7 +1052,8 @@ public class ModelRenderer extends BaseModelRenderer {
          gl2.glBlendFunc(GL2.GL_SRC_ALPHA, GL2.GL_ONE_MINUS_SRC_ALPHA);
          glowTexture.render(gl2, 2);
       }         
-      
+     
+     
       
       ////////////////////////////////////////////////////////////////////////////////
       // Render any filters we want to show
@@ -1273,20 +1280,6 @@ public class ModelRenderer extends BaseModelRenderer {
             if (DCCamera.instance().eye.sub(modelComp.center).mag() <= la.nearPlane) continue;
          
          
-         
-         // Check if the part is currently focused
-         //Integer current  = SSM.instance().currentGroup;
-         //Integer selected = SSM.instance().selectedGroup;
-         
-         //Hack TODO: Test
-//         if (partName.indexOf("_") > 0) {
-//            System.out.println(partName + " " + partName.indexOf("_"));
-//            partName = partName.substring(0, partName.indexOf('_')-1); 
-//         }         
-//         
-         
-//         if (current  != null && HierarchyTable.instance().partTable.get(current).contains(modelComp.baseName) ||
-//             selected != null && HierarchyTable.instance().partTable.get(selected).contains(modelComp.baseName)) {
 	   
          if ( SSM.instance().selectedGroup.size() > 0 && SSM.instance().selectedGroup.contains(modelComp.id)) {
             gl2.glPolygonMode(GL2.GL_FRONT_AND_BACK, GL2.GL_FILL);
@@ -1354,39 +1347,6 @@ public class ModelRenderer extends BaseModelRenderer {
    }
    
    
-   
-   /*
-   public void renderExploded(GL2 gl2) {
-      gl2.glPushMatrix();
-      String[] clist = this.getComponentUnsorted(gl2);
-      for (int i=0; i < clist.length; i++) {
-         String partName  = clist[i];
-         DCComponent modelComp = MM.currentModel.componentTable.get(partName);         
-         
-         // Find the distance away from the eye position
-         float distance = modelComp.center.sub(DCCamera.instance().eye).mag();
-         
-         gl2.glTranslatef(0.0f, 1.0f, 0.0f);
-         gl2.glPushMatrix();
-//            gl2.glScalef( 2.0f/modelComp.scaleFactor.x, 2.0f/modelComp.scaleFactor.y, 2.0f/modelComp.scaleFactor.z);
-//            gl2.glColor4f(modelComp.colour.r, modelComp.colour.g, modelComp.colour.b, modelComp.colour.a);
-            gl2.glColor4f(1.0f, 0.0f, 0.0f, 1.0f);
-            gl2.glUseProgram(0);
-            modelComp.renderBasicMeshWithNormal(gl2);
-         gl2.glPopMatrix();
-                      
-      }
-      gl2.glPopMatrix();
-   }
-   */
-   
-   
-   ////////////////////////////////////////////////////////////////////////////////
-   // Check the X,Y coord and renders a tool tip, if necessary
-   ////////////////////////////////////////////////////////////////////////////////
-   public void renderToolTip(GL2 gl2) {
-      //tip.render(gl2); 
-   }
    
    ////////////////////////////////////////////////////////////////////////////////
    // Init vert,geom and frag shaders
@@ -1471,10 +1431,10 @@ public class ModelRenderer extends BaseModelRenderer {
             attrib.active = ! attrib.active;
             
             if (attrib.active) {
-               widget.animator = PropertySetter.createAnimator(600, widget, "height", new FloatEval(), widget.height, attrib.height); 
+               widget.animator = PropertySetter.createAnimator(SSM.SCROLL_DURATION, widget, "height", new FloatEval(), widget.height, attrib.height); 
                widget.animator.start();
             } else {
-               widget.animator = PropertySetter.createAnimator(600, widget, "height", new FloatEval(), widget.height, 0.0f); 
+               widget.animator = PropertySetter.createAnimator(SSM.SCROLL_DURATION, widget, "height", new FloatEval(), widget.height, 0.0f); 
                widget.animator.start();
             }
          }

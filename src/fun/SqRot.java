@@ -40,7 +40,7 @@ public class SqRot extends JOGLBase implements KeyListener {
       
       gl2.glTranslatef(0, 0, -290f);
       
-//      gl2.glRotatef(current, 0, 0, 1);
+      //gl2.glRotatef(current, 1, 1, 1);
       
          
       for (int idx=0; idx < current; idx++) {
@@ -142,8 +142,8 @@ public class SqRot extends JOGLBase implements KeyListener {
          
          d_radius[i] = Math.random()*0.5 - 0.5;
          d_angle[i] = Math.random()*6 - 3.0;
-         if (d_angle[i] < 0) d_angle[i] -= 0.4;
-         else d_angle[i] += 0.4;
+         if (d_angle[i] < 0) d_angle[i] -= 0.3;
+         else d_angle[i] += 0.3;
       }
       
       current = 0;

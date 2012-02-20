@@ -795,13 +795,8 @@ public abstract class BaseModelRenderer implements RenderTask {
          // Reset sparline for any colouring changes
          comp.cchart.colour = comp.colour;
          
-         
-         
          // Animator construction
-         comp.canimator = PropertySetter.createAnimator(1000, comp.colour , "colour", new DCColourEval(), comp.colour, nextColour);
-         //if (comp.lineAnimator != null && comp.lineAnimator.isRunning()) {
-         //   comp.lineAnimator.stop();   
-         //}
+         comp.canimator = PropertySetter.createAnimator(SSM.PART_CHANGE_DURATION, comp.colour , "colour", new DCColourEval(), comp.colour, nextColour);
       }
       
       MM.currentModel.startAnimation();
@@ -1409,6 +1404,7 @@ public abstract class BaseModelRenderer implements RenderTask {
 
         gl.glEndList();
      }     
+     
      void RenderDualPeeling(GL2 gl) {
         gl.glDisable(GL2.GL_DEPTH_TEST);
         gl.glEnable(GL2.GL_BLEND);
@@ -1524,18 +1520,18 @@ public abstract class BaseModelRenderer implements RenderTask {
         
         // Attempt to draw borders in comparative mode
         if (SSM.instance().useComparisonMode == true) {
-           gl.glLineWidth(1.1f);
+           gl.glLineWidth(1.3f);
            for (DCComponent comp : MM.currentModel.componentTable.values()) {
               if (comp.hasContext && comp.active) {
                  float v1 = CacheManager.instance().groupOccurrence.get(comp.id);
                  float v2 = CacheManager.instance().c_groupOccurrence.get(comp.id);
                  
                  if (v1 > v2) {
-                    //comp.renderBufferAdj(gl, DCColour.fromInt(0, 0, 200, 110));
                     comp.renderBufferAdj(gl, SchemeManager.comp_1);
                  } else if (v2 > v1){
-                    //comp.renderBufferAdj(gl, DCColour.fromInt(200, 0, 200, 110));
                     comp.renderBufferAdj(gl, SchemeManager.comp_2);
+                 } else {
+                    comp.renderBufferAdj(gl, SchemeManager.silhouette_default); 
                  }
               }
            }
@@ -1557,7 +1553,6 @@ public abstract class BaseModelRenderer implements RenderTask {
         g_shaderDualFinal.bindTextureRECT(gl,"BackBlenderTex", g_dualBackBlenderTexId[0], 2);
         gl.glCallList(g_quadDisplayList);
         g_shaderDualFinal.unbind(gl);
-        
         
       
      }     

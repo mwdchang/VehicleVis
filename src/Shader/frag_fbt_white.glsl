@@ -76,8 +76,8 @@ void main(void) {
    
 
 
-   for (int y=-4; y <=4; y++) {
-      for (int x=-4; x <=4; x++) {
+   for (int y=-3; y <=3; y++) {
+      for (int x=-3; x <=3; x++) {
          offset.x = 1.0 * x * distW;
          offset.y = 1.0 * y * distH;
          //c += bloom[cnt] * texture2D( tex , pass_texcoord.xy + offset).rgba;
@@ -88,7 +88,9 @@ void main(void) {
          //c += (vec4(1,1,1,1) - texture2D( tex , pass_texcoord.xy + offset).rgba);
       }
    }
-   c /= 81;
+   //c /= 81;
+   //c /= 49;
+   c /= 49;
 
    outColour = c; 
 

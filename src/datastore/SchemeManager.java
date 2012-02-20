@@ -198,8 +198,8 @@ public class SchemeManager {
    
    
    // Outline/silhouette colour for comparison mode
-   public static DCColour comp_1 = new DCColour(1.0, 1.0, 0.0, 0.5);
-   public static DCColour comp_2 = new DCColour(0.0, 1.0, 1.0, 0.5);
+   public static DCColour comp_1 = DCColour.fromInt(174, 141, 195, 128);
+   public static DCColour comp_2 = DCColour.fromInt(127, 191, 123);
    
    
    public static DCColour textPane_normal   = new DCColour(0.3, 0.3, 0.3, 1.0);

@@ -100,7 +100,8 @@ public class Heatmap extends ComponentChart {
                   
                   DCTip.addText("Time:" + DCTip.translateTable.get(cMonth+"") + "-" + cYear); 
                   if (SSM.instance().useComparisonMode == true) {
-                     DCTip.addText("Value:" + (int)(v+c_v));
+                     DCTip.addText("Value:" + (int)(v));
+                     DCTip.addText("Value:" + (int)(c_v));
                   } else {
                      DCTip.addText("Value:" + (int)v);
                   }
