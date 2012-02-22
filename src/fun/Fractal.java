@@ -20,6 +20,9 @@ import util.ShaderObj;
 /////////////////////////////////////////////////////////////////////////////////
 // Fractal generation using a fractal shader
 // Mostly for complex number based fractals
+// 
+// Note the actual fractal generation logic 
+// resides in vert_fractal.glsl, frag_fragctal.glsl and frag_fractal64.glsl
 /////////////////////////////////////////////////////////////////////////////////
 public class Fractal extends JOGLBase implements MouseWheelListener, KeyListener, MouseMotionListener, MouseListener {
    

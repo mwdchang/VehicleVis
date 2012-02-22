@@ -52,6 +52,295 @@ public class ModelRenderer extends BaseModelRenderer {
    }     
    
    
+   
+   ////////////////////////////////////////////////////////////////////////////////
+   // Main rendering method
+   ////////////////////////////////////////////////////////////////////////////////
+   public void render(GL2 gl2) {
+      gl2.glClear(GL2.GL_COLOR_BUFFER_BIT);
+      
+      // To avoid threading issues, lets
+      // just put the update GL stuff here
+      if (SSM.instance().dirtyGL == 1) {
+         resetDataGL(gl2);
+         SSM.instance().dirtyGL = 0;
+      }
+      
+      ////////////////////////////////////////////////////////////////////////////////
+      // Need to re-adjust the buffer size if the screen size is changed
+      ////////////////////////////////////////////////////////////////////////////////
+      if (SSM.instance().refreshOITBuffers == true) {
+         this.DeleteDualPeelingRenderTargets(gl2);
+         this.InitDualPeelingRenderTargets(gl2);
+         SSM.instance().refreshOITTexture = true;
+         SSM.instance().refreshOITBuffers = false;   
+      }
+      
+      
+      ////////////////////////////////////////////////////////////////////////////////
+      // Initialize the glowTexture
+      ////////////////////////////////////////////////////////////////////////////////
+      if (SSM.instance().refreshGlowTexture == true) {
+        System.out.println("In Modelrenderer init " + SSM.instance().windowHeight + " " + SSM.instance().windowWidth);         
+        glowTexture= new FrameBufferTexture();
+        glowTexture.TEXTURE_SIZE_W = SSM.instance().windowWidth;
+        glowTexture.TEXTURE_SIZE_H = SSM.instance().windowHeight;
+        glowTexture.init(gl2);
+        
+        // Redo shader inits
+        glowTexture.shader.createShader(gl2, "src\\Shader\\vert_fbt.glsl", GL2.GL_VERTEX_SHADER);
+        glowTexture.shader.createShader(gl2, "src\\Shader\\frag_fbt_white.glsl", GL2.GL_FRAGMENT_SHADER);
+        glowTexture.shader.createProgram(gl2);
+        
+        gl2.glBindAttribLocation(glowTexture.shader.programID,  0, "in_position");
+        gl2.glBindAttribLocation(glowTexture.shader.programID,  1, "in_colour");
+        gl2.glBindAttribLocation(glowTexture.shader.programID,  2, "in_texcoord");      
+        
+        glowTexture.shader.linkProgram(gl2);
+        glowTexture.shader.bindFragColour(gl2, "outColour");   
+        
+        SSM.instance().refreshGlowTexture = false;
+        //System.out.println("In Modelrenderer init " + glowTexture.TEXTURE_SIZE_W + " " + glowTexture.TEXTURE_SIZE_H);         
+     }      
+      
+    
+      
+
+      ////////////////////////////////////////////////////////////////////////////////
+      // Render any scenes that we want to cache...ie: Lens, Filters
+      ////////////////////////////////////////////////////////////////////////////////
+      if (SSM.instance().refreshMagicLens == true ||
+         MM.instance().currentModel.isAnimationRunning()) {
+         for (int i=0;i < SSM.instance().lensList.size(); i++) {
+            LensAttrib la = SSM.instance().lensList.elementAt(i);   
+            if (la.mlen == null) {
+               la.mlen = new MagicLens();   
+               la.mlen.init(gl2);
+            }
+            
+            la.mlen.startRecording(gl2); {
+               // Do not render again in dual depthing peeling mode, 
+               // We already have transparency and it is too expensive
+               if ( ! SSM.instance().useDualDepthPeeling) {
+                  setPerspectiveView(gl2, la.nearPlane, la.farPlane); {
+                     gl2.glRotated(SSM.instance().rotateX, 1, 0, 0);
+                     gl2.glRotated(SSM.instance().rotateY, 0, 1, 0);
+                     gl2.glEnable(GL2.GL_BLEND);
+                     renderColourRamp(gl2, la);
+                  }
+                  setPerspectiveView(gl2, 0.01f, la.nearPlane); {
+                     gl2.glRotated(SSM.instance().rotateX, 1, 0, 0);
+                     gl2.glRotated(SSM.instance().rotateY, 0, 1, 0);
+                     renderSil(gl2);   
+                  }
+               }
+            } la.mlen.stopRecording(gl2);
+            
+         }
+         SSM.instance().refreshMagicLens = false;
+      }
+      
+     
+      
+      ////////////////////////////////////////////////////////////////////////////////
+      // Render the default scene we want to show
+      ////////////////////////////////////////////////////////////////////////////////
+      setPerspectiveView(gl2); {
+         gl2.glRotated(SSM.instance().rotateX, 1, 0, 0);
+         gl2.glRotated(SSM.instance().rotateY, 0, 1, 0);
+         gl2.glEnable(GL2.GL_BLEND);
+         
+         if (SSM.instance().useDualDepthPeeling) {
+            if (SSM.instance().refreshOITTexture) {
+               this.RenderDualPeeling(gl2);
+               //SSM.instance().refreshOITTexture = false;
+            } else {
+               this.RenderOITTexture(gl2);   
+            }
+         } else {
+            renderColourRamp(gl2, null);
+         }
+         setProjectedCoord(gl2);
+         float coord[] = MM.currentModel.getMaxMinScreenX(gl2);
+      }
+      
+      
+      ////////////////////////////////////////////////////////////////////////////////
+      // Record glow effects and render to to a 1-1 square in ortho mode 
+      ////////////////////////////////////////////////////////////////////////////////
+      if (SSM.instance().useGlow && SSM.instance().selectedGroup.size() > 0) {
+         glowTexture.startRecording(gl2); 
+            setPerspectiveView(gl2); 
+            gl2.glRotated(SSM.instance().rotateX, 1, 0, 0);
+            gl2.glRotated(SSM.instance().rotateY, 0, 1, 0);
+            gl2.glClearColor(1, 1, 1, 0);
+            gl2.glClear(GL2.GL_COLOR_BUFFER_BIT);
+            gl2.glPushMatrix();
+            for (DCComponent comp : MM.currentModel.componentTable.values()) {
+               if ( SSM.instance().selectedGroup.contains(comp.id) ) {
+                  //gl2.glScaled(1.2, 1.2, 1.2);
+                  comp.renderBuffer(gl2, DCColour.fromInt(20, 20, 210));
+                  //gl2.glScaled(1.0/1.2, 1.0/1.2, 1.0/1.2);
+               }
+               
+            }          
+            gl2.glPopMatrix();
+         glowTexture.stopRecording(gl2);
+         
+         GraphicUtil.setOrthonormalView(gl2, 0, 1, 0, 1, -10, 10);
+         gl2.glBlendFunc(GL2.GL_SRC_ALPHA, GL2.GL_ONE_MINUS_SRC_ALPHA);
+         glowTexture.render(gl2, 2, 1);
+         
+         
+         if (SSM.instance().useComparisonMode == true) {
+            glowTexture.startRecording(gl2);
+               setPerspectiveView(gl2);
+               gl2.glRotated(SSM.instance().rotateX, 1, 0, 0); 
+               gl2.glRotated(SSM.instance().rotateY, 0, 1, 0); 
+               gl2.glClearColor(1, 1, 1, 0);
+               gl2.glClear(GL2.GL_COLOR_BUFFER_BIT);
+               gl2.glPushMatrix();
+               for (DCComponent comp : MM.currentModel.componentTable.values()) {
+                  ////////////////////////////////////////////////////////////////////////////////
+                  // Render a comparative result as halo/glows
+                  // See also end of dual-depth render in BaseRenderer for alternative method
+                  ////////////////////////////////////////////////////////////////////////////////
+                  if (comp.hasContext && comp.active && ! SSM.instance().selectedGroup.contains(comp.id)) {
+                     float v1 = CacheManager.instance().groupOccurrence.get(comp.id);
+                     float v2 = CacheManager.instance().c_groupOccurrence.get(comp.id);                  
+                     if (v1 > v2) 
+                        comp.renderBuffer(gl2, SchemeManager.comp_1);
+                     else if (v1 < v2) 
+                        comp.renderBuffer(gl2, SchemeManager.comp_2);
+                  } else {
+                     continue;
+                  }
+               }
+               gl2.glPopMatrix();
+            glowTexture.stopRecording(gl2);
+            GraphicUtil.setOrthonormalView(gl2, 0, 1, 0, 1, -10, 10);
+            gl2.glBlendFunc(GL2.GL_SRC_ALPHA, GL2.GL_ONE_MINUS_SRC_ALPHA);
+            glowTexture.render(gl2, 1, 0);
+         }
+         
+      }         
+     
+     
+      
+      ////////////////////////////////////////////////////////////////////////////////
+      // Render any filters we want to show
+      ////////////////////////////////////////////////////////////////////////////////
+      for (int i=0; i < SSM.instance().lensList.size(); i++) {
+         LensAttrib la = SSM.instance().lensList.elementAt(i);
+         setOrthonormalView(gl2); {
+            if (la.mlen != null)
+              la.mlen.renderLens( gl2, la );
+         }
+      }
+      
+      
+      
+      
+      
+      ////////////////////////////////////////////////////////////////////////////////
+      // Render any 2D components
+      ////////////////////////////////////////////////////////////////////////////////
+      if (SSM.instance().showLabels == true) {
+         for (int i=0; i < SSM.instance().lensList.size(); i++) {
+            setOrthonormalView(gl2, 0, SSM.instance().windowWidth, 0, SSM.instance().windowHeight); {
+               if (SSM.instance().useCircularLabel == true) {
+                  renderLabelCircular(gl2, SSM.instance().lensList.elementAt(i));
+               } else {
+                  renderLabelBalanced(gl2, SSM.instance().lensList.elementAt(i));
+               }
+            }
+         }
+      }
+      
+      
+      // TODO : Move this out later...just to test if animation can work, probably have a flag and put in resetDataGL or soemthing
+      if (SSM.instance().resizePanel == 1) {
+         if (dcTextPanel.animatorH != null) dcTextPanel.animatorH.stop();
+         if (dcTextPanel.animatorW != null) dcTextPanel.animatorW.stop();
+         
+         float goalH = SSM.instance().docActive ? SSM.instance().docHeight : 0.0f;
+         float goalW = SSM.instance().docActive ? SSM.instance().docWidth : 0.0f;
+         
+         dcTextPanel.animatorH = PropertySetter.createAnimator(600, dcTextPanel, "displayH", new FloatEval(), dcTextPanel.displayH, goalH);
+         dcTextPanel.animatorW = PropertySetter.createAnimator(600, dcTextPanel, "displayW", new FloatEval(), dcTextPanel.displayW, goalW);
+         dcTextPanel.animatorH.start();
+         dcTextPanel.animatorW.start();
+         SSM.instance().resizePanel = 0;   
+      }
+      
+      
+      ////////////////////////////////////////////////////////////////////////////////
+      // Show the document viewer box
+      ////////////////////////////////////////////////////////////////////////////////
+      //if (SSM.instance().docVisible == true) {
+      if (dcTextPanel.displayH >= 0.1) {
+         setOrthonormalView(gl2, 0, SSM.instance().windowWidth, 0, SSM.instance().windowHeight); {
+            dcTextPanel.render(gl2);
+         }
+      }
+     
+      
+      ////////////////////////////////////////////////////////////////////////////////
+      // Optional, debugging elements
+      ////////////////////////////////////////////////////////////////////////////////
+      if (SSM.instance().useGuide == true) {
+         setPerspectiveView(gl2); {
+            GraphicUtil.drawAxis(gl2, 0, 0, 0);
+         }
+         
+         setOrthonormalView(gl2, 0, SSM.instance().windowWidth, 0, SSM.instance().windowHeight); {
+            StatusWindow.tf.anchorX = SSM.instance().windowWidth - StatusWindow.tf.width;
+            StatusWindow.tf.anchorY = 200; //StatusWindow.tf.height;
+            StatusWindow.render(gl2);
+         }
+         
+      }         
+      
+      ////////////////////////////////////////////////////////////////////////////////
+      // Rener the combo boxes
+      ////////////////////////////////////////////////////////////////////////////////
+      setOrthonormalView(gl2, 0, SSM.instance().windowWidth, 0, SSM.instance().windowHeight); {
+         // Update the yoffset before rendering
+         manufactureScroll.yoffset = SSM.instance().manufactureAttrib.yOffset;
+         makeScroll.yoffset  = SSM.instance().makeAttrib.yOffset;
+         modelScroll.yoffset = SSM.instance().modelAttrib.yOffset;
+         yearScroll.yoffset  = SSM.instance().yearAttrib.yOffset;
+         
+         manufactureScroll.render(gl2);   
+         makeScroll.render(gl2);
+         modelScroll.render(gl2);
+         yearScroll.render(gl2);
+         
+         
+         
+         c_manufactureScroll.yoffset = SSM.instance().c_manufactureAttrib.yOffset;
+         c_makeScroll.yoffset  = SSM.instance().c_makeAttrib.yOffset;
+         c_modelScroll.yoffset = SSM.instance().c_modelAttrib.yOffset;
+         c_yearScroll.yoffset  = SSM.instance().c_yearAttrib.yOffset;
+         
+         c_manufactureScroll.render(gl2);   
+         c_makeScroll.render(gl2);
+         c_modelScroll.render(gl2);
+         c_yearScroll.render(gl2);
+         
+      }
+      
+      ////////////////////////////////////////////////////////////////////////////////
+      // Renders a tool tip
+      ////////////////////////////////////////////////////////////////////////////////
+      setOrthonormalView(gl2, 0, SSM.instance().windowWidth, 0, SSM.instance().windowHeight); {
+         DCTip.render(gl2);
+      }
+   }   
+   
+   
+   
+   
    ////////////////////////////////////////////////////////////////////////////////
    // Rules
    //
@@ -898,273 +1187,7 @@ public class ModelRenderer extends BaseModelRenderer {
       }
    }
    
-   
-   
-   
-   ////////////////////////////////////////////////////////////////////////////////
-   // Main rendering method
-   ////////////////////////////////////////////////////////////////////////////////
-   public void render(GL2 gl2) {
-      gl2.glClear(GL2.GL_COLOR_BUFFER_BIT);
-      
-      // To avoid threading issues, lets
-      // just put the update GL stuff here
-      if (SSM.instance().dirtyGL == 1) {
-         resetDataGL(gl2);
-         SSM.instance().dirtyGL = 0;
-      }
-      
-      ////////////////////////////////////////////////////////////////////////////////
-      // Need to re-adjust the buffer size if the screen size is changed
-      ////////////////////////////////////////////////////////////////////////////////
-      if (SSM.instance().refreshOITBuffers == true) {
-         this.DeleteDualPeelingRenderTargets(gl2);
-         this.InitDualPeelingRenderTargets(gl2);
-         SSM.instance().refreshOITTexture = true;
-         SSM.instance().refreshOITBuffers = false;   
-      }
-      
-      
-      ////////////////////////////////////////////////////////////////////////////////
-      // Initialize the glowTexture
-      ////////////////////////////////////////////////////////////////////////////////
-      if (SSM.instance().refreshGlowTexture == true) {
-        System.out.println("In Modelrenderer init " + SSM.instance().windowHeight + " " + SSM.instance().windowWidth);         
-        glowTexture= new FrameBufferTexture();
-        glowTexture.TEXTURE_SIZE_W = SSM.instance().windowWidth;
-        glowTexture.TEXTURE_SIZE_H = SSM.instance().windowHeight;
-        glowTexture.init(gl2);
-        
-        // Redo shader inits
-        glowTexture.shader.createShader(gl2, "src\\Shader\\vert_fbt.glsl", GL2.GL_VERTEX_SHADER);
-        glowTexture.shader.createShader(gl2, "src\\Shader\\frag_fbt_white.glsl", GL2.GL_FRAGMENT_SHADER);
-        glowTexture.shader.createProgram(gl2);
-        
-        gl2.glBindAttribLocation(glowTexture.shader.programID,  0, "in_position");
-        gl2.glBindAttribLocation(glowTexture.shader.programID,  1, "in_colour");
-        gl2.glBindAttribLocation(glowTexture.shader.programID,  2, "in_texcoord");      
-        
-        glowTexture.shader.linkProgram(gl2);
-        glowTexture.shader.bindFragColour(gl2, "outColour");   
-        
-        SSM.instance().refreshGlowTexture = false;
-        System.out.println("In Modelrenderer init " + glowTexture.TEXTURE_SIZE_W + " " + glowTexture.TEXTURE_SIZE_H);         
-     }      
-      
-    
-      
 
-      ////////////////////////////////////////////////////////////////////////////////
-      // Render any scenes that we want to cache...ie: Lens, Filters
-      ////////////////////////////////////////////////////////////////////////////////
-      if (SSM.instance().refreshMagicLens == true ||
-         MM.instance().currentModel.isAnimationRunning()) {
-         for (int i=0;i < SSM.instance().lensList.size(); i++) {
-            LensAttrib la = SSM.instance().lensList.elementAt(i);   
-            if (la.mlen == null) {
-               la.mlen = new MagicLens();   
-               la.mlen.init(gl2);
-            }
-            
-            la.mlen.startRecording(gl2); {
-               // Do not render again in dual depthing peeling mode, 
-               // We already have transparency and it is too expensive
-               if ( ! SSM.instance().useDualDepthPeeling) {
-                  setPerspectiveView(gl2, la.nearPlane, la.farPlane); {
-                     gl2.glRotated(SSM.instance().rotateX, 1, 0, 0);
-                     gl2.glRotated(SSM.instance().rotateY, 0, 1, 0);
-                     gl2.glEnable(GL2.GL_BLEND);
-                     renderColourRamp(gl2, la);
-                  }
-                  setPerspectiveView(gl2, 0.01f, la.nearPlane); {
-                     gl2.glRotated(SSM.instance().rotateX, 1, 0, 0);
-                     gl2.glRotated(SSM.instance().rotateY, 0, 1, 0);
-                     renderSil(gl2);   
-                  }
-               }
-            } la.mlen.stopRecording(gl2);
-            
-         }
-         SSM.instance().refreshMagicLens = false;
-      }
-      
-     
-      
-      ////////////////////////////////////////////////////////////////////////////////
-      // Render the default scene we want to show
-      ////////////////////////////////////////////////////////////////////////////////
-      setPerspectiveView(gl2); {
-         gl2.glRotated(SSM.instance().rotateX, 1, 0, 0);
-         gl2.glRotated(SSM.instance().rotateY, 0, 1, 0);
-         gl2.glEnable(GL2.GL_BLEND);
-         
-         if (SSM.instance().useDualDepthPeeling) {
-            if (SSM.instance().refreshOITTexture) {
-               this.RenderDualPeeling(gl2);
-               //SSM.instance().refreshOITTexture = false;
-            } else {
-               this.RenderOITTexture(gl2);   
-            }
-         } else {
-            renderColourRamp(gl2, null);
-         }
-         setProjectedCoord(gl2);
-         float coord[] = MM.currentModel.getMaxMinScreenX(gl2);
-      }
-      
-      
-      ////////////////////////////////////////////////////////////////////////////////
-      // Record glow effects and render to to a 1-1 square in ortho mode 
-      ////////////////////////////////////////////////////////////////////////////////
-      if (SSM.instance().useGlow && SSM.instance().selectedGroup.size() > 0) {
-         glowTexture.startRecording(gl2); 
-            setPerspectiveView(gl2); 
-            gl2.glRotated(SSM.instance().rotateX, 1, 0, 0);
-            gl2.glRotated(SSM.instance().rotateY, 0, 1, 0);
-            gl2.glClearColor(1, 1, 1, 0);
-            gl2.glClear(GL2.GL_COLOR_BUFFER_BIT);
-            gl2.glPushMatrix();
-            for (DCComponent comp : MM.currentModel.componentTable.values()) {
-               if ( SSM.instance().selectedGroup.contains(comp.id) ) {
-                  //gl2.glScaled(1.2, 1.2, 1.2);
-                  comp.renderBuffer(gl2, DCColour.fromInt(20, 20, 210));
-                  //gl2.glScaled(1.0/1.2, 1.0/1.2, 1.0/1.2);
-               }
-               
-               // TODO : Test test
-               /*
-               if (SSM.instance().useComparisonMode == true) {
-                  if (comp.hasContext && comp.active) {
-                     float v1 = CacheManager.instance().groupOccurrence.get(comp.id);
-                     float v2 = CacheManager.instance().c_groupOccurrence.get(comp.id);                  
-                     
-                     if (v1 > v2) 
-                        comp.renderBuffer(gl2, SchemeManager.comp_1);
-                     else if (v1 < v2) 
-                        comp.renderBuffer(gl2, SchemeManager.comp_2);
-                  }
-               }
-               */
-            }          
-         glowTexture.stopRecording(gl2);
-         
-         GraphicUtil.setOrthonormalView(gl2, 0, 1, 0, 1, -10, 10);
-         gl2.glBlendFunc(GL2.GL_SRC_ALPHA, GL2.GL_ONE_MINUS_SRC_ALPHA);
-         glowTexture.render(gl2, 2);
-      }         
-     
-     
-      
-      ////////////////////////////////////////////////////////////////////////////////
-      // Render any filters we want to show
-      ////////////////////////////////////////////////////////////////////////////////
-      for (int i=0; i < SSM.instance().lensList.size(); i++) {
-         LensAttrib la = SSM.instance().lensList.elementAt(i);
-         setOrthonormalView(gl2); {
-            if (la.mlen != null)
-              la.mlen.renderLens( gl2, la );
-         }
-      }
-      
-      
-      
-      
-      
-      ////////////////////////////////////////////////////////////////////////////////
-      // Render any 2D components
-      ////////////////////////////////////////////////////////////////////////////////
-      if (SSM.instance().showLabels == true) {
-         for (int i=0; i < SSM.instance().lensList.size(); i++) {
-            setOrthonormalView(gl2, 0, SSM.instance().windowWidth, 0, SSM.instance().windowHeight); {
-               if (SSM.instance().useCircularLabel == true) {
-                  renderLabelCircular(gl2, SSM.instance().lensList.elementAt(i));
-               } else {
-                  renderLabelBalanced(gl2, SSM.instance().lensList.elementAt(i));
-               }
-            }
-         }
-      }
-      
-      
-      // TODO : Move this out later...just to test if animation can work, probably have a flag and put in resetDataGL or soemthing
-      if (SSM.instance().resizePanel == 1) {
-         if (dcTextPanel.animatorH != null) dcTextPanel.animatorH.stop();
-         if (dcTextPanel.animatorW != null) dcTextPanel.animatorW.stop();
-         
-         float goalH = SSM.instance().docActive ? SSM.instance().docHeight : 0.0f;
-         float goalW = SSM.instance().docActive ? SSM.instance().docWidth : 0.0f;
-         
-         dcTextPanel.animatorH = PropertySetter.createAnimator(600, dcTextPanel, "displayH", new FloatEval(), dcTextPanel.displayH, goalH);
-         dcTextPanel.animatorW = PropertySetter.createAnimator(600, dcTextPanel, "displayW", new FloatEval(), dcTextPanel.displayW, goalW);
-         dcTextPanel.animatorH.start();
-         dcTextPanel.animatorW.start();
-         SSM.instance().resizePanel = 0;   
-      }
-      
-      
-      ////////////////////////////////////////////////////////////////////////////////
-      // Show the document viewer box
-      ////////////////////////////////////////////////////////////////////////////////
-      //if (SSM.instance().docVisible == true) {
-      if (dcTextPanel.displayH >= 0.1) {
-         setOrthonormalView(gl2, 0, SSM.instance().windowWidth, 0, SSM.instance().windowHeight); {
-            dcTextPanel.render(gl2);
-         }
-      }
-     
-      
-      ////////////////////////////////////////////////////////////////////////////////
-      // Optional, debugging elements
-      ////////////////////////////////////////////////////////////////////////////////
-      if (SSM.instance().useGuide == true) {
-         setPerspectiveView(gl2); {
-            GraphicUtil.drawAxis(gl2, 0, 0, 0);
-         }
-         
-         setOrthonormalView(gl2, 0, SSM.instance().windowWidth, 0, SSM.instance().windowHeight); {
-            StatusWindow.tf.anchorX = SSM.instance().windowWidth - StatusWindow.tf.width;
-            StatusWindow.tf.anchorY = 200; //StatusWindow.tf.height;
-            StatusWindow.render(gl2);
-         }
-         
-      }         
-      
-      ////////////////////////////////////////////////////////////////////////////////
-      // Rener the combo boxes
-      ////////////////////////////////////////////////////////////////////////////////
-      setOrthonormalView(gl2, 0, SSM.instance().windowWidth, 0, SSM.instance().windowHeight); {
-         // Update the yoffset before rendering
-         manufactureScroll.yoffset = SSM.instance().manufactureAttrib.yOffset;
-         makeScroll.yoffset  = SSM.instance().makeAttrib.yOffset;
-         modelScroll.yoffset = SSM.instance().modelAttrib.yOffset;
-         yearScroll.yoffset  = SSM.instance().yearAttrib.yOffset;
-         
-         manufactureScroll.render(gl2);   
-         makeScroll.render(gl2);
-         modelScroll.render(gl2);
-         yearScroll.render(gl2);
-         
-         
-         
-         c_manufactureScroll.yoffset = SSM.instance().c_manufactureAttrib.yOffset;
-         c_makeScroll.yoffset  = SSM.instance().c_makeAttrib.yOffset;
-         c_modelScroll.yoffset = SSM.instance().c_modelAttrib.yOffset;
-         c_yearScroll.yoffset  = SSM.instance().c_yearAttrib.yOffset;
-         
-         c_manufactureScroll.render(gl2);   
-         c_makeScroll.render(gl2);
-         c_modelScroll.render(gl2);
-         c_yearScroll.render(gl2);
-         
-      }
-      
-      ////////////////////////////////////////////////////////////////////////////////
-      // Renders a tool tip
-      ////////////////////////////////////////////////////////////////////////////////
-      setOrthonormalView(gl2, 0, SSM.instance().windowWidth, 0, SSM.instance().windowHeight); {
-         DCTip.render(gl2);
-      }
-   }
       
    
    ////////////////////////////////////////////////////////////////////////////////

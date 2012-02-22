@@ -1,5 +1,7 @@
 package fun;
 
+import java.awt.Dimension;
+import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
@@ -45,6 +47,7 @@ public class SqRot extends JOGLBase implements KeyListener {
          
       for (int idx=0; idx < current; idx++) {
          gl2.glBegin(GL2.GL_LINES);
+         //gl2.glBegin(GL2.GL_LINE_LOOP);
          
          double tmp = (idx%100);
          if (tmp > 50) tmp = 100-tmp;
@@ -62,7 +65,8 @@ public class SqRot extends JOGLBase implements KeyListener {
                   tmp/50.0,
                   1.0-tmp/50.0,
                   c_radius1/c_radius2,
-                  0.5); 
+                  0.5);
+            
             
             gl2.glVertex3d( Math.cos(D2R(c_angle1))*c_radius1, Math.sin(D2R(c_angle1))*c_radius1, 0.0);
             gl2.glVertex3d( Math.cos(D2R(c_angle2))*c_radius2, Math.sin(D2R(c_angle2))*c_radius2, 0.0);
@@ -115,6 +119,22 @@ public class SqRot extends JOGLBase implements KeyListener {
       if (e.getKeyChar() == KeyEvent.VK_SPACE) {
          this.resetStage();
       }
+      if (e.getKeyChar() == 'm') {
+         System.out.println("Flipping maximized state");   
+         this.maximizeFrame();
+      }
+      if (e.getKeyChar() == '2') {
+         Toolkit tk = Toolkit.getDefaultToolkit();
+         Dimension sc = tk.getScreenSize();
+         frame.setLocation((int)sc.getWidth()+1, 0);
+      }
+      if (e.getKeyChar() == '1') {
+         frame.setLocation(0, 0);   
+      }      
+      if (e.getKeyChar() == 'a') {
+         this.onlyPositiveAngle = ! this.onlyPositiveAngle;
+         this.resetStage();
+      }
    }
 
    @Override
@@ -141,7 +161,11 @@ public class SqRot extends JOGLBase implements KeyListener {
          angle[i] = Math.random()*360;   
          
          d_radius[i] = Math.random()*0.5 - 0.5;
-         d_angle[i] = Math.random()*6 - 3.0;
+         if (this.onlyPositiveAngle) {
+            d_angle[i] = Math.random()*2.5;
+         } else {
+            d_angle[i] = Math.random()*6 - 3.0;
+         }
          if (d_angle[i] < 0) d_angle[i] -= 0.3;
          else d_angle[i] += 0.3;
       }
@@ -159,5 +183,7 @@ public class SqRot extends JOGLBase implements KeyListener {
    public double[] d_angle  = new double[numPoint]; // Change in angle
    
    public int current=0;
+   
+   public boolean onlyPositiveAngle = false;
 
 }

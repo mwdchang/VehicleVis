@@ -7,6 +7,7 @@ import javax.media.opengl.GL2;
 
 import datastore.SSM;
 
+import util.DCCamera;
 import util.TextureFont;
 
 /////////////////////////////////////////////////////////////////////////////////
@@ -60,11 +61,14 @@ public class StatusWindow {
       addText("================="); 
       addText("Num selected   : " + SSM.instance().selectedGroup.size());
       addText("Num related    : " + SSM.instance().relatedList.size());
+      addText("================="); 
+      addText("Camera: " + DCCamera.instance().eye);
+      
       
    }
    
    public static TextureFont tf;
-   public static Font f  = new Font( "Consolas", Font.PLAIN, 16);    
+   public static Font f  = new Font( "Consolas", Font.PLAIN, 14);    
    public static Color c = Color.BLACK;
    public static float tipX;
    public static float tipY;

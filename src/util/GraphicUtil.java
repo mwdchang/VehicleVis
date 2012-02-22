@@ -409,6 +409,7 @@ public class GraphicUtil {
       gl2.glDisable(GL2.GL_LIGHTING);
       gl2.glDisable(GL2.GL_TEXTURE_2D);
       gl2.glDisable(GL2.GL_CULL_FACE);
+      gl2.glEnable(GL2.GL_BLEND);
       gl2.glDisable(GL2.GL_DEPTH_TEST);
       
       gl2.glBegin(GL2.GL_LINES);
@@ -584,6 +585,34 @@ public class GraphicUtil {
          up[2]
       );      
    }
+   public static void startPickingPerspective(GL2 gl2, IntBuffer buffer, 
+                                              int mouseX, int mouseY, 
+                                              int screenWidth, int screenHeight, float fov) {
+      
+      float aspect = (float)screenWidth/ (float)screenHeight;
+      
+      //IntBuffer buffer = GLBuffers.newDirectIntBuffer(512);
+      IntBuffer viewport =  (IntBuffer) GLBuffers.newDirectGLBuffer(GL2.GL_UNSIGNED_INT, 4); 
+      gl2.glGetIntegerv(GL2.GL_VIEWPORT, viewport);
+      gl2.glSelectBuffer(512, buffer);      
+      
+      gl2.glRenderMode(GL2.GL_SELECT);
+      gl2.glInitNames();
+      gl2.glPushName(0); // At least one 
+      
+      // Set up the environment as if rendering
+      gl2.glMatrixMode(GL2.GL_PROJECTION);
+      gl2.glPushMatrix();
+      gl2.glLoadIdentity();
+      
+      mouseY = viewport.get(3) - mouseY;
+      glu.gluPickMatrix((float)mouseX, (float)mouseY, 1.0f, 1.0f, viewport);
+      
+      glu.gluPerspective(fov, aspect, 1.0f, 1000.0f);
+      gl2.glMatrixMode(GL2.GL_MODELVIEW);
+      gl2.glLoadIdentity();
+   }
+   
    
    
    ////////////////////////////////////////////////////////////////////////////////

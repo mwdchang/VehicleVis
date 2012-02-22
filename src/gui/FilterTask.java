@@ -1,7 +1,6 @@
 package gui;
 
 import java.nio.IntBuffer;
-import java.sql.ResultSet;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.Vector;
@@ -12,12 +11,8 @@ import javax.media.opengl.glu.GLU;
 import org.jdesktop.animation.timing.Animator;
 import org.jdesktop.animation.timing.interpolation.PropertySetter;
 
-import model.DCColour;
-
 import util.DCUtil;
 import util.DWin;
-import util.FontRenderer;
-
 import TimingFrameExt.DoubleEval;
 import TimingFrameExt.SliderEval;
 
@@ -26,7 +21,6 @@ import com.jogamp.opengl.util.GLBuffers;
 import datastore.CacheManager;
 import datastore.SSM;
 import datastore.SchemeManager;
-import db.DBWrapper;
 import exec.RenderTask;
 
 /////////////////////////////////////////////////////////////////////////////////

@@ -57,7 +57,10 @@ public abstract class JOGLBase implements GLEventListener {
       frame = new JFrame(title);
       frame.getContentPane().add( canvas );
       frame.setSize( frame.getContentPane().getPreferredSize());
+      frame.setUndecorated(this.unDecorated);
       frame.setVisible(true);
+      
+      
       frame.addWindowListener(new WindowAdapter() {
          public void windowClosing(WindowEvent e) {
             System.out.println("Shutting down");   
@@ -65,8 +68,9 @@ public abstract class JOGLBase implements GLEventListener {
          }
       });
       
+      
      canvas.requestFocusInWindow();
-      canvas.requestFocus();
+     canvas.requestFocus();
      
       
       long updateFrequency = 1000;
@@ -148,6 +152,38 @@ public abstract class JOGLBase implements GLEventListener {
       }
    }
    
+   
+   // Maximize current frame to full screen
+   public void maximizeFrame() {
+      
+      if (this.isMaximized == false) {
+         frame.setExtendedState( frame.getExtendedState() | JFrame.MAXIMIZED_BOTH );
+      } else {
+         frame.setExtendedState( JFrame.NORMAL );
+      }
+      isMaximized = !isMaximized;
+      
+      
+      /*
+      if (isMaximized == false) {
+         canvas.removeNotify();
+         frame.removeNotify();
+         frame.setExtendedState( frame.getExtendedState() | JFrame.MAXIMIZED_BOTH);
+         frame.setUndecorated(true);
+         frame.addNotify();
+         canvas.addNotify();
+      } else {
+         canvas.removeNotify();
+         frame.removeNotify();
+         frame.setExtendedState( JFrame.NORMAL);
+         //frame.setUndecorated(false);
+         frame.addNotify();
+         canvas.addNotify();
+      }
+      */
+      
+   }
+   
 
    // Control
    public JFrame frame;
@@ -155,4 +191,6 @@ public abstract class JOGLBase implements GLEventListener {
    public float winWidth;
    public static GLU glu = new GLU();
    public String title = "";
+   public boolean isMaximized = false;
+   public boolean unDecorated = true;
 }

@@ -1518,9 +1518,16 @@ public abstract class BaseModelRenderer implements RenderTask {
         }          
         
         
-        // Attempt to draw borders in comparative mode
+        
+        ////////////////////////////////////////////////////////////////////////////////
+        // Attempt to draw comparative result using the edge detectors
+        // See also glow filter in ModelRenderer for alternative appraoch
+        // 
+        // This seems to result in a very cluttered looking render
+        ////////////////////////////////////////////////////////////////////////////////
+        /*
         if (SSM.instance().useComparisonMode == true) {
-           gl.glLineWidth(1.3f);
+           gl.glLineWidth(1.8f);
            for (DCComponent comp : MM.currentModel.componentTable.values()) {
               if (comp.hasContext && comp.active) {
                  float v1 = CacheManager.instance().groupOccurrence.get(comp.id);
@@ -1537,6 +1544,7 @@ public abstract class BaseModelRenderer implements RenderTask {
            }
            gl.glLineWidth(1.0f);
         }
+        */
         
 
         gl.glDisable(GL2.GL_BLEND);

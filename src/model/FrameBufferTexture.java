@@ -183,9 +183,9 @@ public class FrameBufferTexture {
    // Apply FBO as texture and apply shader effects
    ////////////////////////////////////////////////////////////////////////////////
    public void render(GL2 gl2) {
-      render(gl2, 1.0f);   
+      render(gl2, 1.0f, 1);   
    }
-   public void render(GL2 gl2, float sampleRate) {
+   public void render(GL2 gl2, float sampleRate, int useAverage) {
       gl2.glEnable(GL2.GL_BLEND);
       
       // Bind shader program
@@ -202,6 +202,7 @@ public class FrameBufferTexture {
          shader.setUniform1i(gl2, "width", this.TEXTURE_SIZE_W);
          shader.setUniform1i(gl2, "height", this.TEXTURE_SIZE_H);
          shader.setUniformf(gl2, "sampleRate", sampleRate);
+         shader.setUniform1i(gl2, "useAverage", useAverage);
          
          //setShaderUniform(gl2, la);
          gl2.glActiveTexture(GL2.GL_TEXTURE0);
