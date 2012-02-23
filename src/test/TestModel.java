@@ -13,6 +13,7 @@ import util.TextureFont;
 
 import model.DCColour;
 import model.DCComponent;
+import model.DCTriple;
 import model.FrameBufferTexture;
 
 import datastore.MM;
@@ -61,10 +62,11 @@ public class TestModel extends JOGLBase implements KeyListener {
             for (DCComponent d : MM.currentModel.componentTable.values()) {
                switch (mode) {
                   case 0: { d.renderBuffer(gl2, DCColour.fromDouble(1.0, 0, 0, 1)); break; }        
-                  case 1: { d.renderBufferAdj(gl2, DCColour.fromDouble(1.0, 1.0, 0.0, 0.5)); break; }
-                  case 2: { d.renderBufferToon(gl2); break; }
-                  case 3: { d.renderFNormal(gl2); break; }
-                  case 4: { d.renderEdgeWithNoAdjacent(gl2); break; }
+                  case 1: { d.renderBufferAdj(gl2, DCColour.fromDouble(0.0, 0.0, 0.5, 0.5)); break; }
+                  case 2: { d.renderBufferSilhouette(gl2, new DCTriple(10, 40, 0), DCColour.fromDouble(0.0, 0.0, 0.5, 0.5)); break; }
+                  case 3: { d.renderBufferToon(gl2); break; }
+                  case 4: { d.renderFNormal(gl2); break; }
+                  case 5: { d.renderEdgeWithNoAdjacent(gl2); break; }
                   default: break;
                }
             }
@@ -87,14 +89,15 @@ public class TestModel extends JOGLBase implements KeyListener {
             for (DCComponent d : MM.currentModel.componentTable.values()) {
                switch (mode) {
                   case 0: { d.renderBuffer(gl2, DCColour.fromDouble(1.0, 0, 0, 1)); break; }        
-                  case 1: { d.renderBufferAdj(gl2, DCColour.fromDouble(1.0, 1.0, 0.0, 0.5)); break; }
-                  case 2: { d.renderBufferToon(gl2); break; }
-                  case 3: { d.renderFNormal(gl2); break; }
-                  case 4: { d.renderEdgeWithNoAdjacent(gl2); break; }
+                  case 1: { d.renderBufferAdj(gl2, DCColour.fromDouble(0.0, 0.0, 0.5, 0.5)); break; }
+                  case 2: { d.renderBufferSilhouette(gl2, new DCTriple(10, 40, 0), DCColour.fromDouble(0.0, 0.0, 0.5, 0.5)); break; }
+                  case 3: { d.renderBufferToon(gl2); break; }
+                  case 4: { d.renderFNormal(gl2); break; }
+                  case 5: { d.renderEdgeWithNoAdjacent(gl2); break; }
                   default: break;
                }
             }
-            rotY += 0.3f;
+            rotY += 0.03f;
          gl2.glPopMatrix();
       }
       
@@ -182,7 +185,8 @@ public class TestModel extends JOGLBase implements KeyListener {
       
       if (e.getKeyChar() == KeyEvent.VK_SPACE) {
          mode ++;
-         if (mode > 4) mode = 0;
+         //if (mode > 5) mode = 0;
+         if (mode > 2) mode = 1;
          tf.clearMark();
          tf.addMark("Testing car rendering mode : " + mode, Color.YELLOW, f, 5, 5);
       }

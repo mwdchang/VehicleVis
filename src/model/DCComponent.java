@@ -576,10 +576,35 @@ public class DCComponent extends DCObj {
    
    
    ////////////////////////////////////////////////////////////////////////////////
+   // Render silhouette ... hopefully
+   ////////////////////////////////////////////////////////////////////////////////
+   public void renderBufferSilhouette(GL2 gl2, DCTriple eye, DCColour colour) {
+      if (colour == null) colour = SchemeManager.silhouette_default;
+      
+      gl2.glBindVertexArray(vaoAdj[0]);
+      silShader.bind(gl2);
+         float buffer[] = new float[16];
+         gl2.glGetFloatv(GL2.GL_PROJECTION_MATRIX, buffer, 0);
+         silShader.setUniform4x4(gl2, "projection_matrix", buffer);
+         
+         gl2.glGetFloatv(GL2.GL_MODELVIEW_MATRIX, buffer, 0);
+         silShader.setUniform4x4(gl2, "modelview_matrix", buffer);         
+         
+         silShader.setUniformf(gl2, "comp_colourAdj", colour.r, colour.g, colour.b, colour.a);
+         silShader.setUniformf(gl2, "eyePosition", eye.x, eye.y, eye.z);
+        
+         gl2.glDrawArrays(GL2.GL_TRIANGLES_ADJACENCY_EXT, 0, faceList.size()*6);
+      silShader.unbind(gl2);
+      gl2.glBindVertexArray(0);
+      
+   }
+   
+   
+   ////////////////////////////////////////////////////////////////////////////////
    // Renders the triangle adjacency as a vertex array object
    ////////////////////////////////////////////////////////////////////////////////
    public void renderBufferAdj(GL2 gl2, DCColour colour) {
-      if (colour == null) colour = SchemeManager.instance().silhouette_default;
+      if (colour == null) colour = SchemeManager.silhouette_default;
       
       gl2.glBindVertexArray(vaoAdj[0]);
       
@@ -729,7 +754,6 @@ public class DCComponent extends DCObj {
       }
       
       
-      
       // Generate vertex array
       gl2.glGenVertexArrays(1, vaoAdj, 0);
       gl2.glBindVertexArray(vaoAdj[0]);
@@ -749,19 +773,26 @@ public class DCComponent extends DCObj {
       gl2.glBindVertexArray(0);
       vBuffer.clear();
       
+      
+      ////////////////////////////////////////////////////////////////////////////////
       // Start the shaders
+      ////////////////////////////////////////////////////////////////////////////////
       edgeShader.createShader(gl2, "src\\Shader\\vert_adj.glsl", GL2.GL_VERTEX_SHADER);
       edgeShader.createShader(gl2, "src\\Shader\\geom_adj.glsl", GL3.GL_GEOMETRY_SHADER);
       edgeShader.createShader(gl2, "src\\Shader\\frag_adj.glsl", GL2.GL_FRAGMENT_SHADER);
       edgeShader.createProgram(gl2); 
-      
       gl2.glBindAttribLocation(edgeShader.programID,  0, "in_position");
-      
       edgeShader.linkProgram(gl2);
-      
-      // Bind fragment shader
       edgeShader.bindFragColour(gl2, "outColour");
+      
      
+      silShader.createShader(gl2, "src\\Shader\\vert_adj.glsl", GL2.GL_VERTEX_SHADER);
+      silShader.createShader(gl2, "src\\Shader\\geom_adj_silhouette.glsl", GL3.GL_GEOMETRY_SHADER);
+      silShader.createShader(gl2, "src\\Shader\\frag_adj.glsl", GL2.GL_FRAGMENT_SHADER);
+      silShader.createProgram(gl2); 
+      gl2.glBindAttribLocation(silShader.programID,  0, "in_position");
+      silShader.linkProgram(gl2);
+      silShader.bindFragColour(gl2, "outColour");
   }
    
    
@@ -933,9 +964,11 @@ public class DCComponent extends DCObj {
    
    ////////////////////////////////////////////////////////////////////////////////
    // Adj shader
-   //   Edge/contour detector
+   //   Edge/Feature detector
+   //   Silhouette detector
    ////////////////////////////////////////////////////////////////////////////////
    ShaderObj edgeShader = new ShaderObj();
+   ShaderObj silShader  = new ShaderObj();
    
    
    ////////////////////////////////////////////////////////////////////////////////

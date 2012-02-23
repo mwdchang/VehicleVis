@@ -1,7 +1,7 @@
 #version 150 
 
 /*******************************************************************************
- Triangle adjacency edge shader
+ Triangle adjacency silhouette shader
  Given triangle 024 and adjacency 1,3,5. Emit an edge if the face normals are in
  different directions
 
@@ -33,9 +33,13 @@ layout(triangles_adjacency) in;
 layout(line_strip, max_vertices = 32) out;
 
 
+////////////////////////////////////////////////////////////////////////////////
+// 0) Calcuate the eye vector 
+// 1) Check if central face is front or back facing
+// 2) If front facing then check against the normals of the adjacency trangles
+// 3) If adj trangle is back facing the extrude edge(s)
+////////////////////////////////////////////////////////////////////////////////
 void main(void) {
-   // Pass through the colours
-
 
    // Grab the vertices
    vec3 v0 = gl_in[0].gl_Position.xyz;
@@ -45,39 +49,51 @@ void main(void) {
    vec3 v4 = gl_in[4].gl_Position.xyz;
    vec3 v5 = gl_in[5].gl_Position.xyz;
 
+
    // Get the normal for the 4 triangles in play
    vec3 normal_042 = normalize(cross(v4-v0, v2-v0));
    vec3 normal_021 = normalize(cross(v2-v0, v1-v0));
    vec3 normal_243 = normalize(cross(v4-v2, v3-v2));
    vec3 normal_405 = normalize(cross(v0-v4, v5-v4));
 
+
+   // Calculate the "midpoint" of the central triangle, and use it 
+   // to calcuate the eye vector
+   vec3 midpoint = (v0+v2+v4)/3.0;
+   vec3 eyeVec   = normalize(midpoint - eyePosition); 
+
    
+   // Check if the central triangle is front or back facing
+   float r = dot(normal_042, eyeVec);
+   if (r < 0) return;
 
-   // dot product guard ?
 
-   // Check if the normals are facing the same direction
-   // check 021
-   if ( dot(normal_042, normal_021) < 0.5) {
+   // Check 021 
+   midpoint = (v0+v2+v1)/3.0;
+   eyeVec   = normalize(midpoint - eyePosition);
+   if (dot(eyeVec, normal_021) < 0 ) {
      gl_Position = gl_in[0].gl_Position; EmitVertex();
      gl_Position = gl_in[2].gl_Position; EmitVertex();
      EndPrimitive();
    }
 
-   // check 243
-   if ( dot(normal_042, normal_243) < 0.5) {
+   // Check 243
+   midpoint = (v2+v4+v3)/3.0;
+   eyeVec   = normalize(midpoint - eyePosition);
+   if (dot(eyeVec, normal_243) < 0 ) {
      gl_Position = gl_in[2].gl_Position; EmitVertex();
      gl_Position = gl_in[4].gl_Position; EmitVertex();
      EndPrimitive();
    }
-   
 
-   // check 405
-   if ( dot(normal_042, normal_405) < 0.5) {
+   // Check 405
+   midpoint = (v4+v0+v5)/3.0;
+   eyeVec   = normalize(midpoint - eyePosition);
+   if (dot(eyeVec, normal_405) < 0 ) {
      gl_Position = gl_in[4].gl_Position; EmitVertex();
      gl_Position = gl_in[0].gl_Position; EmitVertex();
      EndPrimitive();
    }
-
 
 
 }
