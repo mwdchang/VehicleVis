@@ -402,10 +402,8 @@ public class DCComponent extends DCObj {
       	h1.remove(f.p2);
       	h1.remove(f.p3);
       	if (h1.isEmpty()) {
-//if (this.cname.equals("wheel")) System.out.println("Null detected");    	   
       		f.a1 = null;
       	} else {
-//if (this.cname.equals("wheel")) System.out.println("Remaining : " + h1.size());
       	   iter = h1.iterator();
       	   f.a1 = iter.next();
       	}
@@ -417,10 +415,8 @@ public class DCComponent extends DCObj {
       	h1.remove(f.p3);
       	h1.remove(f.p1);
       	if (h1.isEmpty()) {
-//if (this.cname.equals("wheel")) System.out.println("Null detected");    	   
       		f.a2 = null;
       	} else {
-//if (this.cname.equals("wheel")) System.out.println("Remaining : " + h1.size());
       		iter = h1.iterator();
       		f.a2 = iter.next();
       	}
@@ -432,10 +428,8 @@ public class DCComponent extends DCObj {
       	h1.remove(f.p1);
       	h1.remove(f.p2);      	
       	if (h1.isEmpty()) {
-//if (this.cname.equals("wheel")) System.out.println("Null detected");    	   
       		f.a3 = null;
       	} else {
-//if (this.cname.equals("wheel")) System.out.println("Remaining : " + h1.size());
       		iter = h1.iterator();
       		f.a3 = iter.next();
       	}
@@ -447,9 +441,18 @@ public class DCComponent extends DCObj {
      	// if the mesh is not closed, make the unclosed edge "fold back" onto itself onto the
      	for (int i=0; i < faceList.size(); i++) {
      	   DCFace f = faceList.elementAt(i); 
-         if (f.a1 == null) f.a1 = f.p3;     	    
-         if (f.a2 == null) f.a2 = f.p1;
-         if (f.a3 == null) f.a3 = f.p2;
+         if (f.a1 == null) {
+            silhouetteList.add(new DCEdge(f.p1, f.p2));
+            f.a1 = f.p3;     	    
+         }
+         if (f.a2 == null) {
+            silhouetteList.add(new DCEdge(f.p2, f.p3));
+            f.a2 = f.p1;
+         }
+         if (f.a3 == null) {
+            silhouetteList.add(new DCEdge(f.p3, f.p1));
+            f.a3 = f.p2;
+         }
      	}
      	
      	
@@ -461,6 +464,24 @@ public class DCComponent extends DCObj {
       h1 = null;
       h2 = null;
      	
+   }
+   
+   
+   ////////////////////////////////////////////////////////////////////////////////
+   // Render pre-computed silhouettes
+   ////////////////////////////////////////////////////////////////////////////////
+   public void renderSilhouette(GL2 gl2, DCColour c) {
+      gl2.glColor4fv(c.toArray(), 0);   
+      gl2.glLineWidth(2.0f);
+      gl2.glBegin(GL2.GL_LINES);
+      for (int i=0; i < silhouetteList.size(); i++) {
+         DCTriple p1 = silhouetteList.elementAt(i).p1;
+         DCTriple p2 = silhouetteList.elementAt(i).p2;
+         gl2.glVertex3f(p1.x, p1.y, p1.z);
+         gl2.glVertex3f(p2.x, p2.y, p2.z);
+      }
+      gl2.glEnd();
+      gl2.glLineWidth(1.0f);
    }
    
    
@@ -690,121 +711,6 @@ public class DCComponent extends DCObj {
       gl2.glBindBuffer(GL2.GL_ELEMENT_ARRAY_BUFFER, 0);
       
    }
-   
-   
-   ////////////////////////////////////////////////////////////////////////////////
-   // Create a buffer for just the vertex and normal
-   ////////////////////////////////////////////////////////////////////////////////
-//   public void createBuffersOIT(GL2 gl2) {
-//      FloatBuffer vBuffer = (FloatBuffer)GLBuffers.newDirectGLBuffer(GL2.GL_FLOAT, faceList.size()*3*3); // xyz * 6 points
-//      FloatBuffer nBuffer = (FloatBuffer) GLBuffers.newDirectGLBuffer(GL2.GL_FLOAT, faceList.size()*3*3); // xyz * 3 points
-//      
-//      for (int i=0; i < faceList.size(); i++) {
-//         // Vertex
-//         vBuffer.put(faceList.elementAt(i).p1.toArray3f());
-//         vBuffer.put(faceList.elementAt(i).p2.toArray3f());
-//         vBuffer.put(faceList.elementAt(i).p3.toArray3f());
-//         
-//         // normal
-//         nBuffer.put( faceList.elementAt(i).n1.toArray3f());
-//         nBuffer.put( faceList.elementAt(i).n2.toArray3f());
-//         nBuffer.put( faceList.elementAt(i).n3.toArray3f());
-//      }      
-//      
-//      // Generate vertex array
-//      gl2.glGenVertexArrays(1, vaoOIT, 0);
-//      gl2.glBindVertexArray(vaoOIT[0]);
-//      
-//      // Generate vertex buffer
-//      gl2.glGenBuffers(2, vboOIT, 0);         
-//      
-//      System.out.println("VBO Ids for " + cname + ": " + vao[0] + "\t" + vbo[0] + "\t" + vbo[1]);
-//      System.out.println("");
-//      
-//      nBuffer.flip();
-//      vBuffer.flip();
-//      
-//      
-//      gl2.glBindBuffer(GL2.GL_ARRAY_BUFFER, vbo[0]);
-//      gl2.glBufferData(GL2.GL_ARRAY_BUFFER, vBuffer.capacity()*4, vBuffer, GL2.GL_STATIC_DRAW);
-//      gl2.glVertexAttribPointer(0, 3, GL2.GL_FLOAT, false, 0, 0);
-//      gl2.glEnableVertexAttribArray(0);         
-//      
-//      gl2.glBindBuffer(GL2.GL_ARRAY_BUFFER, vbo[1]);
-//      gl2.glBufferData(GL2.GL_ARRAY_BUFFER, nBuffer.capacity()*4, nBuffer, GL2.GL_STATIC_DRAW);
-//      gl2.glVertexAttribPointer1, 3, GL2.GL_FLOAT, false, 0, 0);
-//      gl2.glEnableVertexAttribArray(1);         
-//      
-//      
-//      // Clean up
-//      gl2.glBindVertexArray(0);
-//      vBuffer.clear();
-//      nBuffer.clear();
-//      
-//      OIT_init_shader(gl2);
-//      OIT_peel_shader(gl2);
-//      OIT_blend_shader(gl2);
-//      OIT_final_shader(gl2);
-//   }
-//   
-//   
-//   public void OIT_init_shader(GL2 gl2) {
-//      // Start the shaders
-//      vert_shader_oit_init = GLSLUtil.createShader(gl2, "src\\Shader\\dual_peeling_init_vertex.glsl", GL2.GL_VERTEX_SHADER);
-//      frag_shader_oit_init = GLSLUtil.createShader(gl2, "src\\Shader\\dual_peeling_init_fragment.glsl", GL2.GL_FRAGMENT_SHADER);
-//      shader_program_oit_init = gl2.glCreateProgram();
-//      gl2.glAttachShader(shader_program_oit_init, vert_shader_oit_init);
-//      gl2.glAttachShader(shader_program_oit_init, frag_shader_oit_init);
-//      
-//      // link and validate the shader program
-//      gl2.glLinkProgram(shader_program_oit_init);
-//      GLSLUtil.checkLinkAndValidationErrors(gl2, shader_program_oit_init);
-//   }
-//   public void OIT_peel_shader(GL2 gl2) {
-//      // Start the shaders
-//      shader_vertex = GLSLUtil.createShader(gl2, "src\\Shader\\shade_vertex.glsl", GL2.GL_VERTEX_SHADER);
-//      vert_shader_oit_peel = GLSLUtil.createShader(gl2, "src\\Shader\\dual_peeling_peel_vertex.glsl", GL2.GL_VERTEX_SHADER);
-//      shader_fragment = GLSLUtil.createShader(gl2, "src\\Shader\\shade_fragment.glsl", GL2.GL_FRAGMENT_SHADER);
-//      frag_shader_oit_peel = GLSLUtil.createShader(gl2, "src\\Shader\\dual_peeling_peel_fragment.glsl", GL2.GL_FRAGMENT_SHADER);
-//      shader_program_oit_peel = gl2.glCreateProgram();
-//      gl2.glAttachShader(shader_program_oit_peel, shader_vertex);
-//      gl2.glAttachShader(shader_program_oit_peel, vert_shader_oit_peel);
-//      gl2.glAttachShader(shader_program_oit_peel, shader_fragment);
-//      gl2.glAttachShader(shader_program_oit_peel, frag_shader_oit_peel);
-//      
-//      // link and validate the shader program
-//      gl2.glLinkProgram(shader_program_oit_peel);
-//      GLSLUtil.checkLinkAndValidationErrors(gl2, shader_program_oit_peel);
-//   }
-//   public void OIT_blend_shader(GL2 gl2) {
-//      // Start the shaders
-//      vert_shader_oit_blend = GLSLUtil.createShader(gl2, "src\\Shader\\dual_peeling_blend_vertex.glsl", GL2.GL_VERTEX_SHADER);
-//      frag_shader_oit_blend = GLSLUtil.createShader(gl2, "src\\Shader\\dual_peeling_blend_fragment.glsl", GL2.GL_FRAGMENT_SHADER);
-//      shader_program_oit_blend = gl2.glCreateProgram();
-//      gl2.glAttachShader(shader_program_oit_blend, vert_shader_oit_blend);
-//      gl2.glAttachShader(shader_program_oit_blend, frag_shader_oit_blend);
-//      
-//      // link and validate the shader program
-//      gl2.glLinkProgram(shader_program_oit_blend);
-//      GLSLUtil.checkLinkAndValidationErrors(gl2, shader_program_oit_blend);
-//   }
-//   public void OIT_final_shader(GL2 gl2) {
-//      // Start the shaders
-//      vert_shader_oit_final = GLSLUtil.createShader(gl2, "src\\Shader\\dual_peeling_final_vertex.glsl", GL2.GL_VERTEX_SHADER);
-//      frag_shader_oit_final = GLSLUtil.createShader(gl2, "src\\Shader\\dual_peeling_final_fragment.glsl", GL2.GL_FRAGMENT_SHADER);
-//      shader_program_oit_final = gl2.glCreateProgram();
-//      gl2.glAttachShader(shader_program_oit_final , vert_shader_oit_final);
-//      gl2.glAttachShader(shader_program_oit_final, frag_shader_oit_final);
-//      
-//      // link and validate the shader program
-//      gl2.glLinkProgram(shader_program_oit_final);
-//      GLSLUtil.checkLinkAndValidationErrors(gl2, shader_program_oit_final);
-//   }
- 
-   
- 
-   
-   
    
    
    ////////////////////////////////////////////////////////////////////////////////
@@ -1088,8 +994,9 @@ public class DCComponent extends DCObj {
    public float occurrence = 0;
    
    // Animator and Evaluators
-   Animator canimator;
-   Animator lineAnimator;
+   public Animator canimator;
+   
+   public Vector<DCEdge> silhouetteList = new Vector<DCEdge>();
    
    
 }

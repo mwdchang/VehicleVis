@@ -192,38 +192,67 @@ public class ModelRenderer extends BaseModelRenderer {
          glowTexture.render(gl2, 2, 1);
          
          
+         /*
          if (SSM.instance().useComparisonMode == true) {
             glowTexture.startRecording(gl2);
-               setPerspectiveView(gl2);
-               gl2.glRotated(SSM.instance().rotateX, 1, 0, 0); 
-               gl2.glRotated(SSM.instance().rotateY, 0, 1, 0); 
-               gl2.glClearColor(1, 1, 1, 0);
-               gl2.glClear(GL2.GL_COLOR_BUFFER_BIT);
-               gl2.glPushMatrix();
-               for (DCComponent comp : MM.currentModel.componentTable.values()) {
-                  ////////////////////////////////////////////////////////////////////////////////
-                  // Render a comparative result as halo/glows
-                  // See also end of dual-depth render in BaseRenderer for alternative method
-                  ////////////////////////////////////////////////////////////////////////////////
-                  if (comp.hasContext && comp.active && ! SSM.instance().selectedGroup.contains(comp.id)) {
+            setPerspectiveView(gl2);
+            gl2.glRotated(SSM.instance().rotateX, 1, 0, 0); 
+            gl2.glRotated(SSM.instance().rotateY, 0, 1, 0); 
+            gl2.glClearColor(1, 1, 1, 0);
+            gl2.glClear(GL2.GL_COLOR_BUFFER_BIT);
+            gl2.glPushMatrix();
+            
+            for (DCComponent comp : MM.currentModel.componentTable.values()) {
+              if (comp.hasContext && comp.active && ! SSM.instance().selectedGroup.contains(comp.id)) {
+                 float v1 = CacheManager.instance().groupOccurrence.get(comp.id);
+                 float v2 = CacheManager.instance().c_groupOccurrence.get(comp.id);                  
+                 if (v1 > v2) 
+                    comp.renderBuffer(gl2, SchemeManager.comp_1);
+                 else if (v1 < v2) 
+                    comp.renderBuffer(gl2, SchemeManager.comp_2);
+              }
+            }
+            glowTexture.stopRecording(gl2);
+            GraphicUtil.setOrthonormalView(gl2, 0, 1, 0, 1, -10, 10);
+            gl2.glBlendFunc(GL2.GL_SRC_ALPHA, GL2.GL_ONE_MINUS_SRC_ALPHA);
+            glowTexture.render(gl2, 1.4f, 0);
+        }
+        */
+         
+         
+         /*
+         if (SSM.instance().useComparisonMode == true) {
+            for (DCComponent comp : MM.currentModel.componentTable.values()) {
+              ////////////////////////////////////////////////////////////////////////////////
+              // Render a comparative result as halo/glows
+              // See also end of dual-depth render in BaseRenderer for alternative method
+              ////////////////////////////////////////////////////////////////////////////////
+              if (comp.hasContext && comp.active && ! SSM.instance().selectedGroup.contains(comp.id)) {
+                  glowTexture.startRecording(gl2);
+                     setPerspectiveView(gl2);
+                     gl2.glRotated(SSM.instance().rotateX, 1, 0, 0); 
+                     gl2.glRotated(SSM.instance().rotateY, 0, 1, 0); 
+                     gl2.glClearColor(1, 1, 1, 0);
+                     gl2.glClear(GL2.GL_COLOR_BUFFER_BIT);
+                     gl2.glPushMatrix();
+                     
                      float v1 = CacheManager.instance().groupOccurrence.get(comp.id);
                      float v2 = CacheManager.instance().c_groupOccurrence.get(comp.id);                  
                      if (v1 > v2) 
                         comp.renderBuffer(gl2, SchemeManager.comp_1);
                      else if (v1 < v2) 
                         comp.renderBuffer(gl2, SchemeManager.comp_2);
-                  } else {
-                     continue;
-                  }
-               }
-               gl2.glPopMatrix();
-            glowTexture.stopRecording(gl2);
-            GraphicUtil.setOrthonormalView(gl2, 0, 1, 0, 1, -10, 10);
-            gl2.glBlendFunc(GL2.GL_SRC_ALPHA, GL2.GL_ONE_MINUS_SRC_ALPHA);
-            glowTexture.render(gl2, 1, 0);
-         }
+                     gl2.glPopMatrix();
+                  glowTexture.stopRecording(gl2);
+                  GraphicUtil.setOrthonormalView(gl2, 0, 1, 0, 1, -10, 10);
+                  gl2.glBlendFunc(GL2.GL_SRC_ALPHA, GL2.GL_ONE_MINUS_SRC_ALPHA);
+                  glowTexture.render(gl2, 1.4f, 0);
+               } // end if 
+            } // end for
+         } // end if useComparisonMode
+         */
          
-      }         
+      } 
      
      
       

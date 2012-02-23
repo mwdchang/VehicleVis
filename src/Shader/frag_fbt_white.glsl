@@ -78,4 +78,10 @@ void main(void) {
    // check what exact colour we want
    if (useAverage == 0) {
       if (outColour.r+outColour.g+outColour.b < 2.7) 
-         outColou
+         outColour.rgba = vec4(0, 1, 0, 0.8);
+   }
+       
+
+}
+
+

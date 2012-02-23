@@ -1518,6 +1518,16 @@ public abstract class BaseModelRenderer implements RenderTask {
         }          
         
         
+        // If not using glow, then render a bounding box
+        if (! SSM.instance().useGlow && SSM.instance().selectedGroup.size() > 0) {
+           for (DCComponent comp : MM.currentModel.componentTable.values()) {
+              if (SSM.instance().selectedGroup.contains(comp.id)) {
+                 comp.boundingBox.renderBoundingBox(gl, SchemeManager.colour_blue);
+              }
+           }
+        }
+        
+        
         
         ////////////////////////////////////////////////////////////////////////////////
         // Attempt to draw comparative result using the edge detectors
@@ -1525,7 +1535,6 @@ public abstract class BaseModelRenderer implements RenderTask {
         // 
         // This seems to result in a very cluttered looking render
         ////////////////////////////////////////////////////////////////////////////////
-        /*
         if (SSM.instance().useComparisonMode == true) {
            gl.glLineWidth(1.8f);
            for (DCComponent comp : MM.currentModel.componentTable.values()) {
@@ -1534,17 +1543,25 @@ public abstract class BaseModelRenderer implements RenderTask {
                  float v2 = CacheManager.instance().c_groupOccurrence.get(comp.id);
                  
                  if (v1 > v2) {
-                    comp.renderBufferAdj(gl, SchemeManager.comp_1);
+                    if (SSM.instance().useFlag)
+                       comp.renderBufferAdj(gl, SchemeManager.comp_1);
+                    else
+                       comp.renderSilhouette(gl, SchemeManager.comp_1);
                  } else if (v2 > v1){
-                    comp.renderBufferAdj(gl, SchemeManager.comp_2);
+                    if (SSM.instance().useFlag) 
+                       comp.renderBufferAdj(gl, SchemeManager.comp_2);
+                    else
+                       comp.renderSilhouette(gl, SchemeManager.comp_2);
                  } else {
-                    comp.renderBufferAdj(gl, SchemeManager.silhouette_default); 
+                    if (SSM.instance().useFlag)
+                       comp.renderBufferAdj(gl, SchemeManager.silhouette_default); 
+                    else 
+                       comp.renderSilhouette(gl, SchemeManager.silhouette_default);
                  }
               }
            }
            gl.glLineWidth(1.0f);
         }
-        */
         
 
         gl.glDisable(GL2.GL_BLEND);

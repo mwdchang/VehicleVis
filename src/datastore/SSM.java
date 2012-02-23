@@ -191,6 +191,8 @@ public class SSM {
    public boolean useLocalFocus = false;       // Whether to nor to render based on current selected components 
    
    
+   public boolean useFlag = false; // Just a temporary flag to trigger adhoc tests and stuff, not used for real data
+   
    
    
    ///////////////////////////////////////////////////////////////////////////////// 
