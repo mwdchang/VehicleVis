@@ -516,6 +516,10 @@ public class DCComponent extends DCObj {
    // Render vertex array object
    ////////////////////////////////////////////////////////////////////////////////
    public void renderBuffer(GL2 gl2, DCColour colour) {
+      renderBuffer(gl2, colour, 1);
+   }
+
+   public void renderBuffer(GL2 gl2, DCColour colour, int mode) {
       float buffer[] = new float[16];
       gl2.glBindVertexArray(vao[0]);
       
@@ -527,7 +531,7 @@ public class DCComponent extends DCObj {
          gl2.glGetFloatv(GL2.GL_MODELVIEW_MATRIX, buffer, 0);
          normalShader.setUniform4x4(gl2, "modelview_matrix", buffer);
          
-         normalShader.setUniform1i(gl2, "mode", 1);
+         normalShader.setUniform1i(gl2, "mode", mode);
          
          gl2.glActiveTexture(GL2.GL_TEXTURE4);
          gl2.glBindTexture(GL2.GL_TEXTURE_1D, toonTextureId);
@@ -578,7 +582,7 @@ public class DCComponent extends DCObj {
    ////////////////////////////////////////////////////////////////////////////////
    // Render silhouette ... hopefully
    ////////////////////////////////////////////////////////////////////////////////
-   public void renderBufferSilhouette(GL2 gl2, DCTriple eye, DCColour colour) {
+   public void renderBufferSilhouette(GL2 gl2,  DCColour colour) {
       if (colour == null) colour = SchemeManager.silhouette_default;
       
       gl2.glBindVertexArray(vaoAdj[0]);
@@ -591,7 +595,7 @@ public class DCComponent extends DCObj {
          silShader.setUniform4x4(gl2, "modelview_matrix", buffer);         
          
          silShader.setUniformf(gl2, "comp_colourAdj", colour.r, colour.g, colour.b, colour.a);
-         silShader.setUniformf(gl2, "eyePosition", eye.x, eye.y, eye.z);
+//         edgeShader.setUniformf(gl2, "eyePosition", DCCamera.instance().eye.x, DCCamera.instance().eye.y, DCCamera.instance().eye.z);
         
          gl2.glDrawArrays(GL2.GL_TRIANGLES_ADJACENCY_EXT, 0, faceList.size()*6);
       silShader.unbind(gl2);
@@ -618,6 +622,8 @@ public class DCComponent extends DCObj {
          edgeShader.setUniform4x4(gl2, "modelview_matrix", buffer);         
          
          edgeShader.setUniformf(gl2, "comp_colourAdj", colour.r, colour.g, colour.b, colour.a);
+//         edgeShader.setUniformf(gl2, "eyePosition", DCCamera.instance().eye.x, DCCamera.instance().eye.y, DCCamera.instance().eye.z);
+         
 //         edgeShader.setUniform1i(gl2, "modeAdj", 2);
          
          gl2.glDrawArrays(GL2.GL_TRIANGLES_ADJACENCY_EXT, 0, faceList.size()*6);
@@ -642,7 +648,7 @@ public class DCComponent extends DCObj {
    ////////////////////////////////////////////////////////////////////////////////
    public void renderVNormal(GL2 gl2) {
       gl2.glPushMatrix();   
-      gl2.glLineWidth(2.0f);
+      gl2.glLineWidth(1.0f);
       gl2.glBegin(GL2.GL_LINES);
       for (int i=0; i < faceList.size(); i++) {
       	DCFace f = faceList.elementAt(i);
@@ -683,9 +689,9 @@ public class DCComponent extends DCObj {
       	gl2.glColor3d(1, 0, 1);
       	gl2.glVertex3f(f.midpoint.x + f.fn.x, f.midpoint.y + f.fn.y, f.midpoint.z+f.fn.z);
       	*/
-       	gl2.glColor3d(0, 0, 1);
+       	gl2.glColor3d(0, 0, 0.8);
       	gl2.glVertex3f(f.p1.x, f.p1.y, f.p1.z);
-      	gl2.glColor3d(1, 0, 1);
+      	gl2.glColor3d(1.0, 0.5, 0);
       	gl2.glVertex3f(f.p1.x + f.fn.x, f.p1.y + f.fn.y, f.p1.z+f.fn.z);
       }
       gl2.glEnd();
@@ -971,32 +977,6 @@ public class DCComponent extends DCObj {
    ShaderObj silShader  = new ShaderObj();
    
    
-   ////////////////////////////////////////////////////////////////////////////////
-   // OIT Shaders
-   //    Order independent shader - dual depth peeling   
-   ////////////////////////////////////////////////////////////////////////////////
-   public int vert_shader_oit_init;
-   public int frag_shader_oit_init;
-   public int vert_shader_oit_peel;
-   public int frag_shader_oit_peel;
-   public int vert_shader_oit_blend;
-   public int frag_shader_oit_blend;
-   public int vert_shader_oit_final;
-   public int frag_shader_oit_final;
-   public int shader_vertex;
-   public int shader_fragment;
-   public int shader_program_oit_init;
-   public int shader_program_oit_peel;
-   public int shader_program_oit_blend;
-   public int shader_program_oit_final;
-   public int projMatrix_oit_init, viewMatrix_oit_init, compColour_oit_init;
-   public int projMatrix_oit_peel, viewMatrix_oit_peel, compColour_oit_peel;
-   public int projMatrix_oit_blend, viewMatrix_oit_blend, compColour_oit_blend;
-   public int projMatrix_oit_final, viewMatrix_oit_final, compColour_oit_final;
-   
-   
-   
-   
    public Vector<DCComponent> occlusionList;
    public DCTriple scaleFactor;
    public Matrix transform;    // not used ???
@@ -1016,12 +996,12 @@ public class DCComponent extends DCObj {
    public boolean hasContext = true;
    public DCBoundingBox boundingBox;
    public Vector<DCFace> faceList;
-   //public SegmentSparkLine sparkLine;
+   
+   
    public ComponentChart cchart;
-   public int selectedTotal = 0;
    public String cname;            
-   public int id;
    public String baseName;
+   public int id;
    
    
    public float occurrence = 0;

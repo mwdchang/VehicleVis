@@ -9,7 +9,6 @@
 // tex        - the texture, most likely from the frame buffer
 // height     - texture height
 // width      - texture width
-// useAverage - if 0 then return an unblurred colour
 // sampleRate - controls where to sample. A sampleRate of 1 samples the exact textile, > 1 
 //              gives a coarser and more halo'y effect
 //
@@ -21,8 +20,9 @@ precision highp float;
 uniform sampler2D tex;
 uniform int height;
 uniform int width;
-uniform int useAverage;
 uniform float sampleRate;
+
+uniform vec4 hardColour;
 
 
 // Passed in from vertex shader
@@ -40,7 +40,7 @@ void main(void) {
    vec2 offset;
    float distW = sampleRate/width;
    float distH = sampleRate/height;
-   int cnt;
+   int cnt = 0;
    
 
    ////////////////////////////////////////////////////////////////////////////////
@@ -55,32 +55,34 @@ void main(void) {
    }
    
    
-
    // This part is a tad slow .... what can we do to optimiz it ? using a matrix ??
    for (int y=-2; y <=2; y++) {
       for (int x=-2; x <=2; x++) {
          offset.x = 1.0 * x * distW;
          offset.y = 1.0 * y * distH;
-         c +=  texture2D( tex , pass_texcoord.xy + offset).rgba;
+         vec4 current =  texture2D( tex , pass_texcoord.xy + offset).rgba;
+         c += current;
+         cnt ++;
       }
    }
-   c /= 25;  // 5x5 
 
+   // if count is 0 then it should be all white, so return (0,0,0,0)
+   if (cnt < 1) {
+      outColour = vec4(0, 0, 0, 0);
+      return;
+   }
+   c /= cnt;  // 5x5 
    outColour = c; 
 
+
    // Sanity check
-   if (outColour.r+outColour.g+outColour.b > 2.7)
+   if (outColour.r+outColour.g+outColour.b > 2.7) {
       outColour.a = 0.0;
-   else
+   } else {
       outColour.a = 0.8;
-
-
-   // check what exact colour we want
-   if (useAverage == 0) {
-      if (outColour.r+outColour.g+outColour.b < 2.7) 
-         outColour.rgba = vec4(0, 1, 0, 0.8);
    }
-       
+
+
 
 }
 

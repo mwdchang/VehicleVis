@@ -58,6 +58,7 @@ public class StatusWindow {
       addText("Constant Alpha : " + convert(SSM.instance().useConstantAlpha)); 
       addText("Local mode     : " + convert(SSM.instance().useLocalFocus));
       addText("Compare mode   : " + convert(SSM.instance().useComparisonMode));
+      addText("Temp Flag      : " + convert(SSM.instance().useFlag));
       addText("================="); 
       addText("Num selected   : " + SSM.instance().selectedGroup.size());
       addText("Num related    : " + SSM.instance().relatedList.size());

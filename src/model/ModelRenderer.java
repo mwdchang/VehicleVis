@@ -85,6 +85,8 @@ public class ModelRenderer extends BaseModelRenderer {
         glowTexture= new FrameBufferTexture();
         glowTexture.TEXTURE_SIZE_W = SSM.instance().windowWidth;
         glowTexture.TEXTURE_SIZE_H = SSM.instance().windowHeight;
+        //glowTexture.TEXTURE_SIZE_W = SSM.instance().windowWidth /4;
+        //glowTexture.TEXTURE_SIZE_H = SSM.instance().windowHeight/ 4;
         glowTexture.init(gl2);
         
         // Redo shader inits
@@ -100,7 +102,36 @@ public class ModelRenderer extends BaseModelRenderer {
         glowTexture.shader.bindFragColour(gl2, "outColour");   
         
         SSM.instance().refreshGlowTexture = false;
-        //System.out.println("In Modelrenderer init " + glowTexture.TEXTURE_SIZE_W + " " + glowTexture.TEXTURE_SIZE_H);         
+        
+        
+        // Down sample
+        outlineTexture1 = new FrameBufferTexture();
+        outlineTexture1.TEXTURE_SIZE_W = SSM.instance().windowWidth / 1;
+        outlineTexture1.TEXTURE_SIZE_H = SSM.instance().windowHeight / 1;
+        outlineTexture1.init(gl2);
+        outlineTexture1.shader.createShader(gl2, "src\\Shader\\vert_fbt.glsl", GL2.GL_VERTEX_SHADER);
+        outlineTexture1.shader.createShader(gl2, "src\\Shader\\frag_fbt_white2.glsl", GL2.GL_FRAGMENT_SHADER);
+        outlineTexture1.shader.createProgram(gl2);
+        gl2.glBindAttribLocation(outlineTexture1.shader.programID, 0, "in_position");
+        gl2.glBindAttribLocation(outlineTexture1.shader.programID, 1, "in_colour");
+        gl2.glBindAttribLocation(outlineTexture1.shader.programID, 2, "in_texcoord");
+        outlineTexture1.shader.linkProgram(gl2);
+        outlineTexture1.shader.bindFragColour(gl2, "outColour");
+        
+        
+        outlineTexture2 = new FrameBufferTexture();
+        outlineTexture2.TEXTURE_SIZE_W = SSM.instance().windowWidth / 1;
+        outlineTexture2.TEXTURE_SIZE_H = SSM.instance().windowHeight / 1;
+        outlineTexture2.init(gl2);
+        outlineTexture2.shader.createShader(gl2, "src\\Shader\\vert_fbt.glsl", GL2.GL_VERTEX_SHADER);
+        outlineTexture2.shader.createShader(gl2, "src\\Shader\\frag_fbt_white2.glsl", GL2.GL_FRAGMENT_SHADER);
+        outlineTexture2.shader.createProgram(gl2);
+        gl2.glBindAttribLocation(outlineTexture2.shader.programID, 0, "in_position");
+        gl2.glBindAttribLocation(outlineTexture2.shader.programID, 1, "in_colour");
+        gl2.glBindAttribLocation(outlineTexture2.shader.programID, 2, "in_texcoord");
+        outlineTexture2.shader.linkProgram(gl2);
+        outlineTexture2.shader.bindFragColour(gl2, "outColour");
+       
      }      
       
     
@@ -207,17 +238,20 @@ public class ModelRenderer extends BaseModelRenderer {
                  float v1 = CacheManager.instance().groupOccurrence.get(comp.id);
                  float v2 = CacheManager.instance().c_groupOccurrence.get(comp.id);                  
                  if (v1 > v2) 
-                    comp.renderBuffer(gl2, SchemeManager.comp_1);
+                    comp.renderBuffer(gl2, SchemeManager.comp_1, 2);
                  else if (v1 < v2) 
-                    comp.renderBuffer(gl2, SchemeManager.comp_2);
+                    comp.renderBuffer(gl2, SchemeManager.comp_2, 2);
               }
             }
+            gl2.glPopMatrix();
             glowTexture.stopRecording(gl2);
             GraphicUtil.setOrthonormalView(gl2, 0, 1, 0, 1, -10, 10);
             gl2.glBlendFunc(GL2.GL_SRC_ALPHA, GL2.GL_ONE_MINUS_SRC_ALPHA);
-            glowTexture.render(gl2, 1.4f, 0);
+            glowTexture.render(gl2, 1.1f, 0);
         }
         */
+         
+         
          
          
          /*
@@ -238,23 +272,131 @@ public class ModelRenderer extends BaseModelRenderer {
                      
                      float v1 = CacheManager.instance().groupOccurrence.get(comp.id);
                      float v2 = CacheManager.instance().c_groupOccurrence.get(comp.id);                  
-                     if (v1 > v2) 
+                     if (v1 > v2) {
                         comp.renderBuffer(gl2, SchemeManager.comp_1);
-                     else if (v1 < v2) 
+                     } else if (v1 < v2) { 
                         comp.renderBuffer(gl2, SchemeManager.comp_2);
+                     }
                      gl2.glPopMatrix();
                   glowTexture.stopRecording(gl2);
                   GraphicUtil.setOrthonormalView(gl2, 0, 1, 0, 1, -10, 10);
                   gl2.glBlendFunc(GL2.GL_SRC_ALPHA, GL2.GL_ONE_MINUS_SRC_ALPHA);
-                  glowTexture.render(gl2, 1.4f, 0);
+                  glowTexture.render(gl2, 1.4f, 1);
                } // end if 
             } // end for
          } // end if useComparisonMode
          */
-         
       } 
      
      
+      ////////////////////////////////////////////////////////////////////////////////
+      // Record any comparative effects as texture and blend it back into the 
+      // foreground buffer
+      ////////////////////////////////////////////////////////////////////////////////
+//      if (SSM.instance().useComparisonMode == true) {
+//        outlineTexture.startRecording(gl2);
+//        setPerspectiveView(gl2);
+//        gl2.glDisable(GL2.GL_DEPTH_TEST);
+//        gl2.glRotated(SSM.instance().rotateX, 1, 0, 0); 
+//        gl2.glRotated(SSM.instance().rotateY, 0, 1, 0); 
+//        gl2.glClearColor(1, 1, 1, 0);
+//        gl2.glClear(GL2.GL_COLOR_BUFFER_BIT);
+//        
+//        float c = 1;
+//        float size = 1+MM.currentModel.componentTable.size();
+//        for (DCComponent comp : MM.currentModel.componentTable.values()) {
+//           if (comp.hasContext && comp.active && ! SSM.instance().selectedGroup.contains(comp.id)) {
+//              gl2.glPushMatrix();
+//                 
+//                 float v1 = CacheManager.instance().groupOccurrence.get(comp.id);
+//                 float v2 = CacheManager.instance().c_groupOccurrence.get(comp.id);                  
+//                 if (v1 > v2) {
+//                    //comp.renderBuffer(gl2, SchemeManager.comp_1, 2);
+//                    comp.renderBuffer(gl2, DCColour.fromDouble(1.0, 0.0, 0.0, c/size), 2);
+//                 } else if (v1 < v2) { 
+//                    comp.renderBuffer(gl2, DCColour.fromDouble(0.0, 1.0, 0.0, c/size), 2);
+//                    //comp.renderBuffer(gl2, SchemeManager.comp_2, 2);
+//                 }
+//                 //comp.renderBuffer(gl2, DCColour.fromDouble(0.6, 0.6, 0.6, c/size), 2);
+//              gl2.glPopMatrix();
+//           }
+//           c ++;
+//         } // end for
+//         outlineTexture.stopRecording(gl2);
+//         
+//         // Render and blend the texture back to the framebuffer
+//         GraphicUtil.setOrthonormalView(gl2, 0, 1, 0, 1, -10, 10);
+//         gl2.glBlendFunc(GL2.GL_SRC_ALPHA, GL2.GL_ONE_MINUS_SRC_ALPHA);
+//         outlineTexture.render(gl2, 1.0f, 1);
+//      }
+      
+      
+      if (SSM.instance().useComparisonMode == true) {
+         float size;
+         float c;
+         outlineTexture1.startRecording(gl2);
+            setPerspectiveView(gl2);
+            gl2.glDisable(GL2.GL_DEPTH_TEST);
+            gl2.glRotated(SSM.instance().rotateX, 1, 0, 0); 
+            gl2.glRotated(SSM.instance().rotateY, 0, 1, 0); 
+            gl2.glClearColor(1, 1, 1, 0);
+            gl2.glClear(GL2.GL_COLOR_BUFFER_BIT);
+            
+            c = 1;
+            size = 2+MM.currentModel.componentTable.size();
+            gl2.glPushMatrix();
+            for (DCComponent comp : MM.currentModel.componentTable.values()) {
+               if (comp.hasContext && comp.active && ! SSM.instance().selectedGroup.contains(comp.id)) {
+                  float v1 = CacheManager.instance().groupOccurrence.get(comp.id);
+                  float v2 = CacheManager.instance().c_groupOccurrence.get(comp.id);                  
+                  if (v1 > v2) {
+                     comp.renderBuffer(gl2, DCColour.fromDouble(1.0, 0.0, 0.0, 0.5), 2);
+                     //System.out.println("Outline 1: " + comp.cname); 
+                  }
+               }
+               c ++;
+            } // end for
+            gl2.glPopMatrix();
+         outlineTexture1.stopRecording(gl2);
+         GraphicUtil.setOrthonormalView(gl2, 0, 1, 0, 1, -10, 10);
+         gl2.glBlendFunc(GL2.GL_SRC_ALPHA, GL2.GL_ONE_MINUS_SRC_ALPHA);
+         outlineTexture1.render(gl2, 1.0f, 1);
+         
+         
+         outlineTexture2.startRecording(gl2);
+            setPerspectiveView(gl2);
+            gl2.glDisable(GL2.GL_DEPTH_TEST);
+            gl2.glRotated(SSM.instance().rotateX, 1, 0, 0); 
+            gl2.glRotated(SSM.instance().rotateY, 0, 1, 0); 
+            gl2.glClearColor(1, 1, 1, 0);
+            gl2.glClear(GL2.GL_COLOR_BUFFER_BIT);
+            c = 1;
+            size = 2+MM.currentModel.componentTable.size();
+            gl2.glPushMatrix();
+            for (DCComponent comp : MM.currentModel.componentTable.values()) {
+               if (comp.hasContext && comp.active && ! SSM.instance().selectedGroup.contains(comp.id)) {
+                  float v1 = CacheManager.instance().groupOccurrence.get(comp.id);
+                  float v2 = CacheManager.instance().c_groupOccurrence.get(comp.id);                  
+                  if (v1 < v2) {
+                     comp.renderBuffer(gl2, DCColour.fromDouble(0.0, 1.0, 0.0, 0.5), 2);
+                     //System.out.println("Outline 2: " + comp.cname); 
+                  }
+               }
+               c ++;
+            } // end for
+            gl2.glPopMatrix();
+
+         outlineTexture2.stopRecording(gl2);
+         GraphicUtil.setOrthonormalView(gl2, 0, 1, 0, 1, -10, 10);
+         gl2.glBlendFunc(GL2.GL_SRC_ALPHA, GL2.GL_ONE_MINUS_SRC_ALPHA);
+         outlineTexture2.render(gl2, 1.0f, 1);
+      }
+      
+      
+      
+      
+      
+      
       
       ////////////////////////////////////////////////////////////////////////////////
       // Render any filters we want to show
@@ -647,7 +789,7 @@ public class ModelRenderer extends BaseModelRenderer {
          DCComponent comp = rightList.elementAt(i);
          if (comp.id < 0) continue;
             
-         String txt = comp.cname+"(" + comp.selectedTotal + "/" + CacheManager.instance().groupOccurrence.get(comp.id) + ")";
+         String txt = comp.cname+"(" + CacheManager.instance().groupOccurrence.get(comp.id) + ")";
             
          // double size[] = FontRenderer.instance().getDimension(txt);      
          double size[] = GraphicUtil.getFontDim(txt);
@@ -667,7 +809,7 @@ public class ModelRenderer extends BaseModelRenderer {
          DCComponent comp = leftList.elementAt(i);
          if (comp.id < 0) continue;
             
-         String txt = comp.cname+"(" + comp.selectedTotal + "/" + CacheManager.instance().groupOccurrence.get(comp.id) + ")";
+         String txt = comp.cname+"(" + CacheManager.instance().groupOccurrence.get(comp.id) + ")";
             
          //double size[] = FontRenderer.instance().getDimension(txt);      
          double size[] = GraphicUtil.getFontDim(txt);
@@ -917,7 +1059,6 @@ public class ModelRenderer extends BaseModelRenderer {
          
          
             
-         //String txt = comp.cname+"(" + comp.selectedTotal + "/" + groupOccurrence.get(id) + ")";
          int occ = CacheManager.instance().groupOccurrence.get(comp.id); 
          int c_occ = CacheManager.instance().c_groupOccurrence.get(comp.id);
          
@@ -1051,7 +1192,6 @@ public class ModelRenderer extends BaseModelRenderer {
          DCComponent comp = leftList.elementAt(i);
          if (comp.id < 0) continue;
             
-         //String txt = comp.cname+"(" + comp.selectedTotal + "/" + groupOccurrence.get(id) + ")";
          int occ = CacheManager.instance().groupOccurrence.get(comp.id); 
          int c_occ = CacheManager.instance().c_groupOccurrence.get(comp.id);
          

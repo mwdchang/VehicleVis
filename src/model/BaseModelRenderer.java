@@ -65,6 +65,8 @@ public abstract class BaseModelRenderer implements RenderTask {
    
    // Flow effect filter
    public FrameBufferTexture glowTexture;
+   public FrameBufferTexture outlineTexture1;
+   public FrameBufferTexture outlineTexture2;
    
    
    
@@ -924,7 +926,6 @@ public abstract class BaseModelRenderer implements RenderTask {
       String[] clist = getComponentUnsorted( null ); //passing in null (no context)         
       for (int i = 0; i < clist.length; i++) {
          DCComponent comp = MM.currentModel.componentTable.get( clist[i] );   
-         comp.selectedTotal = 0; // reset 
          
          if (comp.id < 0) continue;
          
@@ -1020,7 +1021,6 @@ public abstract class BaseModelRenderer implements RenderTask {
             int y = Integer.parseInt(CacheManager.instance().getTimeByIndex(idx).substring(0, 4));
             int m = Integer.parseInt(CacheManager.instance().getTimeByIndex(idx).substring(4, 6))-1;
             
-            comp.selectedTotal += 1;
             if (y >= SSM.instance().startYear && y <= SSM.instance().endYear) {
                if (m >= SSM.instance().startMonth && m <= SSM.instance().endMonth) {
                   h[idx-chartStartIdx] = 1;
@@ -1510,11 +1510,14 @@ public abstract class BaseModelRenderer implements RenderTask {
         gl.glEnable(GL2.GL_DEPTH_TEST);
         gl.glEnable(GL2.GL_BLEND);
         for (DCComponent comp : MM.currentModel.componentTable.values()) {
+           //comp.renderBufferAdj(gl, DCColour.fromInt(100, 100, 100, 150));
            if (!comp.hasContext || !comp.active) {
               comp.renderBufferAdj(gl, DCColour.fromInt(200, 200, 200, 50));
-           } else if (SSM.instance().relatedList.size() > 0 && SSM.instance().relatedList.contains(comp.id) && !SSM.instance().selectedGroup.contains(comp.id)){
-              //comp.renderBufferAdj(gl, SchemeManager.colour_related.adjustAlpha(0.6f));   
-           } 
+           } else {
+              //gl.glLineWidth(5.0f);
+              //comp.renderBufferAdj(gl, comp.colour);
+              //gl.glLineWidth(1.0f);
+           }
         }          
         
         
@@ -1535,8 +1538,9 @@ public abstract class BaseModelRenderer implements RenderTask {
         // 
         // This seems to result in a very cluttered looking render
         ////////////////////////////////////////////////////////////////////////////////
+        /*
         if (SSM.instance().useComparisonMode == true) {
-           gl.glLineWidth(1.8f);
+           gl.glLineWidth(1.2f);
            for (DCComponent comp : MM.currentModel.componentTable.values()) {
               if (comp.hasContext && comp.active) {
                  float v1 = CacheManager.instance().groupOccurrence.get(comp.id);
@@ -1546,22 +1550,26 @@ public abstract class BaseModelRenderer implements RenderTask {
                     if (SSM.instance().useFlag)
                        comp.renderBufferAdj(gl, SchemeManager.comp_1);
                     else
-                       comp.renderSilhouette(gl, SchemeManager.comp_1);
+                       //comp.renderSilhouette(gl, SchemeManager.comp_1);
+                       comp.renderBufferSilhouette(gl, SchemeManager.comp_1);
                  } else if (v2 > v1){
                     if (SSM.instance().useFlag) 
                        comp.renderBufferAdj(gl, SchemeManager.comp_2);
                     else
-                       comp.renderSilhouette(gl, SchemeManager.comp_2);
+                       //comp.renderSilhouette(gl, SchemeManager.comp_2);
+                       comp.renderBufferSilhouette(gl, SchemeManager.comp_2);
                  } else {
                     if (SSM.instance().useFlag)
                        comp.renderBufferAdj(gl, SchemeManager.silhouette_default); 
                     else 
-                       comp.renderSilhouette(gl, SchemeManager.silhouette_default);
+                       //comp.renderSilhouette(gl, SchemeManager.silhouette_default);
+                       comp.renderBufferSilhouette(gl, SchemeManager.silhouette_default);
                  }
               }
            }
            gl.glLineWidth(1.0f);
         }
+        */
         
 
         gl.glDisable(GL2.GL_BLEND);
@@ -1611,7 +1619,8 @@ public abstract class BaseModelRenderer implements RenderTask {
         for (DCComponent comp : MM.currentModel.componentTable.values()) {
            if (! comp.hasContext || ! comp.active) continue; // Dont' render if it does not have associated values
            
-           g_shaderDualPeel.setUniformf(gl2, "compColour", comp.colour.r, comp.colour.g, comp.colour.b, comp.colour.a);
+           //g_shaderDualPeel.setUniformf(gl2, "compColour", 0.85f, 0.85f, 0.85f, 0.3f);
+           g_shaderDualPeel.setUniformf(gl2, "compColour", comp.colour.r, comp.colour.g, comp.colour.b, 0.7f);
            g_shaderDualPeel.setUniform1i(gl2, "useLight", 1);
            //g_shaderDualPeel.setUniform1i(gl2, "useLight", 0);
            
@@ -1632,7 +1641,8 @@ public abstract class BaseModelRenderer implements RenderTask {
            gl2.glBindBuffer( GL2.GL_ARRAY_BUFFER, 0);
            gl2.glBindBuffer( GL2.GL_ELEMENT_ARRAY_BUFFER, 0);
            
-           if (SSM.instance().selectedGroup.size() > 0 && SSM.instance().selectedGroup.contains(comp.id)){
+           //comp.renderBufferAdj(gl2, SchemeManager.silhouette_default);
+           //if (SSM.instance().selectedGroup.size() > 0 && SSM.instance().selectedGroup.contains(comp.id)){
               //g_opacity[0] = comp.colour.a;
               //g_shaderDualPeel.setUniform1fv(gl2, "Alpha", g_opacity);
               //g_shaderDualPeel.setUniformf(gl2, "compColour", SchemeManager.colour_blue.r, SchemeManager.colour_blue.g, SchemeManager.colour_blue.b, 1.0f);
@@ -1640,11 +1650,11 @@ public abstract class BaseModelRenderer implements RenderTask {
               //g_shaderDualPeel.setUniform1i(gl2, "useLight", 0);
               //comp.boundingBox.renderBoundingBox(gl2);   
               //g_shaderDualPeel.setUniform1fv(gl2, "Alpha", g_opacity);
-           } else if (SSM.instance().relatedList.size() > 0 && SSM.instance().relatedList.contains(comp.id)) {
+           //} else if (SSM.instance().relatedList.size() > 0 && SSM.instance().relatedList.contains(comp.id)) {
               //g_shaderDualPeel.setUniform1i(gl2, "useLight", 0);
               //g_shaderDualPeel.setUniformf(gl2, "compColour", SchemeManager.colour_related.r, SchemeManager.colour_related.g, SchemeManager.colour_related.b, 1.0f);
               //comp.renderBufferAdj(gl2, SchemeManager.colour_related); 
-           }
+           //}
 
         }
         g_numGeoPasses++;

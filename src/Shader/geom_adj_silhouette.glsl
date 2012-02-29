@@ -50,6 +50,7 @@ void main(void) {
    vec3 v5 = gl_in[5].gl_Position.xyz;
 
 
+
    // Get the normal for the 4 triangles in play
    vec3 normal_042 = normalize(cross(v4-v0, v2-v0));
    vec3 normal_021 = normalize(cross(v2-v0, v1-v0));
@@ -65,13 +66,14 @@ void main(void) {
    
    // Check if the central triangle is front or back facing
    float r = dot(normal_042, eyeVec);
-   if (r < 0) return;
+   if (r > 0) return;
+
 
 
    // Check 021 
    midpoint = (v0+v2+v1)/3.0;
-   eyeVec   = normalize(midpoint - eyePosition);
-   if (dot(eyeVec, normal_021) < 0 ) {
+   eyeVec   = normalize(midpoint- eyePosition);
+   if (dot(eyeVec, normal_021) > 0 ) {
      gl_Position = gl_in[0].gl_Position; EmitVertex();
      gl_Position = gl_in[2].gl_Position; EmitVertex();
      EndPrimitive();
@@ -79,8 +81,8 @@ void main(void) {
 
    // Check 243
    midpoint = (v2+v4+v3)/3.0;
-   eyeVec   = normalize(midpoint - eyePosition);
-   if (dot(eyeVec, normal_243) < 0 ) {
+   eyeVec   = normalize(midpoint- eyePosition);
+   if (dot(eyeVec, normal_243) > 0 ) {
      gl_Position = gl_in[2].gl_Position; EmitVertex();
      gl_Position = gl_in[4].gl_Position; EmitVertex();
      EndPrimitive();
@@ -88,12 +90,37 @@ void main(void) {
 
    // Check 405
    midpoint = (v4+v0+v5)/3.0;
-   eyeVec   = normalize(midpoint - eyePosition);
-   if (dot(eyeVec, normal_405) < 0 ) {
+   eyeVec   = normalize(midpoint- eyePosition);
+   if (dot(eyeVec, normal_405) > 0 ) {
      gl_Position = gl_in[4].gl_Position; EmitVertex();
      gl_Position = gl_in[0].gl_Position; EmitVertex();
      EndPrimitive();
    }
+   
+
+
+   // Check if the normals are facing the same direction
+   // check 021
+/*
+   if ( dot(normal_042, normal_021) < 0.0) {
+     gl_Position = gl_in[0].gl_Position; EmitVertex();
+     gl_Position = gl_in[2].gl_Position; EmitVertex();
+     EndPrimitive();
+   }
+   // check 243
+   if ( dot(normal_042, normal_243) < 0.0) {
+     gl_Position = gl_in[2].gl_Position; EmitVertex();
+     gl_Position = gl_in[4].gl_Position; EmitVertex();
+     EndPrimitive();
+   }
+   // check 405
+   if ( dot(normal_042, normal_405) < 0.0) {
+     gl_Position = gl_in[4].gl_Position; EmitVertex();
+     gl_Position = gl_in[0].gl_Position; EmitVertex();
+     EndPrimitive();
+   }
+*/
+   
 
 
 }

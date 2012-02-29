@@ -51,20 +51,33 @@ void main(void) {
    vec3 normal_243 = normalize(cross(v4-v2, v3-v2));
    vec3 normal_405 = normalize(cross(v0-v4, v5-v4));
 
+
+   // Ignore really small triangles ... this does not work in general, 
+   // but should work for the vehicle models we have
+   //vec3 c = cross(v4-v0, v2-v0);
+   //float cmag = c.x*c.x + c.y*c.y + c.z*c.z;
+   //if (cmag < 0.01) return;
+
+
+   // Ignore back faces
+   //vec3 midpoint = (v0+v2+v4)/3.0;
+   //if (dot(normal_042, normalize( midpoint - eyePosition)) > 0) return;
+
+
    
 
    // dot product guard ?
 
    // Check if the normals are facing the same direction
    // check 021
-   if ( dot(normal_042, normal_021) < 0.5) {
+   if ( dot(normal_042, normal_021) < 0.0) {
      gl_Position = gl_in[0].gl_Position; EmitVertex();
      gl_Position = gl_in[2].gl_Position; EmitVertex();
      EndPrimitive();
    }
 
    // check 243
-   if ( dot(normal_042, normal_243) < 0.5) {
+   if ( dot(normal_042, normal_243) < 0.0) {
      gl_Position = gl_in[2].gl_Position; EmitVertex();
      gl_Position = gl_in[4].gl_Position; EmitVertex();
      EndPrimitive();
@@ -72,7 +85,7 @@ void main(void) {
    
 
    // check 405
-   if ( dot(normal_042, normal_405) < 0.5) {
+   if ( dot(normal_042, normal_405) < 0.0) {
      gl_Position = gl_in[4].gl_Position; EmitVertex();
      gl_Position = gl_in[0].gl_Position; EmitVertex();
      EndPrimitive();

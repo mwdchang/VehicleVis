@@ -242,15 +242,15 @@ public class SchemeManager {
       DCColour.fromInt(128, 0, 38, 100)       
    };
    public static DCColour[] YellowOrangeRedPreset = new DCColour[] {
-      DCColour.fromInt(255, 255, 204, 20), 
-      DCColour.fromInt(255, 237, 160, 40), 
+      DCColour.fromInt(255, 255, 204, 40), 
+      DCColour.fromInt(255, 237, 160, 50), 
       DCColour.fromInt(254, 217, 118, 60),
-      DCColour.fromInt(254, 178, 76, 80), 
-      DCColour.fromInt(253, 141, 60, 100), 
-      DCColour.fromInt(252, 78, 42, 120),
-      DCColour.fromInt(227, 26, 28, 140), 
-      DCColour.fromInt(189, 0, 38, 160), 
-      DCColour.fromInt(128, 0, 38, 180)       
+      DCColour.fromInt(254, 178, 76, 70), 
+      DCColour.fromInt(253, 141, 60, 80), 
+      DCColour.fromInt(252, 78, 42, 90),
+      DCColour.fromInt(227, 26, 28, 100), 
+      DCColour.fromInt(189, 0, 38, 110), 
+      DCColour.fromInt(128, 0, 38, 120)       
    };   
    public static DCColour[] Red = new DCColour[] {
       DCColour.fromInt(255, 245, 240, 20),

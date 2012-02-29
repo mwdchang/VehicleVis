@@ -8,6 +8,7 @@ import java.awt.event.KeyListener;
 import javax.media.opengl.GL2;
 import javax.media.opengl.GLAutoDrawable;
 
+import util.DCCamera;
 import util.GraphicUtil;
 import util.TextureFont;
 
@@ -17,6 +18,7 @@ import model.DCTriple;
 import model.FrameBufferTexture;
 
 import datastore.MM;
+import datastore.SchemeManager;
 
 /////////////////////////////////////////////////////////////////////////////////
 // This class is used for testing model renders, particularly for different
@@ -25,8 +27,8 @@ import datastore.MM;
 public class TestModel extends JOGLBase implements KeyListener {
    
    public float rotY = 0;
-   public int mode = 0;
-   public boolean useHalo = true;
+   public int mode = 9;
+   public boolean useHalo = false;
    
    public static void main(String args[]) {
       TestModel tm = new TestModel();
@@ -53,7 +55,12 @@ public class TestModel extends JOGLBase implements KeyListener {
       
       if (useHalo) {
          fbt.startRecording(gl2); 
-         GraphicUtil.setPerspectiveView(gl2, w/h, 30.0f, 1.0f, 500.0f, new float[]{10.0f, 40.0f, 0.0f}, new float[]{0,0,0}, new float[]{0, 1, 0} );
+         GraphicUtil.setPerspectiveView(gl2, w/h, 30.0f, 1.0f, 500.0f, 
+               DCCamera.instance().eye.toArray3f(), 
+               DCCamera.instance().look.toArray3f(), 
+               DCCamera.instance().up.toArray3f() 
+         );
+         
          //gl2.glClearColor(0, 0, 0, 0);
          gl2.glClearColor(1, 1, 1, 0);
          gl2.glClear(GL2.GL_COLOR_BUFFER_BIT);
@@ -61,9 +68,10 @@ public class TestModel extends JOGLBase implements KeyListener {
             gl2.glRotated(rotY, 0, 1, 0);
             for (DCComponent d : MM.currentModel.componentTable.values()) {
                switch (mode) {
-                  case 0: { d.renderBuffer(gl2, DCColour.fromDouble(1.0, 0, 0, 1)); break; }        
+                  //case 0: { d.renderBuffer(gl2, DCColour.fromDouble(1.0, 0, 0, 1)); break; }        
+                  case 0: { d.renderVNormal(gl2); break; }
                   case 1: { d.renderBufferAdj(gl2, DCColour.fromDouble(0.0, 0.0, 0.5, 0.5)); break; }
-                  case 2: { d.renderBufferSilhouette(gl2, new DCTriple(10, 40, 0), DCColour.fromDouble(0.0, 0.0, 0.5, 0.5)); break; }
+                  case 2: { d.renderBufferSilhouette(gl2, DCColour.fromDouble(0.0, 0.0, 0.5, 0.5)); break; }
                   case 3: { d.renderBufferToon(gl2); break; }
                   case 4: { d.renderFNormal(gl2); break; }
                   case 5: { d.renderEdgeWithNoAdjacent(gl2); break; }
@@ -83,14 +91,23 @@ public class TestModel extends JOGLBase implements KeyListener {
          //fbt.shader.setUniform1i(gl2, "width", a.getWidth());
          fbt.render(gl2, 4.0f, 0);
       } else {
-         GraphicUtil.setPerspectiveView(gl2, w/h, 30.0f, 1.0f, 500.0f, new float[]{10.0f, 40.0f, 0.0f}, new float[]{0,0,0}, new float[]{0, 1, 0} );
+         GraphicUtil.setPerspectiveView(gl2, w/h, 30.0f, 1.0f, 500.0f, 
+               DCCamera.instance().eye.toArray3f(),
+               DCCamera.instance().look.toArray3f(),
+               DCCamera.instance().up.toArray3f()
+         );
+         
+         gl2.glEnable(GL2.GL_DEPTH_TEST);
+         gl2.glEnable(GL2.GL_CULL_FACE);
          gl2.glPushMatrix();
             gl2.glRotated(rotY, 0, 1, 0);
             for (DCComponent d : MM.currentModel.componentTable.values()) {
+               if ( !d.baseName.contains("exh")) continue;
                switch (mode) {
-                  case 0: { d.renderBuffer(gl2, DCColour.fromDouble(1.0, 0, 0, 1)); break; }        
+                  //case 0: { d.renderBuffer(gl2, DCColour.fromDouble(1.0, 0, 0, 1)); break; }        
+                  case 0: { d.renderFNormal(gl2); d.renderBuffer(gl2, SchemeManager.silhouette_default); break; }
                   case 1: { d.renderBufferAdj(gl2, DCColour.fromDouble(0.0, 0.0, 0.5, 0.5)); break; }
-                  case 2: { d.renderBufferSilhouette(gl2, new DCTriple(10, 40, 0), DCColour.fromDouble(0.0, 0.0, 0.5, 0.5)); break; }
+                  case 2: { d.renderBufferSilhouette(gl2, DCColour.fromDouble(0.0, 0.0, 0.5, 0.5)); break; }
                   case 3: { d.renderBufferToon(gl2); break; }
                   case 4: { d.renderFNormal(gl2); break; }
                   case 5: { d.renderEdgeWithNoAdjacent(gl2); break; }
@@ -186,7 +203,7 @@ public class TestModel extends JOGLBase implements KeyListener {
       if (e.getKeyChar() == KeyEvent.VK_SPACE) {
          mode ++;
          //if (mode > 5) mode = 0;
-         if (mode > 2) mode = 1;
+         if (mode > 2) mode = 0;
          tf.clearMark();
          tf.addMark("Testing car rendering mode : " + mode, Color.YELLOW, f, 5, 5);
       }

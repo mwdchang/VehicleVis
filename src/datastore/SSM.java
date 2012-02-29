@@ -18,11 +18,12 @@ import model.PaneAttrib;
 // for example: 
 //   - currently focused group object
 //   - the global date range 
+//
 /////////////////////////////////////////////////////////////////////////////////
 public class SSM {
    private static SSM instance;
    
-   //////////////////////
+   ////////////////////////////////////////////////////////////////////////////////
    // Default constructor
    //   Just make sure all the variable have some sort of default value
    ////////////////////////////////////////////////////////////////////////////////
@@ -37,18 +38,15 @@ public class SSM {
       startMonth = 0;
       endMonth = 0;
       
-      
       renderSihoulette = false;
       mouseX = 0;
       mouseY = 0;
       refreshMagicLens = true;
       refreshOITBuffers = true;
       occlusionLevel = 0;
-      //magicLensRadius = 120.0f;
       useGuide = false;
       useCircularLabel = false;
       
-     
       relatedList = new Vector<Integer>();
    }
    
@@ -157,8 +155,6 @@ public class SSM {
    ///////////////////////////////////////////////////////////////////////////////// 
    // The current focus group/component
    ///////////////////////////////////////////////////////////////////////////////// 
-   //public Integer currentGroup;
-   //public Integer selectedGroup;
    public Hashtable<Integer, Integer> selectedGroup;
    
    public Integer occlusionLevel;
@@ -191,7 +187,7 @@ public class SSM {
    public boolean useLocalFocus = false;       // Whether to nor to render based on current selected components 
    
    
-   public boolean useFlag = false; // Just a temporary flag to trigger adhoc tests and stuff, not used for real data
+   public boolean useFlag = true; // Just a temporary flag to trigger adhoc tests and stuff, not used for real data
    
    
    
@@ -416,8 +412,6 @@ public class SSM {
    public boolean r_mousePressed = false;
    
    
-   //public int mouseState =  STATE_NORMAL;
-   
    
    // Figure out which parts are selected based on a precedence order of :
    // 1 - UI_LAYER
@@ -427,10 +421,8 @@ public class SSM {
    public static int COMPONENT_LAYER= 2;
    public int currentFocusLayer = 0;
    
-   //public int currentState;
    public int dirty = 0;
    public int dirtyGL = 0;
-   //public int dirtyFilter = 0;
    public int dirtyLoad = 0;
    public int dirtyDateFilter = 0;
    
