@@ -52,13 +52,8 @@ public class ModelRenderer extends BaseModelRenderer {
    }     
    
    
-   
-   ////////////////////////////////////////////////////////////////////////////////
-   // Main rendering method
-   ////////////////////////////////////////////////////////////////////////////////
    public void render(GL2 gl2) {
       gl2.glClear(GL2.GL_COLOR_BUFFER_BIT);
-      
       // To avoid threading issues, lets
       // just put the update GL stuff here
       if (SSM.instance().dirtyGL == 1) {
@@ -66,6 +61,22 @@ public class ModelRenderer extends BaseModelRenderer {
          SSM.instance().dirtyGL = 0;
       }
       
+      if (SSM.instance().use3DModel == true) {
+         this.renderIntegratedView(gl2);
+      } else {
+         this.renderChartsOnly(gl2);
+      }
+      
+   }
+   
+   
+   
+   ////////////////////////////////////////////////////////////////////////////////
+   // Main rendering method
+   ////////////////////////////////////////////////////////////////////////////////
+   public void renderIntegratedView(GL2 gl2) {
+      
+     
       ////////////////////////////////////////////////////////////////////////////////
       // Need to re-adjust the buffer size if the screen size is changed
       ////////////////////////////////////////////////////////////////////////////////
@@ -171,7 +182,7 @@ public class ModelRenderer extends BaseModelRenderer {
          SSM.instance().refreshMagicLens = false;
       }
       
-     
+    
       
       ////////////////////////////////////////////////////////////////////////////////
       // Render the default scene we want to show
@@ -412,7 +423,6 @@ public class ModelRenderer extends BaseModelRenderer {
       
       
       
-      
       ////////////////////////////////////////////////////////////////////////////////
       // Render any 2D components
       ////////////////////////////////////////////////////////////////////////////////
@@ -472,6 +482,209 @@ public class ModelRenderer extends BaseModelRenderer {
          
       }         
       
+      
+      this.renderScrollFilter(gl2);
+      
+
+      
+     
+      
+      ////////////////////////////////////////////////////////////////////////////////
+      // Render just the charts
+      ////////////////////////////////////////////////////////////////////////////////
+      /*
+      setOrthonormalView(gl2, 0, SSM.instance().windowWidth, 0, SSM.instance().windowHeight); {
+         renderChartsOnly(gl2);
+      }
+      */
+      
+      
+      ////////////////////////////////////////////////////////////////////////////////
+      // Renders a tool tip
+      ////////////////////////////////////////////////////////////////////////////////
+      setOrthonormalView(gl2, 0, SSM.instance().windowWidth, 0, SSM.instance().windowHeight); {
+         DCTip.render(gl2);
+      }
+            
+   }   
+   
+   
+   
+   public static float CHART_ANCHOR_X = 60;
+   public static float CHART_ANCHOR_Y = 200;
+   public static float CHART_GAP_W = 200;
+   public static float CHART_GAP_H =  100;
+   public static float CHART_NUM = 6;
+   
+   
+   ////////////////////////////////////////////////////////////////////////////////
+   // Render only the chart
+   // No 3D model
+   ////////////////////////////////////////////////////////////////////////////////
+   public void renderChartsOnly(GL2 gl2) {
+      String list[] = this.getComponentUnsorted(gl2);
+      
+      int counter = 0;
+      Hashtable<String, String> uniqueTable = new Hashtable<String, String>();
+      
+      float startX = CHART_ANCHOR_X;
+      float startY = CHART_ANCHOR_Y;
+      
+      
+      setOrthonormalView(gl2, 0, SSM.instance().windowWidth, 0, SSM.instance().windowHeight); {
+         for (String key : list) {
+            DCComponent comp = MM.currentModel.componentTable.get(key);
+            
+            //System.out.println("comp name : " + comp.cname);
+            if (comp.hasContext == false) continue;
+            if (comp.id < 0) continue;
+            
+            
+            // If local mode than don't render components that are not related
+            comp.cchart.active = true;
+            if (SSM.instance().useLocalFocus == true) {
+               if (SSM.instance().selectedGroup.size() > 0 && ! SSM.instance().relatedList.contains(comp.id))  {
+                  comp.cchart.active = false;
+               } else {
+                  comp.cchart.active = true;   
+               }
+            }             
+            
+
+            // Check parent and model table capability in aggregation mode
+            boolean skip = false;
+            if (SSM.instance().useAggregate == true) {
+               Integer parentId = comp.id;
+               while(true) {
+                  parentId = HierarchyTable.instance().getParentId(parentId);   
+                  
+                  if (parentId == null) break;
+                  if (MM.currentModel.componentTableById.get(parentId) != null) {
+                     skip = true;
+                     break;
+                  }
+               } // end while            
+            } else {
+               skip = false; 
+            }
+            if (skip == true) continue;
+            
+            
+            
+            
+            if (uniqueTable.contains(comp.baseName)) continue;
+            uniqueTable.put(comp.baseName, comp.baseName);
+            
+            comp.cchart.anchorX = startX;
+            comp.cchart.anchorY = startY;
+            comp.cchart.colour = comp.colour;
+            comp.cchart.renderBorder(gl2);
+            comp.cchart.render(gl2);
+            
+            comp.cchart.tf.width = comp.cchart.width;
+            comp.cchart.tf.height = comp.cchart.height;
+            comp.cchart.tf.anchorX = comp.cchart.anchorX;
+            comp.cchart.tf.anchorY = comp.cchart.anchorY;
+            comp.cchart.setLabel(comp.baseName);
+            comp.cchart.tf.render(gl2);
+            counter += 1;
+            
+            startY += (comp.cchart.height + 10);
+            if (startY > 700) {
+               startX += 200;
+               startY = CHART_ANCHOR_Y;
+            }
+            
+         } // end for
+      } // end ortho
+      
+      
+      this.renderScrollFilter(gl2);
+      
+      ////////////////////////////////////////////////////////////////////////////////
+      // Renders a tool tip
+      ////////////////////////////////////////////////////////////////////////////////
+      setOrthonormalView(gl2, 0, SSM.instance().windowWidth, 0, SSM.instance().windowHeight); {
+         DCTip.render(gl2);
+      }      
+   }
+   
+   public Integer pickingChartsOnly(GL2 gl2) {
+      IntBuffer buffer = (IntBuffer)GLBuffers.newDirectGLBuffer(GL2.GL_UNSIGNED_INT, 512);
+      this.startPickingOrtho(gl2, buffer);      
+      
+      String list[] = this.getComponentUnsorted(gl2);
+      int counter = 0;
+      Hashtable<String, String> uniqueTable = new Hashtable<String, String>();
+      
+      float startX = CHART_ANCHOR_X;
+      float startY = CHART_ANCHOR_Y;      
+      
+      for (String key : list) {
+         DCComponent comp = MM.currentModel.componentTable.get(key);
+         
+         
+         //System.out.println("comp name : " + comp.cname);
+         if (comp.hasContext == false) continue;
+         if (comp.id < 0) continue;
+         
+         // If local mode than don't render components that are not related
+         comp.cchart.active = true;
+         if (SSM.instance().useLocalFocus == true) {
+            if (SSM.instance().selectedGroup.size() > 0 && ! SSM.instance().relatedList.contains(comp.id))  {
+               comp.cchart.active = false;
+            } else {
+               comp.cchart.active = true;   
+            }
+         }             
+         
+
+         // Check parent and model table capability in aggregation mode
+         boolean skip = false;
+         if (SSM.instance().useAggregate == true) {
+            Integer parentId = comp.id;
+            while(true) {
+               parentId = HierarchyTable.instance().getParentId(parentId);   
+               
+               if (parentId == null) break;
+               if (MM.currentModel.componentTableById.get(parentId) != null) {
+                  skip = true;
+                  break;
+               }
+            } // end while            
+         } else {
+            skip = false; 
+         }
+         if (skip == true) continue;         
+         
+         
+         if (uniqueTable.contains(comp.baseName)) continue;
+         uniqueTable.put(comp.baseName, comp.baseName);
+         
+         comp.cchart.anchorX = startX;
+         comp.cchart.anchorY = startY;
+         gl2.glLoadName(comp.cchart.id);
+         gl2.glPushMatrix();
+            comp.cchart.renderBorder(gl2);
+         gl2.glPopMatrix();   
+         
+         counter += 1;
+         
+         startY += (comp.cchart.height + 10);
+         if (startY > 700) {
+            startX += 200;
+            startY = CHART_ANCHOR_Y;
+         }
+     
+         
+      } // end for
+      
+      return finishPicking(gl2, buffer);
+   }
+  
+   
+   
+   public void renderScrollFilter(GL2 gl2) {
       ////////////////////////////////////////////////////////////////////////////////
       // Rener the combo boxes
       ////////////////////////////////////////////////////////////////////////////////
@@ -488,7 +701,6 @@ public class ModelRenderer extends BaseModelRenderer {
          yearScroll.render(gl2);
          
          
-         
          c_manufactureScroll.yoffset = SSM.instance().c_manufactureAttrib.yOffset;
          c_makeScroll.yoffset  = SSM.instance().c_makeAttrib.yOffset;
          c_modelScroll.yoffset = SSM.instance().c_modelAttrib.yOffset;
@@ -498,17 +710,8 @@ public class ModelRenderer extends BaseModelRenderer {
          c_makeScroll.render(gl2);
          c_modelScroll.render(gl2);
          c_yearScroll.render(gl2);
-         
-      }
-      
-      ////////////////////////////////////////////////////////////////////////////////
-      // Renders a tool tip
-      ////////////////////////////////////////////////////////////////////////////////
-      setOrthonormalView(gl2, 0, SSM.instance().windowWidth, 0, SSM.instance().windowHeight); {
-         DCTip.render(gl2);
-      }
-   }   
-   
+      }      
+   }
    
    
    
@@ -594,14 +797,19 @@ public class ModelRenderer extends BaseModelRenderer {
      
       
       
-      // Check 3D first, then 2D
+      
       Integer obj = null;
-      obj = picking3D(gl2);
-      if (obj == null) {
-         for (int i=0; i < SSM.instance().lensList.size(); i++) {
-            obj = picking2DBalanced(gl2, SSM.instance().lensList.elementAt(i));
-            if (obj != null) break;
+      if (SSM.instance().use3DModel == true) {
+         // Check 3D first, then 2D
+         obj = picking3D(gl2);
+         if (obj == null) {
+            for (int i=0; i < SSM.instance().lensList.size(); i++) {
+               obj = picking2DBalanced(gl2, SSM.instance().lensList.elementAt(i));
+               if (obj != null) break;
+            }
          }
+      } else {
+         obj = pickingChartsOnly(gl2);
       }
       
       
@@ -652,21 +860,6 @@ public class ModelRenderer extends BaseModelRenderer {
         }
       }
       
-      /*
-      picking3D(gl2);   
-//      if (SSM.instance().selectedGroup == null) {
-         for (int i=0; i < SSM.instance().lensList.size(); i++) {
-//            picking2D(gl2, SSM.instance().lensList.elementAt(i));
-            picking2DBalanced(gl2, SSM.instance().lensList.elementAt(i));
-//            if (SSM.instance().selectedGroup != null) break;
-         }
-//      }
-      
-      // Signal the process to refresh the data at next iteration
-      if (SSM.instance().selectedGroup != null) {
-         SSM.instance().dirty = 1;
-      }
-      */
    }
    
    
@@ -1040,10 +1233,6 @@ public class ModelRenderer extends BaseModelRenderer {
       
       
       // Now actually render the labels
-      /*
-      rightHeight = (SSM.instance().windowHeight-la.magicLensY) + (rightList.size()/2)*(SSM.instance().sparkLineHeight + vpadding);
-      leftHeight  = (SSM.instance().windowHeight-la.magicLensY) + (leftList.size()/2)*(SSM.instance().sparkLineHeight + vpadding);
-      */
       rightHeight = Math.min((SSM.instance().windowHeight-la.magicLensY) + (rightList.size()/2)*(SSM.instance().sparkLineHeight + vpadding),
                               SSM.instance().windowHeight-SSM.instance().sparkLineHeight-vpadding);
       leftHeight  = Math.min((SSM.instance().windowHeight-la.magicLensY) + (leftList.size()/2)*(SSM.instance().sparkLineHeight + vpadding),
@@ -1056,7 +1245,6 @@ public class ModelRenderer extends BaseModelRenderer {
       for (int i=0; i < rightList.size(); i++) {
          DCComponent comp = rightList.elementAt(i);
          if (comp.id < 0) continue;
-         
          
             
          int occ = CacheManager.instance().groupOccurrence.get(comp.id); 
@@ -1071,11 +1259,6 @@ public class ModelRenderer extends BaseModelRenderer {
                Vector<Integer> selectedGroup =  new Vector<Integer>();
                selectedGroup.addAll( SSM.instance().selectedGroup.values());
             
-//               relatedOcc = CacheManager.instance().getRelatedOccAgg(startIdx, endIdx, SSM.instance().startMonth, SSM.instance().endMonth, comp.id, SSM.instance().selectedGroup, 
-//                  SSM.instance().selectedManufacture, 
-//                  SSM.instance().selectedMake,
-//                  SSM.instance().selectedModel);
-               
                relatedOccNew = CacheManager.instance().getCoOccurringAgg(
                      startIdx, endIdx, 
                      SSM.instance().startMonth, SSM.instance().endMonth, 
@@ -1102,10 +1285,6 @@ public class ModelRenderer extends BaseModelRenderer {
                
                Vector<Integer> t = new Vector<Integer>();
                t.add(comp.id);
-//               relatedOcc = CacheManager.instance().getRelatedOcc(startIdx, endIdx, SSM.instance().startMonth, SSM.instance().endMonth, comp.id, SSM.instance().selectedGroup, 
-//                  SSM.instance().selectedManufacture, 
-//                  SSM.instance().selectedMake,
-//                  SSM.instance().selectedModel);
                
                relatedOccNew = CacheManager.instance().getCoOccurring(
                      startIdx, endIdx, 
@@ -1183,7 +1362,6 @@ public class ModelRenderer extends BaseModelRenderer {
             gl2.glVertex2d(lensX+lensRadius + rpadding+spadding, rightHeight + 0.5*SSM.instance().sparkLineHeight);
          gl2.glEnd();
          gl2.glLineWidth(1.0f);
-         
       }
       
       
@@ -1204,11 +1382,6 @@ public class ModelRenderer extends BaseModelRenderer {
             if (SSM.instance().useAggregate == true) {
                Vector<Integer> selectedGroup =  new Vector<Integer>();
                selectedGroup.addAll( SSM.instance().selectedGroup.values());
-               
-//               relatedOcc = CacheManager.instance().getRelatedOccAgg(startIdx, endIdx, SSM.instance().startMonth, SSM.instance().endMonth, comp.id, SSM.instance().selectedGroup, 
-//                   SSM.instance().selectedManufacture, 
-//                   SSM.instance().selectedMake,
-//                   SSM.instance().selectedModel);
                
                relatedOccNew = CacheManager.instance().getCoOccurringAgg(
                      startIdx, endIdx, 
@@ -1235,11 +1408,6 @@ public class ModelRenderer extends BaseModelRenderer {
                related.addAll(SSM.instance().selectedGroup.keySet());
                Vector<Integer> t = new Vector<Integer>();
                t.add(comp.id);
-               
-//               relatedOcc = CacheManager.instance().getRelatedOcc(startIdx, endIdx, SSM.instance().startMonth, SSM.instance().endMonth, comp.id, SSM.instance().selectedGroup, 
-//                   SSM.instance().selectedManufacture, 
-//                   SSM.instance().selectedMake,
-//                   SSM.instance().selectedModel);
                
                relatedOccNew = CacheManager.instance().getCoOccurring(
                      startIdx, endIdx, 
@@ -1608,6 +1776,9 @@ public class ModelRenderer extends BaseModelRenderer {
       MM.instance().initGPU(gl2);
       SSM.instance().dirty = 1;
       SSM.instance().dirtyGL = 1;
+      
+      
+      this.resetData();
    }
    
    
@@ -1690,7 +1861,6 @@ public class ModelRenderer extends BaseModelRenderer {
       } 
    }
    
-
    
 }
 

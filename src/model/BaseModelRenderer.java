@@ -1054,9 +1054,9 @@ public abstract class BaseModelRenderer implements RenderTask {
          comp.cchart.setMaxValue(localMax);
          //if (SSM.instance().selectedGroup!= null && comp.id == SSM.instance().selectedGroup) {
          if (SSM.instance().selectedGroup.size() > 0 && SSM.instance().selectedGroup.contains(comp.id)) {
-            comp.cchart.resize(SSM.instance().sparkLineWidth*1.2f, 8*range*1.2f+20);
+            comp.cchart.resize(SSM.instance().sparkLineWidth*1.1f, 6*range+20);
          } else {
-            comp.cchart.resize(SSM.instance().sparkLineWidth, 8*range+20);
+            comp.cchart.resize(SSM.instance().sparkLineWidth, 6*range+20);
          }
          comp.cchart.createSegment( segSize ); // needs to go after setData and setHeight
          

@@ -186,8 +186,9 @@ public class SSM {
    
    public boolean useLocalFocus = false;       // Whether to nor to render based on current selected components 
    
+   public boolean use3DModel = true;          // Whether to use integrated 3D view 
    
-   public boolean useFlag = true; // Just a temporary flag to trigger adhoc tests and stuff, not used for real data
+   public boolean useFlag = true;              // Just a temporary flag to trigger adhoc tests and stuff, not used for real data
    
    
    

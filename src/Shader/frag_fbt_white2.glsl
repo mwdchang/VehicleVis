@@ -67,7 +67,7 @@ void main(void) {
    outColour.rgb = vec3(test, test, test);
    outColour.a = 1.0;
    */
-   if (test > 0.65) {
+   if (test > 0.25) {
       //outColour.rgb = texture2D( tex, pass_texcoord.xy).rgb;
 
       if (pointColour.r > 0) {

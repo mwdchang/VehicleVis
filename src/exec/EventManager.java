@@ -259,6 +259,7 @@ public class EventManager implements KeyListener, MouseListener, MouseMotionList
    //  w - swap glow filter
    //  o - swap depth-peel/normal rendering
    //  f - switch focus mode
+   //  d - switch whether to use 3D
    //
    //  c - alternates colouring 
    //  a - switch aggregation
@@ -278,7 +279,13 @@ public class EventManager implements KeyListener, MouseListener, MouseMotionList
          return; 
       }
       
-     
+      
+      if (e.getKeyChar() == 'd') {
+         SSM.instance().use3DModel = ! SSM.instance().use3DModel;   
+         SSM.instance().dirty = 1;
+         SSM.instance().dirtyGL = 1;
+      }
+      
       if (e.getKeyChar() == 'w') {
          SSM.instance().useGlow = ! SSM.instance().useGlow;   
       }
@@ -286,10 +293,11 @@ public class EventManager implements KeyListener, MouseListener, MouseMotionList
       if (e.getKeyChar() == 'o') {
          SSM.instance().useDualDepthPeeling = ! SSM.instance().useDualDepthPeeling;
       }
+      
       if (e.getKeyChar() == '1')  {
          SSM.instance().useConstantAlpha = ! SSM.instance().useConstantAlpha;   
       }
-      
+     
       if (e.getKeyChar() == 't') {
          SSM.instance().useFlag  = ! SSM.instance().useFlag;
          SSM.instance().dirty = 1;
@@ -359,16 +367,6 @@ public class EventManager implements KeyListener, MouseListener, MouseMotionList
          SSM.instance().showLabels = ! SSM.instance().showLabels;   
       }
       
-      /*
-      if (e.getKeyChar() == '0') {
-         SSM.instance().sparklineMode = 0;   
-         SSM.instance().dirtyGL = 1;
-      }
-      if (e.getKeyChar() == '1') {
-         SSM.instance().sparklineMode = 1;   
-         SSM.instance().dirtyGL = 1;
-      }
-      */
       
       if (e.getKeyChar() == '?') {
          SSM.instance().timeFrameStatistics();   
@@ -396,9 +394,6 @@ public class EventManager implements KeyListener, MouseListener, MouseMotionList
       if (e.getKeyChar() == 'g') {
          SSM.instance().useGuide = ! SSM.instance().useGuide;      
       }
-//      if (e.getKeyChar() == 'c') {
-//         SSM.instance().useCircularLabel = ! SSM.instance().useCircularLabel;
-//      }
       if (e.getKeyChar() == 'x') {
          CEditor.instance().setVisible( !CEditor.instance().isVisible() );   
       }
@@ -424,11 +419,13 @@ public class EventManager implements KeyListener, MouseListener, MouseMotionList
          System.out.println("Current instance is " + MM.instance().modelIndex);
       }
       
+      /*
       if (e.getKeyChar() == '0') {
          SSM.instance().colourRampReverseAlpha = ! SSM.instance().colourRampReverseAlpha;
          SSM.instance().dirtyGL = 1;
          SSM.instance().refreshMagicLens = true;
       }
+      */
       
       
       
