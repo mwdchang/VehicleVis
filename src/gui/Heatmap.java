@@ -86,7 +86,7 @@ public class Heatmap extends ComponentChart {
             float c_v = c_data[12*i + j];
             
             float max = CacheManager.instance().monthMaximum.elementAt(12*i+j);
-            float c_max = CacheManager.instance().monthMaximum.elementAt(12*i + j);
+            float c_max = CacheManager.instance().c_monthMaximum.elementAt(12*i + j);
             
             // Tool Tip !
             if ( DCUtil.between(SSM.instance().mouseX, anchorX+tmpX*blockWidth, anchorX+(1+tmpX)*blockWidth)) {
