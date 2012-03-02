@@ -2,7 +2,11 @@
 
 ////////////////////////////////////////////////////////////////////////////////
 // 
-// Sobel filter edges
+// Sobel filter edges. This shader uses a variation of the standard sobel filter
+// kernel
+//
+// H [ 3 10   3;  0, 0,  0; -3, -10, -3]
+// V [ 3, 0, -3; 10, 0, 10;  3,   0, -3]
 //
 // tex        - the texture, most likely from the frame buffer
 // height     - texture height
@@ -74,9 +78,11 @@ void main(void) {
       //outColour.rgb = texture2D( tex, pass_texcoord.xy).rgb;
 
       if (pointColour.r > 0) {
-         outColour.rgba = vec4(1.0, 0.0, 0.0, pointColour.b);
+         //outColour.rgba = vec4(1.0, 0.0, 0.0, pointColour.b);
+         outColour.rgba = vec4(174.0/255.0, 141.0/255.0, 195.0/255.0, pointColour.b);
       } else if (pointColour.g > 0) {
-         outColour.rgba = vec4(0.0, 0.0, 1.0, pointColour.b);
+         //outColour.rgba = vec4(0.0, 0.0, 1.0, pointColour.b);
+         outColour.rgba = vec4(127.0/255.0, 191.0/255.0, 123.0/255.0, pointColour.b);
       } else {
          outColour.rgba = vec4(0, 0, 0, 0.0);
       }

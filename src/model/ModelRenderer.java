@@ -43,6 +43,9 @@ public class ModelRenderer extends BaseModelRenderer {
    public float spadding = 10.0f;
    
    
+   public float OUTLINE_DOWN_SAMPLE = 1.2f;
+   public float GLOW_DOWN_SAMPLE    = 1.8f;
+   
   
    ////////////////////////////////////////////////////////////////////////////////
    // Default constructor
@@ -94,8 +97,8 @@ public class ModelRenderer extends BaseModelRenderer {
       if (SSM.instance().refreshGlowTexture == true) {
         System.out.println("In Modelrenderer init " + SSM.instance().windowHeight + " " + SSM.instance().windowWidth);         
         glowTexture= new FrameBufferTexture();
-        glowTexture.TEXTURE_SIZE_W = SSM.instance().windowWidth;
-        glowTexture.TEXTURE_SIZE_H = SSM.instance().windowHeight;
+        glowTexture.TEXTURE_SIZE_W = (int)((float)SSM.instance().windowWidth/GLOW_DOWN_SAMPLE);
+        glowTexture.TEXTURE_SIZE_H = (int)((float)SSM.instance().windowHeight/GLOW_DOWN_SAMPLE);
         //glowTexture.TEXTURE_SIZE_W = SSM.instance().windowWidth /4;
         //glowTexture.TEXTURE_SIZE_H = SSM.instance().windowHeight/ 4;
         glowTexture.init(gl2);
@@ -117,8 +120,8 @@ public class ModelRenderer extends BaseModelRenderer {
         
         // Down sample
         outlineTexture1 = new FrameBufferTexture();
-        outlineTexture1.TEXTURE_SIZE_W = SSM.instance().windowWidth / 1;
-        outlineTexture1.TEXTURE_SIZE_H = SSM.instance().windowHeight / 1;
+        outlineTexture1.TEXTURE_SIZE_W = (int)((float)SSM.instance().windowWidth / OUTLINE_DOWN_SAMPLE);
+        outlineTexture1.TEXTURE_SIZE_H = (int)((float)SSM.instance().windowHeight / OUTLINE_DOWN_SAMPLE);
         outlineTexture1.init(gl2);
         outlineTexture1.shader.createShader(gl2, "src\\Shader\\vert_fbt.glsl", GL2.GL_VERTEX_SHADER);
         outlineTexture1.shader.createShader(gl2, "src\\Shader\\frag_fbt_white2.glsl", GL2.GL_FRAGMENT_SHADER);
@@ -131,8 +134,8 @@ public class ModelRenderer extends BaseModelRenderer {
         
         
         outlineTexture2 = new FrameBufferTexture();
-        outlineTexture2.TEXTURE_SIZE_W = SSM.instance().windowWidth / 1;
-        outlineTexture2.TEXTURE_SIZE_H = SSM.instance().windowHeight / 1;
+        outlineTexture2.TEXTURE_SIZE_W = (int)((float)SSM.instance().windowWidth / OUTLINE_DOWN_SAMPLE);
+        outlineTexture2.TEXTURE_SIZE_H = (int)((float)SSM.instance().windowHeight / OUTLINE_DOWN_SAMPLE);
         outlineTexture2.init(gl2);
         outlineTexture2.shader.createShader(gl2, "src\\Shader\\vert_fbt.glsl", GL2.GL_VERTEX_SHADER);
         outlineTexture2.shader.createShader(gl2, "src\\Shader\\frag_fbt_white2.glsl", GL2.GL_FRAGMENT_SHADER);
