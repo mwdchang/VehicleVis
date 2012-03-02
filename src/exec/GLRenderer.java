@@ -190,6 +190,7 @@ public class GLRenderer implements GLEventListener {
       SSM.instance().refreshMagicLens = true;
       SSM.instance().refreshOITBuffers = true;
       SSM.instance().refreshOITTexture = true;
+      SSM.instance().refreshGlowTexture = true;
       SSM.instance().dirtyGL = 1;
       
       gl2.glViewport(0, 0, width, height);

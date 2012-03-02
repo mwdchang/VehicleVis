@@ -522,6 +522,10 @@ public abstract class BaseModelRenderer implements RenderTask {
            }
       }
       
+      // Just checking out the month maximum
+      System.err.println("R Max: " + CacheManager.instance().monthMaximum);
+      System.err.println("C Max: " + CacheManager.instance().c_monthMaximum);
+      
       
       // Pick up the related group(s) if there is a user
       // selected group in context

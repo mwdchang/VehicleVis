@@ -347,22 +347,24 @@ public class ModelRenderer extends BaseModelRenderer {
          float c;
          outlineTexture1.startRecording(gl2);
             setPerspectiveView(gl2);
-            gl2.glDisable(GL2.GL_DEPTH_TEST);
             gl2.glRotated(SSM.instance().rotateX, 1, 0, 0); 
             gl2.glRotated(SSM.instance().rotateY, 0, 1, 0); 
-            gl2.glClearColor(1, 1, 1, 0);
+            gl2.glClearColor(0, 0, 0, 0);
             gl2.glClear(GL2.GL_COLOR_BUFFER_BIT);
+            gl2.glDisable(GL2.GL_DEPTH_TEST);
             
             c = 1;
             size = 2+MM.currentModel.componentTable.size();
             gl2.glPushMatrix();
             for (DCComponent comp : MM.currentModel.componentTable.values()) {
+               
                if (comp.hasContext && comp.active && ! SSM.instance().selectedGroup.contains(comp.id)) {
                   float v1 = CacheManager.instance().groupOccurrence.get(comp.id);
                   float v2 = CacheManager.instance().c_groupOccurrence.get(comp.id);                  
                   if (v1 > v2) {
-                     comp.renderBuffer(gl2, DCColour.fromDouble(1.0, 0.0, 0.0, 0.5), 2);
-                     //System.out.println("Outline 1: " + comp.cname); 
+                     double v = 0.3 + 0.7*(v1-v2)/v1;
+                     comp.renderBuffer(gl2, DCColour.fromDouble(0.5, 0.0, v, 0.2), 2);
+                     System.out.println("1 : " + comp.cname);
                   }
                }
                c ++;
@@ -376,21 +378,24 @@ public class ModelRenderer extends BaseModelRenderer {
          
          outlineTexture2.startRecording(gl2);
             setPerspectiveView(gl2);
-            gl2.glDisable(GL2.GL_DEPTH_TEST);
             gl2.glRotated(SSM.instance().rotateX, 1, 0, 0); 
             gl2.glRotated(SSM.instance().rotateY, 0, 1, 0); 
-            gl2.glClearColor(1, 1, 1, 0);
+            gl2.glClearColor(0, 0, 0, 0);
             gl2.glClear(GL2.GL_COLOR_BUFFER_BIT);
+            gl2.glDisable(GL2.GL_DEPTH_TEST);
+            
             c = 1;
             size = 2+MM.currentModel.componentTable.size();
             gl2.glPushMatrix();
             for (DCComponent comp : MM.currentModel.componentTable.values()) {
+               
                if (comp.hasContext && comp.active && ! SSM.instance().selectedGroup.contains(comp.id)) {
                   float v1 = CacheManager.instance().groupOccurrence.get(comp.id);
                   float v2 = CacheManager.instance().c_groupOccurrence.get(comp.id);                  
                   if (v1 < v2) {
-                     comp.renderBuffer(gl2, DCColour.fromDouble(0.0, 1.0, 0.0, 0.5), 2);
-                     //System.out.println("Outline 2: " + comp.cname); 
+                     double v = 0.3 + 0.7*(v2-v1)/v2;
+                     comp.renderBuffer(gl2, DCColour.fromDouble(0.0, 0.5, v, 0.2), 2);
+                     System.out.println("2 : " + comp.cname);
                   }
                }
                c ++;

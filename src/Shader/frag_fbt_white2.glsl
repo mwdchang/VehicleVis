@@ -55,32 +55,35 @@ void main(void) {
    vec4 X = 3*s00 + 10*s10 + 3*s20 - 3*s02 - 10*s12 - 3*s22;
    vec4 Y = 3*s00 + 10*s01 + 3*s02 - 3*s20 - 10*s21 - 3*s22;
 
-//   float test = sqrt(X.r*X.r + X.g*X.g + X.b*X.b +  
-//                     Y.r*Y.r + Y.g*Y.g + Y.b*Y.b);
-   float test = sqrt(X.a*X.a + Y.a*Y.a);
+   float test = sqrt(X.r*X.r + X.g*X.g + X.b*X.b + X.a*X.a +
+                     Y.r*Y.r + Y.g*Y.g + Y.b*Y.b + Y.a*Y.a);
+//   float test = sqrt(X.a*X.a + Y.a*Y.a);
 
 
    // The original colour at point, we will decode the value
    vec4 pointColour = texture2D( tex, pass_texcoord.xy).rgba;
 
-   /*
-   outColour.rgb = vec3(test, test, test);
-   outColour.a = 1.0;
-   */
-   if (test > 0.25) {
+
+   //////////////////////////////////////////////////////////////////////////////// 
+   // RGBA is used to encode other values
+   // R/G are switches to see which colour to use
+   // B is the strength of the colour
+   // A is used to differentiate edges (see above)
+   //////////////////////////////////////////////////////////////////////////////// 
+   if (test > 0.01) {
       //outColour.rgb = texture2D( tex, pass_texcoord.xy).rgb;
 
       if (pointColour.r > 0) {
-         outColour.rgba = vec4(1, 0, 0, 0.5);
+         outColour.rgba = vec4(1.0, 0.0, 0.0, pointColour.b);
       } else if (pointColour.g > 0) {
-         outColour.rgba = vec4(0, 0, 1, 0.5);
+         outColour.rgba = vec4(0.0, 0.0, 1.0, pointColour.b);
       } else {
-         outColour.rgba = vec4(0, 0, 0, 1.0);
+         outColour.rgba = vec4(0, 0, 0, 0.0);
       }
 
       //outColour.rgb = vec3(1, 0, 0);
       //outColour.a = 0.6;
-      outColour = texture2D( tex, pass_texcoord.xy).rgba;
+      //outColour = texture2D( tex, pass_texcoord.xy).rgba;
    } else {
       //float alpha = texture2D(tex, pass_texcoord.xy).a;
       //outColour.rgba = texture2D( tex, pass_texcoord.xy).rgba;
