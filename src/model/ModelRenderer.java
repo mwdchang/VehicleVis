@@ -43,7 +43,7 @@ public class ModelRenderer extends BaseModelRenderer {
    public float spadding = 10.0f;
    
    
-   public float OUTLINE_DOWN_SAMPLE = 1.2f;
+   public float OUTLINE_DOWN_SAMPLE = 1.15f;
    public float GLOW_DOWN_SAMPLE    = 1.8f;
    
   
@@ -367,7 +367,7 @@ public class ModelRenderer extends BaseModelRenderer {
                   if (v1 > v2) {
                      double v = 0.3 + 0.7*(v1-v2)/v1;
                      comp.renderBuffer(gl2, DCColour.fromDouble(0.5, 0.0, v, 0.2), 2);
-                     System.out.println("1 : " + comp.cname);
+                     //System.out.println("1 : " + comp.cname);
                   }
                }
                c ++;
@@ -398,7 +398,7 @@ public class ModelRenderer extends BaseModelRenderer {
                   if (v1 < v2) {
                      double v = 0.3 + 0.7*(v2-v1)/v2;
                      comp.renderBuffer(gl2, DCColour.fromDouble(0.0, 0.5, v, 0.2), 2);
-                     System.out.println("2 : " + comp.cname);
+                     //System.out.println("2 : " + comp.cname);
                   }
                }
                c ++;
@@ -1358,16 +1358,16 @@ public class ModelRenderer extends BaseModelRenderer {
             gl2.glColor4fv( SchemeManager.sparkline_guideline.toArray(), 0);
          }
          
-         gl2.glLineWidth(2.0f);
+         gl2.glLineWidth(1.0f);
          gl2.glBegin(GL2.GL_LINES);
             gl2.glVertex2d( comp.projCenter.x, comp.projCenter.y);
             gl2.glVertex2d( lensX + edgeX, comp.projCenter.y);
             
             gl2.glVertex2d( lensX + edgeX, comp.projCenter.y);
-            gl2.glVertex2d(lensX+lensRadius + rpadding, rightHeight + 0.5*SSM.instance().sparkLineHeight);
+            gl2.glVertex2d(lensX+lensRadius + rpadding, rightHeight + 0.5*comp.cchart.height);
             
-            gl2.glVertex2d(lensX+lensRadius + rpadding, rightHeight + 0.5*SSM.instance().sparkLineHeight);
-            gl2.glVertex2d(lensX+lensRadius + rpadding+spadding, rightHeight + 0.5*SSM.instance().sparkLineHeight);
+            gl2.glVertex2d(lensX+lensRadius + rpadding, rightHeight + 0.5*comp.cchart.height);
+            gl2.glVertex2d(lensX+lensRadius + rpadding+spadding, rightHeight + 0.5*comp.cchart.height);
          gl2.glEnd();
          gl2.glLineWidth(1.0f);
       }
@@ -1479,16 +1479,16 @@ public class ModelRenderer extends BaseModelRenderer {
          }         
          
          
-         gl2.glLineWidth(2.0f);
+         gl2.glLineWidth(1.0f);
          gl2.glBegin(GL2.GL_LINES);
             gl2.glVertex2d( comp.projCenter.x, comp.projCenter.y);
             gl2.glVertex2d( lensX - edgeX, comp.projCenter.y);
             
             gl2.glVertex2d( lensX - edgeX, comp.projCenter.y);
-            gl2.glVertex2d( lensX-lensRadius - lpadding, leftHeight + 0.5*SSM.instance().sparkLineHeight);
+            gl2.glVertex2d( lensX-lensRadius - lpadding, leftHeight + 0.5*comp.cchart.height);
             
-            gl2.glVertex2d( lensX-lensRadius - lpadding, leftHeight + 0.5*SSM.instance().sparkLineHeight);
-            gl2.glVertex2d( lensX-lensRadius - lpadding-spadding, leftHeight + 0.5*SSM.instance().sparkLineHeight);
+            gl2.glVertex2d( lensX-lensRadius - lpadding, leftHeight + 0.5*comp.cchart.height);
+            gl2.glVertex2d( lensX-lensRadius - lpadding-spadding, leftHeight + 0.5*comp.cchart.height);
             
          gl2.glEnd();
          gl2.glLineWidth(1.0f);

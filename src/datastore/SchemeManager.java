@@ -185,7 +185,7 @@ public class SchemeManager {
    public static DCColour range_selected = colour_blue; 
    public static DCColour range_normal   = new DCColour(0.5, 0.5, 0.5, 0.5);
    
-   public static DCColour sparkline_guideline = new DCColour(0.6, 0.6, 0.6, 0.6);
+   public static DCColour sparkline_guideline = new DCColour(0.4, 0.4, 0.4, 0.6);
    
    public static DCColour car_normal1        = new DCColour(0.3, 0.3, 0.3, 0.1);     
    public static DCColour component_selected = new DCColour(1.0f, 0.8f, 0.0f, 0.5f);  
