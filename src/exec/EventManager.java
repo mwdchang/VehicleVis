@@ -45,6 +45,8 @@ public class EventManager implements KeyListener, MouseListener, MouseMotionList
       if (e.getButton() == MouseEvent.BUTTON1) {
          SSM.instance().l_mouseClicked = true;
          if (e.getClickCount() == 2) {
+            if (SSM.instance().location != SSM.ELEMENT_NONE) return; 
+            
             System.out.println("Left button double clickec");
             LensAttrib la = new LensAttrib( SSM.instance().mouseX, SSM.instance().mouseY, 100.0f, 0);      
             la.magicLensType = LensAttrib.LENS_DEPTH;
@@ -96,10 +98,12 @@ public class EventManager implements KeyListener, MouseListener, MouseMotionList
          if (attrib.direction == 1) {
             if (DCUtil.between(my, anchorY-20, anchorY+attrib.height)) {
                if (attrib.active) SSM.instance().topElement = id;
+               SSM.instance().location = id;
             }
          } else {
             if (DCUtil.between(my, anchorY-20-attrib.height, anchorY)) {
                if (attrib.active) SSM.instance().topElement = id;
+               SSM.instance().location = id;
             }
          }
       }
@@ -206,7 +210,8 @@ public class EventManager implements KeyListener, MouseListener, MouseMotionList
          
          float mf_anchorX = SSM.instance().getMonthAnchorX();
          float mf_anchorY = SSM.instance().getMonthAnchorY();
-         if (DCUtil.between(mx, mf_anchorX, mf_anchorX + (CacheManager.instance().timeLineSize/12)*SSM.instance().rangeFilterWidth)) {
+         // Always 12 month
+         if (DCUtil.between(mx, mf_anchorX, mf_anchorX + 12*SSM.instance().rangeFilterWidth)) {
             if (DCUtil.between(my, mf_anchorY, mf_anchorY+SSM.instance().rangeFilterHeight)) {
                SSM.instance().topElement = SSM.ELEMENT_FILTER;
                SSM.instance().location = SSM.ELEMENT_FILTER;

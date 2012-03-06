@@ -43,7 +43,7 @@ public class ModelRenderer extends BaseModelRenderer {
    public float spadding = 10.0f;
    
    
-   public float OUTLINE_DOWN_SAMPLE = 1.15f;
+   public float OUTLINE_DOWN_SAMPLE = 1.1f;
    public float GLOW_DOWN_SAMPLE    = 1.8f;
    
   
@@ -736,7 +736,6 @@ public class ModelRenderer extends BaseModelRenderer {
       
       
       // Something else has triggered a reset, let it run first
-      if (SSM.instance().location != SSM.ELEMENT_NONE) return; 
       
 //      if (SSM.instance().dirty == 1 || SSM.instance().dirtyGL == 1) return;
       
@@ -811,7 +810,14 @@ public class ModelRenderer extends BaseModelRenderer {
       this.pickingScrollPane(mx, my, c_yearScroll, SSM.instance().c_yearAttrib);
       this.scrollPaneTransition(mx, my, c_yearScroll, SSM.instance().c_yearAttrib);
      
+      // If is dirty then skip...something is already updating
+      if (SSM.instance().dirty == 1 || SSM.instance().dirtyGL == 1) {
+         System.out.println("........ dirty exit ........");
+         return;
+      }
       
+      
+      if (SSM.instance().location != SSM.ELEMENT_NONE) return; 
       
       
       Integer obj = null;
@@ -1852,6 +1858,7 @@ public class ModelRenderer extends BaseModelRenderer {
          if (DCUtil.between(my, widget.anchorY-20, widget.anchorY)) {
             attrib.active = ! attrib.active;
             
+            
             if (attrib.active) {
                widget.animator = PropertySetter.createAnimator(SSM.SCROLL_DURATION, widget, "height", new FloatEval(), widget.height, attrib.height); 
                widget.animator.start();
@@ -1911,6 +1918,9 @@ public class ModelRenderer extends BaseModelRenderer {
                      ((DCScrollPane)childrenPair[j]).current = 0;
                      ((PaneAttrib)childrenPair[j+1]).selected = null;
                   }
+                  
+                  System.out.println(widget.label + " >>>>>>>>>>>>>" + i);
+                  
                   
                   break;
                }
