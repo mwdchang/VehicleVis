@@ -89,7 +89,7 @@ public class TestModel extends JOGLBase implements KeyListener {
          //this.basicClear(gl2);
          //fbt.shader.setUniform1i(gl2, "height", a.getHeight());
          //fbt.shader.setUniform1i(gl2, "width", a.getWidth());
-         fbt.render(gl2, 4.0f, 0);
+         fbt.render(gl2, 4.0f);
       } else {
          GraphicUtil.setPerspectiveView(gl2, w/h, 30.0f, 1.0f, 500.0f, 
                DCCamera.instance().eye.toArray3f(),

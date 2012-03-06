@@ -120,6 +120,9 @@ public class EventManager implements KeyListener, MouseListener, MouseMotionList
       lastPressX = SSM.instance().mouseX;
       lastPressY = SSM.instance().mouseY;
       
+      
+      SSM.instance().location = SSM.ELEMENT_NONE;
+      
       // Check to see if the document viewer is pressed
 //      if (e.getButton() == MouseEvent.BUTTON1){
 //         if (SSM.instance().inDocFooter()) {
@@ -141,6 +144,7 @@ public class EventManager implements KeyListener, MouseListener, MouseMotionList
             if (d >= r-10.0 && d <= r) {
                SSM.instance().lensList.elementAt(i).magicLensSelected = 1;
                SSM.instance().topElement = SSM.ELEMENT_LENS;
+               SSM.instance().location   = SSM.ELEMENT_LENS;
             }
          }
          
@@ -156,12 +160,14 @@ public class EventManager implements KeyListener, MouseListener, MouseMotionList
          if (DCUtil.between(mx, anchorX-padding, anchorX) || DCUtil.between(mx, anchorX+docWidth, anchorX+docWidth+padding)) {
             if (DCUtil.between(my, anchorY-padding, anchorY+docHeight+padding)) {
                SSM.instance().topElement = SSM.ELEMENT_DOCUMENT;   
+               SSM.instance().location   = SSM.ELEMENT_DOCUMENT;
             }
          }
          
          if (DCUtil.between(my, anchorY-padding, anchorY) || DCUtil.between(my, anchorY+docHeight, anchorY+docHeight+padding)) {
             if (DCUtil.between(mx, anchorX-padding, anchorX+docWidth+padding)) {
                SSM.instance().topElement = SSM.ELEMENT_DOCUMENT;   
+               SSM.instance().location   = SSM.ELEMENT_DOCUMENT;
             }
          }
          
@@ -183,9 +189,31 @@ public class EventManager implements KeyListener, MouseListener, MouseMotionList
             if (DCUtil.between(my, sl_anchorY, sl_anchorY+SSM.instance().saveLoadHeight)) {
                if (SSM.instance().saveLoadActive) {
                   SSM.instance().topElement = SSM.ELEMENT_SAVELOAD_SCROLL;
+                  SSM.instance().location = SSM.ELEMENT_SAVELOAD_SCROLL;
                }
             }
          }
+         
+         float yf_anchorX = SSM.instance().getYearAnchorX();
+         float yf_anchorY = SSM.instance().getYearAnchorY();
+         if (DCUtil.between(mx, yf_anchorX, yf_anchorX + (CacheManager.instance().timeLineSize/12)*SSM.instance().rangeFilterWidth)) {
+            if (DCUtil.between(my, yf_anchorY, yf_anchorY+SSM.instance().rangeFilterHeight)) {
+               SSM.instance().topElement = SSM.ELEMENT_FILTER;
+               SSM.instance().location = SSM.ELEMENT_FILTER;
+               System.out.println("In Year Filter");
+            }
+         }
+         
+         float mf_anchorX = SSM.instance().getMonthAnchorX();
+         float mf_anchorY = SSM.instance().getMonthAnchorY();
+         if (DCUtil.between(mx, mf_anchorX, mf_anchorX + (CacheManager.instance().timeLineSize/12)*SSM.instance().rangeFilterWidth)) {
+            if (DCUtil.between(my, mf_anchorY, mf_anchorY+SSM.instance().rangeFilterHeight)) {
+               SSM.instance().topElement = SSM.ELEMENT_FILTER;
+               SSM.instance().location = SSM.ELEMENT_FILTER;
+               System.out.println("In Month Filter");
+            }
+         }
+        
          
          
          
@@ -278,6 +306,9 @@ public class EventManager implements KeyListener, MouseListener, MouseMotionList
       if (e.isShiftDown()) {
          shiftKeyPressed = true;
          return; 
+      }
+      if (e.isControlDown()) {
+         SSM.instance().controlKey = true;
       }
       
       
@@ -448,6 +479,9 @@ public class EventManager implements KeyListener, MouseListener, MouseMotionList
       
       if ( ! e.isShiftDown()) {
          shiftKeyPressed = false;   
+      }
+      if ( ! e.isControlDown()) {
+         SSM.instance().controlKey = false;   
       }
       
       if (e.getKeyCode() == KeyEvent.VK_ESCAPE){
@@ -761,6 +795,7 @@ public class EventManager implements KeyListener, MouseListener, MouseMotionList
          }
       } 
    }   
+   
    
    public boolean shiftKeyPressed = false;
    public float lastPressX;

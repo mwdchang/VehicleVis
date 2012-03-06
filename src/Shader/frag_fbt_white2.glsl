@@ -24,7 +24,8 @@ uniform int width;
 uniform int useAverage;
 uniform float sampleRate;
 
-uniform vec4 hardColour;
+uniform vec4 colour1;
+uniform vec4 colour2;
 
 
 // Passed in from vertex shader
@@ -79,10 +80,12 @@ void main(void) {
 
       if (pointColour.r > 0) {
          //outColour.rgba = vec4(1.0, 0.0, 0.0, pointColour.b);
-         outColour.rgba = vec4(174.0/255.0, 141.0/255.0, 195.0/255.0, pointColour.b);
+         //outColour.rgba = vec4(174.0/255.0, 141.0/255.0, 195.0/255.0, pointColour.b);
+         outColour.rgba = vec4(colour1.rgb, pointColour.b);
       } else if (pointColour.g > 0) {
          //outColour.rgba = vec4(0.0, 0.0, 1.0, pointColour.b);
-         outColour.rgba = vec4(127.0/255.0, 191.0/255.0, 123.0/255.0, pointColour.b);
+         //outColour.rgba = vec4(127.0/255.0, 191.0/255.0, 123.0/255.0, pointColour.b);
+         outColour.rgba = vec4(colour2.rgb, pointColour.b);
       } else {
          outColour.rgba = vec4(0, 0, 0, 0.0);
       }

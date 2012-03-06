@@ -184,10 +184,8 @@ public class SSM {
    
    public boolean useComparisonMode = false;   // Whether to compare across time lines
    
-   public boolean useLocalFocus = false;       // Whether to nor to render based on current selected components 
-   
+   public boolean useLocalFocus = true;       // Whether to nor to render based on current selected components 
    public boolean use3DModel = true;          // Whether to use integrated 3D view 
-   
    public boolean useFlag = true;              // Just a temporary flag to trigger adhoc tests and stuff, not used for real data
    
    
@@ -316,6 +314,19 @@ public class SSM {
    }
    
    
+   
+   ////////////////////////////////////////////////////////////////////////////////
+   // Dynamic position
+   // Stuff that are "hooked" into borders ... etc etc
+   ////////////////////////////////////////////////////////////////////////////////
+   public float getYearAnchorX() { return 30.0f; }
+   public float getMonthAnchorX() { return 30.0f; }
+   public float getYearAnchorY() { return this.windowHeight - 80; }
+   public float getMonthAnchorY() { return this.windowHeight - 170; }
+   public float rangeFilterHeight = 40;
+   public float rangeFilterWidth  = 40;
+   
+   
    ////////////////////////////////////////////////////////////////////////////////
    // Animation controls
    // Durations are in milliseconds
@@ -340,6 +351,7 @@ public class SSM {
    public static int ELEMENT_MODEL_SCROLL = 5;
    public static int ELEMENT_YEAR_SCROLL = 6;
    public static int ELEMENT_SAVELOAD_SCROLL = 7;
+   public static int ELEMENT_FILTER = 8;
    
    public static int ELEMENT_CMANUFACTURE_SCROLL = 13;
    public static int ELEMENT_CMAKE_SCROLL = 14;
@@ -347,6 +359,7 @@ public class SSM {
    public static int ELEMENT_CYEAR_SCROLL = 16;
    
    public int topElement = ELEMENT_NONE;
+   public int location   = ELEMENT_NONE; // Horrible hack
    
    
    ////////////////////////////////////////////////////////////////////////////////
@@ -412,6 +425,9 @@ public class SSM {
    public boolean l_mousePressed = false;
    public boolean r_mousePressed = false;
    
+   
+   
+   public boolean controlKey = false;
    
    
    // Figure out which parts are selected based on a precedence order of :

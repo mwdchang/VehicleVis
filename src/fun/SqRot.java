@@ -44,6 +44,15 @@ public class SqRot extends JOGLBase implements KeyListener {
       
       //gl2.glRotatef(current, 1, 1, 1);
       
+      double alpha = 0; 
+      if (this.blendMode == 0) {
+         gl2.glBlendFunc(GL2.GL_SRC_ALPHA, GL2.GL_ONE_MINUS_SRC_ALPHA);   
+         alpha = 0.75;
+      } else {
+         gl2.glBlendFunc(GL2.GL_SRC_ALPHA, GL2.GL_ONE);   
+         alpha = 0.35;
+      }
+      
          
       for (int idx=0; idx < current; idx++) {
          gl2.glBegin(GL2.GL_LINES);
@@ -63,9 +72,10 @@ public class SqRot extends JOGLBase implements KeyListener {
             
             gl2.glColor4d(
                   tmp/50.0,
-                  1.0-tmp/50.0,
+                  startingColour,
+                  //1.0-tmp/50.0,
                   c_radius1/c_radius2,
-                  0.5);
+                  alpha);
             
             
             gl2.glVertex3d( Math.cos(D2R(c_angle1))*c_radius1, Math.sin(D2R(c_angle1))*c_radius1, 0.0);
@@ -84,6 +94,7 @@ public class SqRot extends JOGLBase implements KeyListener {
       current++;
       if (current >= iteration) {
          current = 0;   
+         try {Thread.sleep(3000); } catch(Exception e) {}
          resetStage();
       }
       
@@ -102,7 +113,8 @@ public class SqRot extends JOGLBase implements KeyListener {
       gl2.glHint(GL2.GL_LINE_SMOOTH_HINT, GL2.GL_NICEST);
       
       gl2.glEnable(GL2.GL_BLEND);
-      gl2.glBlendFunc(GL2.GL_SRC_ALPHA, GL2.GL_ONE_MINUS_SRC_ALPHA);
+      //gl2.glBlendFunc(GL2.GL_SRC_ALPHA, GL2.GL_ONE_MINUS_SRC_ALPHA);
+      gl2.glBlendFunc(GL2.GL_SRC_ALPHA, GL2.GL_ONE);
       
       gl2.glDisable(GL2.GL_DEPTH_TEST);
       gl2.glDisable(GL2.GL_TEXTURE_2D);
@@ -135,6 +147,11 @@ public class SqRot extends JOGLBase implements KeyListener {
          this.onlyPositiveAngle = ! this.onlyPositiveAngle;
          this.resetStage();
       }
+      if (e.getKeyChar() == 'b') {
+         this.blendMode ++;
+         this.blendMode %= 2;
+      }
+      
    }
 
    @Override
@@ -171,6 +188,7 @@ public class SqRot extends JOGLBase implements KeyListener {
       }
       
       current = 0;
+      startingColour = 0.3 + 0.7*Math.random();
    }
    
    
@@ -182,8 +200,12 @@ public class SqRot extends JOGLBase implements KeyListener {
    public double[] d_radius = new double[numPoint]; // Change in radius
    public double[] d_angle  = new double[numPoint]; // Change in angle
    
+   public double startingColour = 0.0;
+   
    public int current=0;
    
    public boolean onlyPositiveAngle = false;
+   
+   public int blendMode = 0;
 
 }

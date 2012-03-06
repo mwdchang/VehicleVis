@@ -284,7 +284,7 @@ public abstract class BaseModelRenderer implements RenderTask {
       } else {
          widget.visible = true;
       }
-      System.out.println(widget.label + " " + widget.tagList.size());
+      //System.out.println(widget.label + " " + widget.tagList.size());
    }
    
    
@@ -641,7 +641,7 @@ public abstract class BaseModelRenderer implements RenderTask {
       
       
       
-      System.out.println("Resetting Model Renderer Data");
+      System.out.println("Resetting Model Renderer Data : " + SSM.instance().startIdx + " " + SSM.instance().endIdx);
       System.out.println("Max occurrence : " + SSM.instance().maxOccurrence);
       System.out.println("Min occurrence : " + SSM.instance().minOccurrence);
       System.out.println("\n");

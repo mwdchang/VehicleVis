@@ -44,13 +44,18 @@ public class FilterTask implements RenderTask {
       
       
       // Set the anchor here so it is with respect to the ortho
-      yearSlider.anchorX = 30;
-      yearSlider.anchorY = SSM.instance().windowHeight - 80;
+      //yearSlider.anchorX = 30;
+      yearSlider.anchorX = SSM.instance().getYearAnchorX();
+      //yearSlider.anchorY = SSM.instance().windowHeight - 80;
+      yearSlider.anchorY = SSM.instance().getYearAnchorY();
+      
       yearSlider.tf.anchorX = yearSlider.anchorX;
       yearSlider.tf.anchorY = yearSlider.anchorY-12;
       
-      monthSlider.anchorX = 30;
-      monthSlider.anchorY = SSM.instance().windowHeight - 170;
+      //monthSlider.anchorX = 30;
+      monthSlider.anchorX = SSM.instance().getMonthAnchorX();
+      //monthSlider.anchorY = SSM.instance().windowHeight - 170;
+      monthSlider.anchorY = SSM.instance().getMonthAnchorY();
       monthSlider.tf.anchorX = monthSlider.anchorX;
       monthSlider.tf.anchorY = monthSlider.anchorY-12;
       

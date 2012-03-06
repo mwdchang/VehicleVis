@@ -251,7 +251,8 @@ public class DCRSlider {
    public DCPair[] tempData;         // Hack to have a maximum for the texture while the actual max value is in animated transition
    
    public double maxValue = 1.0;
-   public double height = 40.0;
+   //public double height = 40.0;
+   public double height = SSM.instance().rangeFilterHeight;
    
    public DCPair[] data;      // Primary Data
    public DCPair[] subData;   // Secondary Data

@@ -10,6 +10,7 @@ import util.ShaderObj;
 import com.jogamp.opengl.util.GLBuffers;
 
 import datastore.SSM;
+import datastore.SchemeManager;
 
 /////////////////////////////////////////////////////////////////////////////////
 // This class is responsible for dumping the frame-buffer into
@@ -177,40 +178,35 @@ public class FrameBufferTexture {
       gl2.glBindVertexArray(0);
    }   
    
+   public void setCommonParams(GL2 gl2, float sampleRate) {
+      float buffer[] = new float[16];
+      gl2.glGetFloatv(GL2.GL_PROJECTION_MATRIX, buffer, 0);
+      shader.setUniform4x4(gl2, "projection_matrix", buffer);
+      gl2.glGetFloatv(GL2.GL_MODELVIEW_MATRIX, buffer, 0);
+      shader.setUniform4x4(gl2, "modelview_matrix", buffer);
+      shader.setUniform1i(gl2, "width", this.TEXTURE_SIZE_W);
+      shader.setUniform1i(gl2, "height", this.TEXTURE_SIZE_H);
+      shader.setUniformf(gl2, "sampleRate", sampleRate);
+      gl2.glActiveTexture(GL2.GL_TEXTURE0);
+      gl2.glBindTexture(GL2.GL_TEXTURE_2D, texture_ID);
+      shader.setUniform1i(gl2, "tex", 0);
+   }
    
    
    ////////////////////////////////////////////////////////////////////////////////
    // Apply FBO as texture and apply shader effects
    ////////////////////////////////////////////////////////////////////////////////
    public void render(GL2 gl2) {
-      render(gl2, 1.0f, 1);   
+      render(gl2, 1.0f);
    }
-   public void render(GL2 gl2, float sampleRate, int useAverage) {
+   
+   public void render(GL2 gl2, float sampleRate) {
       gl2.glEnable(GL2.GL_BLEND);
       
       // Bind shader program
       gl2.glBindVertexArray(vao[0]);
       shader.bind(gl2);
-         float buffer[] = new float[16];
-         
-         gl2.glGetFloatv(GL2.GL_PROJECTION_MATRIX, buffer, 0);
-         shader.setUniform4x4(gl2, "projection_matrix", buffer);
-         
-         gl2.glGetFloatv(GL2.GL_MODELVIEW_MATRIX, buffer, 0);
-         shader.setUniform4x4(gl2, "modelview_matrix", buffer);
-
-         shader.setUniform1i(gl2, "width", this.TEXTURE_SIZE_W);
-         shader.setUniform1i(gl2, "height", this.TEXTURE_SIZE_H);
-         shader.setUniformf(gl2, "sampleRate", sampleRate);
-         //shader.setUniform1i(gl2, "useAverage", useAverage);
-         
-         //shader.setUniformf(gl2, "hardColour", 1.0f, 0.5f, 0.5f, 0.5f);
-         
-         //setShaderUniform(gl2, la);
-         gl2.glActiveTexture(GL2.GL_TEXTURE0);
-         gl2.glBindTexture(GL2.GL_TEXTURE_2D, texture_ID);
-         //gl2.glGenerateMipmap(GL2.GL_TEXTURE_2D);
-         shader.setUniform1i(gl2, "tex", 0);
+         this.setCommonParams(gl2, sampleRate);
         
          gl2.glDrawArrays(GL2.GL_QUADS, 0, 4);
       shader.unbind(gl2);
@@ -218,6 +214,20 @@ public class FrameBufferTexture {
       gl2.glBindVertexArray(0);
       gl2.glDisable(GL2.GL_BLEND);
    }   
+   public void renderComparison(GL2 gl2, float sampleRate, DCColour c1, DCColour c2) {
+      gl2.glEnable(GL2.GL_BLEND);
+      gl2.glBindVertexArray(vao[0]);
+      
+      shader.bind(gl2);
+         setCommonParams(gl2, sampleRate);
+         shader.setUniformf(gl2, "colour1", c1.toArray());
+         shader.setUniformf(gl2, "colour2", c2.toArray());
+         gl2.glDrawArrays(GL2.GL_QUADS, 0, 4);
+      shader.unbind(gl2);
+      
+      gl2.glBindVertexArray(0);
+      gl2.glDisable(GL2.GL_BLEND);
+   }
    
    
    public FloatBuffer quadBuffer = (FloatBuffer) GLBuffers.newDirectGLBuffer(GL2.GL_FLOAT, 4*3);

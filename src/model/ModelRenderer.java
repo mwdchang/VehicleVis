@@ -234,7 +234,7 @@ public class ModelRenderer extends BaseModelRenderer {
          
          GraphicUtil.setOrthonormalView(gl2, 0, 1, 0, 1, -10, 10);
          gl2.glBlendFunc(GL2.GL_SRC_ALPHA, GL2.GL_ONE_MINUS_SRC_ALPHA);
-         glowTexture.render(gl2, 2, 1);
+         glowTexture.render(gl2, 2);
          
          
          /*
@@ -376,7 +376,7 @@ public class ModelRenderer extends BaseModelRenderer {
          outlineTexture1.stopRecording(gl2);
          GraphicUtil.setOrthonormalView(gl2, 0, 1, 0, 1, -10, 10);
          gl2.glBlendFunc(GL2.GL_SRC_ALPHA, GL2.GL_ONE_MINUS_SRC_ALPHA);
-         outlineTexture1.render(gl2, 1.0f, 1);
+         outlineTexture1.renderComparison(gl2, 1.0f, SchemeManager.comp_1, SchemeManager.comp_2);
          
          
          outlineTexture2.startRecording(gl2);
@@ -408,7 +408,7 @@ public class ModelRenderer extends BaseModelRenderer {
          outlineTexture2.stopRecording(gl2);
          GraphicUtil.setOrthonormalView(gl2, 0, 1, 0, 1, -10, 10);
          gl2.glBlendFunc(GL2.GL_SRC_ALPHA, GL2.GL_ONE_MINUS_SRC_ALPHA);
-         outlineTexture2.render(gl2, 1.0f, 1);
+         outlineTexture2.renderComparison(gl2, 1.0f, SchemeManager.comp_1, SchemeManager.comp_2);
       }
       
       
@@ -734,6 +734,14 @@ public class ModelRenderer extends BaseModelRenderer {
       // Quickie way to get out and save unnecessary rendering 
       if (SSM.instance().l_mouseClicked == false) return;
       
+      
+      // Something else has triggered a reset, let it run first
+      if (SSM.instance().location != SSM.ELEMENT_NONE) return; 
+      
+//      if (SSM.instance().dirty == 1 || SSM.instance().dirtyGL == 1) return;
+      
+      //if (SSM.instance().topElement != SSM.ELEMENT_NONE) return;
+      
       // Force trigger depth peel re-render on mouse press action
       SSM.instance().refreshOITTexture = true;
       
@@ -823,8 +831,20 @@ public class ModelRenderer extends BaseModelRenderer {
       
       // We have hit something
       // This can be a select or a de-select
+      /*
+      if (obj == null) {
+         SSM.instance().selectedGroup.clear();
+         SSM.instance().dirty = 1;
+         SSM.instance().dirtyGL = 1; // for the text panel
+         SSM.instance().t1Start = 0;
+         SSM.instance().t2Start = SSM.instance().globalFetchSize;
+         SSM.instance().yoffset = SSM.instance().docHeight;
+         SSM.instance().docMaxSize = 0;
+         return;   
+      }
+      */
+      
       if (obj != null) {
-         
          
          // Disable any action if in local focus mode and 
          // the part clicked is not related nor selected
@@ -835,12 +855,18 @@ public class ModelRenderer extends BaseModelRenderer {
          
          
          if (SSM.instance().selectedGroup.size() > 0 ) {
+            // If control key is not held down, clear
+            if ( ! SSM.instance().controlKey) {
+               SSM.instance().selectedGroup.clear();   
+            }
+            
             //if ( SSM.instance().selectedGroup.intValue() == obj.intValue()) {
             if (SSM.instance().selectedGroup.contains(obj)) {
                SSM.instance().selectedGroup.remove(obj);
             } else {
                SSM.instance().selectedGroup.put(obj, obj);
             }
+            
             SSM.instance().dirty = 1;
             SSM.instance().dirtyGL = 1; // for the text panel
             SSM.instance().t1Start = 0;
@@ -866,7 +892,16 @@ public class ModelRenderer extends BaseModelRenderer {
                SSM.instance().docMaxSize += CacheManager.instance().groupOccurrence.get( key );
             }
         }
+      } else {
+         SSM.instance().selectedGroup.clear();
+         SSM.instance().dirty = 1;
+         SSM.instance().dirtyGL = 1; // for the text panel
+         SSM.instance().t1Start = 0;
+         SSM.instance().t2Start = SSM.instance().globalFetchSize;
+         SSM.instance().yoffset = SSM.instance().docHeight;
+         SSM.instance().docMaxSize = 0;
       }
+      
       
    }
    
@@ -1366,8 +1401,18 @@ public class ModelRenderer extends BaseModelRenderer {
             gl2.glVertex2d( lensX + edgeX, comp.projCenter.y);
             gl2.glVertex2d(lensX+lensRadius + rpadding, rightHeight + 0.5*comp.cchart.height);
             
+            // Connect the line to the center
+            //gl2.glVertex2d(lensX+lensRadius + rpadding, rightHeight + 0.5*comp.cchart.height);
+            //gl2.glVertex2d(lensX+lensRadius + rpadding+spadding, rightHeight + 0.5*comp.cchart.height);
+            
+            
+            // Connect the line to the top and the bottom
             gl2.glVertex2d(lensX+lensRadius + rpadding, rightHeight + 0.5*comp.cchart.height);
-            gl2.glVertex2d(lensX+lensRadius + rpadding+spadding, rightHeight + 0.5*comp.cchart.height);
+            gl2.glVertex2d(lensX+lensRadius + rpadding+spadding, rightHeight + comp.cchart.height);
+            gl2.glVertex2d(lensX+lensRadius + rpadding, rightHeight + 0.5*comp.cchart.height);
+            gl2.glVertex2d(lensX+lensRadius + rpadding+spadding, rightHeight );
+            
+            
          gl2.glEnd();
          gl2.glLineWidth(1.0f);
       }
@@ -1487,9 +1532,15 @@ public class ModelRenderer extends BaseModelRenderer {
             gl2.glVertex2d( lensX - edgeX, comp.projCenter.y);
             gl2.glVertex2d( lensX-lensRadius - lpadding, leftHeight + 0.5*comp.cchart.height);
             
-            gl2.glVertex2d( lensX-lensRadius - lpadding, leftHeight + 0.5*comp.cchart.height);
-            gl2.glVertex2d( lensX-lensRadius - lpadding-spadding, leftHeight + 0.5*comp.cchart.height);
+            // Connect the line to the centre
+            //gl2.glVertex2d( lensX-lensRadius - lpadding, leftHeight + 0.5*comp.cchart.height);
+            //gl2.glVertex2d( lensX-lensRadius - lpadding-spadding, leftHeight + 0.5*comp.cchart.height);
             
+            // Connect the line to the top and bottom
+            gl2.glVertex2d( lensX-lensRadius - lpadding, leftHeight + 0.5*comp.cchart.height);
+            gl2.glVertex2d( lensX-lensRadius - lpadding-spadding, leftHeight + comp.cchart.height);
+            gl2.glVertex2d( lensX-lensRadius - lpadding, leftHeight + 0.5*comp.cchart.height);
+            gl2.glVertex2d( lensX-lensRadius - lpadding-spadding, leftHeight);
          gl2.glEnd();
          gl2.glLineWidth(1.0f);
          
