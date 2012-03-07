@@ -531,7 +531,11 @@ public class ModelRenderer extends BaseModelRenderer {
    ////////////////////////////////////////////////////////////////////////////////
    public void renderChartsOnly(GL2 gl2) {
       String list[] = this.getComponentUnsorted(gl2);
-      
+      int startIdx = CacheManager.instance().getDateKey( SSM.instance().startTimeFrame ) == null ? 0:
+         CacheManager.instance().getDateKey( SSM.instance().startTimeFrame );
+      int endIdx   = CacheManager.instance().getDateKey( SSM.instance().endTimeFrame) == null ? CacheManager.instance().timeLineSize:
+         CacheManager.instance().getDateKey( SSM.instance().endTimeFrame );      
+     
       int counter = 0;
       Hashtable<String, String> uniqueTable = new Hashtable<String, String>();
       
@@ -539,6 +543,9 @@ public class ModelRenderer extends BaseModelRenderer {
       float startY = CHART_ANCHOR_Y;
       
       
+      ////////////////////////////////////////////////////////////////////////////////
+      // Render the heat maps
+      ////////////////////////////////////////////////////////////////////////////////
       setOrthonormalView(gl2, 0, SSM.instance().windowWidth, 0, SSM.instance().windowHeight); {
          for (String key : list) {
             DCComponent comp = MM.currentModel.componentTable.get(key);
@@ -583,6 +590,8 @@ public class ModelRenderer extends BaseModelRenderer {
             if (uniqueTable.contains(comp.baseName)) continue;
             uniqueTable.put(comp.baseName, comp.baseName);
             
+            int occ[] = this.getOccCounts(comp, startIdx, endIdx);
+            
             comp.cchart.anchorX = startX;
             comp.cchart.anchorY = startY;
             comp.cchart.colour = comp.colour;
@@ -593,7 +602,13 @@ public class ModelRenderer extends BaseModelRenderer {
             comp.cchart.tf.height = comp.cchart.height;
             comp.cchart.tf.anchorX = comp.cchart.anchorX;
             comp.cchart.tf.anchorY = comp.cchart.anchorY;
-            comp.cchart.setLabel(comp.baseName);
+            if (SSM.instance().useComparisonMode==true) {
+               comp.cchart.setLabel(comp.baseName + " " + occ[2] + "/" + occ[0]);
+            } else {
+               comp.cchart.setLabel(comp.baseName + " " + (occ[2]+occ[3]) + "/" + (occ[0]+occ[1]));
+            }
+            
+            //comp.cchart.setLabel(comp.baseName);
             comp.cchart.tf.render(gl2);
             counter += 1;
             
@@ -607,7 +622,24 @@ public class ModelRenderer extends BaseModelRenderer {
       } // end ortho
       
       
+      
+      ////////////////////////////////////////////////////////////////////////////////
+      // Render the scrollable filters
+      ////////////////////////////////////////////////////////////////////////////////
       this.renderScrollFilter(gl2);
+      
+      
+      ////////////////////////////////////////////////////////////////////////////////
+      // Render the text panel
+      ////////////////////////////////////////////////////////////////////////////////
+      this.dcTextPanel.displayH = SSM.instance().docHeight;
+      this.dcTextPanel.displayW = SSM.instance().docWidth;
+      SSM.instance().docAnchorX = SSM.instance().windowWidth - 1.1f * SSM.instance().docWidth;
+      SSM.instance().docActive = true;
+      this.dcTextPanel.render(gl2);
+      this.dcTextPanel.displayH = 0;
+      this.dcTextPanel.displayW = 0;
+      
       
       ////////////////////////////////////////////////////////////////////////////////
       // Renders a tool tip
@@ -1408,15 +1440,17 @@ public class ModelRenderer extends BaseModelRenderer {
             gl2.glVertex2d(lensX+lensRadius + rpadding, rightHeight + 0.5*comp.cchart.height);
             
             // Connect the line to the center
-            //gl2.glVertex2d(lensX+lensRadius + rpadding, rightHeight + 0.5*comp.cchart.height);
-            //gl2.glVertex2d(lensX+lensRadius + rpadding+spadding, rightHeight + 0.5*comp.cchart.height);
+            gl2.glVertex2d(lensX+lensRadius + rpadding, rightHeight + 0.5*comp.cchart.height);
+            gl2.glVertex2d(lensX+lensRadius + rpadding+spadding, rightHeight + 0.5*comp.cchart.height);
             
             
             // Connect the line to the top and the bottom
+            /*
             gl2.glVertex2d(lensX+lensRadius + rpadding, rightHeight + 0.5*comp.cchart.height);
             gl2.glVertex2d(lensX+lensRadius + rpadding+spadding, rightHeight + comp.cchart.height);
             gl2.glVertex2d(lensX+lensRadius + rpadding, rightHeight + 0.5*comp.cchart.height);
             gl2.glVertex2d(lensX+lensRadius + rpadding+spadding, rightHeight );
+            */
             
             
          gl2.glEnd();
@@ -1539,14 +1573,16 @@ public class ModelRenderer extends BaseModelRenderer {
             gl2.glVertex2d( lensX-lensRadius - lpadding, leftHeight + 0.5*comp.cchart.height);
             
             // Connect the line to the centre
-            //gl2.glVertex2d( lensX-lensRadius - lpadding, leftHeight + 0.5*comp.cchart.height);
-            //gl2.glVertex2d( lensX-lensRadius - lpadding-spadding, leftHeight + 0.5*comp.cchart.height);
+            gl2.glVertex2d( lensX-lensRadius - lpadding, leftHeight + 0.5*comp.cchart.height);
+            gl2.glVertex2d( lensX-lensRadius - lpadding-spadding, leftHeight + 0.5*comp.cchart.height);
             
             // Connect the line to the top and bottom
+            /*
             gl2.glVertex2d( lensX-lensRadius - lpadding, leftHeight + 0.5*comp.cchart.height);
             gl2.glVertex2d( lensX-lensRadius - lpadding-spadding, leftHeight + comp.cchart.height);
             gl2.glVertex2d( lensX-lensRadius - lpadding, leftHeight + 0.5*comp.cchart.height);
             gl2.glVertex2d( lensX-lensRadius - lpadding-spadding, leftHeight);
+            */
          gl2.glEnd();
          gl2.glLineWidth(1.0f);
          
@@ -1928,6 +1964,81 @@ public class ModelRenderer extends BaseModelRenderer {
             return;
          }
       } 
+   }
+   
+   
+   
+   
+   
+   
+   ////////////////////////////////////////////////////////////////////////////////
+   // res[0] -> occ
+   // res[1] -> c_occ
+   // res[2] -> relatedOcc
+   // res[3] -> c_relatedOcc
+   ////////////////////////////////////////////////////////////////////////////////
+   public int[] getOccCounts(DCComponent comp, int startIdx, int endIdx) {
+      int res[] = new int[4];   
+
+      res[0] = CacheManager.instance().groupOccurrence.get(comp.id); 
+      res[1] = CacheManager.instance().c_groupOccurrence.get(comp.id);      
+      
+      
+      if (SSM.instance().selectedGroup.size() > 0 ) {
+         if (SSM.instance().useAggregate == true) {
+            Vector<Integer> selectedGroup =  new Vector<Integer>();
+            selectedGroup.addAll( SSM.instance().selectedGroup.values());
+         
+            res[2] = CacheManager.instance().getCoOccurringAgg(
+                  startIdx, endIdx, 
+                  SSM.instance().startMonth, SSM.instance().endMonth, 
+                  HierarchyTable.instance().getAgg(comp.id),
+                  selectedGroup,
+                  SSM.instance().manufactureAttrib.selected,
+                  SSM.instance().makeAttrib.selected, 
+                  SSM.instance().modelAttrib.selected,
+                  SSM.instance().yearAttrib.selected);
+            
+            res[3] = CacheManager.instance().getCoOccurringAgg(
+                  startIdx, endIdx, 
+                  SSM.instance().startMonth, SSM.instance().endMonth, 
+                  HierarchyTable.instance().getAgg(comp.id),
+                  selectedGroup,
+                  SSM.instance().c_manufactureAttrib.selected,
+                  SSM.instance().c_makeAttrib.selected, 
+                  SSM.instance().c_modelAttrib.selected,
+                  SSM.instance().c_yearAttrib.selected);
+           
+         } else {
+            Vector<Integer> related =  new Vector<Integer>();
+            related.addAll( SSM.instance().selectedGroup.values());
+            
+            Vector<Integer> t = new Vector<Integer>();
+            t.add(comp.id);
+            
+            res[2] = CacheManager.instance().getCoOccurring(
+                  startIdx, endIdx, 
+                  SSM.instance().startMonth, SSM.instance().endMonth, 
+                  t,
+                  related,
+                  SSM.instance().manufactureAttrib.selected,
+                  SSM.instance().makeAttrib.selected, 
+                  SSM.instance().modelAttrib.selected,
+                  SSM.instance().yearAttrib.selected);              
+            
+            res[3] = CacheManager.instance().getCoOccurring(
+                  startIdx, endIdx, 
+                  SSM.instance().startMonth, SSM.instance().endMonth, 
+                  t,
+                  related,
+                  SSM.instance().c_manufactureAttrib.selected,
+                  SSM.instance().c_makeAttrib.selected, 
+                  SSM.instance().c_modelAttrib.selected,
+                  SSM.instance().c_yearAttrib.selected);              
+         }
+      }
+      
+      return res;
    }
    
    

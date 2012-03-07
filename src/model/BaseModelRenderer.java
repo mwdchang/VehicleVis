@@ -902,7 +902,12 @@ public abstract class BaseModelRenderer implements RenderTask {
          
          DWin.instance().debug("Panel 1 size : " + dcTextPanel.t1.documentList.size());
          DWin.instance().debug("Panel 2 size : " + dcTextPanel.t2.documentList.size());
-      }         
+      } else {
+         dcTextPanel.t1.tagList.clear();
+         dcTextPanel.t2.tagList.clear();         
+         dcTextPanel.t1.documentList.clear();
+         dcTextPanel.t2.documentList.clear();
+      }
       
       
       if (dcTextPanel.t1.documentList.size() >= 0) {
@@ -1620,6 +1625,8 @@ public abstract class BaseModelRenderer implements RenderTask {
     }
      
      public void DrawModel(GL2 gl2) {
+        //gl2.glEnable(GL2.GL_CULL_FACE);
+        
         for (DCComponent comp : MM.currentModel.componentTable.values()) {
            if (! comp.hasContext || ! comp.active) continue; // Dont' render if it does not have associated values
            

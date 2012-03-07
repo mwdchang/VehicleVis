@@ -60,7 +60,6 @@ public class TextPane {
       
       tagList.clear();
       
-      
       for (int i=0; i < documentList.size(); i++) {
          ycursor += tokenHeight;
          xcursor = 0;

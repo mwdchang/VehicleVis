@@ -66,11 +66,11 @@ public class GLRenderer implements GLEventListener {
       // Start the scene
       ////////////////////////////////////////////////////////////////////////////////
       DCTip.visible = false;
-      gl2.glPushMatrix();
+      //gl2.glPushMatrix();
          for (int i=0; i < renderTaskList.size(); i++) {
             renderTaskList.elementAt(i).render(gl2);
          }
-      gl2.glPopMatrix();
+      //gl2.glPopMatrix();
       
       
       ////////////////////////////////////////////////////////////////////////////////
@@ -134,33 +134,24 @@ public class GLRenderer implements GLEventListener {
       SSM.instance().LEN_TEXTURE_HEIGHT = screenDimension[0][1];
       
       
-      //DWin.instance().debug( gl2.getGL2().glGetString(GL3.GL_EXTENSIONS));
-       
-      gl2.glShadeModel(GLLightingFunc.GL_SMOOTH);
-//      gl2.glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-//      gl2.glClearColor(1.0f, 1.0f, 1.0f, 0.0f);
+      gl2.glShadeModel(GL2.GL_SMOOTH);
       gl2.glClearColor( SchemeManager.gl_clear.r, SchemeManager.gl_clear.g, SchemeManager.gl_clear.b, SchemeManager.gl_clear.a);
       
 //      gl2.glEnable(GL2.GL_DEPTH_TEST);
       gl2.glDepthFunc(GL2.GL_LEQUAL);
       gl2.glClearDepth(1.0f);
       
-      gl2.glHint(GL2ES1.GL_PERSPECTIVE_CORRECTION_HINT, GL2.GL_NICEST);
+      // HInts
+      gl2.glHint(GL2.GL_PERSPECTIVE_CORRECTION_HINT, GL2.GL_NICEST);
+      gl2.glHint(GL2.GL_LINE_SMOOTH_HINT, GL2.GL_NICEST);
+      gl2.glHint(GL2.GL_POLYGON_SMOOTH_HINT, GL2.GL_NICEST);
       
       // Disable cull face - models may or may not be closed
       //gl2.glEnable(GL2.GL_CULL_FACE);
       //gl2.glCullFace(GL2.GL_BACK);
       
       gl2.glEnable(GL2.GL_BLEND);
-//      gl2.glBlendFunc(GL2.GL_ONE, GL2.GL_ONE_MINUS_SRC_ALPHA);      
       gl2.glBlendFunc(GL2.GL_SRC_ALPHA, GL2.GL_ONE_MINUS_SRC_ALPHA);      
-//      gl2.glBlendFunc(GL2.GL_SRC_ALPHA, GL2.GL_ONE_MINUS_SRC_COLOR);      
-//      gl2.glBlendFunc(GL2.GL_SRC_ALPHA, GL2.GL_ONE_MINUS_DST_ALPHA);      
-//      gl2.glBlendFunc(GL2.GL_SRC_ALPHA, GL2.GL_ONE);
-      
-      
-      //gl2.glAlphaFunc(GL2.GL_LESS, 0.5f);
-      //gl2.glEnable(GL2.GL_ALPHA_TEST);      
       
       
       // Check a few openGL specific things
@@ -174,6 +165,7 @@ public class GLRenderer implements GLEventListener {
          renderTaskList.elementAt(i).init(gl2);
       }
    }
+   
 
    
    @Override

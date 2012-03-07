@@ -201,10 +201,9 @@ public class EventManager implements KeyListener, MouseListener, MouseMotionList
          float yf_anchorX = SSM.instance().getYearAnchorX();
          float yf_anchorY = SSM.instance().getYearAnchorY();
          if (DCUtil.between(mx, yf_anchorX, yf_anchorX + (CacheManager.instance().timeLineSize/12)*SSM.instance().rangeFilterWidth)) {
-            if (DCUtil.between(my, yf_anchorY, yf_anchorY+SSM.instance().rangeFilterHeight)) {
+            if (DCUtil.between(my, yf_anchorY-15, yf_anchorY+SSM.instance().rangeFilterHeight)) {
                SSM.instance().topElement = SSM.ELEMENT_FILTER;
                SSM.instance().location = SSM.ELEMENT_FILTER;
-               System.out.println("In Year Filter");
             }
          }
          
@@ -212,12 +211,12 @@ public class EventManager implements KeyListener, MouseListener, MouseMotionList
          float mf_anchorY = SSM.instance().getMonthAnchorY();
          // Always 12 month
          if (DCUtil.between(mx, mf_anchorX, mf_anchorX + 12*SSM.instance().rangeFilterWidth)) {
-            if (DCUtil.between(my, mf_anchorY, mf_anchorY+SSM.instance().rangeFilterHeight)) {
+            if (DCUtil.between(my, mf_anchorY-15, mf_anchorY+SSM.instance().rangeFilterHeight)) {
                SSM.instance().topElement = SSM.ELEMENT_FILTER;
                SSM.instance().location = SSM.ELEMENT_FILTER;
-               System.out.println("In Month Filter");
             }
          }
+         
         
          
          
