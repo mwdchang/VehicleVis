@@ -9,6 +9,7 @@ import java.util.Vector;
 
 import model.DCColour;
 
+import util.DCUtil;
 import util.DWin;
 import util.StringUtil;
 
@@ -65,10 +66,33 @@ public class TextPane {
          xcursor = 0;
          DCDoc d = documentList.elementAt(i);       
          
-         String idstr = d.docId + "> ";
+         String idstr = "[" + DCUtil.formatDateStr(d.datea) + "] " + d.mfr + " -" + d.make + " -" + d.model + " -" + d.year +  "] ";
+         //String idstr = "[" + d.docId + " >" + d.mfr + " >" + d.make + " >" + d.model + " >" + d.year +  "] ";
+         
+         
          float tmp0 = fm.stringWidth(idstr);
-         tagList.add( new Tag(xcursor, ycursor, tokenHeight, idstr));
-         xcursor += tmp0;
+         Tag tag = new Tag(xcursor, ycursor, tokenHeight, idstr);
+         tag.fn = fontArialBold;
+         
+         // Text colour with accordance to comparison mode ?
+         if (SSM.instance().useComparisonMode == true) {
+            String s = SSM.instance().manufactureAttrib.selected == null? "" : SSM.instance().manufactureAttrib.selected;  
+            s += SSM.instance().makeAttrib.selected  == null? "" : SSM.instance().makeAttrib.selected;
+            s += SSM.instance().modelAttrib.selected == null? "" : SSM.instance().modelAttrib.selected;
+            s += SSM.instance().yearAttrib.selected  == null? "" : SSM.instance().yearAttrib.selected;
+            String c = d.mfr + d.make + d.model + d.year;
+            
+//            System.out.println("In Text Panel : " + s + "<>" + c);
+            if (s != null && c.contains(s)) {
+               tag.c = SchemeManager.comp_1;   
+            } else {
+               tag.c = SchemeManager.comp_2; 
+            }
+            
+         }
+         tagList.add(tag);
+         ycursor += tokenHeight;
+         //xcursor += tmp0;
          
          
          Vector<String> s = StringUtil.splitSpace(d.txt);
@@ -150,14 +174,14 @@ public class TextPane {
    
    // Default
    //public float textPaneWidth = 300.0f;
-   public float textPaneWidth = 400.0f;
+   public float textPaneWidth = 450.0f;
    public float textPaneHeight = 900.0f;
    public float fontHeight = 14.0f;
 
    public TextureRenderer texture; 
    public Graphics2D g2d;
    public static Font fontArial = new Font( "Arial", Font.PLAIN, 12);   
-   public static Font fontArialBold = new Font( "Arial", Font.ITALIC, 12);
+   public static Font fontArialBold = new Font( "Arial", Font.BOLD, 12);
    public FontMetrics fm;
    
    // documentList holds the original document, tag list hods the actual rendering components

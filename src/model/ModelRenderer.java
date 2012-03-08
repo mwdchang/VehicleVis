@@ -1321,6 +1321,7 @@ public class ModelRenderer extends BaseModelRenderer {
       
       
       gl2.glEnable(GL2.GL_BLEND);
+      gl2.glBlendFunc(GL2.GL_SRC_ALPHA, GL2.GL_ZERO);
       
       // Right side
       for (int i=0; i < rightList.size(); i++) {

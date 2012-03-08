@@ -582,7 +582,7 @@ public class EventManager implements KeyListener, MouseListener, MouseMotionList
             }
          }
          return;
-      }
+      } // end if inDocContext
       
       
       if (SSM.instance().currentFocusLayer == 0 &&
@@ -787,7 +787,7 @@ public class EventManager implements KeyListener, MouseListener, MouseMotionList
       if (flag == 1) return;
       
       
-      if (e.getScrollType() == MouseWheelEvent.WHEEL_UNIT_SCROLL) {
+      if (e.getScrollType() == MouseWheelEvent.WHEEL_UNIT_SCROLL && !SSM.instance().inDocContext()) {
          if (e.getUnitsToScroll() > 0) {
             DCCamera.instance().move(-1.5f);
             SSM.instance().refreshMagicLens = true;
@@ -798,6 +798,43 @@ public class EventManager implements KeyListener, MouseListener, MouseMotionList
             SSM.instance().refreshOITTexture = true;
          }
       } 
+      
+      // Allow the mouse wheel to control the text panel scroll
+      if (e.getScrollType() == MouseWheelEvent.WHEEL_UNIT_SCROLL && SSM.instance().inDocContext()) {
+         //System.out.println("Unit to scroll is : " + e.getUnitsToScroll());
+         int unitToScroll = e.getUnitsToScroll();
+         if (e.getUnitsToScroll() < 0) {
+            // Prevent underflow
+            if (SSM.instance().yoffset <= SSM.instance().docHeight) return;
+            
+            if (SSM.instance().yoffset <= SSM.instance().t1Height && SSM.instance().t1Start > 0 ) {
+               SSM.instance().t1Start = Math.max(0, SSM.instance().t1Start - SSM.instance().globalFetchSize);
+               SSM.instance().t2Start = Math.max(SSM.instance().globalFetchSize, SSM.instance().t2Start - SSM.instance().globalFetchSize);
+               SSM.instance().docAction = 1;   
+               SSM.instance().dirtyGL = 1;
+            } else {
+               SSM.instance().yoffset += unitToScroll*5;
+            }            
+         } else {
+            if (SSM.instance().yoffset > SSM.instance().t1Height && SSM.instance().t2Height <= 0) return;
+            
+            // Check to see if we have run off the number allocated for the period
+            if (SSM.instance().t2Start + SSM.instance().globalFetchSize > SSM.instance().docMaxSize) {
+               if (SSM.instance().yoffset >= SSM.instance().t1Height + SSM.instance().t2Height)
+                  return;
+            }
+            
+            if (SSM.instance().yoffset - SSM.instance().docHeight > SSM.instance().t1Height) {
+               SSM.instance().yoffset -= SSM.instance().t1Height;
+               SSM.instance().t1Start += SSM.instance().globalFetchSize;
+               SSM.instance().t2Start += SSM.instance().globalFetchSize;
+               SSM.instance().docAction = 2;   
+               SSM.instance().dirtyGL = 1;
+            } else {
+               SSM.instance().yoffset += unitToScroll*5;
+            }            
+         }
+      }
    }   
    
    

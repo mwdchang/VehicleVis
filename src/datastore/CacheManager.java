@@ -192,7 +192,7 @@ public class CacheManager {
    /////////////////////////////////////////////////////////////////////////////////  
    protected CacheManager() {
       if (DEBUG == true) {
-         this.timeLineStartYear = 2005;         
+         this.timeLineStartYear = 2010;         
          this.timeLineEndYear   = 2010;         
       }
    }
@@ -422,7 +422,8 @@ public class CacheManager {
       DBWrapper dbh = new DBWrapper();
       try {
          // Static clause
-         String sql = "SELECT a.cmplid, a.cdescr  " +   
+         //String sql = "SELECT a.cmplid, a.cdescr  " +   
+         String sql = "SELECT a.cmplid, a.datea, a.mfr_txt, a.make_txt, a.model_txt, a.year_txt, a.cdescr " +
                       "FROM projectv3.cmp_clean a " +
                       "WHERE a.datea >= '" + DCUtil.formatDateStr(from) + "' " +
                       "AND   a.datea <= '" + DCUtil.formatDateStr(to) + "' " +
@@ -487,8 +488,14 @@ public class CacheManager {
          ResultSet rs = dbh.execute( sql, true );
          while (rs.next()) {
             int id  = rs.getInt(1);
-            String txt = rs.getString(2); 
-            result.add( new DCDoc(id, txt));
+            String date = rs.getString(2);
+            String mfr = rs.getString(3);
+            String make = rs.getString(4);
+            String model = rs.getString(5);
+            String year = rs.getString(6);
+            String txt = rs.getString(7); 
+            //result.add( new DCDoc(id, txt));
+            result.add( new DCDoc(id, date, mfr, make, model, year, txt));
          }
          Collections.sort(result, new DCDocComparator<DCDoc>());         
          return result;
@@ -505,7 +512,8 @@ public class CacheManager {
       DBWrapper dbh = new DBWrapper();
       try {
          // Static clause
-         String sql = "SELECT a.cmplid, a.cdescr  " +   
+         //String sql = "SELECT a.cmplid, a.cdescr  " +   
+         String sql = "SELECT a.cmplid, a.datea, a.mfr_txt, a.make_txt, a.model_txt, a.year_txt, a.cdescr " +
                       "FROM projectv3.cmp_clean a " +
                       "WHERE a.datea >= '" + DCUtil.formatDateStr(from) + "' " +
                       "AND   a.datea <= '" + DCUtil.formatDateStr(to) + "' " +
@@ -570,8 +578,14 @@ public class CacheManager {
          ResultSet rs = dbh.execute( sql, true );
          while (rs.next()) {
             int id  = rs.getInt(1);
-            String txt = rs.getString(2); 
-            result.add( new DCDoc(id, txt));
+            String date = rs.getString(2);
+            String mfr = rs.getString(3);
+            String make = rs.getString(4);
+            String model = rs.getString(5);
+            String year = rs.getString(6);
+            String txt = rs.getString(7); 
+            //result.add( new DCDoc(id, txt));
+            result.add( new DCDoc(id, date, mfr, make, model, year, txt));
          }
          Collections.sort(result, new DCDocComparator<DCDoc>());         
          return result;
