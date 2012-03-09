@@ -66,7 +66,7 @@ public class TextPane {
          xcursor = 0;
          DCDoc d = documentList.elementAt(i);       
          
-         String idstr = "[" + DCUtil.formatDateStr(d.datea) + "] " + d.mfr + " -" + d.make + " -" + d.model + " -" + d.year +  "] ";
+         String idstr = "[" + DCUtil.formatDateStr(d.datea) + "] " + d.mfr + " -" + d.make + " -" + d.model + " -" + d.year ;
          //String idstr = "[" + d.docId + " >" + d.mfr + " >" + d.make + " >" + d.model + " >" + d.year +  "] ";
          
          

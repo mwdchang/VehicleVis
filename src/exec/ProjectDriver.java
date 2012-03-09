@@ -82,7 +82,7 @@ public class ProjectDriver {
       canvas.addMouseWheelListener(eventManager);
       
       // Create a Java rendering context
-      JFrame frame = new JFrame("");
+      frame = new JFrame("");
       
       JPanel panel = new JPanel(new BorderLayout());
       
@@ -166,4 +166,6 @@ public class ProjectDriver {
    // Default constructor
    public ProjectDriver() {
    }
+   
+   public static JFrame frame;
 }

@@ -109,6 +109,15 @@ public class EventManager implements KeyListener, MouseListener, MouseMotionList
       }
    }
    
+   
+   
+   public void setScrollPanelOffset(PaneAttrib attrib, int distance) {
+      attrib.yOffset -= distance;
+      if (attrib.yOffset < attrib.height)
+         attrib.yOffset = attrib.height;
+      if (attrib.yOffset > attrib.textureHeight)
+         attrib.yOffset = attrib.textureHeight;   
+   }
    public void setScrollPanelOffset(PaneAttrib attrib) {
       attrib.yOffset -= (SSM.instance().mouseY - SSM.instance().oldMouseY);   
       if (attrib.yOffset < attrib.height)
@@ -161,19 +170,26 @@ public class EventManager implements KeyListener, MouseListener, MouseMotionList
          float docHeight = SSM.instance().docHeight;
          float padding   = SSM.instance().docPadding;
          
+         
+         // Detecting the document text area
+         if (SSM.instance().inDocContext()) {
+            SSM.instance().topElement = SSM.ELEMENT_DOCUMENT;   
+            SSM.instance().location   = SSM.ELEMENT_DOCUMENT;
+         }
+         // Detecting the document borders
          if (DCUtil.between(mx, anchorX-padding, anchorX) || DCUtil.between(mx, anchorX+docWidth, anchorX+docWidth+padding)) {
             if (DCUtil.between(my, anchorY-padding, anchorY+docHeight+padding)) {
                SSM.instance().topElement = SSM.ELEMENT_DOCUMENT;   
                SSM.instance().location   = SSM.ELEMENT_DOCUMENT;
             }
          }
-         
          if (DCUtil.between(my, anchorY-padding, anchorY) || DCUtil.between(my, anchorY+docHeight, anchorY+docHeight+padding)) {
             if (DCUtil.between(mx, anchorX-padding, anchorX+docWidth+padding)) {
                SSM.instance().topElement = SSM.ELEMENT_DOCUMENT;   
                SSM.instance().location   = SSM.ELEMENT_DOCUMENT;
             }
          }
+         
          
          // For default filter
          this.checkScrollPanels(SSM.instance().manufactureAttrib, SSM.ELEMENT_MANUFACTURE_SCROLL);
@@ -316,6 +332,16 @@ public class EventManager implements KeyListener, MouseListener, MouseMotionList
       }
       
       
+      // Massive hack hack to get high reslution screen
+      if (e.getKeyChar() == '+') {
+         ProjectDriver.frame.setBounds(0, 0, 3000, 3000);
+      }
+      if (e.getKeyChar() == '-') {
+         ProjectDriver.frame.setBounds(0, 0, 900, 900);
+      }
+      
+      
+      
       if (e.getKeyChar() == 'd') {
          SSM.instance().use3DModel = ! SSM.instance().use3DModel;   
          SSM.instance().dirty = 1;
@@ -435,6 +461,7 @@ public class EventManager implements KeyListener, MouseListener, MouseMotionList
       }
       
       // vim key binding....out of keys...doh ! 
+      /*
       if (e.getKeyChar() == 'k') {
          SSM.instance().sparkLineWidth ++;   
          SSM.instance().dirtyGL = 1;
@@ -443,6 +470,7 @@ public class EventManager implements KeyListener, MouseListener, MouseMotionList
          SSM.instance().sparkLineWidth --;
          SSM.instance().dirtyGL = 1;
       }
+      */
       
       if (e.getKeyChar() == 'p') {
          SSM.instance().captureScreen = true;
@@ -538,6 +566,7 @@ public class EventManager implements KeyListener, MouseListener, MouseMotionList
       SSM.instance().mouseY = e.getY();       
       
       // Just a proof of concept of draggable text scrolling
+/*      
       if (SSM.instance().inDocContext()) {
          float val = SSM.instance().oldMouseY - SSM.instance().mouseY;
          
@@ -583,7 +612,7 @@ public class EventManager implements KeyListener, MouseListener, MouseMotionList
          }
          return;
       } // end if inDocContext
-      
+*/      
       
       if (SSM.instance().currentFocusLayer == 0 &&
           SSM.instance().lensSelected() == 0 &&
@@ -787,17 +816,7 @@ public class EventManager implements KeyListener, MouseListener, MouseMotionList
       if (flag == 1) return;
       
       
-      if (e.getScrollType() == MouseWheelEvent.WHEEL_UNIT_SCROLL && !SSM.instance().inDocContext()) {
-         if (e.getUnitsToScroll() > 0) {
-            DCCamera.instance().move(-1.5f);
-            SSM.instance().refreshMagicLens = true;
-            SSM.instance().refreshOITTexture = true;
-         } else {
-            DCCamera.instance().move(1.5f);
-            SSM.instance().refreshMagicLens = true;
-            SSM.instance().refreshOITTexture = true;
-         }
-      } 
+
       
       // Allow the mouse wheel to control the text panel scroll
       if (e.getScrollType() == MouseWheelEvent.WHEEL_UNIT_SCROLL && SSM.instance().inDocContext()) {
@@ -834,7 +853,51 @@ public class EventManager implements KeyListener, MouseListener, MouseMotionList
                SSM.instance().yoffset += unitToScroll*5;
             }            
          }
+         return;
       }
+      
+      // For the scrollable filters
+      /*
+      if (e.getScrollType() == MouseWheelEvent.WHEEL_UNIT_SCROLL) {
+         int unitToScroll = e.getUnitsToScroll()*3;
+         
+         if (SSM.instance().topElement == SSM.ELEMENT_MANUFACTURE_SCROLL) {
+            this.setScrollPanelOffset(SSM.instance().manufactureAttrib, unitToScroll);
+         } else if (SSM.instance().topElement == SSM.ELEMENT_MAKE_SCROLL) {
+            this.setScrollPanelOffset(SSM.instance().makeAttrib, unitToScroll);
+         } else if (SSM.instance().topElement == SSM.ELEMENT_MODEL_SCROLL)  {
+            this.setScrollPanelOffset(SSM.instance().modelAttrib, unitToScroll);
+         } else if (SSM.instance().topElement == SSM.ELEMENT_YEAR_SCROLL)  {
+            this.setScrollPanelOffset(SSM.instance().yearAttrib, unitToScroll);
+         // For comparisons   
+         } else if (SSM.instance().topElement == SSM.ELEMENT_CMANUFACTURE_SCROLL) {
+            this.setScrollPanelOffset(SSM.instance().c_manufactureAttrib, unitToScroll);
+         } else if (SSM.instance().topElement == SSM.ELEMENT_CMAKE_SCROLL) {
+            this.setScrollPanelOffset(SSM.instance().c_makeAttrib, unitToScroll);
+         } else if (SSM.instance().topElement == SSM.ELEMENT_CMODEL_SCROLL)  {
+            this.setScrollPanelOffset(SSM.instance().c_modelAttrib, unitToScroll);
+         } else if (SSM.instance().topElement == SSM.ELEMENT_CYEAR_SCROLL)  {
+            this.setScrollPanelOffset(SSM.instance().c_yearAttrib, unitToScroll);      
+         }
+         return;
+      }
+      */
+      
+      
+      
+      // 3D manipulation should be checked last
+      if (e.getScrollType() == MouseWheelEvent.WHEEL_UNIT_SCROLL && !SSM.instance().inDocContext()) {
+         if (e.getUnitsToScroll() > 0) {
+            DCCamera.instance().move(-1.5f);
+            SSM.instance().refreshMagicLens = true;
+            SSM.instance().refreshOITTexture = true;
+         } else {
+            DCCamera.instance().move(1.5f);
+            SSM.instance().refreshMagicLens = true;
+            SSM.instance().refreshOITTexture = true;
+         }
+      }       
+      
    }   
    
    

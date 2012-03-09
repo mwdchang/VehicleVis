@@ -131,7 +131,7 @@ public abstract class JOGLBase implements GLEventListener {
       float aspect = (float)width / (float)height;
       gl2.glMatrixMode(GL2.GL_PROJECTION); 
       gl2.glLoadIdentity();
-      glu.gluPerspective(30.0f, aspect, 1.0, 300.0);
+      glu.gluPerspective(30.0f, aspect, 1.0, 2000.0);
       gl2.glMatrixMode(GL2.GL_MODELVIEW);
       gl2.glLoadIdentity();
    }

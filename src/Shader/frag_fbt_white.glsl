@@ -71,7 +71,7 @@ void main(void) {
       outColour = vec4(0, 0, 0, 0);
       return;
    }
-   c /= cnt;  // 5x5 
+   c /= (cnt);  // 5x5 
    outColour = c; 
 
 
@@ -79,6 +79,9 @@ void main(void) {
    if (outColour.r+outColour.g+outColour.b > 2.7) {
       outColour.a = 0.0;
    } else {
+      // Darken the rgb values to make it more distinguished on a white back drop
+      outColour.rg /= 1.5;
+      outColour.b *= 1.2;
       outColour.a = 0.8;
    }
 

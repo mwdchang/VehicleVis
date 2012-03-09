@@ -186,7 +186,7 @@ public class SSM {
    
    public boolean useLocalFocus = true;       // Whether to nor to render based on current selected components 
    public boolean use3DModel = true;          // Whether to use integrated 3D view 
-   public boolean useFlag = true;              // Just a temporary flag to trigger adhoc tests and stuff, not used for real data
+   public boolean useFlag = true;             // Just a temporary flag to trigger adhoc tests and stuff, not used for real data
    
    
    
@@ -417,8 +417,7 @@ public class SSM {
    // TODO: this uses a single variable to track mouse events ... this is NOT GOOD....
    // fix this when bored !!!
    ///////////////////////////////////////////////////////////////////////////////// 
-   
-   public static int STATE_NORMAL   = 0x00000000;
+   //public static int STATE_NORMAL   = 0x00000000;
    
    public boolean l_mouseClicked = false;
    public boolean r_mouseClicked = false;
