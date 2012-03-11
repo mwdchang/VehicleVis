@@ -114,6 +114,9 @@ public class LegendTask implements RenderTask {
    public void render(GL2 gl2) {
       this.setOrthoMode(gl2);
       
+      this.startX = SSM.instance().windowWidth - this.width - 50;
+      this.startY = SSM.instance().windowHeight - this.height - 20;
+      
       // Render the legend content, this will be either a 
       // continuous rendering, or render into buckets
       gl2.glDisable(GL2.GL_BLEND);
@@ -159,10 +162,17 @@ public class LegendTask implements RenderTask {
    
    @Override
    public void init(GL2 gl2) {
+      
+      this.width = 200;
+      this.height = 40;
+     
+      /*
       this.startX = 50;
       this.startY = 50;
       this.width = 200;
       this.height = 40;
+      */
+      
    }
 
    @Override

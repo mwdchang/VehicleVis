@@ -55,6 +55,56 @@ public class ModelRenderer extends BaseModelRenderer {
    }     
    
    
+   ////////////////////////////////////////////////////////////////////////////////
+   // Hack: Just to test if this works
+   // Check if the comparison mode is active
+   // if comparisonMode == true  then adjust the anchorX and anchorY to show the comparison dropdown
+   // if comparisonMode == false then hide the comparison mode
+   ////////////////////////////////////////////////////////////////////////////////
+   public void checkComparisonMode() {
+      if (SSM.instance().useComparisonMode == false) {
+         SSM.instance().manufactureAttrib.anchorY = 150;
+         SSM.instance().makeAttrib.anchorY = 150;
+         SSM.instance().modelAttrib.anchorY = 150;
+         SSM.instance().yearAttrib.anchorY = 150;
+         SSM.instance().c_manufactureAttrib.anchorY = -150;
+         SSM.instance().c_makeAttrib.anchorY = -150;
+         SSM.instance().c_modelAttrib.anchorY = -150;
+         SSM.instance().c_yearAttrib.anchorY = -150;
+         
+         manufactureScroll.anchorY = SSM.instance().manufactureAttrib.anchorY;
+         makeScroll.anchorY = SSM.instance().makeAttrib.anchorY;
+         modelScroll.anchorY = SSM.instance().modelAttrib.anchorY;
+         yearScroll.anchorY = SSM.instance().yearAttrib.anchorY;
+         c_manufactureScroll.anchorY = SSM.instance().c_manufactureAttrib.anchorY;
+         c_makeScroll.anchorY = SSM.instance().c_makeAttrib.anchorY;
+         c_modelScroll.anchorY = SSM.instance().c_modelAttrib.anchorY;
+         c_yearScroll.anchorY = SSM.instance().c_yearAttrib.anchorY;
+      } else {
+         SSM.instance().manufactureAttrib.anchorY = 250;
+         SSM.instance().makeAttrib.anchorY = 250;
+         SSM.instance().modelAttrib.anchorY = 250;
+         SSM.instance().yearAttrib.anchorY = 250;
+         SSM.instance().c_manufactureAttrib.anchorY = 220;
+         SSM.instance().c_makeAttrib.anchorY = 220;
+         SSM.instance().c_modelAttrib.anchorY = 220;
+         SSM.instance().c_yearAttrib.anchorY = 220;
+         
+         manufactureScroll.anchorY = SSM.instance().manufactureAttrib.anchorY;
+         makeScroll.anchorY = SSM.instance().makeAttrib.anchorY;
+         modelScroll.anchorY = SSM.instance().modelAttrib.anchorY;
+         yearScroll.anchorY = SSM.instance().yearAttrib.anchorY;
+         c_manufactureScroll.anchorY = SSM.instance().c_manufactureAttrib.anchorY;
+         c_makeScroll.anchorY = SSM.instance().c_makeAttrib.anchorY;
+         c_modelScroll.anchorY = SSM.instance().c_modelAttrib.anchorY;
+         c_yearScroll.anchorY = SSM.instance().c_yearAttrib.anchorY;
+     }
+   }
+   
+   
+   ////////////////////////////////////////////////////////////////////////////////
+   // Rendering
+   ////////////////////////////////////////////////////////////////////////////////
    public void render(GL2 gl2) {
       gl2.glClear(GL2.GL_COLOR_BUFFER_BIT);
       // To avoid threading issues, lets
@@ -63,6 +113,7 @@ public class ModelRenderer extends BaseModelRenderer {
          resetDataGL(gl2);
          SSM.instance().dirtyGL = 0;
       }
+      checkComparisonMode();
       
       if (SSM.instance().use3DModel == true) {
          this.renderIntegratedView(gl2);
@@ -750,6 +801,32 @@ public class ModelRenderer extends BaseModelRenderer {
          c_makeScroll.render(gl2);
          c_modelScroll.render(gl2);
          c_yearScroll.render(gl2);
+         
+         // Draw in indicator so the users will known which colour is associated with 
+         // which selection
+         if (SSM.instance().useComparisonMode == true) {
+            float ax;
+            float ay;
+            ax = manufactureScroll.anchorX-40;
+            ay = manufactureScroll.anchorY-20;
+            gl2.glColor4fv(SchemeManager.comp_1.toArray(), 0);
+            gl2.glBegin(GL2.GL_QUADS);    
+               gl2.glVertex2f(ax, ay);
+               gl2.glVertex2f(ax+20, ay);
+               gl2.glVertex2f(ax+20, ay+20);
+               gl2.glVertex2f(ax, ay+20);
+            gl2.glEnd();
+            
+            ax = c_manufactureScroll.anchorX-40;
+            ay = c_manufactureScroll.anchorY-20;
+            gl2.glColor4fv(SchemeManager.comp_2.toArray(), 0);
+            gl2.glBegin(GL2.GL_QUADS);
+               gl2.glVertex2f(ax, ay);
+               gl2.glVertex2f(ax+20, ay);
+               gl2.glVertex2f(ax+20, ay+20);
+               gl2.glVertex2f(ax, ay+20);
+            gl2.glEnd();
+         }
       }      
    }
    
@@ -1845,28 +1922,28 @@ public class ModelRenderer extends BaseModelRenderer {
       
       
       
-      c_manufactureScroll = new DCScrollPane("CMFR");
+      c_manufactureScroll = new DCScrollPane("MFR");
       c_manufactureScroll.direction = DCScrollPane.DOWN;
       c_manufactureScroll.anchorX = SSM.instance().c_manufactureAttrib.anchorX;
       c_manufactureScroll.anchorY = SSM.instance().c_manufactureAttrib.anchorY;
       c_manufactureScroll.calculate();
       c_manufactureScroll.renderToTexture(SchemeManager.colour_red.convertToAWT());
       
-      c_makeScroll = new DCScrollPane("CMAKE");
+      c_makeScroll = new DCScrollPane("MAKE");
       c_makeScroll.direction = DCScrollPane.DOWN;
       c_makeScroll.anchorX = SSM.instance().c_makeAttrib.anchorX;
       c_makeScroll.anchorY = SSM.instance().c_makeAttrib.anchorY;
       c_makeScroll.calculate();
       c_makeScroll.renderToTexture(SchemeManager.colour_green.convertToAWT());
       
-      c_modelScroll = new DCScrollPane("CMODEL");
+      c_modelScroll = new DCScrollPane("MODEL");
       c_modelScroll.direction = DCScrollPane.DOWN;
       c_modelScroll.anchorX = SSM.instance().c_modelAttrib.anchorX;
       c_modelScroll.anchorY = SSM.instance().c_modelAttrib.anchorY;
       c_modelScroll.calculate();
       c_modelScroll.renderToTexture(SchemeManager.colour_blue.convertToAWT());
       
-      c_yearScroll = new DCScrollPane("CYEAR");
+      c_yearScroll = new DCScrollPane("YEAR");
       c_yearScroll.direction = DCScrollPane.DOWN;
       c_yearScroll.anchorX = SSM.instance().c_yearAttrib.anchorX;
       c_yearScroll.anchorY = SSM.instance().c_yearAttrib.anchorY;

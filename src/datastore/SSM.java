@@ -213,15 +213,15 @@ public class SSM {
    ////////////////////////////////////////////////////////////////////////////////
    // Filter Panel management
    ////////////////////////////////////////////////////////////////////////////////
-   public PaneAttrib manufactureAttrib = new PaneAttrib(300, 150, 200, 200, 1);
-   public PaneAttrib makeAttrib = new PaneAttrib(550, 150, 200, 200, 1);
-   public PaneAttrib modelAttrib = new PaneAttrib(800, 150, 200, 200, 1);
-   public PaneAttrib yearAttrib = new PaneAttrib(1050, 150, 200, 200, 1);
+   public PaneAttrib manufactureAttrib = new PaneAttrib(100, 150, 200, 200, 1);
+   public PaneAttrib makeAttrib = new PaneAttrib(350, 150, 200, 200, 1);
+   public PaneAttrib modelAttrib = new PaneAttrib(600, 150, 200, 200, 1);
+   public PaneAttrib yearAttrib = new PaneAttrib(850, 150, 200, 200, 1);
    
-   public PaneAttrib c_manufactureAttrib = new PaneAttrib(300, 120, 200, 200, 0);
-   public PaneAttrib c_makeAttrib = new PaneAttrib(550, 120, 200, 200, 0);
-   public PaneAttrib c_modelAttrib = new PaneAttrib(800, 120, 200, 200, 0);
-   public PaneAttrib c_yearAttrib = new PaneAttrib(1050, 120, 200, 200, 0);
+   public PaneAttrib c_manufactureAttrib = new PaneAttrib(100, 120, 200, 200, 0);
+   public PaneAttrib c_makeAttrib = new PaneAttrib(350, 120, 200, 200, 0);
+   public PaneAttrib c_modelAttrib = new PaneAttrib(600, 120, 200, 200, 0);
+   public PaneAttrib c_yearAttrib = new PaneAttrib(850, 120, 200, 200, 0);
    
    
    

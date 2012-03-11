@@ -62,7 +62,7 @@ public class ProjectDriver {
       
       // Add save/load
       SaveLoadTask save_task = new SaveLoadTask();
-      renderer.renderTaskList.add( save_task );
+      //renderer.renderTaskList.add( save_task );
       
       
       // Create event manager instance

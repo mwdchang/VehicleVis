@@ -43,20 +43,19 @@ public class EventManager implements KeyListener, MouseListener, MouseMotionList
    @Override
    public void mouseClicked(MouseEvent e) {
       if (e.getButton() == MouseEvent.BUTTON1) {
-         SSM.instance().l_mouseClicked = true;
          if (e.getClickCount() == 2) {
             if (SSM.instance().location != SSM.ELEMENT_NONE) return; 
             
-            System.out.println("Left button double clickec");
             LensAttrib la = new LensAttrib( SSM.instance().mouseX, SSM.instance().mouseY, 100.0f, 0);      
             la.magicLensType = LensAttrib.LENS_DEPTH;
             SSM.instance().lensList.add( la );
             SSM.instance().refreshMagicLens = true;
+            return;
+         } else {
+            SSM.instance().l_mouseClicked = true;
          }
       } else  if (e.getButton() == MouseEvent.BUTTON3){
-         SSM.instance().r_mouseClicked = true;
          if (e.getClickCount() == 2) {
-            System.out.println("Right button double clickec");
             
             // TODO: This is a bit buggy due to the removal while still iterating the list
             for (int i=0; i < SSM.instance().lensList.size(); i++) {
@@ -69,7 +68,9 @@ public class EventManager implements KeyListener, MouseListener, MouseMotionList
                }
                
             }
+            return;
          }
+         SSM.instance().r_mouseClicked = true;
       } // end if 
       
    }
@@ -279,7 +280,6 @@ public class EventManager implements KeyListener, MouseListener, MouseMotionList
 
    @Override
    public void mouseReleased(MouseEvent e) {
-      //System.out.println("Mouse Released...");
       if (e.getButton() == MouseEvent.BUTTON1) {
          SSM.instance().l_mousePressed = false;
          SSM.instance().clearLens();

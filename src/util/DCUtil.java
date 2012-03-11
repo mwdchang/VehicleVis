@@ -2,6 +2,7 @@ package util;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.InputStreamReader;
@@ -11,6 +12,8 @@ import java.util.Date;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Vector;
+
+import javax.swing.JFileChooser;
 
 /////////////////////////////////////////////////////////////////////////////////
 // Miscellaneous stuff that doesn't really belong in any categories
@@ -41,6 +44,16 @@ public class DCUtil {
 //      System.out.println(DCUtil.abbreviation(439));
 //      System.out.println(DCUtil.abbreviation(1910));
 //   }
+   
+   
+   public static File fileChooser() {
+      JFileChooser fc = new JFileChooser();
+      int r = fc.showOpenDialog(null);
+      if (r == JFileChooser.APPROVE_OPTION) {
+         return fc.getSelectedFile();   
+      }
+      return null;
+   }
    
    
    public static Hashtable<Integer, Integer> mergeHash(Hashtable<Integer, Integer> a, Hashtable<Integer, Integer> b) {
