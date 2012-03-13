@@ -1122,7 +1122,7 @@ public class ModelRenderer extends BaseModelRenderer {
             if (tmp.contains(comp.baseName)) continue; 
             tmp.put(comp.baseName, comp.baseName);
 
-            this.alternateSideLayout(comp, rightList, leftList, i);
+            this.alternateSideLayout(comp, la, rightList, leftList, i);
             //this.dualSideLayout(comp, la, rightList, leftList, new float[]{rpadding, lpadding});
             //this.singleSideLayout(comp, la, rightList, leftList, new float[]{rpadding, lpadding});
          }
@@ -1268,7 +1268,7 @@ public class ModelRenderer extends BaseModelRenderer {
    ///////////////////////////////////////////////////////////////////////////////// 
    // Alternate between right and left
    ///////////////////////////////////////////////////////////////////////////////// 
-   public void alternateSideLayout(DCComponent comp, Vector<DCComponent> right, Vector<DCComponent> left, int index) {
+   public void alternateSideLayout(DCComponent comp, LensAttrib la, Vector<DCComponent> right, Vector<DCComponent> left, int index) {
       if (index % 2 == 0) {
          right.add(comp);
       } else {
@@ -1318,10 +1318,10 @@ public class ModelRenderer extends BaseModelRenderer {
       
       // check if the paddings are out of bound (ie: when we are close up)
       // default the padding space to space padding
-      if ( rpadding + lensX > SSM.instance().windowWidth ) {
+      if ( rpadding + lensX + SSM.instance().sparkLineWidth > SSM.instance().windowWidth ) {
          rpadding = spadding;   
       }
-      if (lensX - lpadding < 0) {
+      if (lensX - lpadding - SSM.instance().sparkLineWidth < 0) {
          lpadding = spadding;   
       }
       
@@ -1380,7 +1380,7 @@ public class ModelRenderer extends BaseModelRenderer {
             if (tmp.contains(comp.baseName)) continue; 
             tmp.put(comp.baseName, comp.baseName);
                
-            this.alternateSideLayout(comp, rightList, leftList, i);
+            this.alternateSideLayout(comp, la, rightList, leftList, i);
             //this.dualSideLayout(comp, la, rightList, leftList, new float[]{rpadding, lpadding});
             //this.singleSideLayout(comp, la, rightList, leftList, new float[]{rpadding, lpadding});
             

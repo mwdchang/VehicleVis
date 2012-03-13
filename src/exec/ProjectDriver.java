@@ -81,6 +81,7 @@ public class ProjectDriver {
       canvas.addMouseMotionListener(eventManager);
       canvas.addMouseWheelListener(eventManager);
       
+      
       // Create a Java rendering context
       frame = new JFrame("");
       
