@@ -85,8 +85,9 @@ public class GLRenderer implements GLEventListener {
          //}
          //SSM.instance().currentState = SSM.STATE_NORMAL;   
       //
-      if ( (SSM.instance().l_mouseClicked || SSM.instance().l_mousePressed) &&
-            SSM.instance().lensSelected() == 0 ) {
+      //if ( (SSM.instance().l_mouseClicked || SSM.instance().l_mousePressed) &&
+      //      SSM.instance().lensSelected() == 0 ) {
+      if ( (SSM.instance().l_mouseClicked || SSM.instance().l_mousePressed)) {
             //SSM.instance().magicLensSelected == 0) {
          for (int i=0; i < renderTaskList.size(); i++) {
             renderTaskList.elementAt(i).picking(gl2);

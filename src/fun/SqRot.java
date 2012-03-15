@@ -42,7 +42,7 @@ public class SqRot extends JOGLBase implements KeyListener {
       
       gl2.glTranslatef(0, 0, -290f);
       
-      //gl2.glRotatef(current, 1, 1, 1);
+      gl2.glRotated(current*2, xvec, yvec, zvec);
       
       double alpha = 0; 
       if (this.blendMode == 0) {
@@ -54,6 +54,7 @@ public class SqRot extends JOGLBase implements KeyListener {
       }
       
          
+      zpos = 0;
       for (int idx=0; idx < current; idx++) {
          gl2.glBegin(GL2.GL_LINES);
          //gl2.glBegin(GL2.GL_LINE_LOOP);
@@ -78,8 +79,8 @@ public class SqRot extends JOGLBase implements KeyListener {
                   alpha);
             
             
-            gl2.glVertex3d( Math.cos(D2R(c_angle1))*c_radius1, Math.sin(D2R(c_angle1))*c_radius1, 0.0);
-            gl2.glVertex3d( Math.cos(D2R(c_angle2))*c_radius2, Math.sin(D2R(c_angle2))*c_radius2, 0.0);
+            gl2.glVertex3d( Math.cos(D2R(c_angle1))*c_radius1, Math.sin(D2R(c_angle1))*c_radius1, zpos);
+            gl2.glVertex3d( Math.cos(D2R(c_angle2))*c_radius2, Math.sin(D2R(c_angle2))*c_radius2, zpos);
             
             /*
             if (c_radius1 > 150) d_radius[i] = d_radius[i]*-1;
@@ -89,6 +90,7 @@ public class SqRot extends JOGLBase implements KeyListener {
             */
          }
          gl2.glEnd();
+         zpos += 0.25;
       }
    
       current++;
@@ -189,6 +191,12 @@ public class SqRot extends JOGLBase implements KeyListener {
       
       current = 0;
       startingColour = 0.3 + 0.7*Math.random();
+      zpos = 0;
+      iteration = (int)Math.random()*150 + 150;
+      
+      xvec = Math.random()*2 - 1.0;
+      yvec = Math.random()*2 - 1.0;
+      zvec = Math.random()*2 - 1.0;
    }
    
    
@@ -207,5 +215,8 @@ public class SqRot extends JOGLBase implements KeyListener {
    public boolean onlyPositiveAngle = false;
    
    public int blendMode = 0;
+   public double zpos = 0;
+   
+   public double xvec, yvec, zvec; // random rotation vectors, let the api normalize them, we just generate random numbers
 
 }

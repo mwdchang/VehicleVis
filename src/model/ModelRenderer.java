@@ -926,8 +926,29 @@ public class ModelRenderer extends BaseModelRenderer {
       }
       
       
-      if (SSM.instance().location != SSM.ELEMENT_NONE) return; 
+      if (SSM.instance().location == SSM.ELEMENT_LENS) {
+          for (int i=0; i < SSM.instance().lensList.size(); i++) {
+            Integer obj = picking2DBalanced(gl2, SSM.instance().lensList.elementAt(i));
+            // Speical
+            if (obj!= null && (obj == 9999 || obj == 8888)) {
+               LensAttrib la = SSM.instance().lensList.elementAt(i);
+               System.out.println("Clicked either up or down lens");
+               
+               if (obj == 8888)
+                  la.start += la.numToDisplay;
+               else if (obj == 9999)
+                  la.start -= la.numToDisplay;
+               
+               System.out.println("Lens attrib : " + la.start + " " + la.numToDisplay);
+               return;
+            }
+            if (obj != null) break;
+         }
+         return;
+      }
       
+      
+      if (SSM.instance().location != SSM.ELEMENT_NONE) return; 
       
       Integer obj = null;
       if (SSM.instance().use3DModel == true) {
@@ -936,6 +957,22 @@ public class ModelRenderer extends BaseModelRenderer {
          if (obj == null) {
             for (int i=0; i < SSM.instance().lensList.size(); i++) {
                obj = picking2DBalanced(gl2, SSM.instance().lensList.elementAt(i));
+               
+               // Speical
+               /*
+               if (obj!= null && (obj == 9999 || obj == 8888)) {
+                  LensAttrib la = SSM.instance().lensList.elementAt(i);
+                  System.out.println("Clicked either up or down lens");
+                  
+                  if (obj == 8888)
+                     la.start += la.numToDisplay;
+                  else if (obj == 9999)
+                     la.start -= la.numToDisplay;
+                  
+                  System.out.println("Lens attrib : " + la.start + " " + la.numToDisplay);
+                  return;
+               }
+               */
                if (obj != null) break;
             }
          }
@@ -1072,6 +1109,11 @@ public class ModelRenderer extends BaseModelRenderer {
       
       Hashtable<String, String> tmp = new Hashtable<String, String>();
       
+      // This need to be in order
+      if (la.start > list.length) la.start -= la.numToDisplay; 
+      if (la.start <= 0) la.start = 0;
+      int laCnt = 0;
+      
       // First filter into left and right list
       for (int i=0; i < list.length; i++) {
          DCComponent comp = MM.currentModel.componentTable.get(list[i]);
@@ -1121,8 +1163,13 @@ public class ModelRenderer extends BaseModelRenderer {
             // so we don't draw so many guide lines
             if (tmp.contains(comp.baseName)) continue; 
             tmp.put(comp.baseName, comp.baseName);
+            
+            if (laCnt >= la.start && laCnt < la.start+la.numToDisplay) {
+               this.alternateSideLayout(comp, la, rightList, leftList, i);
+            }
+            laCnt ++;
+            
 
-            this.alternateSideLayout(comp, la, rightList, leftList, i);
             //this.dualSideLayout(comp, la, rightList, leftList, new float[]{rpadding, lpadding});
             //this.singleSideLayout(comp, la, rightList, leftList, new float[]{rpadding, lpadding});
          }
@@ -1174,6 +1221,26 @@ public class ModelRenderer extends BaseModelRenderer {
             comp.cchart.renderBorder(gl2);
          gl2.glPopMatrix();
       }      
+      
+      // Draw a down and up for scrolling
+      gl2.glLoadName(9999);
+      gl2.glPushMatrix();
+      gl2.glBegin(GL2.GL_TRIANGLES); 
+         gl2.glVertex2d(lensX-0.5*lensRadius, (SSM.instance().windowHeight - lensY)+lensRadius+5);
+         gl2.glVertex2d(lensX+0.5*lensRadius, (SSM.instance().windowHeight - lensY)+lensRadius+5);
+         gl2.glVertex2d(lensX, (SSM.instance().windowHeight - lensY)+lensRadius+25);
+      gl2.glEnd();
+      gl2.glPopMatrix();
+      
+      gl2.glLoadName(8888);
+      gl2.glPushMatrix();
+      gl2.glBegin(GL2.GL_TRIANGLES); 
+         gl2.glVertex2d(lensX-0.5*lensRadius, (SSM.instance().windowHeight - lensY)-lensRadius-5);
+         gl2.glVertex2d(lensX+0.5*lensRadius, (SSM.instance().windowHeight - lensY)-lensRadius-5);
+         gl2.glVertex2d(lensX, (SSM.instance().windowHeight - lensY)-lensRadius-25);
+      gl2.glEnd();      
+      gl2.glPopMatrix();
+      
       
       return finishPicking(gl2, buffer);
       
@@ -1328,6 +1395,13 @@ public class ModelRenderer extends BaseModelRenderer {
       
       Hashtable<String, String> tmp = new Hashtable<String, String>();
       
+      // This need to be in order
+      if (la.start > list.length) la.start -= la.numToDisplay; 
+      if (la.start <= 0) la.start = 0;
+      int laCnt = 0;
+      
+//System.out.println("render label : " + la.start + " " + la.numToDisplay);      
+      
       // First filter into left and right list
       for (int i=0; i < list.length; i++) {
          DCComponent comp = MM.currentModel.componentTable.get(list[i]);
@@ -1379,8 +1453,13 @@ public class ModelRenderer extends BaseModelRenderer {
             // so we don't draw so many guide lines
             if (tmp.contains(comp.baseName)) continue; 
             tmp.put(comp.baseName, comp.baseName);
+            
+            if (laCnt >= la.start && laCnt < (la.start+la.numToDisplay)) {
+               this.alternateSideLayout(comp, la, rightList, leftList, i);
+            }
+            laCnt ++;
+            
                
-            this.alternateSideLayout(comp, la, rightList, leftList, i);
             //this.dualSideLayout(comp, la, rightList, leftList, new float[]{rpadding, lpadding});
             //this.singleSideLayout(comp, la, rightList, leftList, new float[]{rpadding, lpadding});
             
@@ -1529,8 +1608,6 @@ public class ModelRenderer extends BaseModelRenderer {
             gl2.glVertex2d(lensX+lensRadius + rpadding, rightHeight + 0.5*comp.cchart.height);
             gl2.glVertex2d(lensX+lensRadius + rpadding+spadding, rightHeight );
             */
-            
-            
          gl2.glEnd();
          gl2.glLineWidth(1.0f);
       }
@@ -1632,7 +1709,6 @@ public class ModelRenderer extends BaseModelRenderer {
          float doodleAngle = (float)Math.asin( doodleY/lensRadius);
          float edgeX = 1.0f*lensRadius*(float)Math.cos(doodleAngle);
          
-         //if (SSM.instance().selectedGroup != null && SSM.instance().selectedGroup == comp.cchart.id){
          if (SSM.instance().selectedGroup.size() > 0 && SSM.instance().selectedGroup.contains(comp.cchart.id)){
             gl2.glColor4fv( SchemeManager.colour_blue.toArray(), 0);
          } else if (SSM.instance().relatedList != null && SSM.instance().relatedList.contains(comp.id)) {   
@@ -1663,8 +1739,87 @@ public class ModelRenderer extends BaseModelRenderer {
             */
          gl2.glEnd();
          gl2.glLineWidth(1.0f);
-         
       }
+      
+      
+      // Draw a down and up for scrolling
+      //if (la.magicLensSelected == 1) {
+      //   gl2.glColor4fv( DCColour.fromInt(10, 10, 160, 30).toArray(), 0);
+      //} else {
+      //   gl2.glColor4fv( DCColour.fromDouble(0.5, 0.5, 0.5, 0.5).toArray(), 0);
+      //}
+      
+      Integer obj = this.pickingCircleLabel(gl2, la);
+     
+      float x = (float)SSM.instance().mouseX - lensX;
+      float y = (float)SSM.instance().mouseY - lensY;
+      float r = (float)lensRadius;
+      float d = (float)Math.sqrt(x*x + y*y);
+      if ( d <= r ) {
+         la.magicLensSelected = 1;
+      } else {
+         la.magicLensSelected = 0;
+      }
+      
+      if (obj != null) {
+         la.magicLensSelected = 1;
+         SSM.instance().topElement = SSM.ELEMENT_LENS;
+         SSM.instance().location   = SSM.ELEMENT_LENS;
+      } 
+      
+      
+      if (la.magicLensSelected == 1)  {
+         gl2.glColor4f(0.2f, 0.2f, 0.9f, 1.0f);
+      } else {
+         gl2.glColor4f(0.5f, 0.5f, 0.5f, 1.0f);
+      }
+      
+      gl2.glBegin(GL2.GL_TRIANGLES); 
+         gl2.glVertex2d(lensX-0.5*lensRadius, (SSM.instance().windowHeight - lensY)+lensRadius+5);
+         gl2.glVertex2d(lensX+0.5*lensRadius, (SSM.instance().windowHeight - lensY)+lensRadius+5);
+         gl2.glVertex2d(lensX, (SSM.instance().windowHeight - lensY)+lensRadius+25);
+      gl2.glEnd();
+      
+      gl2.glBegin(GL2.GL_TRIANGLES); 
+         gl2.glVertex2d(lensX-0.5*lensRadius, (SSM.instance().windowHeight - lensY)-lensRadius-5);
+         gl2.glVertex2d(lensX+0.5*lensRadius, (SSM.instance().windowHeight - lensY)-lensRadius-5);
+         gl2.glVertex2d(lensX, (SSM.instance().windowHeight - lensY)-lensRadius-25);
+      gl2.glEnd();
+     
+   }
+   
+   
+   
+   
+   
+   public Integer pickingCircleLabel(GL2 gl2, LensAttrib la)  {
+      IntBuffer buffer = (IntBuffer)GLBuffers.newDirectGLBuffer(GL2.GL_UNSIGNED_INT, 512);
+      this.startPickingOrtho(gl2, buffer);      
+      
+      float lensX = la.magicLensX;
+      float lensY = la.magicLensY;
+      float lensRadius = la.magicLensRadius;
+      
+      // Draw a down and up for scrolling
+      gl2.glLoadName(9999);
+      gl2.glPushMatrix();
+      gl2.glBegin(GL2.GL_TRIANGLES); 
+         gl2.glVertex2d(lensX-0.5*lensRadius, (SSM.instance().windowHeight - lensY)+lensRadius+5);
+         gl2.glVertex2d(lensX+0.5*lensRadius, (SSM.instance().windowHeight - lensY)+lensRadius+5);
+         gl2.glVertex2d(lensX, (SSM.instance().windowHeight - lensY)+lensRadius+25);
+      gl2.glEnd();
+      gl2.glPopMatrix();
+      
+      gl2.glLoadName(8888);
+      gl2.glPushMatrix();
+      gl2.glBegin(GL2.GL_TRIANGLES); 
+         gl2.glVertex2d(lensX-0.5*lensRadius, (SSM.instance().windowHeight - lensY)-lensRadius-5);
+         gl2.glVertex2d(lensX+0.5*lensRadius, (SSM.instance().windowHeight - lensY)-lensRadius-5);
+         gl2.glVertex2d(lensX, (SSM.instance().windowHeight - lensY)-lensRadius-25);
+      gl2.glEnd();      
+      gl2.glPopMatrix();
+     
+      return this.finishPicking(gl2, buffer);
    }
    
    

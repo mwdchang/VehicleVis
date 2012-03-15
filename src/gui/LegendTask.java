@@ -72,6 +72,9 @@ public class LegendTask implements RenderTask {
       }
       gl2.glEnd();
       
+
+      
+      
       
       // Draws an indicator of where the currently selected component is located
       /*
@@ -150,6 +153,16 @@ public class LegendTask implements RenderTask {
       } else {
          drawContinuous(gl2);
       }
+      
+      // Draw a border around the legend to create a higher contrast
+      gl2.glDisable(GL2.GL_DEPTH_TEST);
+      gl2.glBegin(GL2.GL_LINE_LOOP);
+         gl2.glColor4d(0.4, 0.4, 0.4, 0.8);
+         gl2.glVertex2d(startX, startY);
+         gl2.glVertex2d(startX+width, startY);
+         gl2.glVertex2d(startX+width, startY+height);
+         gl2.glVertex2d(startX, startY+height);
+      gl2.glEnd();      
       
       // Draw a border around the legend
 //      gl2.glBegin(GL2.GL_LINE_LOOP);

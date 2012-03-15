@@ -234,7 +234,7 @@ public abstract class BaseModelRenderer implements RenderTask {
    public void resetPane(Hashtable<String, Integer> table, DCScrollPane widget, PaneAttrib attrib) {
       int counter = 0;
       int prevManufacture = -1;
-      widget.tagList.add( new GTag(10.0f, (counter+1)*DCScrollPane.spacing, counter*DCScrollPane.spacing, "--- ALL ---", "--- ALL ---"));
+      widget.tagList.add( new GTag(10.0f, (counter+1)*DCScrollPane.spacing, counter*DCScrollPane.spacing, "--- ALL ---", "--- ALL ---", -1));
       counter++;
       
       Vector<String> list = new Vector<String>();
@@ -245,7 +245,7 @@ public abstract class BaseModelRenderer implements RenderTask {
       for (int i=0; i < list.size(); i++) {
          String s = list.elementAt(i);
          String txt = s + " (" + table.get(s) + ")";
-         GTag t = new GTag(10.0f, (counter+1)*DCScrollPane.spacing, counter*DCScrollPane.spacing, txt, s);
+         GTag t = new GTag(10.0f, (counter+1)*DCScrollPane.spacing, counter*DCScrollPane.spacing, txt, s, table.get(s));
          if (t.val.equals(attrib.selected)) {
             prevManufacture = i;
             widget.currentStr = t.val;

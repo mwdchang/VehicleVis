@@ -43,7 +43,8 @@ public class EventManager implements KeyListener, MouseListener, MouseMotionList
    @Override
    public void mouseClicked(MouseEvent e) {
       if (e.getButton() == MouseEvent.BUTTON1) {
-         if (e.getClickCount() == 2) {
+         //if (e.getClickCount() == 2) {
+         if (SSM.instance().controlKey == true) {
             if (SSM.instance().location != SSM.ELEMENT_NONE) return; 
             
             LensAttrib la = new LensAttrib( SSM.instance().mouseX, SSM.instance().mouseY, 100.0f, 0);      
@@ -52,10 +53,12 @@ public class EventManager implements KeyListener, MouseListener, MouseMotionList
             SSM.instance().refreshMagicLens = true;
             return;
          } else {
+System.out.println("...........................................................................");            
             SSM.instance().l_mouseClicked = true;
          }
       } else  if (e.getButton() == MouseEvent.BUTTON3){
-         if (e.getClickCount() == 2) {
+         //if (e.getClickCount() == 2) {
+         if (SSM.instance().controlKey == true) {
             
             // TODO: This is a bit buggy due to the removal while still iterating the list
             for (int i=0; i < SSM.instance().lensList.size(); i++) {
@@ -764,6 +767,7 @@ public class EventManager implements KeyListener, MouseListener, MouseMotionList
       SSM.instance().mouseX = e.getX();
       SSM.instance().mouseY = e.getY();
       
+      /*
       for (int i=0; i < SSM.instance().lensList.size(); i++) {
          float x = (float)SSM.instance().mouseX - (float)SSM.instance().lensList.elementAt(i).magicLensX;
          float y = (float)SSM.instance().mouseY - (float)SSM.instance().lensList.elementAt(i).magicLensY;
@@ -775,6 +779,7 @@ public class EventManager implements KeyListener, MouseListener, MouseMotionList
             SSM.instance().lensList.elementAt(i).magicLensSelected = 0;
          }
       }
+      */
    }
    
    

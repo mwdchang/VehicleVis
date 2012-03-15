@@ -125,7 +125,7 @@ public class SaveLoadTask implements RenderTask {
 		   SaveState ss = stateList.elementAt(i);
 		   String label = ss.label;
 		   String index = i+"";
-   		saveLoad.tagList.add(new GTag(1, (i+1)*DCScrollPane.spacing, i*DCScrollPane.spacing, label, index));
+   		saveLoad.tagList.add(new GTag(1, (i+1)*DCScrollPane.spacing, i*DCScrollPane.spacing, label, index, -1));
 		}
 		
 		if (saveLoad.tagList.size() <= 0) return;

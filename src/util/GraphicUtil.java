@@ -659,11 +659,11 @@ public class GraphicUtil {
       hits = gl2.glRenderMode(GL2.GL_RENDER);
       
       if (hits > 0) {
-         System.out.println("Something got hit");
+         //System.out.println("Something got hit");
          int choose = buffer.get(3);
          int depth  = buffer.get(1);
          
-         System.out.println(choose + " " + depth);
+         //System.out.println(choose + " " + depth);
          
          for (int idx = 1; idx < hits; idx++) {
             if(buffer.get(idx*4+1) < depth) {
@@ -671,7 +671,7 @@ public class GraphicUtil {
                depth  = buffer.get(idx*4+1);
             }
          }
-         System.out.println( "ID :" + choose);
+         //System.out.println( "ID :" + choose);
          pick = new Integer(choose);   
       }
       return pick;      

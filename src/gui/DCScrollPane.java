@@ -2,6 +2,7 @@ package gui;
 
 import gui.TextPane.Tag;
 
+import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.FontMetrics;
@@ -22,6 +23,8 @@ import util.GraphicUtil;
 import com.jogamp.opengl.util.awt.TextureRenderer;
 import com.jogamp.opengl.util.texture.Texture;
 import com.jogamp.opengl.util.texture.TextureCoords;
+
+import datastore.SSM;
 
 
 
@@ -104,7 +107,7 @@ public class DCScrollPane {
       tagList.clear();
       // TODO: Calculate real height and with real data
       for (int i=0; i < 10; i++) {
-         tagList.add( new GTag(10, (i+1)*spacing, 0+i*spacing, "Test " + i, "Test " + i));    
+         tagList.add( new GTag(10, (i+1)*spacing, 0+i*spacing, "Test " + i, "Test " + i, -1));    
       }
    }
    
@@ -138,20 +141,21 @@ public class DCScrollPane {
       // Setup anti-aliasing fonts
       g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
       
+      g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER));
+      
       // Render the tags
       for (int i=0; i < tagList.size(); i++) {
          GTag t = tagList.elementAt(i);
          
          if (i % 2 == 0) 
             //g2d.setColor(Color.GRAY);
-            g2d.setColor(DCColour.fromInt(200, 200, 200).convertToAWT());
+            g2d.setColor(DCColour.fromInt(200, 200, 200, 200).convertToAWT());
          else 
-            g2d.setColor(DCColour.fromInt(230, 230, 230).convertToAWT());
+            g2d.setColor(DCColour.fromInt(230, 230, 230, 200).convertToAWT());
             //g2d.setColor(Color.LIGHT_GRAY);
          g2d.fillRect((int)0, (int)t.yPrime, (int)width, (int)spacing);
          
          //g2d.setColor(c);
-         g2d.setColor(Color.BLACK);
          
 //         if (i == current)  
          if (currentStr.equals(t.val))
@@ -159,6 +163,13 @@ public class DCScrollPane {
          else 
             g2d.setFont(fontArial);
          
+//         if (i > 0) {
+//            g2d.setColor( DCColour.fromInt(20, 20, 180, 200).convertToAWT());
+//            g2d.fillRect((int)0, (int)t.y-10, (int)(this.width*((float)t.num/(float)SSM.instance().maxOccurrence)), 2);
+//         }
+         
+         // Draw da text
+         g2d.setColor(Color.BLACK);
          g2d.drawString(t.txt, t.x, t.y-3); //-3 is just a padding to make it like nicer (more or less centered)
          
       }

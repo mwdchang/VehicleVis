@@ -119,7 +119,8 @@ public class SchemeManager {
       
       // sanity check
       bucket = bucket < 0 ? 0: bucket >= YellowGreenBlue.length ? (YellowGreenBlue.length-1) : bucket;
-      return YellowOrangeRedPreset[bucket]; 
+      //return YellowOrangeRedPreset[bucket]; 
+      return Red[bucket]; 
    }   
    
    

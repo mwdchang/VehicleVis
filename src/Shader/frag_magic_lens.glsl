@@ -78,7 +78,7 @@ void main() {
 
    if (  hypo > magicLensRadius) {
       //outColour = vec4(1,0,0,1);
-      outColour = vec4(0,0,0,0);
+      outColour = vec4(0,0,0,0.0);
    } else if ( hypo > magicLensRadius-5 && hypo <= magicLensRadius) {
       if (magicLensSelected == 1)
 	      outColour = vec4(0.2,0.2,0.9,0.5);
