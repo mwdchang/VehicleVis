@@ -1,5 +1,7 @@
 package model;
 
+import java.awt.Color;
+import java.awt.Font;
 import java.nio.IntBuffer;
 import java.util.Enumeration;
 import java.util.Hashtable;
@@ -13,6 +15,7 @@ import org.jdesktop.animation.timing.interpolation.PropertySetter;
 import util.DCCamera;
 import util.DCUtil;
 import util.GraphicUtil;
+import util.TextureFont;
 import TimingFrameExt.FloatEval;
 
 import com.jogamp.opengl.util.GLBuffers;
@@ -209,11 +212,50 @@ public class ModelRenderer extends BaseModelRenderer {
          MM.instance().currentModel.isAnimationRunning()) {
          for (int i=0;i < SSM.instance().lensList.size(); i++) {
             LensAttrib la = SSM.instance().lensList.elementAt(i);   
-            if (la.mlen == null) {
+            //if (la.mlen == null) {
                la.mlen = new MagicLens();   
                la.mlen.init(gl2);
+               la.displayList = this.MakeFullScreenQuad(gl2);
+               System.out.println("initing lens " + la.displayList);
+            //}
+            if (la.t_top == null) {
+               la.t_top = new TextureFont();   
+               la.t_top.width  = 40;
+               la.t_top.height = 40;
+               la.l_top = -1;
+            }
+            if (la.t_bottom == null) {
+               la.t_bottom = new TextureFont();    
+               la.t_bottom.width  = 40;
+               la.t_bottom.height = 40;
+               la.l_bottom = -1;
             }
             
+            
+            
+            setPerspectiveView(gl2, la.nearPlane, la.farPlane); {
+               gl2.glRotated(SSM.instance().rotateX, 1, 0, 0);
+               gl2.glRotated(SSM.instance().rotateY, 0, 1, 0);
+               gl2.glEnable(GL2.GL_BLEND);
+               this.ProcessDualPeeling(gl2, la.displayList);
+            }
+            
+            la.mlen.startRecording(gl2); {
+               //this.RenderDualPeeling(gl2, la.displayList);
+               System.out.println("..."  + System.currentTimeMillis());
+               this.RenderDualPeeling(gl2, la.displayList);
+               
+               gl2.glEnable(GL2.GL_BLEND);
+               gl2.glDisable(GL2.GL_DEPTH_TEST);
+               setPerspectiveView(gl2, 0.01f, la.nearPlane); {
+                  gl2.glRotated(SSM.instance().rotateX, 1, 0, 0);
+                  gl2.glRotated(SSM.instance().rotateY, 0, 1, 0);
+                  renderSil(gl2);   
+               }               
+            } la.mlen.stopRecording(gl2);
+            
+            
+            /*
             la.mlen.startRecording(gl2); {
                // Do not render again in dual depthing peeling mode, 
                // We already have transparency and it is too expensive
@@ -231,6 +273,8 @@ public class ModelRenderer extends BaseModelRenderer {
                   }
                }
             } la.mlen.stopRecording(gl2);
+            */
+            
             
          }
          SSM.instance().refreshMagicLens = false;
@@ -241,6 +285,7 @@ public class ModelRenderer extends BaseModelRenderer {
       ////////////////////////////////////////////////////////////////////////////////
       // Render the default scene we want to show
       ////////////////////////////////////////////////////////////////////////////////
+      //setPerspectiveView(gl2, 40, 1000); {
       setPerspectiveView(gl2); {
          gl2.glRotated(SSM.instance().rotateX, 1, 0, 0);
          gl2.glRotated(SSM.instance().rotateY, 0, 1, 0);
@@ -248,7 +293,8 @@ public class ModelRenderer extends BaseModelRenderer {
          
          if (SSM.instance().useDualDepthPeeling) {
             if (SSM.instance().refreshOITTexture) {
-               this.RenderDualPeeling(gl2);
+               this.ProcessDualPeeling(gl2, this.g_quadDisplayList);
+               this.RenderDualPeeling(gl2, this.g_quadDisplayList);
                //SSM.instance().refreshOITTexture = false;
             } else {
                this.RenderOITTexture(gl2);   
@@ -286,115 +332,9 @@ public class ModelRenderer extends BaseModelRenderer {
          GraphicUtil.setOrthonormalView(gl2, 0, 1, 0, 1, -10, 10);
          gl2.glBlendFunc(GL2.GL_SRC_ALPHA, GL2.GL_ONE_MINUS_SRC_ALPHA);
          glowTexture.render(gl2, 2);
-         
-         
-         /*
-         if (SSM.instance().useComparisonMode == true) {
-            glowTexture.startRecording(gl2);
-            setPerspectiveView(gl2);
-            gl2.glRotated(SSM.instance().rotateX, 1, 0, 0); 
-            gl2.glRotated(SSM.instance().rotateY, 0, 1, 0); 
-            gl2.glClearColor(1, 1, 1, 0);
-            gl2.glClear(GL2.GL_COLOR_BUFFER_BIT);
-            gl2.glPushMatrix();
-            
-            for (DCComponent comp : MM.currentModel.componentTable.values()) {
-              if (comp.hasContext && comp.active && ! SSM.instance().selectedGroup.contains(comp.id)) {
-                 float v1 = CacheManager.instance().groupOccurrence.get(comp.id);
-                 float v2 = CacheManager.instance().c_groupOccurrence.get(comp.id);                  
-                 if (v1 > v2) 
-                    comp.renderBuffer(gl2, SchemeManager.comp_1, 2);
-                 else if (v1 < v2) 
-                    comp.renderBuffer(gl2, SchemeManager.comp_2, 2);
-              }
-            }
-            gl2.glPopMatrix();
-            glowTexture.stopRecording(gl2);
-            GraphicUtil.setOrthonormalView(gl2, 0, 1, 0, 1, -10, 10);
-            gl2.glBlendFunc(GL2.GL_SRC_ALPHA, GL2.GL_ONE_MINUS_SRC_ALPHA);
-            glowTexture.render(gl2, 1.1f, 0);
-        }
-        */
-         
-         
-         
-         
-         /*
-         if (SSM.instance().useComparisonMode == true) {
-            for (DCComponent comp : MM.currentModel.componentTable.values()) {
-              ////////////////////////////////////////////////////////////////////////////////
-              // Render a comparative result as halo/glows
-              // See also end of dual-depth render in BaseRenderer for alternative method
-              ////////////////////////////////////////////////////////////////////////////////
-              if (comp.hasContext && comp.active && ! SSM.instance().selectedGroup.contains(comp.id)) {
-                  glowTexture.startRecording(gl2);
-                     setPerspectiveView(gl2);
-                     gl2.glRotated(SSM.instance().rotateX, 1, 0, 0); 
-                     gl2.glRotated(SSM.instance().rotateY, 0, 1, 0); 
-                     gl2.glClearColor(1, 1, 1, 0);
-                     gl2.glClear(GL2.GL_COLOR_BUFFER_BIT);
-                     gl2.glPushMatrix();
-                     
-                     float v1 = CacheManager.instance().groupOccurrence.get(comp.id);
-                     float v2 = CacheManager.instance().c_groupOccurrence.get(comp.id);                  
-                     if (v1 > v2) {
-                        comp.renderBuffer(gl2, SchemeManager.comp_1);
-                     } else if (v1 < v2) { 
-                        comp.renderBuffer(gl2, SchemeManager.comp_2);
-                     }
-                     gl2.glPopMatrix();
-                  glowTexture.stopRecording(gl2);
-                  GraphicUtil.setOrthonormalView(gl2, 0, 1, 0, 1, -10, 10);
-                  gl2.glBlendFunc(GL2.GL_SRC_ALPHA, GL2.GL_ONE_MINUS_SRC_ALPHA);
-                  glowTexture.render(gl2, 1.4f, 1);
-               } // end if 
-            } // end for
-         } // end if useComparisonMode
-         */
       } 
      
      
-      ////////////////////////////////////////////////////////////////////////////////
-      // Record any comparative effects as texture and blend it back into the 
-      // foreground buffer
-      ////////////////////////////////////////////////////////////////////////////////
-//      if (SSM.instance().useComparisonMode == true) {
-//        outlineTexture.startRecording(gl2);
-//        setPerspectiveView(gl2);
-//        gl2.glDisable(GL2.GL_DEPTH_TEST);
-//        gl2.glRotated(SSM.instance().rotateX, 1, 0, 0); 
-//        gl2.glRotated(SSM.instance().rotateY, 0, 1, 0); 
-//        gl2.glClearColor(1, 1, 1, 0);
-//        gl2.glClear(GL2.GL_COLOR_BUFFER_BIT);
-//        
-//        float c = 1;
-//        float size = 1+MM.currentModel.componentTable.size();
-//        for (DCComponent comp : MM.currentModel.componentTable.values()) {
-//           if (comp.hasContext && comp.active && ! SSM.instance().selectedGroup.contains(comp.id)) {
-//              gl2.glPushMatrix();
-//                 
-//                 float v1 = CacheManager.instance().groupOccurrence.get(comp.id);
-//                 float v2 = CacheManager.instance().c_groupOccurrence.get(comp.id);                  
-//                 if (v1 > v2) {
-//                    //comp.renderBuffer(gl2, SchemeManager.comp_1, 2);
-//                    comp.renderBuffer(gl2, DCColour.fromDouble(1.0, 0.0, 0.0, c/size), 2);
-//                 } else if (v1 < v2) { 
-//                    comp.renderBuffer(gl2, DCColour.fromDouble(0.0, 1.0, 0.0, c/size), 2);
-//                    //comp.renderBuffer(gl2, SchemeManager.comp_2, 2);
-//                 }
-//                 //comp.renderBuffer(gl2, DCColour.fromDouble(0.6, 0.6, 0.6, c/size), 2);
-//              gl2.glPopMatrix();
-//           }
-//           c ++;
-//         } // end for
-//         outlineTexture.stopRecording(gl2);
-//         
-//         // Render and blend the texture back to the framebuffer
-//         GraphicUtil.setOrthonormalView(gl2, 0, 1, 0, 1, -10, 10);
-//         gl2.glBlendFunc(GL2.GL_SRC_ALPHA, GL2.GL_ONE_MINUS_SRC_ALPHA);
-//         outlineTexture.render(gl2, 1.0f, 1);
-//      }
-      
       
       if (SSM.instance().useComparisonMode == true) {
          float size;
@@ -1742,13 +1682,9 @@ public class ModelRenderer extends BaseModelRenderer {
       }
       
       
-      // Draw a down and up for scrolling
-      //if (la.magicLensSelected == 1) {
-      //   gl2.glColor4fv( DCColour.fromInt(10, 10, 160, 30).toArray(), 0);
-      //} else {
-      //   gl2.glColor4fv( DCColour.fromDouble(0.5, 0.5, 0.5, 0.5).toArray(), 0);
-      //}
       
+      
+      // Draw a down and up for scrolling
       Integer obj = this.pickingCircleLabel(gl2, la);
      
       float x = (float)SSM.instance().mouseX - lensX;
@@ -1774,18 +1710,54 @@ public class ModelRenderer extends BaseModelRenderer {
          gl2.glColor4f(0.5f, 0.5f, 0.5f, 1.0f);
       }
       
-      gl2.glBegin(GL2.GL_TRIANGLES); 
-         gl2.glVertex2d(lensX-0.5*lensRadius, (SSM.instance().windowHeight - lensY)+lensRadius+5);
-         gl2.glVertex2d(lensX+0.5*lensRadius, (SSM.instance().windowHeight - lensY)+lensRadius+5);
-         gl2.glVertex2d(lensX, (SSM.instance().windowHeight - lensY)+lensRadius+25);
-      gl2.glEnd();
-      
-      gl2.glBegin(GL2.GL_TRIANGLES); 
-         gl2.glVertex2d(lensX-0.5*lensRadius, (SSM.instance().windowHeight - lensY)-lensRadius-5);
-         gl2.glVertex2d(lensX+0.5*lensRadius, (SSM.instance().windowHeight - lensY)-lensRadius-5);
-         gl2.glVertex2d(lensX, (SSM.instance().windowHeight - lensY)-lensRadius-25);
-      gl2.glEnd();
+      if (la.start >= la.numToDisplay) {
+         la.renderTop = true;
+      } else {
+         la.renderTop = false;
+      }
      
+      if (la.start+la.numToDisplay < laCnt) {
+         la.renderBottom = true;
+      } else {
+         la.renderBottom = false;
+      }
+      
+      double arrowWidth = Math.min(50, Math.max(20, 0.5*lensRadius));
+      double arrowHeight = 30;
+      if (la.renderTop) {
+         gl2.glBegin(GL2.GL_TRIANGLES); 
+            gl2.glVertex2d(lensX-arrowWidth, (SSM.instance().windowHeight - lensY)+lensRadius+5);
+            gl2.glVertex2d(lensX+arrowWidth, (SSM.instance().windowHeight - lensY)+lensRadius+5);
+            gl2.glVertex2d(lensX, (SSM.instance().windowHeight - lensY)+lensRadius+arrowHeight);
+         gl2.glEnd();
+         
+         if (la.start != la.l_top) {
+            la.t_top.clearMark();
+            la.t_top.addMark(la.start+"", Color.WHITE, new Font("Consolas", Font.BOLD, 14), 0, 5, false);
+            la.t_top.anchorX = lensX-8;
+            la.t_top.anchorY = (SSM.instance().windowHeight-lensY)+lensRadius+5;
+            la.t_top.dirty = 1;
+         }
+         la.t_top.render(gl2);
+         
+      }
+      if (la.renderBottom) {
+         gl2.glBegin(GL2.GL_TRIANGLES); 
+            gl2.glVertex2d(lensX-arrowWidth, (SSM.instance().windowHeight - lensY)-lensRadius-5);
+            gl2.glVertex2d(lensX+arrowWidth, (SSM.instance().windowHeight - lensY)-lensRadius-5);
+            gl2.glVertex2d(lensX, (SSM.instance().windowHeight - lensY)-lensRadius-arrowHeight);
+         gl2.glEnd();
+         
+         if ( (laCnt - (la.start+la.numToDisplay)) != la.l_bottom){
+            la.t_bottom.clearMark();
+            la.t_bottom.addMark((laCnt-(la.start+la.numToDisplay))+"", Color.WHITE, new Font("Consolas", Font.BOLD, 14), 0, 5, false);
+            la.t_bottom.anchorX = lensX-8;
+            la.t_bottom.anchorY = (SSM.instance().windowHeight-lensY)-lensRadius-23;
+            la.t_bottom.dirty = 1;
+         }
+         la.t_bottom.render(gl2);
+      }
+  
    }
    
    
@@ -1801,23 +1773,29 @@ public class ModelRenderer extends BaseModelRenderer {
       float lensRadius = la.magicLensRadius;
       
       // Draw a down and up for scrolling
-      gl2.glLoadName(9999);
-      gl2.glPushMatrix();
-      gl2.glBegin(GL2.GL_TRIANGLES); 
-         gl2.glVertex2d(lensX-0.5*lensRadius, (SSM.instance().windowHeight - lensY)+lensRadius+5);
-         gl2.glVertex2d(lensX+0.5*lensRadius, (SSM.instance().windowHeight - lensY)+lensRadius+5);
-         gl2.glVertex2d(lensX, (SSM.instance().windowHeight - lensY)+lensRadius+25);
-      gl2.glEnd();
-      gl2.glPopMatrix();
+      double arrowWidth = Math.min(50, Math.max(20, 0.5*lensRadius));
+      double arrowHeight = 30;
+      if (la.renderTop) {
+         gl2.glLoadName(9999);
+         gl2.glPushMatrix();
+         gl2.glBegin(GL2.GL_TRIANGLES); 
+            gl2.glVertex2d(lensX-arrowWidth, (SSM.instance().windowHeight - lensY)+lensRadius+5);
+            gl2.glVertex2d(lensX+arrowWidth, (SSM.instance().windowHeight - lensY)+lensRadius+5);
+            gl2.glVertex2d(lensX, (SSM.instance().windowHeight - lensY)+lensRadius+arrowHeight);
+         gl2.glEnd();
+         gl2.glPopMatrix();
+      }
       
-      gl2.glLoadName(8888);
-      gl2.glPushMatrix();
-      gl2.glBegin(GL2.GL_TRIANGLES); 
-         gl2.glVertex2d(lensX-0.5*lensRadius, (SSM.instance().windowHeight - lensY)-lensRadius-5);
-         gl2.glVertex2d(lensX+0.5*lensRadius, (SSM.instance().windowHeight - lensY)-lensRadius-5);
-         gl2.glVertex2d(lensX, (SSM.instance().windowHeight - lensY)-lensRadius-25);
-      gl2.glEnd();      
-      gl2.glPopMatrix();
+      if (la.renderBottom){ 
+         gl2.glLoadName(8888);
+         gl2.glPushMatrix();
+         gl2.glBegin(GL2.GL_TRIANGLES); 
+            gl2.glVertex2d(lensX-arrowWidth, (SSM.instance().windowHeight - lensY)-lensRadius-5);
+            gl2.glVertex2d(lensX+arrowWidth, (SSM.instance().windowHeight - lensY)-lensRadius-5);
+            gl2.glVertex2d(lensX, (SSM.instance().windowHeight - lensY)-lensRadius-arrowHeight);
+         gl2.glEnd();      
+         gl2.glPopMatrix();
+      }
      
       return this.finishPicking(gl2, buffer);
    }

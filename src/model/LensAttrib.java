@@ -1,5 +1,6 @@
 package model;
 
+import util.TextureFont;
 import datastore.SSM;
 
 /////////////////////////////////////////////////////////////////////////////////
@@ -61,6 +62,16 @@ public class LensAttrib {
    // Number of labels to display
    public int start = 0;
    public final int numToDisplay = 10;
+   public boolean renderTop    = false;
+   public boolean renderBottom = false; 
+   
+   public TextureFont t_top;
+   public TextureFont t_bottom;
+   public int l_top;
+   public int l_bottom;
+   
+   public int displayList;
+   
    
    // Types
    public static int LENS_NORMAL = 0;

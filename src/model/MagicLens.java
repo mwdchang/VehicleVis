@@ -103,7 +103,7 @@ public class MagicLens {
    public MagicLens() {
    	//TEXTURE_SIZE_W = SSM.instance().LEN_TEXTURE_WIDTH;
    	//TEXTURE_SIZE_H = SSM.instance().LEN_TEXTURE_HEIGHT;
-   	TEXTURE_SIZE_W = SSM.instance().windowHeight;
+   	TEXTURE_SIZE_H = SSM.instance().windowHeight;
    	TEXTURE_SIZE_W = SSM.instance().windowWidth;
    }
    
@@ -227,7 +227,7 @@ public class MagicLens {
          
          shaderObj.setUniform1i(gl2, "tex", 0);
          if (SSM.instance().useDualDepthPeeling) {
-            shaderObj.setUniform1i(gl2, "useTexture", 0);
+            shaderObj.setUniform1i(gl2, "useTexture", 1);
          } else {
             shaderObj.setUniform1i(gl2, "useTexture", 1);
          }
@@ -301,6 +301,8 @@ public class MagicLens {
    public void init(GL2 gl2) {
       
       initFrameBuffer(gl2);      
+      
+      System.out.println("Texture size" + this.TEXTURE_SIZE_W + "," + this.TEXTURE_SIZE_H);
       
       diamondBuffer.put(square);
       colorBuffer.put(color);

@@ -89,7 +89,7 @@ public abstract class BaseModelRenderer implements RenderTask {
          
          gl2.glBindFramebuffer(GL2.GL_FRAMEBUFFER, 0);
          BuildShaders(gl2);
-         MakeFullScreenQuad(gl2);
+         this.g_quadDisplayList = MakeFullScreenQuad(gl2);
          
          gl2.glDisable(GL2.GL_CULL_FACE);
          gl2.glDisable(GL2.GL_LIGHTING);
@@ -1391,11 +1391,12 @@ public abstract class BaseModelRenderer implements RenderTask {
         g_shaderDualFinal.linkProgram(gl2);
 
      }     
-     void MakeFullScreenQuad(GL2 gl) {
+     int MakeFullScreenQuad(GL2 gl) {
         GLU glu = GLU.createGLU(gl);
 
-        g_quadDisplayList = gl.glGenLists(1);
-        gl.glNewList(g_quadDisplayList, GL2.GL_COMPILE);
+        //g_quadDisplayList = gl.glGenLists(1);
+        int listId = gl.glGenLists(1);
+        gl.glNewList(listId, GL2.GL_COMPILE);
 
         gl.glMatrixMode(GL2.GL_MODELVIEW);
         gl.glPushMatrix();
@@ -1412,9 +1413,11 @@ public abstract class BaseModelRenderer implements RenderTask {
         gl.glPopMatrix();
 
         gl.glEndList();
+        
+        return listId;
      }     
      
-     void RenderDualPeeling(GL2 gl) {
+     void ProcessDualPeeling(GL2 gl, int displayList) {
         gl.glDisable(GL2.GL_DEPTH_TEST);
         gl.glEnable(GL2.GL_BLEND);
 
@@ -1500,7 +1503,7 @@ public abstract class BaseModelRenderer implements RenderTask {
 
            g_shaderDualBlend.bind(gl);
            g_shaderDualBlend.bindTextureRECT(gl,"TempTex", g_dualBackTempTexId[currId], 0);
-           gl.glCallList(g_quadDisplayList);
+           gl.glCallList(displayList);
            g_shaderDualBlend.unbind(gl);
 
            if (g_useOQ) {
@@ -1582,22 +1585,25 @@ public abstract class BaseModelRenderer implements RenderTask {
         
 
         gl.glDisable(GL2.GL_BLEND);
-
+        gl.glBindFramebuffer(GL2.GL_FRAMEBUFFER, 0);
+      
+     }     
+     
+     public void RenderDualPeeling(GL2 gl2, int displayList) {
         // ---------------------------------------------------------------------
         // 3. Final Pass
         // ---------------------------------------------------------------------
 
-        gl.glBindFramebuffer(GL2.GL_FRAMEBUFFER, 0);
-        gl.glDrawBuffer(GL2.GL_BACK);
 
-        g_shaderDualFinal.bind(gl);
-        g_shaderDualFinal.bindTextureRECT(gl,"FrontBlenderTex", g_dualFrontBlenderTexId[currId], 1);
-        g_shaderDualFinal.bindTextureRECT(gl,"BackBlenderTex", g_dualBackBlenderTexId[0], 2);
-        gl.glCallList(g_quadDisplayList);
-        g_shaderDualFinal.unbind(gl);
-        
-      
-     }     
+        gl2.glDrawBuffer(GL2.GL_BACK);
+
+        g_shaderDualFinal.bind(gl2);
+        g_shaderDualFinal.bindTextureRECT(gl2,"FrontBlenderTex", g_dualFrontBlenderTexId[currId], 1);
+        g_shaderDualFinal.bindTextureRECT(gl2,"BackBlenderTex", g_dualBackBlenderTexId[0], 2);
+        gl2.glCallList(displayList);
+        g_shaderDualFinal.unbind(gl2);
+       
+     }
      
      
      public void RenderOITTexture(GL2 gl2) {
