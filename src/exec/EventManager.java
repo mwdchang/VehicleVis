@@ -732,6 +732,7 @@ System.out.println("............................................................
             if (SSM.instance().lensList.elementAt(i).magicLensSelected == 1) {
                SSM.instance().lensList.elementAt(i).magicLensX += (SSM.instance().mouseX - SSM.instance().oldMouseX);   
                SSM.instance().lensList.elementAt(i).magicLensY += (SSM.instance().mouseY - SSM.instance().oldMouseY);   
+               SSM.instance().lensList.elementAt(i).start = 0;
             }
          }
       }
@@ -767,6 +768,7 @@ System.out.println("............................................................
       SSM.instance().mouseX = e.getX();
       SSM.instance().mouseY = e.getY();
       
+
       /*
       for (int i=0; i < SSM.instance().lensList.size(); i++) {
          float x = (float)SSM.instance().mouseX - (float)SSM.instance().lensList.elementAt(i).magicLensX;

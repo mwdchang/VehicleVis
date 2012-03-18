@@ -40,5 +40,6 @@ public class PaneAttrib {
    public String selected = null;
    
    public int direction = 0;
+   
 
 }

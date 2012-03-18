@@ -53,6 +53,8 @@ public class DCScrollPane {
    public static short UP   =   1;
    public static short DOWN =   2;
    
+   public int maxValue = 0;
+   
    
    public float texPanelWidth = 230.0f;
    public float texPanelHeight = 8000.0f;
@@ -142,6 +144,7 @@ public class DCScrollPane {
       g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
       
       g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER));
+      //g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.DST_OVER));
       
       // Render the tags
       for (int i=0; i < tagList.size(); i++) {
@@ -163,10 +166,10 @@ public class DCScrollPane {
          else 
             g2d.setFont(fontArial);
          
-//         if (i > 0) {
-//            g2d.setColor( DCColour.fromInt(20, 20, 180, 200).convertToAWT());
-//            g2d.fillRect((int)0, (int)t.y-10, (int)(this.width*((float)t.num/(float)SSM.instance().maxOccurrence)), 2);
-//         }
+         if (i > 0) {
+            g2d.setColor( DCColour.fromInt(10, 10, 180, 120).convertToAWT());
+            g2d.fillRect((int)1, (int)t.y-12, (int)(0.95*this.width*((float)t.num/(float)this.maxValue)), 8);
+         }
          
          // Draw da text
          g2d.setColor(Color.BLACK);
@@ -197,7 +200,7 @@ public class DCScrollPane {
       gl2.glBlendFunc(GL2.GL_SRC_ALPHA, GL2.GL_ONE_MINUS_SRC_ALPHA);            
       
       
-      gl2.glColor4d(1.0, 1.0, 1.0, 0.5);
+      gl2.glColor4d(1.0, 1.0, 1.0, 0.8);
       gl2.glEnable(GL2.GL_TEXTURE_2D);
       
       if (direction == UP) {

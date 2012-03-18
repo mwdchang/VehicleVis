@@ -238,9 +238,15 @@ public abstract class BaseModelRenderer implements RenderTask {
       counter++;
       
       Vector<String> list = new Vector<String>();
+      
+      // Add to list and also calculate the max per the category
+      int max = 0;
       for (String s : table.keySet()) {
          list.add( s );  
+         if (max < table.get(s) ) max = table.get(s);
       }
+      widget.maxValue = max;
+      
       Collections.sort(list);
       for (int i=0; i < list.size(); i++) {
          String s = list.elementAt(i);

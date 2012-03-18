@@ -224,6 +224,16 @@ public class SSM {
    public PaneAttrib c_yearAttrib = new PaneAttrib(950, 120, 200, 200, 0);
    
    
+   public int manufactureMax = 0;
+   public int makeMax = 0;
+   public int modelMax = 0;
+   public int yearMax = 0;
+   public int c_manufactureMax = 0;
+   public int c_makeMax = 0;
+   public int c_modelMax = 0;
+   public int c_yearMax = 0;
+   
+   
    
    public float saveLoadAnchorX = 850;
    public float saveLoadAnchorY = 950;
