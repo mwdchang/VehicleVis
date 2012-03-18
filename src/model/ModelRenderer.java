@@ -129,6 +129,80 @@ public class ModelRenderer extends BaseModelRenderer {
    
    
    ////////////////////////////////////////////////////////////////////////////////
+   // Render a comparison outline
+   ////////////////////////////////////////////////////////////////////////////////
+   public void renderComparison(GL2 gl2) {
+      if (SSM.instance().useComparisonMode == true) {
+         float size;
+         float c;
+         outlineTexture1.startRecording(gl2);
+            setPerspectiveView(gl2);
+            gl2.glRotated(SSM.instance().rotateX, 1, 0, 0); 
+            gl2.glRotated(SSM.instance().rotateY, 0, 1, 0); 
+            gl2.glClearColor(0, 0, 0, 0);
+            gl2.glClear(GL2.GL_COLOR_BUFFER_BIT);
+            gl2.glDisable(GL2.GL_DEPTH_TEST);
+            
+            c = 1;
+            size = 2+MM.currentModel.componentTable.size();
+            gl2.glPushMatrix();
+            for (DCComponent comp : MM.currentModel.componentTable.values()) {
+               
+               if (comp.hasContext && comp.active && ! SSM.instance().selectedGroup.contains(comp.id)) {
+                  float v1 = CacheManager.instance().groupOccurrence.get(comp.id);
+                  float v2 = CacheManager.instance().c_groupOccurrence.get(comp.id);                  
+                  if (v1 > v2) {
+                     double v = 0.3 + 0.7*(v1-v2)/v1;
+                     comp.renderBuffer(gl2, DCColour.fromDouble(0.5, 0.0, v, 0.2), 2);
+                     //System.out.println("1 : " + comp.cname);
+                  }
+               }
+               c ++;
+            } // end for
+            gl2.glPopMatrix();
+         outlineTexture1.stopRecording(gl2);
+         GraphicUtil.setOrthonormalView(gl2, 0, 1, 0, 1, -10, 10);
+         gl2.glBlendFunc(GL2.GL_SRC_ALPHA, GL2.GL_ONE_MINUS_SRC_ALPHA);
+         outlineTexture1.renderComparison(gl2, 1.0f, SchemeManager.comp_1, SchemeManager.comp_2);
+         
+         
+         outlineTexture2.startRecording(gl2);
+            setPerspectiveView(gl2);
+            gl2.glRotated(SSM.instance().rotateX, 1, 0, 0); 
+            gl2.glRotated(SSM.instance().rotateY, 0, 1, 0); 
+            gl2.glClearColor(0, 0, 0, 0);
+            gl2.glClear(GL2.GL_COLOR_BUFFER_BIT);
+            gl2.glDisable(GL2.GL_DEPTH_TEST);
+            
+            c = 1;
+            size = 2+MM.currentModel.componentTable.size();
+            gl2.glPushMatrix();
+            for (DCComponent comp : MM.currentModel.componentTable.values()) {
+               
+               if (comp.hasContext && comp.active && ! SSM.instance().selectedGroup.contains(comp.id)) {
+                  float v1 = CacheManager.instance().groupOccurrence.get(comp.id);
+                  float v2 = CacheManager.instance().c_groupOccurrence.get(comp.id);                  
+                  if (v1 < v2) {
+                     double v = 0.3 + 0.7*(v2-v1)/v2;
+                     comp.renderBuffer(gl2, DCColour.fromDouble(0.0, 0.5, v, 0.2), 2);
+                     //System.out.println("2 : " + comp.cname);
+                  }
+               }
+               c ++;
+            } // end for
+            gl2.glPopMatrix();
+
+         outlineTexture2.stopRecording(gl2);
+         GraphicUtil.setOrthonormalView(gl2, 0, 1, 0, 1, -10, 10);
+         gl2.glBlendFunc(GL2.GL_SRC_ALPHA, GL2.GL_ONE_MINUS_SRC_ALPHA);
+         outlineTexture2.renderComparison(gl2, 1.0f, SchemeManager.comp_1, SchemeManager.comp_2);
+      }      
+   }
+   
+   
+   
+   
+   ////////////////////////////////////////////////////////////////////////////////
    // Main rendering method
    ////////////////////////////////////////////////////////////////////////////////
    public void renderIntegratedView(GL2 gl2) {
@@ -307,35 +381,12 @@ public class ModelRenderer extends BaseModelRenderer {
       }
       
       
-      ////////////////////////////////////////////////////////////////////////////////
-      // Record glow effects and render to to a 1-1 square in ortho mode 
-      ////////////////////////////////////////////////////////////////////////////////
-      if (SSM.instance().useGlow && SSM.instance().selectedGroup.size() > 0) {
-         glowTexture.startRecording(gl2); 
-            setPerspectiveView(gl2); 
-            gl2.glRotated(SSM.instance().rotateX, 1, 0, 0);
-            gl2.glRotated(SSM.instance().rotateY, 0, 1, 0);
-            gl2.glClearColor(1, 1, 1, 0);
-            gl2.glClear(GL2.GL_COLOR_BUFFER_BIT);
-            gl2.glPushMatrix();
-            for (DCComponent comp : MM.currentModel.componentTable.values()) {
-               if ( SSM.instance().selectedGroup.contains(comp.id) ) {
-                  //gl2.glScaled(1.2, 1.2, 1.2);
-                  comp.renderBuffer(gl2, DCColour.fromInt(20, 20, 210));
-                  //gl2.glScaled(1.0/1.2, 1.0/1.2, 1.0/1.2);
-               }
-               
-            }          
-            gl2.glPopMatrix();
-         glowTexture.stopRecording(gl2);
-         
-         GraphicUtil.setOrthonormalView(gl2, 0, 1, 0, 1, -10, 10);
-         gl2.glBlendFunc(GL2.GL_SRC_ALPHA, GL2.GL_ONE_MINUS_SRC_ALPHA);
-         glowTexture.render(gl2, 2);
-      } 
+
      
      
+      this.renderComparison(gl2);
       
+      /*
       if (SSM.instance().useComparisonMode == true) {
          float size;
          float c;
@@ -401,6 +452,7 @@ public class ModelRenderer extends BaseModelRenderer {
          gl2.glBlendFunc(GL2.GL_SRC_ALPHA, GL2.GL_ONE_MINUS_SRC_ALPHA);
          outlineTexture2.renderComparison(gl2, 1.0f, SchemeManager.comp_1, SchemeManager.comp_2);
       }
+      */
       
       
       
@@ -414,11 +466,41 @@ public class ModelRenderer extends BaseModelRenderer {
       for (int i=0; i < SSM.instance().lensList.size(); i++) {
          LensAttrib la = SSM.instance().lensList.elementAt(i);
          setOrthonormalView(gl2); {
-            if (la.mlen != null)
+            if (la.mlen != null) {
               la.mlen.renderLens( gl2, la );
+              // TODO: This is probably not very efficient, can we get away with just a single render for the entire render cycle at the end ???
+              this.renderComparison(gl2);
+            }
          }
       }
       
+      
+      ////////////////////////////////////////////////////////////////////////////////
+      // Record glow effects and render to to a 1-1 square in ortho mode 
+      ////////////////////////////////////////////////////////////////////////////////
+      if (SSM.instance().useGlow && SSM.instance().selectedGroup.size() > 0) {
+         glowTexture.startRecording(gl2); 
+            setPerspectiveView(gl2); 
+            gl2.glRotated(SSM.instance().rotateX, 1, 0, 0);
+            gl2.glRotated(SSM.instance().rotateY, 0, 1, 0);
+            gl2.glClearColor(1, 1, 1, 0);
+            gl2.glClear(GL2.GL_COLOR_BUFFER_BIT);
+            gl2.glPushMatrix();
+            for (DCComponent comp : MM.currentModel.componentTable.values()) {
+               if ( SSM.instance().selectedGroup.contains(comp.id) ) {
+                  //gl2.glScaled(1.2, 1.2, 1.2);
+                  comp.renderBuffer(gl2, DCColour.fromInt(20, 20, 210));
+                  //gl2.glScaled(1.0/1.2, 1.0/1.2, 1.0/1.2);
+               }
+               
+            }          
+            gl2.glPopMatrix();
+         glowTexture.stopRecording(gl2);
+         
+         GraphicUtil.setOrthonormalView(gl2, 0, 1, 0, 1, -10, 10);
+         gl2.glBlendFunc(GL2.GL_SRC_ALPHA, GL2.GL_ONE_MINUS_SRC_ALPHA);
+         glowTexture.render(gl2, 2);
+      }       
       
       
       
