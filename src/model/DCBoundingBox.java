@@ -65,7 +65,7 @@ public class DCBoundingBox extends DCObj {
    }
    
    public void renderBoundingBox(GL2 gl2) {
-      renderBoundingBox(gl2, SchemeManager.colour_blue);
+      renderBoundingBox(gl2, SchemeManager.selected);
    }
    
    // Render a wire-frame version the bounding box

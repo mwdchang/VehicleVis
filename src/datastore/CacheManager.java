@@ -475,12 +475,19 @@ public class CacheManager {
          }
          
          // Work around to get dimensionalized view
-         for (int i=0; i < groupIds.size(); i++) {
-            sql += "AND EXISTS ( " + 
+         if (groupIds.size() == 0) {
+             sql += "AND EXISTS ( " + 
                       "SELECT 1 FROM projectv3.cmp_x_grp_clean b " + 
                       "WHERE a.cmplid = b.cmplid " +
-                      "AND b.groupId in " + DCUtil.makeInClause(HierarchyTable.instance().getAgg(groupIds.elementAt(i))) + " " +
                    ") ";
+         } else {
+            for (int i=0; i < groupIds.size(); i++) {
+               sql += "AND EXISTS ( " + 
+                         "SELECT 1 FROM projectv3.cmp_x_grp_clean b " + 
+                         "WHERE a.cmplid = b.cmplid " +
+                         "AND b.groupId in " + DCUtil.makeInClause(HierarchyTable.instance().getAgg(groupIds.elementAt(i))) + " " +
+                      ") ";
+            }
          }
          
          sql += "limit " + idx + ", " + SSM.instance().globalFetchSize;
@@ -565,12 +572,19 @@ public class CacheManager {
          }
          
          // Work around to get dimensionalized view
-         for (int i=0; i < groupIds.size(); i++) {
-            sql += "AND EXISTS ( " + 
+         if (groupIds.size() == 0) {
+             sql += "AND EXISTS ( " + 
                       "SELECT 1 FROM projectv3.cmp_x_grp_clean b " + 
                       "WHERE a.cmplid = b.cmplid " +
-                      "AND b.groupId = " + groupIds.elementAt(i) + 
                    ") ";
+         } else {
+            for (int i=0; i < groupIds.size(); i++) {
+               sql += "AND EXISTS ( " + 
+                         "SELECT 1 FROM projectv3.cmp_x_grp_clean b " + 
+                         "WHERE a.cmplid = b.cmplid " +
+                         "AND b.groupId = " + groupIds.elementAt(i) + 
+                      ") ";
+            }
          }
          
          sql += "limit " + idx + ", " + SSM.instance().globalFetchSize;

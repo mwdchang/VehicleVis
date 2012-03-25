@@ -56,12 +56,12 @@ public class DCRSlider {
       for (int i=0; i < data.length; i++) {
          if (i >= lowIdx && i <= highIdx) {
             if (barColour == null) {
-               gl2.glColor4fv( SchemeManager.range_selected.toArray(), 0);
+               gl2.glColor4fv( SchemeManager.selected.toArray(), 0);
             } else {
                gl2.glColor4fv(barColour.toArray(), 0);
             }
          } else {
-               gl2.glColor4fv( SchemeManager.range_normal.toArray(), 0);
+               gl2.glColor4fv( SchemeManager.unselected.toArray(), 0);
          }
          renderQuad(gl2, data[i], null, 1, i);   
       }
@@ -133,7 +133,7 @@ public class DCRSlider {
    public void renderMarkerLow(GL2 gl2) {
       // Low marker
       if (this.isSelected == true)
-         gl2.glColor4fv(SchemeManager.colour_blue.toArray(), 0);
+         gl2.glColor4fv(SchemeManager.selected.toArray(), 0);
       else 
          gl2.glColor4d(0.5, 0.5, 0.5, 1.0);
       
@@ -162,7 +162,7 @@ public class DCRSlider {
    public void renderMarkerHigh(GL2 gl2) {
       // High marker
       if (this.isSelected == true)
-         gl2.glColor4fv(SchemeManager.colour_blue.toArray(), 0);
+         gl2.glColor4fv(SchemeManager.selected.toArray(), 0);
       else
          gl2.glColor4d(0.5, 0.5, 0.5, 1.0);
       

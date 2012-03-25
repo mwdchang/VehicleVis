@@ -46,7 +46,7 @@ public class ModelRenderer extends BaseModelRenderer {
    public float spadding = 10.0f;
    
    
-   public float OUTLINE_DOWN_SAMPLE = 1.1f;
+   public float OUTLINE_DOWN_SAMPLE = 1.025f;
    public float GLOW_DOWN_SAMPLE    = 1.8f;
    
   
@@ -1030,7 +1030,7 @@ public class ModelRenderer extends BaseModelRenderer {
          
          if (SSM.instance().selectedGroup.size() > 0 ) {
             // If control key is not held down, clear
-            if ( ! SSM.instance().controlKey) {
+            if ( ! SSM.instance().shiftKey) {
                SSM.instance().selectedGroup.clear();   
             }
             
@@ -1281,7 +1281,33 @@ public class ModelRenderer extends BaseModelRenderer {
       
       int hits;
       IntBuffer buffer = (IntBuffer)GLBuffers.newDirectGLBuffer(GL2.GL_UNSIGNED_INT, 512);
-      this.startPickingPerspective(gl2, buffer);
+      
+      
+      // check if we are inside a lens, if we are, we want to use the lens' near and far plane 
+      // instead of the default near and far plane
+      LensAttrib la = null;
+      LensAttrib clen = null;
+      for (int i=0; i < SSM.instance().lensList.size(); i++) {
+         la = SSM.instance().lensList.elementAt(i);
+         float x = (float)SSM.instance().mouseX - la.magicLensX;
+         float y = (float)SSM.instance().mouseY - la.magicLensY;
+         float r = (float)la.magicLensRadius;
+         float d = (float)Math.sqrt(x*x + y*y);            
+         if (d < r) {
+            clen = la;
+            break;
+         }         
+      }
+      if (clen != null) {
+         GraphicUtil.startPickingPerspective(gl2, buffer, 
+               SSM.instance().mouseX, SSM.instance().mouseY, 
+               SSM.instance().windowWidth, SSM.instance().windowHeight, SSM.instance().fov, clen.nearPlane, clen.farPlane,
+               DCCamera.instance().eye.toArray3f(), new float[]{0,0,0}, DCCamera.instance().up.toArray3f());         
+      } else {
+         this.startPickingPerspective(gl2, buffer);
+      }
+      
+      
       
       Enumeration<String> e = MM.currentModel.componentTable.keys();
       while (e.hasMoreElements()) {   
@@ -1603,7 +1629,7 @@ public class ModelRenderer extends BaseModelRenderer {
          float edgeX = 1.0f*lensRadius*(float)Math.cos(doodleAngle);
          
          if (SSM.instance().selectedGroup.size() > 0  && SSM.instance().selectedGroup.contains(comp.cchart.id)){
-            gl2.glColor4fv( SchemeManager.colour_blue.toArray(), 0);
+            gl2.glColor4fv( SchemeManager.selected.toArray(), 0);
          } else if (SSM.instance().relatedList != null && SSM.instance().relatedList.contains(comp.id)) { 
             gl2.glColor4fv( SchemeManager.colour_related.toArray(), 0);
          } else {
@@ -1732,7 +1758,7 @@ public class ModelRenderer extends BaseModelRenderer {
          float edgeX = 1.0f*lensRadius*(float)Math.cos(doodleAngle);
          
          if (SSM.instance().selectedGroup.size() > 0 && SSM.instance().selectedGroup.contains(comp.cchart.id)){
-            gl2.glColor4fv( SchemeManager.colour_blue.toArray(), 0);
+            gl2.glColor4fv( SchemeManager.selected.toArray(), 0);
          } else if (SSM.instance().relatedList != null && SSM.instance().relatedList.contains(comp.id)) {   
             gl2.glColor4fv( SchemeManager.colour_related.toArray(), 0);
          } else {
@@ -1785,12 +1811,12 @@ public class ModelRenderer extends BaseModelRenderer {
          SSM.instance().location   = SSM.ELEMENT_LENS;
       } 
       
-      
       if (la.magicLensSelected == 1)  {
-         gl2.glColor4f(0.2f, 0.2f, 0.9f, 1.0f);
+         gl2.glColor4fv(SchemeManager.selected.toArray(), 0);
       } else {
-         gl2.glColor4f(0.5f, 0.5f, 0.5f, 1.0f);
+         gl2.glColor4fv(SchemeManager.unselected.toArray(), 0);
       }
+      
       
       if (la.start >= la.numToDisplay) {
          la.renderTop = true;
@@ -2044,7 +2070,7 @@ public class ModelRenderer extends BaseModelRenderer {
                gl2.glUseProgram(0);
                modelComp.renderBuffer( gl2, modelComp.colour );
                gl2.glLineWidth(1.5f);
-               modelComp.renderBufferAdj(gl2, SchemeManager.colour_blue);
+               modelComp.renderBufferAdj(gl2, SchemeManager.selected);
                
                modelComp.boundingBox.renderBoundingBox(gl2);
                gl2.glLineWidth(0.5f);
@@ -2114,25 +2140,25 @@ public class ModelRenderer extends BaseModelRenderer {
       manufactureScroll.anchorX = SSM.instance().manufactureAttrib.anchorX;
       manufactureScroll.anchorY = SSM.instance().manufactureAttrib.anchorY;
       manufactureScroll.calculate();
-      manufactureScroll.renderToTexture(SchemeManager.colour_red.convertToAWT());
+      manufactureScroll.renderToTexture(null);
       
       makeScroll = new DCScrollPane("MAKE");
       makeScroll.anchorX = SSM.instance().makeAttrib.anchorX;
       makeScroll.anchorY = SSM.instance().makeAttrib.anchorY;
       makeScroll.calculate();
-      makeScroll.renderToTexture(SchemeManager.colour_green.convertToAWT());
+      makeScroll.renderToTexture(null);
       
       modelScroll = new DCScrollPane("MODEL");
       modelScroll.anchorX = SSM.instance().modelAttrib.anchorX;
       modelScroll.anchorY = SSM.instance().modelAttrib.anchorY;
       modelScroll.calculate();
-      modelScroll.renderToTexture(SchemeManager.colour_blue.convertToAWT());
+      modelScroll.renderToTexture(null);
       
       yearScroll = new DCScrollPane("YEAR");
       yearScroll.anchorX = SSM.instance().yearAttrib.anchorX;
       yearScroll.anchorY = SSM.instance().yearAttrib.anchorY;
       yearScroll.calculate();
-      yearScroll.renderToTexture(SchemeManager.colour_blue.convertToAWT());
+      yearScroll.renderToTexture(null);
       
       
       
@@ -2142,28 +2168,28 @@ public class ModelRenderer extends BaseModelRenderer {
       c_manufactureScroll.anchorX = SSM.instance().c_manufactureAttrib.anchorX;
       c_manufactureScroll.anchorY = SSM.instance().c_manufactureAttrib.anchorY;
       c_manufactureScroll.calculate();
-      c_manufactureScroll.renderToTexture(SchemeManager.colour_red.convertToAWT());
+      c_manufactureScroll.renderToTexture(null);
       
       c_makeScroll = new DCScrollPane("MAKE");
       c_makeScroll.direction = DCScrollPane.DOWN;
       c_makeScroll.anchorX = SSM.instance().c_makeAttrib.anchorX;
       c_makeScroll.anchorY = SSM.instance().c_makeAttrib.anchorY;
       c_makeScroll.calculate();
-      c_makeScroll.renderToTexture(SchemeManager.colour_green.convertToAWT());
+      c_makeScroll.renderToTexture(null);
       
       c_modelScroll = new DCScrollPane("MODEL");
       c_modelScroll.direction = DCScrollPane.DOWN;
       c_modelScroll.anchorX = SSM.instance().c_modelAttrib.anchorX;
       c_modelScroll.anchorY = SSM.instance().c_modelAttrib.anchorY;
       c_modelScroll.calculate();
-      c_modelScroll.renderToTexture(SchemeManager.colour_blue.convertToAWT());
+      c_modelScroll.renderToTexture(null);
       
       c_yearScroll = new DCScrollPane("YEAR");
       c_yearScroll.direction = DCScrollPane.DOWN;
       c_yearScroll.anchorX = SSM.instance().c_yearAttrib.anchorX;
       c_yearScroll.anchorY = SSM.instance().c_yearAttrib.anchorY;
       c_yearScroll.calculate();
-      c_yearScroll.renderToTexture(SchemeManager.colour_blue.convertToAWT());
+      c_yearScroll.renderToTexture(null);
       
       
       
@@ -2330,7 +2356,6 @@ public class ModelRenderer extends BaseModelRenderer {
                   SSM.instance().c_yearAttrib.selected);              
          }
       }
-      
       return res;
    }
    

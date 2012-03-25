@@ -38,7 +38,7 @@ public class Heatmap extends ComponentChart {
       // Draw the selected/related components
       if (SSM.instance().selectedGroup.size() > 0 && SSM.instance().selectedGroup.contains(this.id)) {
          gl2.glLineWidth(2.0f);
-         renderBorder(gl2, SchemeManager.colour_blue, GL2.GL_LINE);
+         renderBorder(gl2, SchemeManager.selected, GL2.GL_LINE);
          gl2.glLineWidth(0.5f);
       } else if (SSM.instance().relatedList != null && SSM.instance().relatedList.contains(this.id))  {
          //gl2.glLineWidth(2.0f);
@@ -193,7 +193,7 @@ public class Heatmap extends ComponentChart {
       
       float tmpY = (float) Math.floor(data.length/12.0f);
       gl2.glPolygonMode(GL2.GL_FRONT_AND_BACK, GL2.GL_LINE);
-      gl2.glColor4fv(SchemeManager.colour_blue.toArray(), 0);
+      gl2.glColor4fv(SchemeManager.selected.toArray(), 0);
       gl2.glBegin(GL2.GL_QUADS);
          gl2.glVertex2f(anchorX + startX*blockWidth, anchorY+height - startY*blockHeight - labelBuffer);
          gl2.glVertex2f(anchorX + endX*blockWidth,   anchorY+height - startY*blockHeight - labelBuffer);

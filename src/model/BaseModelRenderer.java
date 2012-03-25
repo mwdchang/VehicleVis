@@ -855,7 +855,7 @@ public abstract class BaseModelRenderer implements RenderTask {
       DWin.instance().debug("startIndex:" + startIdx + "  endIdnex:" + endIdx);
       
       
-      if (SSM.instance().selectedGroup.size() > 0 ) {
+      if (SSM.instance().selectedGroup.size() >= 0 ) {
          dcTextPanel.t1.documentList.clear();
          dcTextPanel.t2.documentList.clear();
          dcTextPanel.t2.tagList.clear();
@@ -1543,7 +1543,7 @@ public abstract class BaseModelRenderer implements RenderTask {
         if (! SSM.instance().useGlow && SSM.instance().selectedGroup.size() > 0) {
            for (DCComponent comp : MM.currentModel.componentTable.values()) {
               if (SSM.instance().selectedGroup.contains(comp.id)) {
-                 comp.boundingBox.renderBoundingBox(gl, SchemeManager.colour_blue);
+                 comp.boundingBox.renderBoundingBox(gl, SchemeManager.selected);
               }
            }
         }

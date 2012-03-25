@@ -19,6 +19,7 @@ import util.GraphicUtil;
 import util.ShaderObj;
 
 import datastore.SSM;
+import datastore.SchemeManager;
 
 /////////////////////////////////////////////////////////////////////////////////
 // This class contains the control for a single "len" (texture)
@@ -205,7 +206,13 @@ public class MagicLens {
          //shaderObj.setUniform1i(gl2, "areaHeight", SSM.instance().windowHeight);
          //shaderObj.setUniform1i(gl2, "areaWidth", SSM.instance().windowWidth);
          shaderObj.setUniformf(gl2, "magicLensRadius", la.magicLensRadius);
-         shaderObj.setUniform1i(gl2, "magicLensSelected", la.magicLensSelected);
+         //shaderObj.setUniform1i(gl2, "magicLensSelected", la.magicLensSelected);
+         
+         if (la.magicLensSelected == 1) {
+            shaderObj.setUniformf(gl2, "lensColour", SchemeManager.selected.toArray());   
+         } else {
+            shaderObj.setUniformf(gl2, "lensColour", SchemeManager.unselected.toArray());   
+         }
          
          
          //gl2.glUniform1i(sareaHeight, SSM.instance().windowHeight);

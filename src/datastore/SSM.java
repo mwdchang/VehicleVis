@@ -437,6 +437,7 @@ public class SSM {
    
    
    public boolean controlKey = false;
+   public boolean shiftKey = false;
    
    
    // Figure out which parts are selected based on a precedence order of :

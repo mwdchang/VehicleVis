@@ -47,7 +47,7 @@ public class TextPane {
       float xcursor = 0;
       
       // Just exit if nothing is selected
-      if (SSM.instance().selectedGroup.size() <= 0) return;
+      //if (SSM.instance().selectedGroup.size() <= 0) return;
       
       
       Vector<Integer> keyList = new Vector<Integer>();
@@ -114,7 +114,7 @@ public class TextPane {
                   //if (tlist.elementAt(x).groupId == SSM.instance().selectedGroup) {
                   if (keyList.contains(tlist.elementAt(x).groupId)) {
                      //t.c = SchemeManager.textPane_selected;
-                     t.c = SchemeManager.colour_blue;
+                     t.c = SchemeManager.selected;
                   } else {
                      t.c = SchemeManager.colour_related;
                   }

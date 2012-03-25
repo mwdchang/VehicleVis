@@ -123,7 +123,7 @@ public class LegendTask implements RenderTask {
       if (SSM.instance().selectedGroup.size() > 0 ) {
          float val = (float)CacheManager.instance().groupOccurrence.get(SSM.instance().selectedGroup)/(float)SSM.instance().maxOccurrence;
          gl2.glBegin(GL2.GL_QUADS);
-            gl2.glColor4fv(SchemeManager.colour_blue.toArray(), 0);
+            gl2.glColor4fv(SchemeManager.selected.toArray(), 0);
             gl2.glVertex3d(startX + val*width, startY, 0); 
             gl2.glVertex3d(startX + (val+0.03)*width, startY, 0); 
             gl2.glVertex3d(startX + (val+0.03)*width, startY+height, 0); 

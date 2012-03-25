@@ -177,14 +177,16 @@ public class SchemeManager {
    
    
    // Default colour and stuff
-   public static DCColour colour_red    = new DCColour(1, 0, 0, 0.5); 
-   public static DCColour colour_green  = new DCColour(0, 1, 0, 0.5); 
-   public static DCColour colour_blue   = new DCColour(0.1, 0.1, 0.9, 0.5); 
+   //public static DCColour colour_red    = new DCColour(1, 0, 0, 0.5); 
+   //public static DCColour colour_green  = new DCColour(0, 1, 0, 0.5); 
+   //public static DCColour colour_blue   = new DCColour(0.1, 0.1, 0.9, 0.5); 
+   //public static DCColour colour_blue = DCColour.fromInt(61, 130, 246, 128);
    
    public static DCColour colour_related = new DCColour(0.1, 0.4, 0.8, 0.5);
    
-   public static DCColour range_selected = colour_blue; 
-   public static DCColour range_normal   = new DCColour(0.5, 0.5, 0.5, 0.5);
+   //public static DCColour range_selected = colour_blue; 
+   public static DCColour selected    = DCColour.fromInt( 61, 130, 246, 128);
+   public static DCColour unselected  = DCColour.fromInt(128, 128, 128, 128); 
    
    public static DCColour sparkline_guideline = new DCColour(0.4, 0.4, 0.4, 0.6);
    

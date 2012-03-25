@@ -68,6 +68,7 @@ public class DCColour {
       return new float[]{ r, g, b, a};
    }
    
+   
    public String toString() {
       return "[" + r + ", " + g + ", " + b + ", " + a + "]";    
    }
@@ -79,10 +80,10 @@ public class DCColour {
    
    // Convert to AWT
    public Color convertToAWT() {
-      //return new Color((int)(r*255.0f), (int)(g*255.0f), (int)(b*255.0f), (int)(a*255.0f));   
-      return new Color((int)(r*255.0f), (int)(g*255.0f), (int)(b*255.0f), (int)(a*255.0f));
+      //return new Color((int)(r*255.0f), (int)(g*255.0f), (int)(b*255.0f), (int)(a*255.0f));
+      return new Color((int)(r*255.0f), (int)(g*255.0f), (int)(b*255.0f), (int)(1.0*255.0f));
    }
-   
+
    // Alternate constructions 
    public static DCColour fromInt(int r, int g, int b, int a) {
       return new DCColour( (float)r/255.0f, (float)g/255.0f, (float)b/255.0f, (float)a/255.0f);   

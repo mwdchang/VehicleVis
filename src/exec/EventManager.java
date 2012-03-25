@@ -327,7 +327,7 @@ System.out.println("............................................................
       
       // Special meta
       if (e.isShiftDown()) {
-         shiftKeyPressed = true;
+         SSM.instance().shiftKey = true;
          return; 
       }
       if (e.isControlDown()) {
@@ -513,7 +513,7 @@ System.out.println("............................................................
    public void keyReleased(KeyEvent e) {
       
       if ( ! e.isShiftDown()) {
-         shiftKeyPressed = false;   
+         SSM.instance().shiftKey = false;   
       }
       if ( ! e.isControlDown()) {
          SSM.instance().controlKey = false;   
@@ -631,7 +631,7 @@ System.out.println("............................................................
          Matrix m_basis      = new Matrix(basis);
          Matrix m_basisT     = m_basis.inverse();
          
-         if ( this.shiftKeyPressed && (SSM.instance().oldMouseX > SSM.instance().mouseX ||
+         if ( SSM.instance().shiftKey && (SSM.instance().oldMouseX > SSM.instance().mouseX ||
               SSM.instance().oldMouseX < SSM.instance().mouseX)) {
             float val = (float)(SSM.instance().mouseX - SSM.instance().oldMouseX);
             SSM.instance().rotateY += val;
@@ -908,7 +908,7 @@ System.out.println("............................................................
    }   
    
    
-   public boolean shiftKeyPressed = false;
+   //public boolean shiftKeyPressed = false;
    public float lastPressX;
    public float lastPressY;
 

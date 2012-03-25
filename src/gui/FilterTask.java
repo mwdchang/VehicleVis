@@ -36,6 +36,11 @@ public class FilterTask implements RenderTask {
    ////////////////////////////////////////////////////////////////////////////////
    @Override
    public void render(GL2 gl2) {
+      
+      // test resetting so colour picking will pick up the changes     
+      yearSlider.barColour = SchemeManager.selected;
+      monthSlider.barColour = SchemeManager.selected;
+      
       gl2.glMatrixMode(GL2.GL_PROJECTION);
       gl2.glLoadIdentity();
       gl2.glOrtho(0, SSM.instance().windowWidth, 0, SSM.instance().windowHeight, -10, 10);
@@ -116,8 +121,8 @@ public class FilterTask implements RenderTask {
       
       //yearSlider.barColour = new DCColour(0.9f, 0.3f, 0.3f, 0.6f);
       //monthSlider.barColour = new DCColour(0.9f, 0.3f, 0.3f, 0.6f);
-      yearSlider.barColour = SchemeManager.range_selected;
-      monthSlider.barColour = SchemeManager.range_selected;
+      yearSlider.barColour = SchemeManager.selected;
+      monthSlider.barColour = SchemeManager.selected;
       
       // Set the bottom-left of the year range slider
       yearSlider.anchorX = 80;

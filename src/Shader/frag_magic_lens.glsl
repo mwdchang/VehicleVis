@@ -20,6 +20,7 @@ uniform int areaWidth;
 uniform float magicLensRadius;
 uniform int magicLensSelected;
 uniform int useTexture;
+uniform vec4 lensColour;
 
 
 in vec4 pass_colour;
@@ -80,10 +81,13 @@ void main() {
       //outColour = vec4(1,0,0,1);
       outColour = vec4(0,0,0,0);
    } else if ( hypo > magicLensRadius-5 && hypo <= magicLensRadius) {
+      outColour.rgba = lensColour;
+      /*
       if (magicLensSelected == 1)
 	      outColour = vec4(0.2,0.2,0.9,0.5);
 	  else    
 	      outColour = vec4(0.5,0.5,0.5,0.5);
+	  */     
    }
 
    //outColour = pass_colour;

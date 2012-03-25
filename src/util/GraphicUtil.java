@@ -547,8 +547,15 @@ public class GraphicUtil {
    //    eye, look, up - unit vectors for gluLookAt
    ////////////////////////////////////////////////////////////////////////////////
    public static void startPickingPerspective(GL2 gl2, IntBuffer buffer, 
+         int mouseX, int mouseY, 
+         int screenWidth, int screenHeight, float fov,
+         float[] eye, float[] look, float[] up) {
+      startPickingPerspective(gl2, buffer, mouseX, mouseY, screenWidth, screenHeight, fov, 1.0f, 1000.0f, eye, look, up); 
+   }
+   
+   public static void startPickingPerspective(GL2 gl2, IntBuffer buffer, 
                                               int mouseX, int mouseY, 
-                                              int screenWidth, int screenHeight, float fov,
+                                              int screenWidth, int screenHeight, float fov, float near, float far,
                                               float[] eye, float[] look, float[] up) {
       
       float aspect = (float)screenWidth/ (float)screenHeight;
@@ -570,7 +577,7 @@ public class GraphicUtil {
       mouseY = viewport.get(3) - mouseY;
       glu.gluPickMatrix((float)mouseX, (float)mouseY, 1.0f, 1.0f, viewport);
       
-      glu.gluPerspective(fov, aspect, 1.0f, 1000.0f);
+      glu.gluPerspective(fov, aspect, near, far);
       gl2.glMatrixMode(GL2.GL_MODELVIEW);
       gl2.glLoadIdentity();
       glu.gluLookAt(

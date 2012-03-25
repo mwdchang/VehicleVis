@@ -180,7 +180,7 @@ public class SegmentSparkLine extends ComponentChart {
          float val2 = segData[i+1] / (maxValue - minValue); 
          
          if (highlight[ (int)Math.floor(i*d)] == 1) {
-            gl2.glColor4fv(SchemeManager.colour_blue.toArray(), 0);
+            gl2.glColor4fv(SchemeManager.selected.toArray(), 0);
          } else {
             //gl2.glColor4fv(SchemeManager.sparkline_normal.toArray(), 0);
          	gl2.glColor4fv(colour.toArray(), 0);
@@ -213,14 +213,14 @@ public class SegmentSparkLine extends ComponentChart {
       for (int i=0; i < segData.length; i++) {
          if (SSM.instance().selectedGroup.size() > 0 && SSM.instance().selectedGroup.contains(this.id)) {
             if (highlight[ (int)Math.floor(i*d)] == 1) {
-               gl2.glColor4fv(SchemeManager.colour_blue.toArray(), 0);
+               gl2.glColor4fv(SchemeManager.selected.toArray(), 0);
             } else {
                //gl2.glColor4fv(SchemeManager.sparkline_normal.toArray(), 0);
             	gl2.glColor4fv(colour.toArray(), 0);
             }
          } else {
             if (highlight[ (int)Math.floor(i*d)] == 1) {
-               gl2.glColor4fv(SchemeManager.range_selected.toArray(), 0);
+               gl2.glColor4fv(SchemeManager.selected.toArray(), 0);
             } else {
                //gl2.glColor4fv(SchemeManager.sparkline_normal.toArray(), 0);
             	gl2.glColor4fv(colour.toArray(), 0);
@@ -236,7 +236,7 @@ public class SegmentSparkLine extends ComponentChart {
       //renderBorder(gl2);
       if (SSM.instance().selectedGroup.size() > 0 && SSM.instance().selectedGroup.contains(this.id)) {
          gl2.glLineWidth(1.5f);
-         renderBorder(gl2, SchemeManager.colour_blue, GL2.GL_LINE);
+         renderBorder(gl2, SchemeManager.selected, GL2.GL_LINE);
          gl2.glLineWidth(0.5f);
       } else if (SSM.instance().relatedList != null && SSM.instance().relatedList.contains(this.id))  {
          gl2.glLineWidth(1.5f);
@@ -277,9 +277,9 @@ public class SegmentSparkLine extends ComponentChart {
       for (int i=0; i < data.length; i++) {
          float h = data[i]/maxValue*height;
          if (highlight != null && highlight[i] == 1) {
-            gl2.glColor4fv(SchemeManager.range_selected.toArray(), 0);
+            gl2.glColor4fv(SchemeManager.selected.toArray(), 0);
          } else {
-            gl2.glColor4fv(SchemeManager.range_normal.toArray(), 0);
+            gl2.glColor4fv(SchemeManager.unselected.toArray(), 0);
          }
          gl2.glVertex2f( i*interval, h);
          //gl2.glVertex2f( i*interval, 0);
