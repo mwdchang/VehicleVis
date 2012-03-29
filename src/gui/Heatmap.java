@@ -41,9 +41,9 @@ public class Heatmap extends ComponentChart {
          renderBorder(gl2, SchemeManager.selected, GL2.GL_LINE);
          gl2.glLineWidth(0.5f);
       } else if (SSM.instance().relatedList != null && SSM.instance().relatedList.contains(this.id))  {
-         //gl2.glLineWidth(2.0f);
-         //renderBorder(gl2, SchemeManager.colour_related, GL2.GL_LINE);
-         //gl2.glLineWidth(0.5f);
+         gl2.glLineWidth(2.0f);
+         renderBorder(gl2, SchemeManager.related, GL2.GL_LINE);
+         gl2.glLineWidth(0.5f);
       }        
    }
    
@@ -55,8 +55,10 @@ public class Heatmap extends ComponentChart {
       // Draw a shaded grey as the back drop
       gl2.glPolygonMode(GL2.GL_FRONT_AND_BACK, GL2.GL_FILL);
       if (active) {
-         gl2.glDisable(GL2.GL_BLEND);
-         renderBorder(gl2, DCColour.fromDouble(0.9, 0.9, 0.9, 0.2), GL2.GL_FILL);
+         //gl2.glDisable(GL2.GL_BLEND);
+         gl2.glEnable(GL2.GL_BLEND);
+         gl2.glBlendFunc(GL2.GL_SRC_ALPHA, GL2.GL_ONE_MINUS_SRC_ALPHA);
+         renderBorder(gl2, DCColour.fromDouble(0.9, 0.9, 0.9, 0.5), GL2.GL_FILL);
          //renderBorder(gl2, DCColour.fromDouble(0.0, 0.8, 0.0, 0.2), GL2.GL_FILL);
       } else {
          gl2.glEnable(GL2.GL_BLEND);
@@ -78,6 +80,16 @@ public class Heatmap extends ComponentChart {
       blockWidth  = width / (1+eMonth-sMonth);
       blockHeight = (height-labelBuffer) / (1+eYear-sYear);
       
+      // Hack for max and min
+      maxValue = Float.MIN_VALUE;
+      minValue = Float.MAX_VALUE;
+      for (int i=start; i < end; i++) {
+         for (int j=sMonth; j <= eMonth; j++) {
+            if ( data[12*i+j] > maxValue) maxValue = data[12*i+j];
+            if ( c_data[12*i+j] > c_maxValue) c_maxValue = c_data[12*i+j];
+         }
+      }
+      
       for (int i=start; i < end; i++) {
          float tmpX = 0;
          float tmpY = i-start;
@@ -85,8 +97,29 @@ public class Heatmap extends ComponentChart {
             float v = data[12*i + j];      
             float c_v = c_data[12*i + j];
             
-            float max = CacheManager.instance().monthMaximum.elementAt(12*i+j);
-            float c_max = CacheManager.instance().c_monthMaximum.elementAt(12*i + j);
+            float max = 0;
+            float c_max = 0;
+            
+            switch(SSM.instance().chartMode) {
+               case SSM.CHART_MODE_BY_MONTH_MAX: {
+                  // month_score % max_month
+                  max = CacheManager.instance().monthMaximum.elementAt(12*i+j);
+                  c_max = CacheManager.instance().c_monthMaximum.elementAt(12*i + j);
+                  break;
+               }
+               case SSM.CHART_MODE_BY_COMPONENT_MAX: {
+                  // month_score % max_component
+                  max = this.maxValue;
+                  c_max = this.c_maxValue;
+                  break;
+               }
+               case SSM.CHART_MODE_BY_GLOBAL_MAX: {
+                  max = SSM.instance().segmentMax;
+                  c_max = 0; // segMax includes comparative sums
+                  break;
+               }
+            }
+            
             
             // Tool Tip !
             if ( DCUtil.between(SSM.instance().mouseX, anchorX+tmpX*blockWidth, anchorX+(1+tmpX)*blockWidth)) {
@@ -117,16 +150,14 @@ public class Heatmap extends ComponentChart {
             gl2.glBegin(GL2.GL_QUADS);
                if (SSM.instance().useComparisonMode == true) {
                   if (v > c_v) {
-                     //gl2.glColor4fv(DCColour.fromInt(0, 0, 200, 110).toArray(), 0);                     
                      gl2.glColor4fv(SchemeManager.comp_1.toArray(), 0);
                   } else if (v < c_v) {
-                     //gl2.glColor4fv(DCColour.fromInt(200, 0, 200, 110).toArray(), 0);                     
                      gl2.glColor4fv(SchemeManager.comp_2.toArray(), 0);
                   } else {
-                     gl2.glColor4fv(SchemeManager.silhouette_default.toArray(), 0);
+                     gl2.glColor4fv(SchemeManager.silhouette_default.adjustAlpha(0.5f).toArray(), 0);
                   }
                } else {
-                  gl2.glColor4fv(SchemeManager.silhouette_default.toArray(), 0);
+                  gl2.glColor4fv(SchemeManager.silhouette_default.adjustAlpha(0.5f).toArray(), 0);
                }
                gl2.glVertex2i((int)(anchorX + tmpX*blockWidth),     (int)(anchorY+height-tmpY*blockHeight-labelBuffer));
                gl2.glVertex2i((int)(anchorX + (1+tmpX)*blockWidth), (int)(anchorY+height-tmpY*blockHeight-labelBuffer));

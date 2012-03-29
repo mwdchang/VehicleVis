@@ -192,8 +192,8 @@ public class CacheManager {
    /////////////////////////////////////////////////////////////////////////////////  
    protected CacheManager() {
       if (DEBUG == true) {
-         this.timeLineStartYear = 1996;         
-         this.timeLineEndYear   = 2000;         
+         this.timeLineStartYear = 2005;         
+         this.timeLineEndYear   = 2010;         
       }
    }
    
@@ -495,7 +495,7 @@ public class CacheManager {
          ResultSet rs = dbh.execute( sql, true );
          while (rs.next()) {
             int id  = rs.getInt(1);
-            String date = rs.getString(2);
+            Date date = rs.getDate(2);
             String mfr = rs.getString(3);
             String make = rs.getString(4);
             String model = rs.getString(5);
@@ -592,7 +592,7 @@ public class CacheManager {
          ResultSet rs = dbh.execute( sql, true );
          while (rs.next()) {
             int id  = rs.getInt(1);
-            String date = rs.getString(2);
+            Date date = rs.getDate(2);
             String mfr = rs.getString(3);
             String make = rs.getString(4);
             String model = rs.getString(5);

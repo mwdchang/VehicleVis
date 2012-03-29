@@ -25,6 +25,7 @@ import com.jogamp.opengl.util.texture.Texture;
 import com.jogamp.opengl.util.texture.TextureCoords;
 
 import datastore.SSM;
+import datastore.SchemeManager;
 
 
 
@@ -152,9 +153,9 @@ public class DCScrollPane {
          
          if (i % 2 == 0) 
             //g2d.setColor(Color.GRAY);
-            g2d.setColor(DCColour.fromInt(200, 200, 200, 200).convertToAWT());
+            g2d.setColor(DCColour.fromInt(200, 200, 200, 200).awtRGBA());
          else 
-            g2d.setColor(DCColour.fromInt(230, 230, 230, 200).convertToAWT());
+            g2d.setColor(DCColour.fromInt(230, 230, 230, 200).awtRGBA());
             //g2d.setColor(Color.LIGHT_GRAY);
          g2d.fillRect((int)0, (int)t.yPrime, (int)width, (int)spacing);
          
@@ -167,7 +168,8 @@ public class DCScrollPane {
             g2d.setFont(fontArial);
          
          if (i > 0) {
-            g2d.setColor( DCColour.fromInt(10, 10, 180, 120).convertToAWT());
+            //g2d.setColor( DCColour.fromInt(10, 10, 180, 120).awtRGBA());
+            g2d.setColor( SchemeManager.selected.awtRGBA());
             g2d.fillRect((int)1, (int)t.y-12, (int)(0.95*this.width*((float)t.num/(float)this.maxValue)), 8);
          }
          
@@ -260,7 +262,11 @@ public class DCScrollPane {
       
       if (current >= 0 && tagList.size() > 0)  {
          //FontRenderer.instance().renderOnce(gl2, anchorX+10, anchorY-15, 0, tagList.elementAt(current).s);
-         FontRenderer.instance().renderOnce(gl2, anchorX+10, anchorY-15, 0, label+":"+currentStr);
+         if (currentStr.length() > 20) {
+            FontRenderer.instance().renderOnce(gl2, anchorX+10, anchorY-15, 0, label+":"+currentStr.substring(0, 20));
+         } else {
+            FontRenderer.instance().renderOnce(gl2, anchorX+10, anchorY-15, 0, label+":"+currentStr);
+         }
       }
       
       // Draw a border

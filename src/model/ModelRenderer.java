@@ -47,7 +47,7 @@ public class ModelRenderer extends BaseModelRenderer {
    
    
    public float OUTLINE_DOWN_SAMPLE = 1.025f;
-   public float GLOW_DOWN_SAMPLE    = 1.8f;
+   public float GLOW_DOWN_SAMPLE    = 1.5f;
    
   
    ////////////////////////////////////////////////////////////////////////////////
@@ -66,10 +66,10 @@ public class ModelRenderer extends BaseModelRenderer {
    ////////////////////////////////////////////////////////////////////////////////
    public void checkComparisonMode() {
       if (SSM.instance().useComparisonMode == false) {
-         SSM.instance().manufactureAttrib.anchorY = 150;
-         SSM.instance().makeAttrib.anchorY = 150;
-         SSM.instance().modelAttrib.anchorY = 150;
-         SSM.instance().yearAttrib.anchorY = 150;
+         SSM.instance().manufactureAttrib.anchorY = 50;
+         SSM.instance().makeAttrib.anchorY = 50;
+         SSM.instance().modelAttrib.anchorY = 50;
+         SSM.instance().yearAttrib.anchorY = 50;
          SSM.instance().c_manufactureAttrib.anchorY = -150;
          SSM.instance().c_makeAttrib.anchorY = -150;
          SSM.instance().c_modelAttrib.anchorY = -150;
@@ -84,14 +84,14 @@ public class ModelRenderer extends BaseModelRenderer {
          c_modelScroll.anchorY = SSM.instance().c_modelAttrib.anchorY;
          c_yearScroll.anchorY = SSM.instance().c_yearAttrib.anchorY;
       } else {
-         SSM.instance().manufactureAttrib.anchorY = 250;
-         SSM.instance().makeAttrib.anchorY = 250;
-         SSM.instance().modelAttrib.anchorY = 250;
-         SSM.instance().yearAttrib.anchorY = 250;
-         SSM.instance().c_manufactureAttrib.anchorY = 220;
-         SSM.instance().c_makeAttrib.anchorY = 220;
-         SSM.instance().c_modelAttrib.anchorY = 220;
-         SSM.instance().c_yearAttrib.anchorY = 220;
+         SSM.instance().manufactureAttrib.anchorY = 80;
+         SSM.instance().makeAttrib.anchorY = 80;
+         SSM.instance().modelAttrib.anchorY = 80;
+         SSM.instance().yearAttrib.anchorY = 80;
+         SSM.instance().c_manufactureAttrib.anchorY = 50;
+         SSM.instance().c_makeAttrib.anchorY = 50;
+         SSM.instance().c_modelAttrib.anchorY = 50;
+         SSM.instance().c_yearAttrib.anchorY = 50;
          
          manufactureScroll.anchorY = SSM.instance().manufactureAttrib.anchorY;
          makeScroll.anchorY = SSM.instance().makeAttrib.anchorY;
@@ -1187,7 +1187,8 @@ public class ModelRenderer extends BaseModelRenderer {
             tmp.put(comp.baseName, comp.baseName);
             
             if (laCnt >= la.start && laCnt < la.start+la.numToDisplay) {
-               this.alternateSideLayout(comp, la, rightList, leftList, i);
+               //this.alternateSideLayout(comp, la, rightList, leftList, i);
+               this.singleSideLayout(comp, la, rightList, leftList, new float[]{rpadding, lpadding});
             }
             laCnt ++;
             
@@ -1503,7 +1504,8 @@ public class ModelRenderer extends BaseModelRenderer {
             tmp.put(comp.baseName, comp.baseName);
             
             if (laCnt >= la.start && laCnt < (la.start+la.numToDisplay)) {
-               this.alternateSideLayout(comp, la, rightList, leftList, i);
+               //this.alternateSideLayout(comp, la, rightList, leftList, i);
+               this.singleSideLayout(comp, la, rightList, leftList, new float[]{rpadding, lpadding});
             }
             laCnt ++;
             
@@ -1539,7 +1541,7 @@ public class ModelRenderer extends BaseModelRenderer {
          int relatedOcc = 0;
          int relatedOccNew = 0;
          int c_relatedOccNew = 0;
-         if (SSM.instance().selectedGroup.size() > 0 ) {
+         if (SSM.instance().selectedGroup.size() >= 0 ) {
             
             if (SSM.instance().useAggregate == true) {
                Vector<Integer> selectedGroup =  new Vector<Integer>();
@@ -1596,9 +1598,11 @@ public class ModelRenderer extends BaseModelRenderer {
          }
          String txt = "";
          if (SSM.instance().useComparisonMode == true) {
-            txt = comp.baseName+"(" + (relatedOccNew+c_relatedOccNew) + "/" + relatedOcc + "/" + (c_occ+occ) + ")";
+            //txt = comp.baseName+"(" + (relatedOccNew+c_relatedOccNew) + "/" + relatedOcc + "/" + (c_occ+occ) + ")";
+            txt = comp.baseName+"(" + (relatedOccNew+c_relatedOccNew) + "/" + (c_occ+occ) + ")";
          } else {
-            txt = comp.baseName+"(" + relatedOccNew + "/" + relatedOcc + "/" + occ + ")";
+            //txt = comp.baseName+"(" + relatedOccNew + "/" + relatedOcc + "/" + occ + ")";
+            txt = comp.baseName+"(" + relatedOccNew + "/" + occ + ")";
          }
             
          double size[] = GraphicUtil.getFontDim(txt);
@@ -1631,7 +1635,7 @@ public class ModelRenderer extends BaseModelRenderer {
          if (SSM.instance().selectedGroup.size() > 0  && SSM.instance().selectedGroup.contains(comp.cchart.id)){
             gl2.glColor4fv( SchemeManager.selected.toArray(), 0);
          } else if (SSM.instance().relatedList != null && SSM.instance().relatedList.contains(comp.id)) { 
-            gl2.glColor4fv( SchemeManager.colour_related.toArray(), 0);
+            gl2.glColor4fv( SchemeManager.related.toArray(), 0);
          } else {
             gl2.glColor4fv( SchemeManager.sparkline_guideline.toArray(), 0);
          }
@@ -1673,7 +1677,7 @@ public class ModelRenderer extends BaseModelRenderer {
          int relatedOccNew = 0;
          int c_relatedOccNew = 0;
          
-         if (SSM.instance().selectedGroup.size() > 0 ) {
+         if (SSM.instance().selectedGroup.size() >= 0 ) {
             
             if (SSM.instance().useAggregate == true) {
                Vector<Integer> selectedGroup =  new Vector<Integer>();
@@ -1729,9 +1733,11 @@ public class ModelRenderer extends BaseModelRenderer {
          }
          String txt = "";
          if (SSM.instance().useComparisonMode == true) {
-            txt = comp.baseName+"(" + (relatedOccNew+c_relatedOccNew) + "/" + relatedOcc + "/" + (occ+c_occ) + ")";
+            //txt = comp.baseName+"(" + (relatedOccNew+c_relatedOccNew) + "/" + relatedOcc + "/" + (occ+c_occ) + ")";
+            txt = comp.baseName+"(" + (relatedOccNew+c_relatedOccNew) + "/" + (occ+c_occ) + ")";
          } else {
-            txt = comp.baseName+"(" + relatedOccNew + "/" + relatedOcc + "/" + occ + ")";
+            //txt = comp.baseName+"(" + relatedOccNew + "/" + relatedOcc + "/" + occ + ")";
+            txt = comp.baseName+"(" + relatedOccNew + "/" + occ + ")";
          }
             
             
@@ -1760,7 +1766,7 @@ public class ModelRenderer extends BaseModelRenderer {
          if (SSM.instance().selectedGroup.size() > 0 && SSM.instance().selectedGroup.contains(comp.cchart.id)){
             gl2.glColor4fv( SchemeManager.selected.toArray(), 0);
          } else if (SSM.instance().relatedList != null && SSM.instance().relatedList.contains(comp.id)) {   
-            gl2.glColor4fv( SchemeManager.colour_related.toArray(), 0);
+            gl2.glColor4fv( SchemeManager.related.toArray(), 0);
          } else {
             gl2.glColor4fv( SchemeManager.sparkline_guideline.toArray(), 0);
          }         
@@ -1841,7 +1847,7 @@ public class ModelRenderer extends BaseModelRenderer {
          
          if (la.start != la.l_top) {
             la.t_top.clearMark();
-            la.t_top.addMark(la.start+"", Color.WHITE, new Font("Consolas", Font.BOLD, 14), 0, 5, false);
+            la.t_top.addMark(la.start+"", Color.BLACK, new Font("Arial", Font.BOLD, 14), 0, 5, true);
             la.t_top.anchorX = lensX-8;
             la.t_top.anchorY = (SSM.instance().windowHeight-lensY)+lensRadius+5;
             la.t_top.dirty = 1;
@@ -1858,7 +1864,7 @@ public class ModelRenderer extends BaseModelRenderer {
          
          if ( (laCnt - (la.start+la.numToDisplay)) != la.l_bottom){
             la.t_bottom.clearMark();
-            la.t_bottom.addMark((laCnt-(la.start+la.numToDisplay))+"", Color.WHITE, new Font("Consolas", Font.BOLD, 14), 0, 5, false);
+            la.t_bottom.addMark((laCnt-(la.start+la.numToDisplay))+"", Color.BLACK, new Font("Arial", Font.BOLD, 14), 0, 5, true);
             la.t_bottom.anchorX = lensX-8;
             la.t_bottom.anchorY = (SSM.instance().windowHeight-lensY)-lensRadius-23;
             la.t_bottom.dirty = 1;
@@ -2092,7 +2098,7 @@ public class ModelRenderer extends BaseModelRenderer {
                   gl2.glPushMatrix();
                      //modelComp.boundingBox.renderBoundingBox(gl2, DCColour.fromInt(0, 255, 255, 128));
                      //modelComp.boundingBox.renderBoundingBox(gl2, DCColour.fromInt(0, 255, 255, 128));
-                     modelComp.renderBufferAdj(gl2, SchemeManager.colour_related.adjustAlpha(0.5f));
+                     modelComp.renderBufferAdj(gl2, SchemeManager.related.adjustAlpha(0.5f));
                   gl2.glPopMatrix();
                   break;
                }
@@ -2164,28 +2170,28 @@ public class ModelRenderer extends BaseModelRenderer {
       
       
       c_manufactureScroll = new DCScrollPane("MFR");
-      c_manufactureScroll.direction = DCScrollPane.DOWN;
+      c_manufactureScroll.direction = DCScrollPane.UP;
       c_manufactureScroll.anchorX = SSM.instance().c_manufactureAttrib.anchorX;
       c_manufactureScroll.anchorY = SSM.instance().c_manufactureAttrib.anchorY;
       c_manufactureScroll.calculate();
       c_manufactureScroll.renderToTexture(null);
       
       c_makeScroll = new DCScrollPane("MAKE");
-      c_makeScroll.direction = DCScrollPane.DOWN;
+      c_makeScroll.direction = DCScrollPane.UP;
       c_makeScroll.anchorX = SSM.instance().c_makeAttrib.anchorX;
       c_makeScroll.anchorY = SSM.instance().c_makeAttrib.anchorY;
       c_makeScroll.calculate();
       c_makeScroll.renderToTexture(null);
       
       c_modelScroll = new DCScrollPane("MODEL");
-      c_modelScroll.direction = DCScrollPane.DOWN;
+      c_modelScroll.direction = DCScrollPane.UP;
       c_modelScroll.anchorX = SSM.instance().c_modelAttrib.anchorX;
       c_modelScroll.anchorY = SSM.instance().c_modelAttrib.anchorY;
       c_modelScroll.calculate();
       c_modelScroll.renderToTexture(null);
       
       c_yearScroll = new DCScrollPane("YEAR");
-      c_yearScroll.direction = DCScrollPane.DOWN;
+      c_yearScroll.direction = DCScrollPane.UP;
       c_yearScroll.anchorX = SSM.instance().c_yearAttrib.anchorX;
       c_yearScroll.anchorY = SSM.instance().c_yearAttrib.anchorY;
       c_yearScroll.calculate();
@@ -2266,6 +2272,7 @@ public class ModelRenderer extends BaseModelRenderer {
                   
                   SSM.instance().dirty = 1;
                   SSM.instance().dirtyGL = 1;
+                  SSM.instance().refreshMagicLens = true;
                   attrib.selected = i==0? null:t.val; 
                   
                   // Clear the children

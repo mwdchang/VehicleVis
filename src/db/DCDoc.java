@@ -1,5 +1,6 @@
 package db;
 
+import java.util.Date;
 import java.util.Vector;
 
 /////////////////////////////////////////////////////////////////////////////////
@@ -11,7 +12,7 @@ public class DCDoc {
       docId = id;
       txt   = t;
    }
-   public DCDoc(int id, String d, String mfr, String make, String model, String year, String t) {
+   public DCDoc(int id, Date d, String mfr, String make, String model, String year, String t) {
       this.docId = id;
       this.mfr = mfr;
       this.make = make;
@@ -29,7 +30,7 @@ public class DCDoc {
    public String make;
    public String model;
    public String year;
-   public String datea;
+   public Date datea;
    
    
    // Cache

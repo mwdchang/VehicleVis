@@ -66,7 +66,7 @@ public class TextPane {
          xcursor = 0;
          DCDoc d = documentList.elementAt(i);       
          
-         String idstr = "[" + DCUtil.formatDateStr(d.datea) + "] " + d.mfr + " -" + d.make + " -" + d.model + " -" + d.year ;
+         String idstr = "[" + DCUtil.formatDateYYYYMMDD(d.datea) + "] " + d.mfr + " -" + d.make + " -" + d.model + " -" + d.year ;
          //String idstr = "[" + d.docId + " >" + d.mfr + " >" + d.make + " >" + d.model + " >" + d.year +  "] ";
          
          
@@ -107,6 +107,7 @@ public class TextPane {
                ycursor += tokenHeight;
             }
             Tag t = new Tag(xcursor, ycursor, tokenHeight, str);
+            t.width = tmp;
             
             // Check highlighting semantics
             for (int x=0; x < tlist.size(); x++) {
@@ -115,8 +116,13 @@ public class TextPane {
                   if (keyList.contains(tlist.elementAt(x).groupId)) {
                      //t.c = SchemeManager.textPane_selected;
                      t.c = SchemeManager.selected;
+                     t.isKey = true;
+                     //t.fn = this.fontArialBold;
                   } else {
-                     t.c = SchemeManager.colour_related;
+                     //t.c = SchemeManager.selected;
+                     t.c = SchemeManager.related;
+                     t.fn = fontArial;
+                     t.isRelated = true;
                   }
                   //t.fn = fontArialBold;
                }
@@ -166,8 +172,20 @@ public class TextPane {
          } else {
             g2d.setFont(fontArial); 
          }
-         g2d.setColor(t.c.convertToAWT());
-         g2d.drawString(t.s, t.x, t.y);
+         g2d.setColor(t.c.awtRGB());
+         
+         if (t.isKey) {
+            g2d.fillRect((int)t.x, (int)(t.y-t.yPrime+4), (int)t.width, (int)(t.yPrime-2));
+            g2d.setColor(Color.white);
+            g2d.drawString(t.s, t.x, t.y);
+         } else if (t.isRelated) {
+            g2d.drawString(t.s, t.x, t.y);
+         } else {
+            g2d.setColor(Color.black);
+            g2d.drawString(t.s, t.x, t.y);
+         }
+//            g2d.drawRect((int)t.x, (int)(t.y-t.yPrime+4), (int)t.width, (int)(t.yPrime));
+         
       }
    }
    
@@ -180,8 +198,8 @@ public class TextPane {
 
    public TextureRenderer texture; 
    public Graphics2D g2d;
-   public static Font fontArial = new Font( "Arial", Font.PLAIN, 12);   
-   public static Font fontArialBold = new Font( "Arial", Font.BOLD, 12);
+   public static Font fontArial = new Font( "Consolas", Font.PLAIN, 12);   
+   public static Font fontArialBold = new Font( "Consolas", Font.BOLD, 12);
    public FontMetrics fm;
    
    // documentList holds the original document, tag list hods the actual rendering components
@@ -214,6 +232,10 @@ public class TextPane {
       String sClean;
       DCColour c;
       Font fn = null;
+      boolean isKey=false;
+      boolean isRelated=false;
+      
+      float width;
    }
    
    

@@ -102,7 +102,7 @@ public class Ascii extends JOGLBase implements KeyListener {
             }
          });
          int index = (int)(Math.random()*(s.length-1));
-         File file = new File(dirStr + "IMG_4185.jpg");
+         File file = new File(dirStr + "eye.jpg");
          
          
          // Parse image file to texture data

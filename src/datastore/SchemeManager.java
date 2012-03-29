@@ -182,13 +182,13 @@ public class SchemeManager {
    //public static DCColour colour_blue   = new DCColour(0.1, 0.1, 0.9, 0.5); 
    //public static DCColour colour_blue = DCColour.fromInt(61, 130, 246, 128);
    
-   public static DCColour colour_related = new DCColour(0.1, 0.4, 0.8, 0.5);
+   public static DCColour related = DCColour.fromInt(255, 128, 0, 128);
    
    //public static DCColour range_selected = colour_blue; 
-   public static DCColour selected    = DCColour.fromInt( 61, 130, 246, 128);
+   public static DCColour selected    = DCColour.fromInt( 61, 80, 246, 128);
    public static DCColour unselected  = DCColour.fromInt(128, 128, 128, 128); 
    
-   public static DCColour sparkline_guideline = new DCColour(0.4, 0.4, 0.4, 0.6);
+   public static DCColour sparkline_guideline = new DCColour(0.2, 0.2, 0.2, 0.8);
    
    public static DCColour car_normal1        = new DCColour(0.3, 0.3, 0.3, 0.1);     
    public static DCColour component_selected = new DCColour(1.0f, 0.8f, 0.0f, 0.5f);  

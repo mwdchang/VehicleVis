@@ -187,6 +187,13 @@ public class SSM {
    public boolean useLocalFocus = true;       // Whether to nor to render based on current selected components 
    public boolean use3DModel = true;          // Whether to use integrated 3D view 
    public boolean useFlag = true;             // Just a temporary flag to trigger adhoc tests and stuff, not used for real data
+   //public boolean useMonthMax = true;         // Whether to calculate the heatmap using month maximum or component maximum
+   
+   
+   public int chartMode = 1;
+   public static final int CHART_MODE_BY_MONTH_MAX     = 1;
+   public static final int CHART_MODE_BY_COMPONENT_MAX = 2;
+   public static final int CHART_MODE_BY_GLOBAL_MAX    = 3;
    
    
    
@@ -453,4 +460,6 @@ public class SSM {
    public int dirtyLoad = 0;
    public int dirtyDateFilter = 0;
    
+   
+   public float segmentMax = 0;
 }

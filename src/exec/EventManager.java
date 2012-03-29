@@ -343,6 +343,19 @@ System.out.println("............................................................
          ProjectDriver.frame.setBounds(0, 0, 900, 900);
       }
       
+      // Switch on/off month_maximum or component_maximum
+      //if (e.getKeyChar() == 'h') {
+      //   SSM.instance().useMonthMax = ! SSM.instance().useMonthMax;
+      //}
+      if (e.getKeyChar() == '1') {
+         SSM.instance().chartMode = SSM.CHART_MODE_BY_MONTH_MAX;
+      }
+      if (e.getKeyChar() == '2') {
+         SSM.instance().chartMode = SSM.CHART_MODE_BY_COMPONENT_MAX;
+      }
+      if (e.getKeyChar() == '3') {
+         SSM.instance().chartMode = SSM.CHART_MODE_BY_GLOBAL_MAX;
+      }
       
       
       if (e.getKeyChar() == 'd') {
@@ -359,9 +372,9 @@ System.out.println("............................................................
          SSM.instance().useDualDepthPeeling = ! SSM.instance().useDualDepthPeeling;
       }
       
-      if (e.getKeyChar() == '1')  {
-         SSM.instance().useConstantAlpha = ! SSM.instance().useConstantAlpha;   
-      }
+      //if (e.getKeyChar() == '1')  {
+      //   SSM.instance().useConstantAlpha = ! SSM.instance().useConstantAlpha;   
+      //}
      
       if (e.getKeyChar() == 't') {
          SSM.instance().useFlag  = ! SSM.instance().useFlag;

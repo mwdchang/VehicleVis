@@ -79,9 +79,12 @@ public class DCColour {
    
    
    // Convert to AWT
-   public Color convertToAWT() {
-      //return new Color((int)(r*255.0f), (int)(g*255.0f), (int)(b*255.0f), (int)(a*255.0f));
+   public Color awtRGB() {
       return new Color((int)(r*255.0f), (int)(g*255.0f), (int)(b*255.0f), (int)(1.0*255.0f));
+   }
+   
+   public Color awtRGBA() {
+      return new Color((int)(r*255.0f), (int)(g*255.0f), (int)(b*255.0f), (int)(a*255.0f));
    }
 
    // Alternate constructions 

@@ -59,6 +59,13 @@ public class StatusWindow {
       addText("Local mode     : " + convert(SSM.instance().useLocalFocus));
       addText("Compare mode   : " + convert(SSM.instance().useComparisonMode));
       addText("Temp Flag      : " + convert(SSM.instance().useFlag));
+      
+      switch (SSM.instance().chartMode) {
+      case SSM.CHART_MODE_BY_MONTH_MAX: { addText("Chart Mode      : Month Max"); break; }
+      case SSM.CHART_MODE_BY_GLOBAL_MAX: { addText("Chart Mode      : Global Max"); break; }
+      case SSM.CHART_MODE_BY_COMPONENT_MAX: { addText("Chart Mode      : Component Max"); break; }
+      }
+      
       addText("================="); 
       addText("Num selected   : " + SSM.instance().selectedGroup.size());
       addText("Num related    : " + SSM.instance().relatedList.size());

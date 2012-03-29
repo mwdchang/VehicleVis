@@ -29,11 +29,17 @@ public abstract class ComponentChart {
    public void setAnchor(float x, float y) { anchorX = x; anchorY = y; }
    public void resize(float w, float h) { width = w; height = h; }
    public void calcMaxMin() {
+//System.err.println("Calculate max and min " + data.length);      
       maxValue = Float.MIN_VALUE;
       minValue = Float.MAX_VALUE;
       for (int i=0; i < data.length; i++) {
          if ( data[i] > maxValue) maxValue = data[i];
          if ( data[i] < minValue) minValue = data[i];
+      }
+      
+      for (int i=0; i < c_data.length; i++) {
+         if ( c_data[i] > c_maxValue) c_maxValue = c_data[i];
+         if ( c_data[i] < c_minValue) c_minValue = c_data[i];
       }
    }
    
@@ -47,9 +53,16 @@ public abstract class ComponentChart {
    public float anchorY = 0;   
    public float maxValue = 0;
    public float minValue = 0;
+   public float c_maxValue = 0;
+   public float c_minValue = 0;
+   
    public DCColour colour;   
    
    public boolean active = true;
+   
+   // hack for global max
+   public float occ = 0;
+   public float c_occ = 0;
    
    // For labels and font
    public static Color labelColour = Color.BLACK;

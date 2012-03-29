@@ -240,7 +240,7 @@ public class SegmentSparkLine extends ComponentChart {
          gl2.glLineWidth(0.5f);
       } else if (SSM.instance().relatedList != null && SSM.instance().relatedList.contains(this.id))  {
          gl2.glLineWidth(1.5f);
-         renderBorder(gl2, SchemeManager.colour_related, GL2.GL_LINE);
+         renderBorder(gl2, SchemeManager.related, GL2.GL_LINE);
          gl2.glLineWidth(0.5f);
       }
       

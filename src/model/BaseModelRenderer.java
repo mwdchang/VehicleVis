@@ -249,8 +249,18 @@ public abstract class BaseModelRenderer implements RenderTask {
       
       Collections.sort(list);
       for (int i=0; i < list.size(); i++) {
+         String txt = "";
          String s = list.elementAt(i);
-         String txt = s + " (" + table.get(s) + ")";
+         
+         // HACK
+         String s2 = "";
+         if (s.length() > 20) {
+            s2 = s.substring(0, 20);
+            txt = s2 + " (" + table.get(s) + ")";
+         } else {
+            txt = s + " (" + table.get(s) + ")";
+         }
+         
          GTag t = new GTag(10.0f, (counter+1)*DCScrollPane.spacing, counter*DCScrollPane.spacing, txt, s, table.get(s));
          if (t.val.equals(attrib.selected)) {
             prevManufacture = i;
@@ -839,6 +849,12 @@ public abstract class BaseModelRenderer implements RenderTask {
                      CacheManager.instance().getDateKey( SSM.instance().endTimeFrame );
       int size = (endIdx - startIdx) + 1;      
       
+      int origin = CacheManager.instance().timeLineStartYear;
+      int sYear  = SSM.instance().startYear;
+      int eYear  = SSM.instance().endYear; 
+      int sMonth = SSM.instance().startMonth;
+      int eMonth = SSM.instance().endMonth;      
+      
       
       int chartStartIdx = startIdx;
       int chartEndIdx   = endIdx;
@@ -939,6 +955,7 @@ public abstract class BaseModelRenderer implements RenderTask {
       
       
       String[] clist = getComponentUnsorted( null ); //passing in null (no context)         
+      SSM.instance().segmentMax = 0;
       for (int i = 0; i < clist.length; i++) {
          DCComponent comp = MM.currentModel.componentTable.get( clist[i] );   
          
@@ -1067,9 +1084,8 @@ public abstract class BaseModelRenderer implements RenderTask {
          comp.cchart.c_data = c_data;
          
          comp.cchart.setMaxValue(localMax);
-         //if (SSM.instance().selectedGroup!= null && comp.id == SSM.instance().selectedGroup) {
          if (SSM.instance().selectedGroup.size() > 0 && SSM.instance().selectedGroup.contains(comp.id)) {
-            comp.cchart.resize(SSM.instance().sparkLineWidth*1.1f, 6*range+20);
+            comp.cchart.resize(SSM.instance().sparkLineWidth, 6*range+20);
          } else {
             comp.cchart.resize(SSM.instance().sparkLineWidth, 6*range+20);
          }
@@ -1077,6 +1093,23 @@ public abstract class BaseModelRenderer implements RenderTask {
          
          // Set it to the same colour as the component
          comp.cchart.colour = comp.colour;
+         
+         
+         // Need to loop again to get the global maxima
+         int start = sYear - origin; 
+         int end   = (eYear - origin)+1;
+         for (int x=start; x < end; x++) {
+            for (int y=sMonth; y <= eMonth; y++) {
+               float tmp = 0;
+               if (SSM.instance().useComparisonMode == true) {
+                  tmp = comp.cchart.data[12*x+y] + comp.cchart.c_data[12*x+y];  
+               } else {
+                  tmp = comp.cchart.data[12*x+y];
+               }
+               if ( SSM.instance().segmentMax < tmp) SSM.instance().segmentMax = tmp; 
+            }
+         }
+         
       }
       
       
@@ -1710,7 +1743,7 @@ public abstract class BaseModelRenderer implements RenderTask {
      public float[] g_opacity = new float[]{0.5f};     
 //     public int g_numPasses = 4;
 //     public int g_numPasses = 8;
-     public int g_numPasses = 8;
+     public int g_numPasses = 4;
      public int g_numGeoPasses = 0;
      
      

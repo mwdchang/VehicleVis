@@ -147,7 +147,7 @@ public class LegendTask implements RenderTask {
       
       // Render the legend content, this will be either a 
       // continuous rendering, or render into buckets
-      gl2.glDisable(GL2.GL_BLEND);
+      //gl2.glDisable(GL2.GL_BLEND);
       if ( SSM.instance().colouringMethod == 4) {
          drawBucket(gl2);
       } else {
@@ -173,6 +173,7 @@ public class LegendTask implements RenderTask {
 //         gl2.glVertex3d(startX, startY+height, 0);
 //      gl2.glEnd();
       
+      /*
       if (DIRECTION == HORIZONTAL) {
          FontRenderer.instance().renderOnce(gl2, startX+width+2, startY-10, 0, SSM.instance().maxOccurrence+"");       
          FontRenderer.instance().renderOnce(gl2, startX-10, startY-10, 0, "0");       
@@ -180,6 +181,7 @@ public class LegendTask implements RenderTask {
          FontRenderer.instance().renderOnce(gl2, startX+width+2, startY+height, 0, SSM.instance().maxOccurrence+"");       
          FontRenderer.instance().renderOnce(gl2, startX+width+2, startY-10, 0, "0");       
       }
+      */
       
    }
 
