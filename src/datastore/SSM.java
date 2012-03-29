@@ -165,6 +165,9 @@ public class SSM {
    public int minOccurrence = Integer.MIN_VALUE;
    
    
+   public int selectedX = -1;
+   public int selectedY = -1;
+   
    
    ////////////////////////////////////////////////////////////////////////////////
    // Switches
@@ -271,7 +274,7 @@ public class SSM {
    public float docAnchorX = 400;                 // Bottom left of the document panel
    public float docAnchorY = 400;                 // Bottom left of the document panel
    public float docPadding = 25;                  // Padding area (for dragging)
-   public float docWidth = 450;                  
+   public float docWidth = 550;                  
    public float docHeight = 400;
    public float docHeader = 15;     // not currently used
    public float docFooter = 15;     // not currently used

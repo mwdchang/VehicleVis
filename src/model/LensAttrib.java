@@ -61,7 +61,7 @@ public class LensAttrib {
    
    // Number of labels to display
    public int start = 0;
-   public final int numToDisplay = 10;
+   public final int numToDisplay = 8;
    public boolean renderTop    = false;
    public boolean renderBottom = false; 
    

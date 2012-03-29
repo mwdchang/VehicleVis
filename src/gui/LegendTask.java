@@ -27,8 +27,8 @@ public class LegendTask implements RenderTask {
    // Draws a bucketed scale, with distinct colour and outline for each bucket
    ////////////////////////////////////////////////////////////////////////////////
    public void drawBucket(GL2 gl2) {
-      int buckets = 9;
-      float interval = 1.0f/9.0f;
+      int buckets = SchemeManager.Red.length;
+      float interval = 1.0f/(float)buckets;
       
       // Draws the distinct colours
       //gl2.glEnable(GL2.GL_BLEND);

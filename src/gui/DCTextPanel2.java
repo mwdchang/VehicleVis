@@ -53,8 +53,8 @@ public class DCTextPanel2 {
             (double)(anchorX+(displayW/2)), (double)(anchorY+(displayH/2)), (double)0.0,   // xyz
             (double)(displayW/2.0)+padding, (double)(displayH/2.0)+padding,                // width and height
             40.0, 7,                                                                       // corner and segments 
-            DCColour.fromDouble(0.80, 0.80, 0.80, 0.7).toArray(), 
-            DCColour.fromDouble(0.75, 0.75, 0.75, 0.7).toArray());
+            DCColour.fromDouble(0.90, 0.90, 0.90, 0.6).toArray(), 
+            DCColour.fromDouble(0.65, 0.65, 0.65, 0.6).toArray());
       /*
       gl2.glBegin(GL2.GL_QUADS);
          gl2.glVertex3d(anchorX,          anchorY, 0);

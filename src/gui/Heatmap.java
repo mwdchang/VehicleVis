@@ -141,23 +141,32 @@ public class Heatmap extends ComponentChart {
                   DCTip.setTip( SSM.instance().mouseX, 
                         (SSM.instance().windowHeight-SSM.instance().mouseY), 
                         SSM.instance().windowWidth, SSM.instance().windowHeight);   
+                  
+                  SSM.instance().selectedX = i;
+                  SSM.instance().selectedY = j;
                }
             }
             
             
             // Render an out line to separate the grids
-            gl2.glPolygonMode(GL2.GL_FRONT_AND_BACK, GL2.GL_FILL);
+            gl2.glPolygonMode(GL2.GL_FRONT_AND_BACK, GL2.GL_LINE);
             gl2.glBegin(GL2.GL_QUADS);
-               if (SSM.instance().useComparisonMode == true) {
-                  if (v > c_v) {
-                     gl2.glColor4fv(SchemeManager.comp_1.toArray(), 0);
-                  } else if (v < c_v) {
-                     gl2.glColor4fv(SchemeManager.comp_2.toArray(), 0);
+               if (i==SSM.instance().selectedX && j==SSM.instance().selectedY){
+                  gl2.glLineWidth(2.0f);
+                  gl2.glColor4fv(SchemeManager.selected.toArray(), 0);
+               } else {
+                  gl2.glLineWidth(1.0f);
+                  if (SSM.instance().useComparisonMode == true) {
+                     if (v > c_v) {
+                        gl2.glColor4fv(SchemeManager.comp_1.toArray(), 0);
+                     } else if (v < c_v) {
+                        gl2.glColor4fv(SchemeManager.comp_2.toArray(), 0);
+                     } else {
+                        gl2.glColor4fv(SchemeManager.silhouette_default.adjustAlpha(0.5f).toArray(), 0);
+                     }
                   } else {
                      gl2.glColor4fv(SchemeManager.silhouette_default.adjustAlpha(0.5f).toArray(), 0);
                   }
-               } else {
-                  gl2.glColor4fv(SchemeManager.silhouette_default.adjustAlpha(0.5f).toArray(), 0);
                }
                gl2.glVertex2i((int)(anchorX + tmpX*blockWidth),     (int)(anchorY+height-tmpY*blockHeight-labelBuffer));
                gl2.glVertex2i((int)(anchorX + (1+tmpX)*blockWidth), (int)(anchorY+height-tmpY*blockHeight-labelBuffer));

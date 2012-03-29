@@ -372,9 +372,9 @@ System.out.println("............................................................
          SSM.instance().useDualDepthPeeling = ! SSM.instance().useDualDepthPeeling;
       }
       
-      //if (e.getKeyChar() == '1')  {
-      //   SSM.instance().useConstantAlpha = ! SSM.instance().useConstantAlpha;   
-      //}
+      if (e.getKeyChar() == '9')  {
+         SSM.instance().useConstantAlpha = ! SSM.instance().useConstantAlpha;   
+      }
      
       if (e.getKeyChar() == 't') {
          SSM.instance().useFlag  = ! SSM.instance().useFlag;

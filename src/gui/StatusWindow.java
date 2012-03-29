@@ -23,7 +23,7 @@ public class StatusWindow {
    
    public static void render(GL2 gl2) {
       // Render the box
-      gl2.glColor4d(0.6, 0.6, 0.6, 0.6);
+      gl2.glColor4d(0.6, 0.6, 0.6, 0.4);
       gl2.glBegin(GL2.GL_QUADS);
          gl2.glVertex2d(tf.anchorX, tf.anchorY);
          gl2.glVertex2d(tf.anchorX+tf.width, tf.anchorY);

@@ -172,10 +172,10 @@ public class TextPane {
          } else {
             g2d.setFont(fontArial); 
          }
-         g2d.setColor(t.c.awtRGB());
+         g2d.setColor(t.c.awtRGBA());
          
          if (t.isKey) {
-            g2d.fillRect((int)t.x, (int)(t.y-t.yPrime+4), (int)t.width, (int)(t.yPrime-2));
+            g2d.fillRect((int)t.x, (int)(t.y-t.yPrime+4), (int)t.width-8, (int)(t.yPrime-2));
             g2d.setColor(Color.white);
             g2d.drawString(t.s, t.x, t.y);
          } else if (t.isRelated) {
@@ -192,14 +192,14 @@ public class TextPane {
    
    // Default
    //public float textPaneWidth = 300.0f;
-   public float textPaneWidth = 450.0f;
+   public float textPaneWidth = SSM.instance().docWidth;
    public float textPaneHeight = 900.0f;
-   public float fontHeight = 14.0f;
+   public float fontHeight = 15.0f;
 
    public TextureRenderer texture; 
    public Graphics2D g2d;
-   public static Font fontArial = new Font( "Consolas", Font.PLAIN, 12);   
-   public static Font fontArialBold = new Font( "Consolas", Font.BOLD, 12);
+   public static Font fontArial = new Font( "Consolas", Font.PLAIN, 14);   
+   public static Font fontArialBold = new Font( "Consolas", Font.BOLD, 14);
    public FontMetrics fm;
    
    // documentList holds the original document, tag list hods the actual rendering components

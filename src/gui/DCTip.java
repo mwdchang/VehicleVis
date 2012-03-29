@@ -6,6 +6,8 @@ import java.util.Hashtable;
 
 import javax.media.opengl.GL2;
 
+import datastore.SSM;
+
 import util.DCUtil;
 import util.TextureFont;
 
@@ -28,7 +30,11 @@ public class DCTip {
    
    
    public static void render(GL2 gl2) {
-      if (! visible) return; 
+      if (! visible) { 
+         SSM.instance().selectedX  = -1;
+         SSM.instance().selectedY  = -1;
+         return; 
+      }
       
       //tf.renderBorder(gl2);
       

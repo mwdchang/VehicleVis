@@ -112,13 +112,13 @@ public class SchemeManager {
       }
       intensity = (occurrence/maxOccurrence);
       //int bucket =   (int)Math.round(intensity * YellowGreenBlue.length);
-      int bucket =   (int)Math.floor(intensity * YellowGreenBlue.length);
+      int bucket =   (int)Math.floor(intensity * Red.length);
       
       
       //System.out.println( intensity + " " + bucket );
       
       // sanity check
-      bucket = bucket < 0 ? 0: bucket >= YellowGreenBlue.length ? (YellowGreenBlue.length-1) : bucket;
+      bucket = bucket < 0 ? 0: bucket >= Red.length ? (Red.length-1) : bucket;
       //return YellowOrangeRedPreset[bucket]; 
       return Red[bucket]; 
    }   
@@ -182,7 +182,7 @@ public class SchemeManager {
    //public static DCColour colour_blue   = new DCColour(0.1, 0.1, 0.9, 0.5); 
    //public static DCColour colour_blue = DCColour.fromInt(61, 130, 246, 128);
    
-   public static DCColour related = DCColour.fromInt(255, 128, 0, 128);
+   public static DCColour related = DCColour.fromInt(240, 140, 10, 200);
    
    //public static DCColour range_selected = colour_blue; 
    public static DCColour selected    = DCColour.fromInt( 61, 80, 246, 128);
@@ -256,6 +256,18 @@ public class SchemeManager {
       DCColour.fromInt(128, 0, 38, 120)       
    };   
    public static DCColour[] Red = new DCColour[] {
+      /*
+      DCColour.fromInt(103, 0, 13, 20),
+      DCColour.fromInt(103, 0, 13, 40),      
+      DCColour.fromInt(103, 0, 13, 60),      
+      DCColour.fromInt(103, 0, 13, 80),      
+      DCColour.fromInt(103, 0, 13, 100),      
+      DCColour.fromInt(103, 0, 13, 120),      
+      DCColour.fromInt(103, 0, 13, 140),      
+      DCColour.fromInt(103, 0, 13, 160),      
+      DCColour.fromInt(103, 0, 13, 180)      
+      */
+      /*
       DCColour.fromInt(255, 245, 240, 20),
       DCColour.fromInt(254, 224, 210, 40),
       DCColour.fromInt(252, 187, 161, 60),
@@ -265,7 +277,28 @@ public class SchemeManager {
       DCColour.fromInt(203, 24, 29, 140),
       DCColour.fromInt(165, 15, 21, 160),
       DCColour.fromInt(103, 0, 13, 180)      
+      */
+      
+      /*
+      DCColour.fromInt(255, 245, 240, 90),
+      DCColour.fromInt(254, 224, 210, 100),
+      DCColour.fromInt(252, 187, 161, 110),
+      DCColour.fromInt(252, 146, 114, 120),
+      DCColour.fromInt(251, 106, 74, 130),
+      DCColour.fromInt(239, 59, 44, 140),
+      DCColour.fromInt(203, 24, 29, 160),
+      DCColour.fromInt(165, 15, 21, 180),
+      DCColour.fromInt(103, 0, 13, 200)      
+      */
+      
+      DCColour.fromInt(254, 240, 217, 100),      
+      DCColour.fromInt(253, 212, 158, 110),      
+      DCColour.fromInt(253, 187, 132, 120),      
+      DCColour.fromInt(252, 141, 89, 140),      
+      DCColour.fromInt(227, 74, 51, 170),      
+      DCColour.fromInt(179, 0, 0, 200)      
    };
+   
    
    
 }

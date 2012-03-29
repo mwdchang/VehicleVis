@@ -192,7 +192,7 @@ public class CacheManager {
    /////////////////////////////////////////////////////////////////////////////////  
    protected CacheManager() {
       if (DEBUG == true) {
-         this.timeLineStartYear = 2005;         
+         this.timeLineStartYear = 2009;         
          this.timeLineEndYear   = 2010;         
       }
    }

@@ -557,7 +557,7 @@ public class ModelRenderer extends BaseModelRenderer {
          
          setOrthonormalView(gl2, 0, SSM.instance().windowWidth, 0, SSM.instance().windowHeight); {
             StatusWindow.tf.anchorX = SSM.instance().windowWidth - StatusWindow.tf.width;
-            StatusWindow.tf.anchorY = 200; //StatusWindow.tf.height;
+            StatusWindow.tf.anchorY = 10; //StatusWindow.tf.height;
             StatusWindow.render(gl2);
          }
          
@@ -1836,7 +1836,7 @@ public class ModelRenderer extends BaseModelRenderer {
          la.renderBottom = false;
       }
       
-      double arrowWidth = Math.min(50, Math.max(20, 0.5*lensRadius));
+      double arrowWidth = Math.min(30, Math.max(15, 0.5*lensRadius));
       double arrowHeight = 30;
       if (la.renderTop) {
          gl2.glBegin(GL2.GL_TRIANGLES); 
@@ -1887,7 +1887,8 @@ public class ModelRenderer extends BaseModelRenderer {
       float lensRadius = la.magicLensRadius;
       
       // Draw a down and up for scrolling
-      double arrowWidth = Math.min(50, Math.max(20, 0.5*lensRadius));
+      double arrowWidth = Math.min(30, Math.max(15, 0.5*lensRadius));
+      //double arrowWidth = Math.min(50, Math.max(20, 0.5*lensRadius));
       double arrowHeight = 30;
       if (la.renderTop) {
          gl2.glLoadName(9999);
