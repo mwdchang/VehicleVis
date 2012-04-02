@@ -66,7 +66,7 @@ public class ShaderObj {
       int id = gl2.glGetUniformLocation(programID, name );   
       if (id < 0) {
          System.err.println("Unable to find : " + name);
-         System.exit(0);
+         //System.exit(0);
       }
       return id;
    }

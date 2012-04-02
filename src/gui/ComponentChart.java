@@ -5,6 +5,9 @@ import java.awt.Font;
 
 import javax.media.opengl.GL2;
 
+import datastore.SchemeManager;
+
+import util.DCUtil;
 import util.TextureFont;
 
 import model.DCColour;
@@ -66,6 +69,8 @@ public abstract class ComponentChart {
    
    // For labels and font
    public static Color labelColour = Color.BLACK;
-   public static Font  labelFont  = new Font("Arial", Font.PLAIN, 12);
+   public static Color labelColourInactive = SchemeManager.inactive.awtRGBA();
+   //public static Font  labelFont  = new Font("Arial", Font.PLAIN, 12);
+   public static Font  labelFont  = DCUtil.loadFont("din1451m.ttf", Font.PLAIN, 16);
    public TextureFont tf = new TextureFont();     
 }

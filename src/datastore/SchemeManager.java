@@ -107,8 +107,8 @@ public class SchemeManager {
    public DCColour intensityRamp05(Integer partId, float occurrence, float maxOccurrence) {
       float intensity = 0.0f;
       float val = 0.0f;
-      if (partId == null ) {
-         return new DCColour(0.8f, 0.8f, 0.8f, 0.4f);
+      if (partId == null || occurrence == 0) {
+         return DCColour.fromInt(255, 255, 255, 255);
       }
       intensity = (occurrence/maxOccurrence);
       //int bucket =   (int)Math.round(intensity * YellowGreenBlue.length);
@@ -183,9 +183,12 @@ public class SchemeManager {
    //public static DCColour colour_blue = DCColour.fromInt(61, 130, 246, 128);
    
    public static DCColour related = DCColour.fromInt(240, 140, 10, 200);
-   
+   //ROYALBLUE2: java.awt.Color[r=61,g=130,b=246]
    //public static DCColour range_selected = colour_blue; 
-   public static DCColour selected    = DCColour.fromInt( 61, 80, 246, 128);
+   //public static DCColour selected    = DCColour.fromInt( 61, 80, 246, 128);
+   //public static DCColour selected    = DCColour.fromInt(61, 130, 246, 128); 
+   
+   public static DCColour selected    = DCColour.fromInt(1, 71, 189, 175); 
    public static DCColour unselected  = DCColour.fromInt(128, 128, 128, 128); 
    
    public static DCColour sparkline_guideline = new DCColour(0.2, 0.2, 0.2, 0.8);
@@ -193,6 +196,7 @@ public class SchemeManager {
    public static DCColour car_normal1        = new DCColour(0.3, 0.3, 0.3, 0.1);     
    public static DCColour component_selected = new DCColour(1.0f, 0.8f, 0.0f, 0.5f);  
    
+   public static DCColour inactive = DCColour.fromDouble(0.8, 0.8, 0.8, 0.8);
    
    public static DCColour silhouette_default = new DCColour(0.5f, 0.5f, 0.5f, 0.15);
    
@@ -201,8 +205,10 @@ public class SchemeManager {
    
    
    // Outline/silhouette colour for comparison mode
-   public static DCColour comp_1 = DCColour.fromInt(174, 141, 195, 200);
-   public static DCColour comp_2 = DCColour.fromInt(127, 191, 123, 200);
+   //public static DCColour comp_1 = DCColour.fromInt(174, 141, 195, 200);
+   //public static DCColour comp_2 = DCColour.fromInt(127, 191, 123, 200);
+   public static DCColour comp_1 =  new DCColour(255, 20, 195, 200);
+   public static DCColour comp_2 =  new DCColour(0, 102, 0, 200);   
    
    
    public static DCColour textPane_normal   = new DCColour(0.3, 0.3, 0.3, 1.0);
@@ -291,6 +297,27 @@ public class SchemeManager {
       DCColour.fromInt(103, 0, 13, 200)      
       */
       
+      /* Grey scale 6
+      DCColour.fromInt(180, 180, 180, 100),      
+      DCColour.fromInt(160, 160, 160, 110),      
+      DCColour.fromInt(140, 140, 140, 120),      
+      DCColour.fromInt(120, 120, 120, 140),      
+      DCColour.fromInt(100, 100, 100, 170),      
+      DCColour.fromInt(80, 80, 80, 200)      
+      */
+      
+      /*Yellow Green Blue*/
+      /*
+      DCColour.fromInt(255, 255, 204, 100),      
+      DCColour.fromInt(199, 233, 180, 110),      
+      DCColour.fromInt(127, 205, 187, 120),      
+      DCColour.fromInt(65, 182, 196, 140),      
+      DCColour.fromInt(44, 127, 184, 170),      
+      DCColour.fromInt(37, 52, 148, 200)      
+      */
+    
+      
+      /* Red orange yellow */
       DCColour.fromInt(254, 240, 217, 100),      
       DCColour.fromInt(253, 212, 158, 110),      
       DCColour.fromInt(253, 187, 132, 120),      

@@ -472,7 +472,7 @@ public class DCComponent extends DCObj {
    ////////////////////////////////////////////////////////////////////////////////
    public void renderSilhouette(GL2 gl2, DCColour c) {
       gl2.glColor4fv(c.toArray(), 0);   
-      gl2.glLineWidth(2.0f);
+      //gl2.glLineWidth(2.0f);
       gl2.glBegin(GL2.GL_LINES);
       for (int i=0; i < silhouetteList.size(); i++) {
          DCTriple p1 = silhouetteList.elementAt(i).p1;

@@ -38,6 +38,7 @@ import gui.DCScrollPane;
 import gui.DCTextPanel2;
 import gui.DCTip;
 import gui.GTag;
+import gui.Heatmap;
 import gui.StatusWindow;
 
 /////////////////////////////////////////////////////////////////////////////////
@@ -383,12 +384,15 @@ public abstract class BaseModelRenderer implements RenderTask {
       this.resetPane(manufactureHash, manufactureScroll, SSM.instance().manufactureAttrib);
       
       Hashtable<String, Integer> makeHash = this.getHierFilter(startIdx, endIdx, manufactureScroll);
+      DCUtil.removeLowerBound(makeHash, 20);
       this.resetPane(makeHash, makeScroll, SSM.instance().makeAttrib);
       
       Hashtable<String, Integer> modelHash = this.getHierFilter(startIdx, endIdx, manufactureScroll, makeScroll);
+      DCUtil.removeLowerBound(modelHash, 20);
       this.resetPane(modelHash, modelScroll, SSM.instance().modelAttrib);
       
       Hashtable<String, Integer> yearHash = this.getHierFilter(startIdx, endIdx, manufactureScroll, makeScroll, modelScroll);
+      DCUtil.removeLowerBound(yearHash, 20);
       this.resetPane(yearHash, yearScroll, SSM.instance().yearAttrib);
 
             
@@ -399,12 +403,15 @@ public abstract class BaseModelRenderer implements RenderTask {
       this.resetPane(c_manufactureHash, c_manufactureScroll, SSM.instance().c_manufactureAttrib);
       
       Hashtable<String, Integer> c_makeHash = this.getHierFilter(startIdx, endIdx, c_manufactureScroll);
+      DCUtil.removeLowerBound(c_makeHash, 20);
       this.resetPane(c_makeHash, c_makeScroll, SSM.instance().c_makeAttrib);
       
       Hashtable<String, Integer> c_modelHash = this.getHierFilter(startIdx, endIdx, c_manufactureScroll, c_makeScroll);
+      DCUtil.removeLowerBound(c_modelHash, 20);
       this.resetPane(c_modelHash, c_modelScroll, SSM.instance().c_modelAttrib);
       
       Hashtable<String, Integer> c_yearHash = this.getHierFilter(startIdx, endIdx, c_manufactureScroll, c_makeScroll, c_modelScroll);
+      DCUtil.removeLowerBound(c_yearHash, 20);
       this.resetPane(c_yearHash, c_yearScroll, SSM.instance().c_yearAttrib);
       
      
@@ -953,6 +960,8 @@ public abstract class BaseModelRenderer implements RenderTask {
       
       float range = (CacheManager.timeLineEndYear - CacheManager.timeLineStartYear)+1;
       
+      range = (SSM.instance().endYear - SSM.instance().startYear)+1; 
+      
       
       String[] clist = getComponentUnsorted( null ); //passing in null (no context)         
       SSM.instance().segmentMax = 0;
@@ -1085,9 +1094,9 @@ public abstract class BaseModelRenderer implements RenderTask {
          
          comp.cchart.setMaxValue(localMax);
          if (SSM.instance().selectedGroup.size() > 0 && SSM.instance().selectedGroup.contains(comp.id)) {
-            comp.cchart.resize(SSM.instance().sparkLineWidth, 10*range+20);
+            comp.cchart.resize(SSM.instance().sparkLineWidth, 8*range+Heatmap.labelBuffer);
          } else {
-            comp.cchart.resize(SSM.instance().sparkLineWidth, 10*range+20);
+            comp.cchart.resize(SSM.instance().sparkLineWidth, 8*range+Heatmap.labelBuffer);
          }
          comp.cchart.createSegment( segSize ); // needs to go after setData and setHeight
          
@@ -1563,7 +1572,7 @@ public abstract class BaseModelRenderer implements RenderTask {
         for (DCComponent comp : MM.currentModel.componentTable.values()) {
            //comp.renderBufferAdj(gl, DCColour.fromInt(100, 100, 100, 150));
            if (!comp.hasContext || !comp.active) {
-              comp.renderBufferAdj(gl, DCColour.fromInt(200, 200, 200, 50));
+              comp.renderBufferAdj(gl, DCColour.fromInt(160, 160, 160, 50));
            } else {
               //gl.glLineWidth(5.0f);
               //comp.renderBufferAdj(gl, comp.colour);
@@ -1677,8 +1686,11 @@ public abstract class BaseModelRenderer implements RenderTask {
            
            //g_shaderDualPeel.setUniformf(gl2, "compColour", 0.85f, 0.85f, 0.85f, 0.3f);
            g_shaderDualPeel.setUniformf(gl2, "compColour", comp.colour.r, comp.colour.g, comp.colour.b, 0.7f);
-           g_shaderDualPeel.setUniform1i(gl2, "useLight", 1);
-           //g_shaderDualPeel.setUniform1i(gl2, "useLight", 0);
+           
+           if (SSM.instance().useLight) 
+              g_shaderDualPeel.setUniform1i(gl2, "useLight", 1);
+           else
+              g_shaderDualPeel.setUniform1i(gl2, "useLight", 0);
            
            // Hack Test
            if (SSM.instance().useConstantAlpha == false) {

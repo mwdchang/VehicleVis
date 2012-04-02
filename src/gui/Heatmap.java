@@ -37,14 +37,21 @@ public class Heatmap extends ComponentChart {
       
       // Draw the selected/related components
       if (SSM.instance().selectedGroup.size() > 0 && SSM.instance().selectedGroup.contains(this.id)) {
-         gl2.glLineWidth(2.0f);
+         gl2.glLineWidth(3.0f);
          renderBorder(gl2, SchemeManager.selected, GL2.GL_LINE);
          gl2.glLineWidth(0.5f);
       } else if (SSM.instance().relatedList != null && SSM.instance().relatedList.contains(this.id))  {
-         gl2.glLineWidth(2.0f);
-         renderBorder(gl2, SchemeManager.related, GL2.GL_LINE);
+         gl2.glLineWidth(1.0f);
+         //renderBorder(gl2, SchemeManager.related, GL2.GL_LINE);
+         renderBorder(gl2, SchemeManager.sparkline_guideline, GL2.GL_LINE);
          gl2.glLineWidth(0.5f);
-      }        
+      } else {
+         if (active) {
+            renderBorder(gl2, SchemeManager.sparkline_guideline, GL2.GL_LINE);
+         } else {
+            renderBorder(gl2, DCColour.fromDouble(0.8, 0.8, 0.8, 0.8), GL2.GL_LINE);
+         }
+      }
    }
    
    
@@ -53,6 +60,7 @@ public class Heatmap extends ComponentChart {
       calcMaxMin();
       
       // Draw a shaded grey as the back drop
+      /*
       gl2.glPolygonMode(GL2.GL_FRONT_AND_BACK, GL2.GL_FILL);
       if (active) {
          //gl2.glDisable(GL2.GL_BLEND);
@@ -65,7 +73,11 @@ public class Heatmap extends ComponentChart {
          gl2.glBlendFunc(GL2.GL_SRC_ALPHA, GL2.GL_ONE_MINUS_SRC_ALPHA);
          renderBorder(gl2, DCColour.fromDouble(0.4, 0.4, 0.4, 0.6), GL2.GL_FILL);
       }
+      */
       
+      gl2.glEnable(GL2.GL_BLEND);
+      gl2.glBlendFunc(GL2.GL_SRC_ALPHA, GL2.GL_ONE_MINUS_SRC_ALPHA);
+         
       int origin = CacheManager.instance().timeLineStartYear;
       int sYear  = SSM.instance().startYear;
       int eYear  = SSM.instance().endYear; 
@@ -265,10 +277,14 @@ public class Heatmap extends ComponentChart {
    public void setLabel(String label) {
       if (tf.marks.size() == 0 || ! tf.marks.elementAt(0).str.equalsIgnoreCase(label)) {
          tf.clearMark();
-         tf.addMark(label, labelColour, new Font("Consolas", Font.PLAIN, 11), 1, height-labelBuffer+5);
+         //tf.addMark(label, labelColour, new Font("Consolas", Font.PLAIN, 11), 1, height-labelBuffer+5);
+         if (active) 
+            tf.addMark(label, labelColour, smallFont, 1, height-labelBuffer+5);
+         else 
+            tf.addMark(label, labelColourInactive, smallFont, 1, height-labelBuffer+5);
       }
-      
    }   
+   
    
    public void renderBorder(GL2 gl2, DCColour c, int mode) {
       gl2.glPolygonMode(GL2.GL_FRONT_AND_BACK, mode);
@@ -294,11 +310,14 @@ public class Heatmap extends ComponentChart {
    
    //public static Font  smallFont  = new Font("Courier", Font.PLAIN, 5);
    //public static Font  smallFont  = new Font("Tahoma", Font.PLAIN, 8);
-   public static Font  smallFont  = new Font("Consolas", Font.PLAIN, 10);
+   //public static Font  smallFont  = new Font("Consolas", Font.PLAIN, 10);
+   public static Font  smallFont  = DCUtil.loadFont("din1451m.ttf", Font.PLAIN, 14);
    public float blockHeight = 3;
    public float blockWidth  = 8;
  
-   public float labelBuffer = 16.0f;
+   public static float labelBuffer = 20.0f;
+   
+   
 
 }
 

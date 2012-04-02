@@ -334,6 +334,10 @@ System.out.println("............................................................
          SSM.instance().controlKey = true;
       }
       
+      if (e.getKeyChar() == '4') {
+         SSM.instance().useLight = ! SSM.instance().useLight;   
+      }
+      
       
       // Massive hack hack to get high reslution screen
       if (e.getKeyChar() == '+') {

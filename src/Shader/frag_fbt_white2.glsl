@@ -75,7 +75,7 @@ void main(void) {
    // B is the strength of the colour
    // A is used to differentiate edges (see above)
    //////////////////////////////////////////////////////////////////////////////// 
-   if (test > 0.01) {
+   if (test > 2.0) {
       //outColour.rgb = texture2D( tex, pass_texcoord.xy).rgb;
 
       if (pointColour.r > 0) {
@@ -101,6 +101,7 @@ void main(void) {
       //outColour = texture2D( tex, pass_texcoord.xy).rgba;
    }
 
+   //outColour = texture2D( tex, pass_texcoord.xy).rgba;
 
 
 

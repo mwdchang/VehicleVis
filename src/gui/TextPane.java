@@ -120,8 +120,8 @@ public class TextPane {
                      //t.fn = this.fontArialBold;
                   } else {
                      //t.c = SchemeManager.selected;
-                     t.c = SchemeManager.related;
-                     t.fn = fontArial;
+                     //t.c = SchemeManager.related;
+                     //t.fn = fontArialBold;
                      t.isRelated = true;
                   }
                   //t.fn = fontArialBold;
@@ -175,10 +175,12 @@ public class TextPane {
          g2d.setColor(t.c.awtRGBA());
          
          if (t.isKey) {
-            g2d.fillRect((int)t.x, (int)(t.y-t.yPrime+4), (int)t.width-8, (int)(t.yPrime-2));
+            g2d.fillRect((int)t.x, (int)(t.y-t.yPrime+4), (int)t.width-4, (int)(t.yPrime-2));
             g2d.setColor(Color.white);
             g2d.drawString(t.s, t.x, t.y);
          } else if (t.isRelated) {
+            g2d.fillRect((int)t.x, (int)(t.y-t.yPrime+4), (int)t.width-4, (int)(t.yPrime-2));
+            g2d.setColor(Color.LIGHT_GRAY);
             g2d.drawString(t.s, t.x, t.y);
          } else {
             g2d.setColor(Color.black);
@@ -198,8 +200,10 @@ public class TextPane {
 
    public TextureRenderer texture; 
    public Graphics2D g2d;
-   public static Font fontArial = new Font( "Consolas", Font.PLAIN, 14);   
-   public static Font fontArialBold = new Font( "Consolas", Font.BOLD, 14);
+   //public static Font fontArial = new Font( "Consolas", Font.PLAIN, 14);   
+   //public static Font fontArialBold = new Font( "Consolas", Font.BOLD, 14);
+   public static Font fontArial = DCUtil.loadFont("din1451m.ttf", Font.PLAIN, 14f);
+   public static Font fontArialBold = DCUtil.loadFont("din1451m.ttf", Font.BOLD, 14f);
    public FontMetrics fm;
    
    // documentList holds the original document, tag list hods the actual rendering components

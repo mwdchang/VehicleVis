@@ -99,7 +99,7 @@ public class SSM {
    public float farPlane  = 1000.0f; 
    
    public boolean  renderSihoulette;
-   public boolean  useLight;
+   public boolean  useLight = false;
    public float rotateX = 0.0f;
    public float rotateY = 0.0f;
    
@@ -147,7 +147,7 @@ public class SSM {
    // GUI Environment
    ///////////////////////////////////////////////////////////////////////////////// 
    public float sparkLineHeight  = 80;
-   public float sparkLineWidth   = 170.0f;
+   public float sparkLineWidth   = 200.0f;
    public int   sparkLineSegment = 50; 
    
    
@@ -228,10 +228,10 @@ public class SSM {
    public PaneAttrib modelAttrib = new PaneAttrib(700, 150, 200, 200, 1);
    public PaneAttrib yearAttrib = new PaneAttrib(950, 150, 200, 200, 1);
    
-   public PaneAttrib c_manufactureAttrib = new PaneAttrib(200, 120, 200, 200, 0);
-   public PaneAttrib c_makeAttrib = new PaneAttrib(450, 120, 200, 200, 0);
-   public PaneAttrib c_modelAttrib = new PaneAttrib(700, 120, 200, 200, 0);
-   public PaneAttrib c_yearAttrib = new PaneAttrib(950, 120, 200, 200, 0);
+   public PaneAttrib c_manufactureAttrib = new PaneAttrib(200, 120, 200, 200, 1);
+   public PaneAttrib c_makeAttrib = new PaneAttrib(450, 120, 200, 200, 1);
+   public PaneAttrib c_modelAttrib = new PaneAttrib(700, 120, 200, 200, 1);
+   public PaneAttrib c_yearAttrib = new PaneAttrib(950, 120, 200, 200, 1);
    
    
    public int manufactureMax = 0;

@@ -16,9 +16,11 @@ import model.DCColour;
 
 import org.jdesktop.animation.timing.Animator;
 
+import util.DCUtil;
 import util.DWin;
 import util.FontRenderer;
 import util.GraphicUtil;
+import util.TextureFont;
 
 import com.jogamp.opengl.util.awt.TextureRenderer;
 import com.jogamp.opengl.util.texture.Texture;
@@ -65,8 +67,12 @@ public class DCScrollPane {
    public TextureRenderer texture; 
    public Graphics2D g2d;
    
-   public static Font fontArial = new Font( "Arial", Font.PLAIN, 12);   
-   public static Font fontArialBold = new Font( "Arial", Font.BOLD, 12);
+   //public static Font fontArial = new Font( "Arial", Font.PLAIN, 12);   
+   //public static Font fontArialBold = new Font( "Arial", Font.BOLD, 12);
+   public static Font fontArial = DCUtil.loadFont("din1451m.ttf", Font.PLAIN, 14f);
+   public static Font fontArialBold = DCUtil.loadFont("din1451m.ttf", Font.BOLD, 14f);
+   
+   public TextureFont tf = new TextureFont();   
    
    public short direction;
    
@@ -178,6 +184,15 @@ public class DCScrollPane {
          g2d.drawString(t.txt, t.x, t.y-3); //-3 is just a padding to make it like nicer (more or less centered)
          
       }
+      
+      tf.anchorX = this.anchorX+10;
+      tf.anchorY = this.anchorY-15;
+      tf.width = this.width;
+      tf.height = 20;
+      tf.clearMark();
+      tf.addMark(this.currentStr, Color.black, this.fontArialBold, 1, 1);
+      tf.renderToTexture(null);
+      
    }   
    
    
@@ -246,42 +261,26 @@ public class DCScrollPane {
       
       
       // Draw the buttons and stuff
-      /*
-      gl2.glColor4d(1.0, 1.0, 0.0, 0.6);
-      gl2.glBegin(GL2.GL_QUADS);
-         gl2.glVertex3d(anchorX, anchorY, 0);
-         gl2.glVertex3d(anchorX+width, anchorY, 0);
-         gl2.glVertex3d(anchorX+width, anchorY-20, 0);
-         gl2.glVertex3d(anchorX, anchorY-20, 0);
-      gl2.glEnd();
-      */
       GraphicUtil.drawRoundedRect(gl2, anchorX+(width/2), anchorY-10, 0, (width/2), 10, 5, 6,
             DCColour.fromDouble(0.68, 0.68, 0.68, 0.65).toArray(), 
             DCColour.fromDouble(0.77, 0.77, 0.77, 0.65).toArray());
       
       
       if (current >= 0 && tagList.size() > 0)  {
+         tf.render(gl2);
          //FontRenderer.instance().renderOnce(gl2, anchorX+10, anchorY-15, 0, tagList.elementAt(current).s);
+         /*
          if (currentStr.length() > 20) {
             FontRenderer.instance().renderOnce(gl2, anchorX+10, anchorY-15, 0, label+":"+currentStr.substring(0, 20));
          } else {
             FontRenderer.instance().renderOnce(gl2, anchorX+10, anchorY-15, 0, label+":"+currentStr);
          }
+         */
       }
       
-      // Draw a border
-//      gl2.glColor4d(0.0, 0.0, 0.0, 0.5);
-//      gl2.glBegin(GL2.GL_LINE_LOOP);
-//         gl2.glVertex3d(anchorX, anchorY, 0);
-//         gl2.glVertex3d(anchorX+width, anchorY, 0);
-//         gl2.glVertex3d(anchorX+width, anchorY+height, 0);
-//         gl2.glVertex3d(anchorX, anchorY+height, 0);
-//      gl2.glEnd();
       
    }
    
    
-   // Inner class to keep track of text items
-
 
 }

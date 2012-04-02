@@ -46,7 +46,7 @@ public class ModelRenderer extends BaseModelRenderer {
    public float spadding = 10.0f;
    
    
-   public float OUTLINE_DOWN_SAMPLE = 1.025f;
+   public float OUTLINE_DOWN_SAMPLE = 1.5f;
    public float GLOW_DOWN_SAMPLE    = 1.5f;
    
   
@@ -142,6 +142,7 @@ public class ModelRenderer extends BaseModelRenderer {
             gl2.glClearColor(0, 0, 0, 0);
             gl2.glClear(GL2.GL_COLOR_BUFFER_BIT);
             gl2.glDisable(GL2.GL_DEPTH_TEST);
+            gl2.glEnable(GL2.GL_BLEND);
             
             c = 1;
             size = 2+MM.currentModel.componentTable.size();
@@ -152,7 +153,7 @@ public class ModelRenderer extends BaseModelRenderer {
                   float v1 = CacheManager.instance().groupOccurrence.get(comp.id);
                   float v2 = CacheManager.instance().c_groupOccurrence.get(comp.id);                  
                   if (v1 > v2) {
-                     double v = 0.3 + 0.7*(v1-v2)/v1;
+                     double v = 0.4 + 0.6*(v1-v2)/v1;
                      comp.renderBuffer(gl2, DCColour.fromDouble(0.5, 0.0, v, 0.2), 2);
                      //System.out.println("1 : " + comp.cname);
                   }
@@ -173,6 +174,7 @@ public class ModelRenderer extends BaseModelRenderer {
             gl2.glClearColor(0, 0, 0, 0);
             gl2.glClear(GL2.GL_COLOR_BUFFER_BIT);
             gl2.glDisable(GL2.GL_DEPTH_TEST);
+            gl2.glEnable(GL2.GL_BLEND);
             
             c = 1;
             size = 2+MM.currentModel.componentTable.size();
@@ -183,7 +185,7 @@ public class ModelRenderer extends BaseModelRenderer {
                   float v1 = CacheManager.instance().groupOccurrence.get(comp.id);
                   float v2 = CacheManager.instance().c_groupOccurrence.get(comp.id);                  
                   if (v1 < v2) {
-                     double v = 0.3 + 0.7*(v2-v1)/v2;
+                     double v = 0.4 + 0.6*(v2-v1)/v2;
                      comp.renderBuffer(gl2, DCColour.fromDouble(0.0, 0.5, v, 0.2), 2);
                      //System.out.println("2 : " + comp.cname);
                   }
@@ -368,6 +370,7 @@ public class ModelRenderer extends BaseModelRenderer {
          if (SSM.instance().useDualDepthPeeling) {
             if (SSM.instance().refreshOITTexture) {
                this.ProcessDualPeeling(gl2, this.g_quadDisplayList);
+               // weeee
                this.RenderDualPeeling(gl2, this.g_quadDisplayList);
                //SSM.instance().refreshOITTexture = false;
             } else {
@@ -489,7 +492,8 @@ public class ModelRenderer extends BaseModelRenderer {
             for (DCComponent comp : MM.currentModel.componentTable.values()) {
                if ( SSM.instance().selectedGroup.contains(comp.id) ) {
                   //gl2.glScaled(1.2, 1.2, 1.2);
-                  comp.renderBuffer(gl2, DCColour.fromInt(20, 20, 210));
+                  //comp.renderBuffer(gl2, DCColour.fromInt(20, 20, 210));
+                  comp.renderBuffer(gl2, SchemeManager.selected);
                   //gl2.glScaled(1.0/1.2, 1.0/1.2, 1.0/1.2);
                }
                
@@ -552,7 +556,18 @@ public class ModelRenderer extends BaseModelRenderer {
       ////////////////////////////////////////////////////////////////////////////////
       if (SSM.instance().useGuide == true) {
          setPerspectiveView(gl2); {
+             
+            
             GraphicUtil.drawAxis(gl2, 0, 0, 0);
+            gl2.glDisable(GL2.GL_LIGHTING);
+            gl2.glDisable(GL2.GL_TEXTURE_2D);
+            gl2.glEnable(GL2.GL_CULL_FACE);
+            gl2.glCullFace(GL2.GL_BACK);
+            gl2.glEnable(GL2.GL_BLEND);
+            //gl2.glDisable(GL2.GL_DEPTH_TEST);
+            for (DCComponent comp : MM.currentModel.componentTable.values()) {
+               comp.renderBufferAdj(gl2, DCColour.fromInt(255, 0, 0, 50));
+            }             
          }
          
          setOrthonormalView(gl2, 0, SSM.instance().windowWidth, 0, SSM.instance().windowHeight); {
@@ -1187,8 +1202,8 @@ public class ModelRenderer extends BaseModelRenderer {
             tmp.put(comp.baseName, comp.baseName);
             
             if (laCnt >= la.start && laCnt < la.start+la.numToDisplay) {
-               //this.alternateSideLayout(comp, la, rightList, leftList, i);
-               this.singleSideLayout(comp, la, rightList, leftList, new float[]{rpadding, lpadding});
+               this.alternateSideLayout(comp, la, rightList, leftList, i);
+               //this.singleSideLayout(comp, la, rightList, leftList, new float[]{rpadding, lpadding});
             }
             laCnt ++;
             
@@ -1504,8 +1519,8 @@ public class ModelRenderer extends BaseModelRenderer {
             tmp.put(comp.baseName, comp.baseName);
             
             if (laCnt >= la.start && laCnt < (la.start+la.numToDisplay)) {
-               //this.alternateSideLayout(comp, la, rightList, leftList, i);
-               this.singleSideLayout(comp, la, rightList, leftList, new float[]{rpadding, lpadding});
+               this.alternateSideLayout(comp, la, rightList, leftList, i);
+               //this.singleSideLayout(comp, la, rightList, leftList, new float[]{rpadding, lpadding});
             }
             laCnt ++;
             
@@ -1599,10 +1614,10 @@ public class ModelRenderer extends BaseModelRenderer {
          String txt = "";
          if (SSM.instance().useComparisonMode == true) {
             //txt = comp.baseName+"(" + (relatedOccNew+c_relatedOccNew) + "/" + relatedOcc + "/" + (c_occ+occ) + ")";
-            txt = comp.baseName+"(" + (relatedOccNew+c_relatedOccNew) + "/" + (c_occ+occ) + ")";
+            txt = comp.baseName+" (" + (relatedOccNew+c_relatedOccNew) + "/" + (c_occ+occ) + ")";
          } else {
             //txt = comp.baseName+"(" + relatedOccNew + "/" + relatedOcc + "/" + occ + ")";
-            txt = comp.baseName+"(" + relatedOccNew + "/" + occ + ")";
+            txt = comp.baseName+" (" + relatedOccNew + "/" + occ + ")";
          }
             
          double size[] = GraphicUtil.getFontDim(txt);
@@ -1635,12 +1650,17 @@ public class ModelRenderer extends BaseModelRenderer {
          if (SSM.instance().selectedGroup.size() > 0  && SSM.instance().selectedGroup.contains(comp.cchart.id)){
             gl2.glColor4fv( SchemeManager.selected.toArray(), 0);
          } else if (SSM.instance().relatedList != null && SSM.instance().relatedList.contains(comp.id)) { 
-            gl2.glColor4fv( SchemeManager.related.toArray(), 0);
-         } else {
             gl2.glColor4fv( SchemeManager.sparkline_guideline.toArray(), 0);
+            //gl2.glColor4fv( SchemeManager.related.toArray(), 0);
+         } else {
+            if (comp.cchart.active) 
+               gl2.glColor4fv( SchemeManager.sparkline_guideline.toArray(), 0);
+            else
+               gl2.glColor4fv( DCColour.fromDouble(0.8, 0.8, 0.8, 0.8).toArray(), 0);
+            
          }
          
-         gl2.glLineWidth(1.0f);
+         gl2.glLineWidth(2.0f);
          gl2.glBegin(GL2.GL_LINES);
             gl2.glVertex2d( comp.projCenter.x, comp.projCenter.y);
             gl2.glVertex2d( lensX + edgeX, comp.projCenter.y);
@@ -1650,7 +1670,7 @@ public class ModelRenderer extends BaseModelRenderer {
             
             // Connect the line to the center
             gl2.glVertex2d(lensX+lensRadius + rpadding, rightHeight + 0.5*comp.cchart.height);
-            gl2.glVertex2d(lensX+lensRadius + rpadding+spadding, rightHeight + 0.5*comp.cchart.height);
+            gl2.glVertex2d(lensX+lensRadius + rpadding+spadding-1, rightHeight + 0.5*comp.cchart.height);
             
             
             // Connect the line to the top and the bottom
@@ -1734,10 +1754,10 @@ public class ModelRenderer extends BaseModelRenderer {
          String txt = "";
          if (SSM.instance().useComparisonMode == true) {
             //txt = comp.baseName+"(" + (relatedOccNew+c_relatedOccNew) + "/" + relatedOcc + "/" + (occ+c_occ) + ")";
-            txt = comp.baseName+"(" + (relatedOccNew+c_relatedOccNew) + "/" + (occ+c_occ) + ")";
+            txt = comp.baseName+" (" + (relatedOccNew+c_relatedOccNew) + "/" + (occ+c_occ) + ")";
          } else {
             //txt = comp.baseName+"(" + relatedOccNew + "/" + relatedOcc + "/" + occ + ")";
-            txt = comp.baseName+"(" + relatedOccNew + "/" + occ + ")";
+            txt = comp.baseName+" (" + relatedOccNew + "/" + occ + ")";
          }
             
             
@@ -1766,13 +1786,17 @@ public class ModelRenderer extends BaseModelRenderer {
          if (SSM.instance().selectedGroup.size() > 0 && SSM.instance().selectedGroup.contains(comp.cchart.id)){
             gl2.glColor4fv( SchemeManager.selected.toArray(), 0);
          } else if (SSM.instance().relatedList != null && SSM.instance().relatedList.contains(comp.id)) {   
-            gl2.glColor4fv( SchemeManager.related.toArray(), 0);
-         } else {
+            //gl2.glColor4fv( SchemeManager.related.toArray(), 0);
             gl2.glColor4fv( SchemeManager.sparkline_guideline.toArray(), 0);
+         } else {
+            if (comp.cchart.active)
+               gl2.glColor4fv( SchemeManager.sparkline_guideline.toArray(), 0);
+            else 
+               gl2.glColor4fv( DCColour.fromDouble(0.8, 0.8, 0.8, 0.8).toArray(), 0);
          }         
          
          
-         gl2.glLineWidth(1.0f);
+         gl2.glLineWidth(2.0f);
          gl2.glBegin(GL2.GL_LINES);
             gl2.glVertex2d( comp.projCenter.x, comp.projCenter.y);
             gl2.glVertex2d( lensX - edgeX, comp.projCenter.y);
@@ -1782,7 +1806,7 @@ public class ModelRenderer extends BaseModelRenderer {
             
             // Connect the line to the centre
             gl2.glVertex2d( lensX-lensRadius - lpadding, leftHeight + 0.5*comp.cchart.height);
-            gl2.glVertex2d( lensX-lensRadius - lpadding-spadding, leftHeight + 0.5*comp.cchart.height);
+            gl2.glVertex2d( lensX-lensRadius - lpadding-spadding+1, leftHeight + 0.5*comp.cchart.height);
             
             // Connect the line to the top and bottom
             /*
