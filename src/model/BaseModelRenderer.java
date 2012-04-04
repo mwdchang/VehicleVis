@@ -1717,13 +1717,24 @@ public abstract class BaseModelRenderer implements RenderTask {
               
               g_shaderDualPeel.setUniform1i(gl2, "useLight", 0);
               if (v1 > v2) {                   
-                 gl2.glLineWidth(8.0f);
-                 g_shaderDualPeel.setUniformf(gl2, "compColour", 1.0f, 0.0f,  0.0f, 1.0f);
+                 double v = 0.4 + 0.6*(v1-v2)/v1;
+                 gl2.glLineWidth(6.0f);
+                 g_shaderDualPeel.setUniformf(gl2, "compColour", 
+                       SchemeManager.comp_1.r,
+                       SchemeManager.comp_1.g,
+                       SchemeManager.comp_1.b,
+                       (float)v);
                  comp.renderSilhouette(gl2, DCColour.fromInt(255, 0, 0, 255));
                  gl2.glLineWidth(1.0f);
-              } else {
-                 gl2.glLineWidth(8.0f);
-                 g_shaderDualPeel.setUniformf(gl2, "compColour", 0.0f, 1.0f,  0.0f, 1.0f);
+              } else if (v1 < v2 ){
+                 double v = 0.4 + 0.6*(v2-v1)/v2;
+                 gl2.glLineWidth(6.0f);
+                 g_shaderDualPeel.setUniformf(gl2, "compColour", 
+                       SchemeManager.comp_2.r,
+                       SchemeManager.comp_2.g,
+                       SchemeManager.comp_2.b,
+                       (float)v);
+                 
                  comp.renderSilhouette(gl2, DCColour.fromInt(0, 255, 0, 255));
                  gl2.glLineWidth(1.0f);
               }

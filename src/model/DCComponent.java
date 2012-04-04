@@ -441,24 +441,55 @@ public class DCComponent extends DCObj {
      	// if the mesh is not closed, make the unclosed edge "fold back" onto itself onto the
      	for (int i=0; i < faceList.size(); i++) {
      	   DCFace f = faceList.elementAt(i); 
+     	   
+     	   
          if (f.a1 == null) {
-            silhouetteList.add(new DCEdge(f.p1, f.p2));
+            //silhouetteList.add(new DCEdge(f.p1, f.p2));
             f.a1 = f.p3;     	    
          } else {
          }
          
          if (f.a2 == null) {
-            silhouetteList.add(new DCEdge(f.p2, f.p3));
+            //silhouetteList.add(new DCEdge(f.p2, f.p3));
             f.a2 = f.p1;
          } else {
          }
          
          if (f.a3 == null) {
-            silhouetteList.add(new DCEdge(f.p3, f.p1));
+            //silhouetteList.add(new DCEdge(f.p3, f.p1));
             f.a3 = f.p2;
          } else {
          }
          
+         // Fake the edges
+   	   DCTriple v0 = f.p1;
+     	   DCTriple v1 = f.a1;
+     	   DCTriple v2 = f.p2;
+     	   DCTriple v3 = f.a2;
+     	   DCTriple v4 = f.p3;
+     	   DCTriple v5 = f.a3;
+     	   
+     	   DCTriple normal_042 = (v4.sub(v0)).cross(v2.sub(v0));
+     	   DCTriple normal_021 = (v2.sub(v0)).cross(v1.sub(v0));
+     	   DCTriple normal_243 = (v4.sub(v2)).cross(v3.sub(v2));
+     	   DCTriple normal_405 = (v0.sub(v4)).cross(v5.sub(v4));
+     	   
+     	   normal_042.normalize();
+     	   normal_021.normalize();
+     	   normal_243.normalize();
+     	   normal_405.normalize();
+     	   
+     	   if (normal_042.dot(normal_021) < 0) {
+     	      silhouetteList.add(new DCEdge(f.p1, f.p2));   
+     	   }
+     	   if (normal_042.dot(normal_243) < 0) {
+     	      silhouetteList.add(new DCEdge(f.p2, f.p3));   
+     	   }
+     	   if (normal_042.dot(normal_405) < 0) {
+     	      silhouetteList.add(new DCEdge(f.p3, f.p1));   
+     	   }
+     	   
+        
      	}
      	
      	
