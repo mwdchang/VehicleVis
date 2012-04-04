@@ -1709,6 +1709,39 @@ public abstract class BaseModelRenderer implements RenderTask {
            gl2.glBindBuffer( GL2.GL_ARRAY_BUFFER, 0);
            gl2.glBindBuffer( GL2.GL_ELEMENT_ARRAY_BUFFER, 0);
            
+           
+           // Try to send in other special effects
+           if (SSM.instance().useComparisonMode == true) {
+              float v1 = CacheManager.instance().groupOccurrence.get(comp.id);
+              float v2 = CacheManager.instance().c_groupOccurrence.get(comp.id);                  
+              
+              g_shaderDualPeel.setUniform1i(gl2, "useLight", 0);
+              if (v1 > v2) {                   
+                 gl2.glLineWidth(8.0f);
+                 g_shaderDualPeel.setUniformf(gl2, "compColour", 1.0f, 0.0f,  0.0f, 1.0f);
+                 comp.renderSilhouette(gl2, DCColour.fromInt(255, 0, 0, 255));
+                 gl2.glLineWidth(1.0f);
+              } else {
+                 gl2.glLineWidth(8.0f);
+                 g_shaderDualPeel.setUniformf(gl2, "compColour", 0.0f, 1.0f,  0.0f, 1.0f);
+                 comp.renderSilhouette(gl2, DCColour.fromInt(0, 255, 0, 255));
+                 gl2.glLineWidth(1.0f);
+              }
+           }
+           
+           
+           /* Test demo
+           gl2.glLineWidth(6.0f);
+              gl2.glColor4d(1, 0, 1, 1);
+              //comp.renderEdgeWithNoAdjacent(gl2); 
+              g_shaderDualPeel.setUniformf(gl2, "compColour", 1.0f, 0.0f,  0.0f, 1.0f);
+              comp.renderSilhouette(gl2, DCColour.fromInt(255, 0, 0, 255));
+           gl2.glLineWidth(1.0f);
+           // End of trying to send in other special effects
+            */
+           
+           
+           
            //comp.renderBufferAdj(gl2, SchemeManager.silhouette_default);
            //if (SSM.instance().selectedGroup.size() > 0 && SSM.instance().selectedGroup.contains(comp.id)){
               //g_opacity[0] = comp.colour.a;

@@ -268,7 +268,7 @@ public class DCComponent extends DCObj {
    ////////////////////////////////////////////////////////////////////////////////
    public void renderEdgeWithNoAdjacent(GL2 gl2) {
       gl2.glPushMatrix();
-      gl2.glLineWidth(1.0f);
+//      gl2.glLineWidth(1.0f);
     	gl2.glBegin(GL2.GL_LINES);
       for (int i=0; i < faceList.size(); i++) {
       	DCFace f = faceList.elementAt(i);
@@ -286,7 +286,7 @@ public class DCComponent extends DCObj {
       	//}
       }
    	gl2.glEnd();
-      gl2.glLineWidth(1.0f);
+//      gl2.glLineWidth(1.0f);
       gl2.glPopMatrix();
    }
    
@@ -444,15 +444,21 @@ public class DCComponent extends DCObj {
          if (f.a1 == null) {
             silhouetteList.add(new DCEdge(f.p1, f.p2));
             f.a1 = f.p3;     	    
+         } else {
          }
+         
          if (f.a2 == null) {
             silhouetteList.add(new DCEdge(f.p2, f.p3));
             f.a2 = f.p1;
+         } else {
          }
+         
          if (f.a3 == null) {
             silhouetteList.add(new DCEdge(f.p3, f.p1));
             f.a3 = f.p2;
+         } else {
          }
+         
      	}
      	
      	

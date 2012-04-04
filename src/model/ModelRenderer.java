@@ -387,7 +387,8 @@ public class ModelRenderer extends BaseModelRenderer {
 
      
      
-      this.renderComparison(gl2);
+      // Hack hack - remove comparison to basemodelrenderer
+      //this.renderComparison(gl2);
       
       /*
       if (SSM.instance().useComparisonMode == true) {
