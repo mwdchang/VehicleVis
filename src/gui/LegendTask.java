@@ -139,7 +139,7 @@ public class LegendTask implements RenderTask {
       GraphicUtil.setOrthonormalView(gl2, 0, SSM.instance().windowWidth, 0, SSM.instance().windowHeight, -10, 10);
       
       this.startX = 30;
-      this.startY = 30;
+      this.startY = 20;
       /*
       this.startX = SSM.instance().windowWidth - this.width - 50;
       this.startY = SSM.instance().windowHeight - this.height - 20;

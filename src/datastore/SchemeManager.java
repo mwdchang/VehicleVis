@@ -81,10 +81,6 @@ public class SchemeManager {
       }
       intensity = (occurrence/maxOccurrence);
       
-      // Boot strap engine
-      //if ( partId == 117 ) { 
-      //   System.out.println("Intensity: " + intensity + "  MaxOccurrence : " + maxOccurrence);
-      //}
       
       // Check which 'bucket' this value falls into
       // multiply by the size of the scale, then floor the result
@@ -115,11 +111,9 @@ public class SchemeManager {
       int bucket =   (int)Math.floor(intensity * Red.length);
       
       
-      //System.out.println( intensity + " " + bucket );
       
       // sanity check
       bucket = bucket < 0 ? 0: bucket >= Red.length ? (Red.length-1) : bucket;
-      //return YellowOrangeRedPreset[bucket]; 
       return Red[bucket]; 
    }   
    
@@ -146,47 +140,25 @@ public class SchemeManager {
          g = start.g + (middle.g-start.g)*(0.5f-(0.5f-intensity)); 
          b = start.b + (middle.b-start.b)*(0.5f-(0.5f-intensity)); 
          
-         /*
-         r = start.r + (middle.r-start.r)*(intensity/0.5f); 
-         g = start.g + (middle.g-start.g)*(intensity/0.5f); 
-         b = start.b + (middle.b-start.b)*(intensity/0.5f); 
-         */
       } else {
          r = middle.r + (end.r - middle.r)*intensity;
          g = middle.g + (end.g - middle.g)*intensity;
          b = middle.b + (end.b - middle.b)*intensity;
-         /*
-         r = middle.r + (end.r - middle.r)*(intensity-0.5f)/0.5f;
-         g = middle.g + (end.g - middle.g)*(intensity-0.5f)/0.5f;
-         b = middle.b + (end.b - middle.b)*(intensity-0.5f)/0.5f;
-         */
       }
       
       // Lower threshold alpha
       a = 0.1f + 0.9f*intensity;
       
-      // Unaltered alpha
-      //a = intensity;
       
-      // Constant alpha
-      //a = 0.8f;
       return  new DCColour(r, g, b, a);
    }
    
    
    
    
-   // Default colour and stuff
-   //public static DCColour colour_red    = new DCColour(1, 0, 0, 0.5); 
-   //public static DCColour colour_green  = new DCColour(0, 1, 0, 0.5); 
-   //public static DCColour colour_blue   = new DCColour(0.1, 0.1, 0.9, 0.5); 
-   //public static DCColour colour_blue = DCColour.fromInt(61, 130, 246, 128);
    
    public static DCColour related = DCColour.fromInt(240, 140, 10, 200);
    //ROYALBLUE2: java.awt.Color[r=61,g=130,b=246]
-   //public static DCColour range_selected = colour_blue; 
-   //public static DCColour selected    = DCColour.fromInt( 61, 80, 246, 128);
-   //public static DCColour selected    = DCColour.fromInt(61, 130, 246, 128); 
    
    public static DCColour selected    = DCColour.fromInt(1, 71, 189, 175); 
    public static DCColour unselected  = DCColour.fromInt(128, 128, 128, 128); 

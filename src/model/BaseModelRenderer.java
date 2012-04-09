@@ -22,6 +22,7 @@ import util.DWin;
 import util.GraphicUtil;
 import util.MatrixUtil;
 import util.ShaderObj;
+import util.TextureFont;
 import Jama.Matrix;
 import TimingFrameExt.DCColourEval;
 
@@ -40,6 +41,7 @@ import gui.DCTip;
 import gui.GTag;
 import gui.Heatmap;
 import gui.StatusWindow;
+import gui.TextPane;
 
 /////////////////////////////////////////////////////////////////////////////////
 // This class provides basic function that should be shared among all model rendering classes
@@ -53,11 +55,13 @@ public abstract class BaseModelRenderer implements RenderTask {
    public DCTextPanel2 dcTextPanel = new DCTextPanel2();
    
    // Data filter combo boxes
+   public TextureFont label;
    public DCScrollPane manufactureScroll; 
    public DCScrollPane makeScroll;
    public DCScrollPane modelScroll;
    public DCScrollPane yearScroll;
    
+   public TextureFont c_label;
    public DCScrollPane c_manufactureScroll; 
    public DCScrollPane c_makeScroll;
    public DCScrollPane c_modelScroll;
@@ -69,6 +73,8 @@ public abstract class BaseModelRenderer implements RenderTask {
    public FrameBufferTexture outlineTexture1;
    public FrameBufferTexture outlineTexture2;
    
+   
+   public static Font labelFont = DCUtil.loadFont("din1451m.ttf", Font.PLAIN, 10f);
    
    
    @Override
@@ -1118,8 +1124,51 @@ public abstract class BaseModelRenderer implements RenderTask {
                if ( SSM.instance().segmentMax < tmp) SSM.instance().segmentMax = tmp; 
             }
          }
-         
       }
+      
+      
+      
+      // Reset the scroll labels
+      label.clearMark();
+      if (SSM.instance().manufactureAttrib.selected != null) 
+         label.addMark(SSM.instance().manufactureAttrib.selected, Color.BLACK, labelFont, 1, 31);
+      else
+         label.addMark("-- ALL --", Color.BLACK, labelFont, 1, 31);
+      if (SSM.instance().makeAttrib.selected != null)
+         label.addMark(SSM.instance().makeAttrib.selected, Color.BLACK, labelFont, 1, 21);
+      else
+         label.addMark("-- ALL --", Color.BLACK, labelFont, 1, 21);
+      if (SSM.instance().modelAttrib.selected != null)
+         label.addMark(SSM.instance().modelAttrib.selected, Color.BLACK, labelFont, 1, 11);
+      else
+         label.addMark("-- ALL --", Color.BLACK, labelFont, 1, 11);
+      if (SSM.instance().yearAttrib.selected != null)
+         label.addMark(SSM.instance().yearAttrib.selected, Color.BLACK, labelFont, 1, 1);
+      else
+         label.addMark("-- ALL --", Color.BLACK, labelFont, 1, 1);
+      label.renderToTexture(null);
+      
+      c_label.clearMark();
+      if (SSM.instance().c_manufactureAttrib.selected != null)
+         c_label.addMark(SSM.instance().c_manufactureAttrib.selected, Color.BLACK, labelFont, 1, 31);
+      else
+         c_label.addMark("-- ALL --", Color.BLACK, labelFont, 1, 31);
+         
+      if (SSM.instance().c_makeAttrib.selected != null)
+         c_label.addMark(SSM.instance().c_makeAttrib.selected, Color.BLACK, labelFont, 1, 21);
+      else
+         c_label.addMark("-- ALL --", Color.BLACK, labelFont, 1, 21);
+         
+      if (SSM.instance().c_modelAttrib.selected != null)
+         c_label.addMark(SSM.instance().c_modelAttrib.selected, Color.BLACK, labelFont, 1, 11);
+      else
+         c_label.addMark("-- ALL --", Color.BLACK, labelFont, 1, 11);
+         
+      if (SSM.instance().c_yearAttrib.selected != null)
+         c_label.addMark(SSM.instance().c_yearAttrib.selected, Color.BLACK, labelFont, 1, 1);
+      else
+         c_label.addMark("-- ALL --", Color.BLACK, labelFont, 1, 1);
+      c_label.renderToTexture(null);      
       
       
       // Update status

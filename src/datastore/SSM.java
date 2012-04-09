@@ -223,15 +223,20 @@ public class SSM {
    ////////////////////////////////////////////////////////////////////////////////
    // Filter Panel management
    ////////////////////////////////////////////////////////////////////////////////
-   public PaneAttrib manufactureAttrib = new PaneAttrib(200, 150, 200, 200, 1);
-   public PaneAttrib makeAttrib = new PaneAttrib(450, 150, 200, 200, 1);
-   public PaneAttrib modelAttrib = new PaneAttrib(700, 150, 200, 200, 1);
-   public PaneAttrib yearAttrib = new PaneAttrib(950, 150, 200, 200, 1);
+   public PaneAttrib manufactureAttrib = new PaneAttrib(250, 150, 200, 200, 1);
+   public PaneAttrib makeAttrib        = new PaneAttrib(500, 150, 200, 200, 1);
+   public PaneAttrib modelAttrib       = new PaneAttrib(750, 150, 200, 200, 1);
+   public PaneAttrib yearAttrib        = new PaneAttrib(1000, 150, 200, 200, 1);
    
-   public PaneAttrib c_manufactureAttrib = new PaneAttrib(200, 120, 200, 200, 1);
-   public PaneAttrib c_makeAttrib = new PaneAttrib(450, 120, 200, 200, 1);
-   public PaneAttrib c_modelAttrib = new PaneAttrib(700, 120, 200, 200, 1);
-   public PaneAttrib c_yearAttrib = new PaneAttrib(950, 120, 200, 200, 1);
+   public PaneAttrib c_manufactureAttrib = new PaneAttrib(250, 120, 200, 200, 1);
+   public PaneAttrib c_makeAttrib        = new PaneAttrib(500, 120, 200, 200, 1);
+   public PaneAttrib c_modelAttrib       = new PaneAttrib(750, 120, 200, 200, 1);
+   public PaneAttrib c_yearAttrib        = new PaneAttrib(1000, 120, 200, 200, 1);
+   
+   public static float offset_labelX = 130;
+   public static float offset_labelY = 30;
+   public static float offset_markerX = 160;
+   public static float offset_markerY = 30;
    
    
    public int manufactureMax = 0;

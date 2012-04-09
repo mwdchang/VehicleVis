@@ -64,13 +64,15 @@ public class DCScrollPane {
    
    public boolean visible = true;
    
+   public boolean masterVisible = false; // master level visibility control
+   
    public TextureRenderer texture; 
    public Graphics2D g2d;
    
    //public static Font fontArial = new Font( "Arial", Font.PLAIN, 12);   
    //public static Font fontArialBold = new Font( "Arial", Font.BOLD, 12);
-   public static Font fontArial = DCUtil.loadFont("din1451m.ttf", Font.PLAIN, 14f);
-   public static Font fontArialBold = DCUtil.loadFont("din1451m.ttf", Font.BOLD, 14f);
+   public static Font fontArial = DCUtil.loadFont("din1451m.ttf", Font.PLAIN, 12f);
+   public static Font fontArialBold = DCUtil.loadFont("din1451m.ttf", Font.BOLD, 12f);
    
    public TextureFont tf = new TextureFont();   
    
@@ -201,6 +203,7 @@ public class DCScrollPane {
    ////////////////////////////////////////////////////////////////////////////////
    public void render(GL2 gl2) {
       // If not visible, don't render....duh ?
+      if (! this.masterVisible) return;
       if (! this.visible) return;
       
       if (dirty) {

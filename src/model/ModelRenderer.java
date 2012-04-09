@@ -29,6 +29,7 @@ import gui.DCScrollPane;
 import gui.DCTip;
 import gui.GTag;
 import gui.StatusWindow;
+import gui.TextPane;
 
 /////////////////////////////////////////////////////////////////////////////////
 // This class is responsible for rendering the 3D part of the visualizaiton
@@ -84,14 +85,15 @@ public class ModelRenderer extends BaseModelRenderer {
          c_modelScroll.anchorY = SSM.instance().c_modelAttrib.anchorY;
          c_yearScroll.anchorY = SSM.instance().c_yearAttrib.anchorY;
       } else {
-         SSM.instance().manufactureAttrib.anchorY = 80;
-         SSM.instance().makeAttrib.anchorY = 80;
-         SSM.instance().modelAttrib.anchorY = 80;
-         SSM.instance().yearAttrib.anchorY = 80;
-         SSM.instance().c_manufactureAttrib.anchorY = 50;
-         SSM.instance().c_makeAttrib.anchorY = 50;
-         SSM.instance().c_modelAttrib.anchorY = 50;
-         SSM.instance().c_yearAttrib.anchorY = 50;
+         SSM.instance().c_manufactureAttrib.anchorY = 100;
+         SSM.instance().c_makeAttrib.anchorY = 100;
+         SSM.instance().c_modelAttrib.anchorY = 100;
+         SSM.instance().c_yearAttrib.anchorY = 100;
+         
+         SSM.instance().manufactureAttrib.anchorY = 50;
+         SSM.instance().makeAttrib.anchorY = 50;
+         SSM.instance().modelAttrib.anchorY = 50;
+         SSM.instance().yearAttrib.anchorY = 50;
          
          manufactureScroll.anchorY = SSM.instance().manufactureAttrib.anchorY;
          makeScroll.anchorY = SSM.instance().makeAttrib.anchorY;
@@ -473,7 +475,7 @@ public class ModelRenderer extends BaseModelRenderer {
             if (la.mlen != null) {
               la.mlen.renderLens( gl2, la );
               // TODO: This is probably not very efficient, can we get away with just a single render for the entire render cycle at the end ???
-              this.renderComparison(gl2);
+              //this.renderComparison(gl2);
             }
          }
       }
@@ -565,10 +567,13 @@ public class ModelRenderer extends BaseModelRenderer {
             gl2.glEnable(GL2.GL_CULL_FACE);
             gl2.glCullFace(GL2.GL_BACK);
             gl2.glEnable(GL2.GL_BLEND);
+            
             //gl2.glDisable(GL2.GL_DEPTH_TEST);
+            /*
             for (DCComponent comp : MM.currentModel.componentTable.values()) {
                comp.renderBufferAdj(gl2, DCColour.fromInt(255, 0, 0, 50));
             }             
+            */
          }
          
          setOrthonormalView(gl2, 0, SSM.instance().windowWidth, 0, SSM.instance().windowHeight); {
@@ -840,29 +845,61 @@ public class ModelRenderer extends BaseModelRenderer {
          c_modelScroll.render(gl2);
          c_yearScroll.render(gl2);
          
+         float ax;
+         float ay;
+         
+         gl2.glEnable(GL2.GL_BLEND);
+         if (SSM.instance().useComparisonMode == true) {
+            GraphicUtil.drawRoundedRect(gl2, manufactureScroll.anchorX - 90, manufactureScroll.anchorY - 10, 0, 
+                  80, 20, 8, 6,
+                  DCColour.fromDouble(0.68, 0.68, 0.68, 0.65).toArray(), 
+                  DCColour.fromDouble(0.77, 0.77, 0.77, 0.65).toArray());
+            
+            label.anchorX = manufactureScroll.anchorX - SSM.offset_labelX;   
+            label.anchorY = manufactureScroll.anchorY - SSM.offset_labelY;
+            label.render(gl2);
+            
+            GraphicUtil.drawRoundedRect(gl2, c_manufactureScroll.anchorX - 90, c_manufactureScroll.anchorY - 10, 0, 
+                  80, 20, 8, 6,
+                  DCColour.fromDouble(0.68, 0.68, 0.68, 0.65).toArray(), 
+                  DCColour.fromDouble(0.77, 0.77, 0.77, 0.65).toArray());
+                  
+            c_label.anchorX = c_manufactureScroll.anchorX - SSM.offset_labelX;   
+            c_label.anchorY = c_manufactureScroll.anchorY - SSM.offset_labelY;
+            c_label.render(gl2);
+         } else {
+            GraphicUtil.drawRoundedRect(gl2, manufactureScroll.anchorX - 90, manufactureScroll.anchorY - 10, 0, 
+                  80, 20, 8, 6,
+                  DCColour.fromDouble(0.68, 0.68, 0.68, 0.65).toArray(), 
+                  DCColour.fromDouble(0.77, 0.77, 0.77, 0.65).toArray());
+                  
+            label.anchorX = manufactureScroll.anchorX - SSM.offset_labelX;   
+            label.anchorY = manufactureScroll.anchorY - SSM.offset_labelY;
+            label.render(gl2);
+         }
+         
+         
          // Draw in indicator so the users will known which colour is associated with 
          // which selection
          if (SSM.instance().useComparisonMode == true) {
-            float ax;
-            float ay;
-            ax = manufactureScroll.anchorX-40;
-            ay = manufactureScroll.anchorY-20;
+            ax = manufactureScroll.anchorX-SSM.offset_markerX;
+            ay = manufactureScroll.anchorY-SSM.offset_markerY;
             gl2.glColor4fv(SchemeManager.comp_1.toArray(), 0);
             gl2.glBegin(GL2.GL_QUADS);    
-               gl2.glVertex2f(ax, ay);
-               gl2.glVertex2f(ax+20, ay);
-               gl2.glVertex2f(ax+20, ay+20);
-               gl2.glVertex2f(ax, ay+20);
+               gl2.glVertex2f(ax, ay+3);
+               gl2.glVertex2f(ax+20, ay+3);
+               gl2.glVertex2f(ax+20, ay+40-3);
+               gl2.glVertex2f(ax, ay+40-3);
             gl2.glEnd();
             
-            ax = c_manufactureScroll.anchorX-40;
-            ay = c_manufactureScroll.anchorY-20;
+            ax = c_manufactureScroll.anchorX-SSM.offset_markerX;
+            ay = c_manufactureScroll.anchorY-SSM.offset_markerY;
             gl2.glColor4fv(SchemeManager.comp_2.toArray(), 0);
             gl2.glBegin(GL2.GL_QUADS);
-               gl2.glVertex2f(ax, ay);
-               gl2.glVertex2f(ax+20, ay);
-               gl2.glVertex2f(ax+20, ay+20);
-               gl2.glVertex2f(ax, ay+20);
+               gl2.glVertex2f(ax, ay+3);
+               gl2.glVertex2f(ax+20, ay+3);
+               gl2.glVertex2f(ax+20, ay+40-3);
+               gl2.glVertex2f(ax, ay+40-3);
             gl2.glEnd();
          }
       }      
@@ -895,6 +932,44 @@ public class ModelRenderer extends BaseModelRenderer {
       
       float mx = SSM.instance().mouseX;
       float my = SSM.instance().windowHeight - SSM.instance().mouseY;
+      
+      
+      // Check if any one of the master scrollpane buttons are pressed
+      if (SSM.instance().useComparisonMode == true) {
+         if (DCUtil.between(mx, manufactureScroll.anchorX-SSM.offset_labelX, manufactureScroll.anchorX-20))  {
+            if (DCUtil.between(my, manufactureScroll.anchorY-SSM.offset_labelY, manufactureScroll.anchorY+15)) {
+               System.err.println("Clicked on master control");   
+               this.manufactureScroll.masterVisible = ! this.manufactureScroll.masterVisible;
+               this.makeScroll.masterVisible = ! this.makeScroll.masterVisible;
+               this.modelScroll.masterVisible = ! this.modelScroll.masterVisible;
+               this.yearScroll.masterVisible = ! this.yearScroll.masterVisible;
+               return;
+            }
+         }
+         
+         if (DCUtil.between(mx, c_manufactureScroll.anchorX-SSM.offset_labelX, c_manufactureScroll.anchorX-20))  {
+            if (DCUtil.between(my, c_manufactureScroll.anchorY-SSM.offset_labelY, c_manufactureScroll.anchorY+15)) {
+               System.err.println("Clicked on c master control");   
+               this.c_manufactureScroll.masterVisible = ! this.c_manufactureScroll.masterVisible;
+               this.c_makeScroll.masterVisible = ! this.c_makeScroll.masterVisible;
+               this.c_modelScroll.masterVisible = ! this.c_modelScroll.masterVisible;
+               this.c_yearScroll.masterVisible = ! this.c_yearScroll.masterVisible;
+               return;
+            }
+         }
+      } else {
+         if (DCUtil.between(mx, manufactureScroll.anchorX-SSM.offset_labelX, manufactureScroll.anchorX-20))  {
+            if (DCUtil.between(my, manufactureScroll.anchorY-SSM.offset_labelY, manufactureScroll.anchorY+15)) {
+               System.err.println("Clicked on master control");   
+               this.manufactureScroll.masterVisible = ! this.manufactureScroll.masterVisible;
+               this.makeScroll.masterVisible = ! this.makeScroll.masterVisible;
+               this.modelScroll.masterVisible = ! this.modelScroll.masterVisible;
+               this.yearScroll.masterVisible = ! this.yearScroll.masterVisible;
+               return;
+            }
+         }
+      }
+      // end check
       
       
       // Check the UI elements first
@@ -2168,6 +2243,13 @@ public class ModelRenderer extends BaseModelRenderer {
       super.init(gl2);
       dcTextPanel.init(gl2);
       
+      label = new TextureFont();
+      label.height = 45;
+      label.width = 120;
+      label.addMark("label", Color.black, labelFont, 1, 1);
+      label.renderToTexture(null);
+      
+      
       manufactureScroll = new DCScrollPane("MFR");
       manufactureScroll.anchorX = SSM.instance().manufactureAttrib.anchorX;
       manufactureScroll.anchorY = SSM.instance().manufactureAttrib.anchorY;
@@ -2194,6 +2276,11 @@ public class ModelRenderer extends BaseModelRenderer {
       
       
       
+      c_label = new TextureFont();
+      c_label.height = 45;
+      c_label.width = 100;
+      c_label.addMark("clabel", Color.black, labelFont, 1, 1);
+      c_label.renderToTexture(null);
       
       c_manufactureScroll = new DCScrollPane("MFR");
       c_manufactureScroll.direction = DCScrollPane.UP;
@@ -2300,6 +2387,8 @@ public class ModelRenderer extends BaseModelRenderer {
                   SSM.instance().dirtyGL = 1;
                   SSM.instance().refreshMagicLens = true;
                   attrib.selected = i==0? null:t.val; 
+                  
+                  
                   
                   // Clear the children
                   for (int j=0; j < childrenPair.length; j+=2) {
