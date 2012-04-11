@@ -59,7 +59,7 @@ public class DCScrollPane {
    public int maxValue = 0;
    
    
-   public float texPanelWidth = 230.0f;
+   public float texPanelWidth = 1.0f;
    public float texPanelHeight = 8000.0f;
    
    public boolean visible = true;
@@ -71,8 +71,8 @@ public class DCScrollPane {
    
    //public static Font fontArial = new Font( "Arial", Font.PLAIN, 12);   
    //public static Font fontArialBold = new Font( "Arial", Font.BOLD, 12);
-   public static Font fontArial = DCUtil.loadFont("din1451m.ttf", Font.PLAIN, 12f);
-   public static Font fontArialBold = DCUtil.loadFont("din1451m.ttf", Font.BOLD, 12f);
+   public static Font font = DCUtil.loadFont("din1451m.ttf", Font.PLAIN, 12f);
+   public static Font fontBold = DCUtil.loadFont("din1451m.ttf", Font.BOLD, 12f);
    
    public TextureFont tf = new TextureFont();   
    
@@ -102,7 +102,7 @@ public class DCScrollPane {
    public DCScrollPane() {
       texture = new TextureRenderer((int)texPanelWidth, (int)texPanelHeight, true, true);
       g2d = texture.createGraphics();
-      g2d.setFont(fontArial);      
+      g2d.setFont(font);      
       
       // Get a metric
       fm = g2d.getFontMetrics();
@@ -171,9 +171,9 @@ public class DCScrollPane {
          
 //         if (i == current)  
          if (currentStr.equals(t.val))
-            g2d.setFont(fontArialBold);
+            g2d.setFont(fontBold);
          else 
-            g2d.setFont(fontArial);
+            g2d.setFont(font);
          
          if (i > 0) {
             //g2d.setColor( DCColour.fromInt(10, 10, 180, 120).awtRGBA());
@@ -192,7 +192,7 @@ public class DCScrollPane {
       tf.width = this.width;
       tf.height = 20;
       tf.clearMark();
-      tf.addMark(this.currentStr, Color.black, this.fontArialBold, 1, 1);
+      tf.addMark(this.currentStr, Color.black, fontBold, 1, 1);
       tf.renderToTexture(null);
       
    }   

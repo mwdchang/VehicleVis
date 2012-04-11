@@ -139,8 +139,8 @@ public class ModelRenderer extends BaseModelRenderer {
          float c;
          outlineTexture1.startRecording(gl2);
             setPerspectiveView(gl2);
-            gl2.glRotated(SSM.instance().rotateX, 1, 0, 0); 
-            gl2.glRotated(SSM.instance().rotateY, 0, 1, 0); 
+            
+            basicTransform(gl2);
             gl2.glClearColor(0, 0, 0, 0);
             gl2.glClear(GL2.GL_COLOR_BUFFER_BIT);
             gl2.glDisable(GL2.GL_DEPTH_TEST);
@@ -171,8 +171,7 @@ public class ModelRenderer extends BaseModelRenderer {
          
          outlineTexture2.startRecording(gl2);
             setPerspectiveView(gl2);
-            gl2.glRotated(SSM.instance().rotateX, 1, 0, 0); 
-            gl2.glRotated(SSM.instance().rotateY, 0, 1, 0); 
+            basicTransform(gl2);
             gl2.glClearColor(0, 0, 0, 0);
             gl2.glClear(GL2.GL_COLOR_BUFFER_BIT);
             gl2.glDisable(GL2.GL_DEPTH_TEST);
@@ -312,8 +311,7 @@ public class ModelRenderer extends BaseModelRenderer {
             
             
             setPerspectiveView(gl2, la.nearPlane, la.farPlane); {
-               gl2.glRotated(SSM.instance().rotateX, 1, 0, 0);
-               gl2.glRotated(SSM.instance().rotateY, 0, 1, 0);
+               basicTransform(gl2);
                gl2.glEnable(GL2.GL_BLEND);
                this.ProcessDualPeeling(gl2, la.displayList);
             }
@@ -326,8 +324,7 @@ public class ModelRenderer extends BaseModelRenderer {
                gl2.glEnable(GL2.GL_BLEND);
                gl2.glDisable(GL2.GL_DEPTH_TEST);
                setPerspectiveView(gl2, 0.01f, la.nearPlane); {
-                  gl2.glRotated(SSM.instance().rotateX, 1, 0, 0);
-                  gl2.glRotated(SSM.instance().rotateY, 0, 1, 0);
+                  basicTransform(gl2);
                   renderSil(gl2);   
                }               
             } la.mlen.stopRecording(gl2);
@@ -339,14 +336,12 @@ public class ModelRenderer extends BaseModelRenderer {
                // We already have transparency and it is too expensive
                if ( ! SSM.instance().useDualDepthPeeling) {
                   setPerspectiveView(gl2, la.nearPlane, la.farPlane); {
-                     gl2.glRotated(SSM.instance().rotateX, 1, 0, 0);
-                     gl2.glRotated(SSM.instance().rotateY, 0, 1, 0);
+                     basicTransform(gl2);
                      gl2.glEnable(GL2.GL_BLEND);
                      renderColourRamp(gl2, la);
                   }
                   setPerspectiveView(gl2, 0.01f, la.nearPlane); {
-                     gl2.glRotated(SSM.instance().rotateX, 1, 0, 0);
-                     gl2.glRotated(SSM.instance().rotateY, 0, 1, 0);
+                     basicTransform(gl2);
                      renderSil(gl2);   
                   }
                }
@@ -365,8 +360,7 @@ public class ModelRenderer extends BaseModelRenderer {
       ////////////////////////////////////////////////////////////////////////////////
       //setPerspectiveView(gl2, 40, 1000); {
       setPerspectiveView(gl2); {
-         gl2.glRotated(SSM.instance().rotateX, 1, 0, 0);
-         gl2.glRotated(SSM.instance().rotateY, 0, 1, 0);
+         basicTransform(gl2);
          gl2.glEnable(GL2.GL_BLEND);
          
          if (SSM.instance().useDualDepthPeeling) {
@@ -398,8 +392,7 @@ public class ModelRenderer extends BaseModelRenderer {
          float c;
          outlineTexture1.startRecording(gl2);
             setPerspectiveView(gl2);
-            gl2.glRotated(SSM.instance().rotateX, 1, 0, 0); 
-            gl2.glRotated(SSM.instance().rotateY, 0, 1, 0); 
+            basicTransform(gl2);
             gl2.glClearColor(0, 0, 0, 0);
             gl2.glClear(GL2.GL_COLOR_BUFFER_BIT);
             gl2.glDisable(GL2.GL_DEPTH_TEST);
@@ -429,8 +422,7 @@ public class ModelRenderer extends BaseModelRenderer {
          
          outlineTexture2.startRecording(gl2);
             setPerspectiveView(gl2);
-            gl2.glRotated(SSM.instance().rotateX, 1, 0, 0); 
-            gl2.glRotated(SSM.instance().rotateY, 0, 1, 0); 
+            basicTransform(gl2);
             gl2.glClearColor(0, 0, 0, 0);
             gl2.glClear(GL2.GL_COLOR_BUFFER_BIT);
             gl2.glDisable(GL2.GL_DEPTH_TEST);
@@ -487,8 +479,7 @@ public class ModelRenderer extends BaseModelRenderer {
       if (SSM.instance().useGlow && SSM.instance().selectedGroup.size() > 0) {
          glowTexture.startRecording(gl2); 
             setPerspectiveView(gl2); 
-            gl2.glRotated(SSM.instance().rotateX, 1, 0, 0);
-            gl2.glRotated(SSM.instance().rotateY, 0, 1, 0);
+            basicTransform(gl2);
             gl2.glClearColor(1, 1, 1, 0);
             gl2.glClear(GL2.GL_COLOR_BUFFER_BIT);
             gl2.glPushMatrix();
@@ -851,31 +842,46 @@ public class ModelRenderer extends BaseModelRenderer {
          gl2.glEnable(GL2.GL_BLEND);
          if (SSM.instance().useComparisonMode == true) {
             GraphicUtil.drawRoundedRect(gl2, manufactureScroll.anchorX - 90, manufactureScroll.anchorY - 10, 0, 
-                  80, 20, 8, 6,
+                  80, 10, 8, 6,
                   DCColour.fromDouble(0.68, 0.68, 0.68, 0.65).toArray(), 
                   DCColour.fromDouble(0.77, 0.77, 0.77, 0.65).toArray());
             
+            /*
             label.anchorX = manufactureScroll.anchorX - SSM.offset_labelX;   
             label.anchorY = manufactureScroll.anchorY - SSM.offset_labelY;
             label.render(gl2);
+            */
+            filterTexture.anchorX = manufactureScroll.anchorX - SSM.offset_labelX;
+            filterTexture.anchorY = manufactureScroll.anchorY - 15;
+            filterTexture.render(gl2);
             
             GraphicUtil.drawRoundedRect(gl2, c_manufactureScroll.anchorX - 90, c_manufactureScroll.anchorY - 10, 0, 
-                  80, 20, 8, 6,
+                  80, 10, 8, 6,
                   DCColour.fromDouble(0.68, 0.68, 0.68, 0.65).toArray(), 
                   DCColour.fromDouble(0.77, 0.77, 0.77, 0.65).toArray());
                   
+            /*
             c_label.anchorX = c_manufactureScroll.anchorX - SSM.offset_labelX;   
             c_label.anchorY = c_manufactureScroll.anchorY - SSM.offset_labelY;
             c_label.render(gl2);
+            */
+            c_filterTexture.anchorX = c_manufactureScroll.anchorX - SSM.offset_labelX;
+            c_filterTexture.anchorY = c_manufactureScroll.anchorY - 15;
+            c_filterTexture.render(gl2);
          } else {
             GraphicUtil.drawRoundedRect(gl2, manufactureScroll.anchorX - 90, manufactureScroll.anchorY - 10, 0, 
-                  80, 20, 8, 6,
+                  80, 10, 8, 6,
                   DCColour.fromDouble(0.68, 0.68, 0.68, 0.65).toArray(), 
                   DCColour.fromDouble(0.77, 0.77, 0.77, 0.65).toArray());
                   
+            /*
             label.anchorX = manufactureScroll.anchorX - SSM.offset_labelX;   
             label.anchorY = manufactureScroll.anchorY - SSM.offset_labelY;
             label.render(gl2);
+            */
+            filterTexture.anchorX = manufactureScroll.anchorX - SSM.offset_labelX;
+            filterTexture.anchorY = manufactureScroll.anchorY - 15;
+            filterTexture.render(gl2);
          }
          
          
@@ -883,23 +889,25 @@ public class ModelRenderer extends BaseModelRenderer {
          // which selection
          if (SSM.instance().useComparisonMode == true) {
             ax = manufactureScroll.anchorX-SSM.offset_markerX;
-            ay = manufactureScroll.anchorY-SSM.offset_markerY;
+            //ay = manufactureScroll.anchorY-SSM.offset_markerY;
+            ay = manufactureScroll.anchorY-20;
             gl2.glColor4fv(SchemeManager.comp_1.toArray(), 0);
             gl2.glBegin(GL2.GL_QUADS);    
                gl2.glVertex2f(ax, ay+3);
                gl2.glVertex2f(ax+20, ay+3);
-               gl2.glVertex2f(ax+20, ay+40-3);
-               gl2.glVertex2f(ax, ay+40-3);
+               gl2.glVertex2f(ax+20, ay+20-3);
+               gl2.glVertex2f(ax, ay+20-3);
             gl2.glEnd();
             
             ax = c_manufactureScroll.anchorX-SSM.offset_markerX;
-            ay = c_manufactureScroll.anchorY-SSM.offset_markerY;
+            //ay = c_manufactureScroll.anchorY-SSM.offset_markerY;
+            ay = c_manufactureScroll.anchorY-20;
             gl2.glColor4fv(SchemeManager.comp_2.toArray(), 0);
             gl2.glBegin(GL2.GL_QUADS);
                gl2.glVertex2f(ax, ay+3);
                gl2.glVertex2f(ax+20, ay+3);
-               gl2.glVertex2f(ax+20, ay+40-3);
-               gl2.glVertex2f(ax, ay+40-3);
+               gl2.glVertex2f(ax+20, ay+20-3);
+               gl2.glVertex2f(ax, ay+20-3);
             gl2.glEnd();
          }
       }      
@@ -1414,8 +1422,7 @@ public class ModelRenderer extends BaseModelRenderer {
          gl2.glLoadName(partId);
          gl2.glPushMatrix();
             // Make sure the transform is also in picking mode 
-            gl2.glRotated(SSM.instance().rotateX, 1, 0, 0);
-            gl2.glRotated(SSM.instance().rotateY, 0, 1, 0);
+            basicTransform(gl2);
             if (MM.currentModel.componentTable.get(partName).level >= SSM.instance().occlusionLevel) 
                 MM.currentModel.componentTable.get(partName).renderBasicMesh(gl2);
             //model.componentTable.get(partName).boundingBox.renderBoundingBox(gl2);  
@@ -2249,6 +2256,12 @@ public class ModelRenderer extends BaseModelRenderer {
       label.addMark("label", Color.black, labelFont, 1, 1);
       label.renderToTexture(null);
       
+      filterTexture = new TextureFont();
+      filterTexture.height = 20;
+      filterTexture.width = 120;
+      filterTexture.addMark("Filter 1", Color.BLACK, labelFont, 1, 1);
+      filterTexture.renderToTexture(null);
+      
       
       manufactureScroll = new DCScrollPane("MFR");
       manufactureScroll.anchorX = SSM.instance().manufactureAttrib.anchorX;
@@ -2282,6 +2295,12 @@ public class ModelRenderer extends BaseModelRenderer {
       c_label.addMark("clabel", Color.black, labelFont, 1, 1);
       c_label.renderToTexture(null);
       
+      c_filterTexture = new TextureFont();
+      c_filterTexture.height = 20;
+      c_filterTexture.width = 120;
+      c_filterTexture.addMark("Filter 2", Color.BLACK, labelFont, 1, 1);
+      c_filterTexture.renderToTexture(null);
+      
       c_manufactureScroll = new DCScrollPane("MFR");
       c_manufactureScroll.direction = DCScrollPane.UP;
       c_manufactureScroll.anchorX = SSM.instance().c_manufactureAttrib.anchorX;
@@ -2311,6 +2330,25 @@ public class ModelRenderer extends BaseModelRenderer {
       c_yearScroll.renderToTexture(null);
       
       
+      // Resize the width
+      manufactureScroll.width = SSM.instance().manufactureAttrib.width;
+      manufactureScroll.texPanelWidth = SSM.instance().manufactureAttrib.width;
+      makeScroll.width = SSM.instance().makeAttrib.width;
+      makeScroll.texPanelWidth = SSM.instance().makeAttrib.width;
+      modelScroll.width = SSM.instance().modelAttrib.width;
+      modelScroll.texPanelWidth = SSM.instance().modelAttrib.width;
+      yearScroll.width = SSM.instance().yearAttrib.width;
+      yearScroll.texPanelWidth = SSM.instance().yearAttrib.width;
+      
+      c_manufactureScroll.width = SSM.instance().c_manufactureAttrib.width;
+      c_manufactureScroll.texPanelWidth = SSM.instance().c_manufactureAttrib.width;
+      c_makeScroll.width = SSM.instance().c_makeAttrib.width;
+      c_makeScroll.texPanelWidth = SSM.instance().c_makeAttrib.width;
+      c_modelScroll.width = SSM.instance().c_modelAttrib.width;
+      c_modelScroll.texPanelWidth = SSM.instance().c_modelAttrib.width;
+      c_yearScroll.width = SSM.instance().c_yearAttrib.width;
+      c_yearScroll.texPanelWidth = SSM.instance().c_yearAttrib.width;
+     
       
       MM.instance().initGPU(gl2);
       SSM.instance().dirty = 1;

@@ -56,12 +56,14 @@ public abstract class BaseModelRenderer implements RenderTask {
    
    // Data filter combo boxes
    public TextureFont label;
+   public TextureFont filterTexture;
    public DCScrollPane manufactureScroll; 
    public DCScrollPane makeScroll;
    public DCScrollPane modelScroll;
    public DCScrollPane yearScroll;
    
    public TextureFont c_label;
+   public TextureFont c_filterTexture;
    public DCScrollPane c_manufactureScroll; 
    public DCScrollPane c_makeScroll;
    public DCScrollPane c_modelScroll;
@@ -114,7 +116,16 @@ public abstract class BaseModelRenderer implements RenderTask {
    }
 
    
-  
+   ////////////////////////////////////////////////////////////////////////////////  
+   // Performs the basic transformation
+   // Translation and rotation of object model
+   ////////////////////////////////////////////////////////////////////////////////  
+   public void basicTransform(GL2 gl2) {
+      gl2.glTranslated(0, 0, 0);
+      gl2.glRotated(SSM.rotateX, 1, 0, 0);
+      gl2.glRotated(SSM.rotateY, 0, 1, 0);
+   }
+   
    
    ////////////////////////////////////////////////////////////////////////////////
    //
@@ -390,15 +401,15 @@ public abstract class BaseModelRenderer implements RenderTask {
       this.resetPane(manufactureHash, manufactureScroll, SSM.instance().manufactureAttrib);
       
       Hashtable<String, Integer> makeHash = this.getHierFilter(startIdx, endIdx, manufactureScroll);
-      DCUtil.removeLowerBound(makeHash, 20);
+      //DCUtil.removeLowerBound(makeHash, 20);
       this.resetPane(makeHash, makeScroll, SSM.instance().makeAttrib);
       
       Hashtable<String, Integer> modelHash = this.getHierFilter(startIdx, endIdx, manufactureScroll, makeScroll);
-      DCUtil.removeLowerBound(modelHash, 20);
+      //DCUtil.removeLowerBound(modelHash, 20);
       this.resetPane(modelHash, modelScroll, SSM.instance().modelAttrib);
       
       Hashtable<String, Integer> yearHash = this.getHierFilter(startIdx, endIdx, manufactureScroll, makeScroll, modelScroll);
-      DCUtil.removeLowerBound(yearHash, 20);
+      //DCUtil.removeLowerBound(yearHash, 20);
       this.resetPane(yearHash, yearScroll, SSM.instance().yearAttrib);
 
             

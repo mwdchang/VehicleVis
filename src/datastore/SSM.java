@@ -99,9 +99,9 @@ public class SSM {
    public float farPlane  = 1000.0f; 
    
    public boolean  renderSihoulette;
-   public boolean  useLight = false;
-   public float rotateX = 0.0f;
-   public float rotateY = 0.0f;
+   public boolean  useLight = true;
+   public static float rotateX = 0.0f;
+   public static float rotateY = 0.0f;
    
    
 //   
@@ -223,15 +223,15 @@ public class SSM {
    ////////////////////////////////////////////////////////////////////////////////
    // Filter Panel management
    ////////////////////////////////////////////////////////////////////////////////
-   public PaneAttrib manufactureAttrib = new PaneAttrib(250, 150, 200, 200, 1);
-   public PaneAttrib makeAttrib        = new PaneAttrib(500, 150, 200, 200, 1);
-   public PaneAttrib modelAttrib       = new PaneAttrib(750, 150, 200, 200, 1);
-   public PaneAttrib yearAttrib        = new PaneAttrib(1000, 150, 200, 200, 1);
+   public PaneAttrib manufactureAttrib = new PaneAttrib(250, 150, 220, 200, 1);
+   public PaneAttrib makeAttrib        = new PaneAttrib(500, 150, 220, 200, 1);
+   public PaneAttrib modelAttrib       = new PaneAttrib(750, 150, 220, 200, 1);
+   public PaneAttrib yearAttrib        = new PaneAttrib(1000, 150, 220, 200, 1);
    
-   public PaneAttrib c_manufactureAttrib = new PaneAttrib(250, 120, 200, 200, 1);
-   public PaneAttrib c_makeAttrib        = new PaneAttrib(500, 120, 200, 200, 1);
-   public PaneAttrib c_modelAttrib       = new PaneAttrib(750, 120, 200, 200, 1);
-   public PaneAttrib c_yearAttrib        = new PaneAttrib(1000, 120, 200, 200, 1);
+   public PaneAttrib c_manufactureAttrib = new PaneAttrib(250, 120, 220, 200, 1);
+   public PaneAttrib c_makeAttrib        = new PaneAttrib(500, 120, 220, 200, 1);
+   public PaneAttrib c_modelAttrib       = new PaneAttrib(750, 120, 220, 200, 1);
+   public PaneAttrib c_yearAttrib        = new PaneAttrib(1000, 120, 220, 200, 1);
    
    public static float offset_labelX = 130;
    public static float offset_labelY = 30;
