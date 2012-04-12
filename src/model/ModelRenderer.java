@@ -85,10 +85,10 @@ public class ModelRenderer extends BaseModelRenderer {
          c_modelScroll.anchorY = SSM.instance().c_modelAttrib.anchorY;
          c_yearScroll.anchorY = SSM.instance().c_yearAttrib.anchorY;
       } else {
-         SSM.instance().c_manufactureAttrib.anchorY = 100;
-         SSM.instance().c_makeAttrib.anchorY = 100;
-         SSM.instance().c_modelAttrib.anchorY = 100;
-         SSM.instance().c_yearAttrib.anchorY = 100;
+         SSM.instance().c_manufactureAttrib.anchorY = 80;
+         SSM.instance().c_makeAttrib.anchorY = 80;
+         SSM.instance().c_modelAttrib.anchorY = 80;
+         SSM.instance().c_yearAttrib.anchorY = 80;
          
          SSM.instance().manufactureAttrib.anchorY = 50;
          SSM.instance().makeAttrib.anchorY = 50;
@@ -841,8 +841,8 @@ public class ModelRenderer extends BaseModelRenderer {
          
          gl2.glEnable(GL2.GL_BLEND);
          if (SSM.instance().useComparisonMode == true) {
-            GraphicUtil.drawRoundedRect(gl2, manufactureScroll.anchorX - 90, manufactureScroll.anchorY - 10, 0, 
-                  80, 10, 8, 6,
+            GraphicUtil.drawRoundedRect(gl2, SSM.filterControlAnchorX+30, manufactureScroll.anchorY - 10, 0, 
+                  60, 10, 8, 6,
                   DCColour.fromDouble(0.68, 0.68, 0.68, 0.65).toArray(), 
                   DCColour.fromDouble(0.77, 0.77, 0.77, 0.65).toArray());
             
@@ -851,12 +851,12 @@ public class ModelRenderer extends BaseModelRenderer {
             label.anchorY = manufactureScroll.anchorY - SSM.offset_labelY;
             label.render(gl2);
             */
-            filterTexture.anchorX = manufactureScroll.anchorX - SSM.offset_labelX;
+            filterTexture.anchorX = SSM.filterControlAnchorX;
             filterTexture.anchorY = manufactureScroll.anchorY - 15;
             filterTexture.render(gl2);
             
-            GraphicUtil.drawRoundedRect(gl2, c_manufactureScroll.anchorX - 90, c_manufactureScroll.anchorY - 10, 0, 
-                  80, 10, 8, 6,
+            GraphicUtil.drawRoundedRect(gl2, SSM.c_filterControlAnchorX+30, c_manufactureScroll.anchorY - 10, 0, 
+                  60, 10, 8, 6,
                   DCColour.fromDouble(0.68, 0.68, 0.68, 0.65).toArray(), 
                   DCColour.fromDouble(0.77, 0.77, 0.77, 0.65).toArray());
                   
@@ -865,12 +865,12 @@ public class ModelRenderer extends BaseModelRenderer {
             c_label.anchorY = c_manufactureScroll.anchorY - SSM.offset_labelY;
             c_label.render(gl2);
             */
-            c_filterTexture.anchorX = c_manufactureScroll.anchorX - SSM.offset_labelX;
+            c_filterTexture.anchorX = SSM.c_filterControlAnchorX;
             c_filterTexture.anchorY = c_manufactureScroll.anchorY - 15;
             c_filterTexture.render(gl2);
          } else {
-            GraphicUtil.drawRoundedRect(gl2, manufactureScroll.anchorX - 90, manufactureScroll.anchorY - 10, 0, 
-                  80, 10, 8, 6,
+            GraphicUtil.drawRoundedRect(gl2, SSM.filterControlAnchorX+30, manufactureScroll.anchorY - 10, 0, 
+                  60, 10, 8, 6,
                   DCColour.fromDouble(0.68, 0.68, 0.68, 0.65).toArray(), 
                   DCColour.fromDouble(0.77, 0.77, 0.77, 0.65).toArray());
                   
@@ -879,7 +879,7 @@ public class ModelRenderer extends BaseModelRenderer {
             label.anchorY = manufactureScroll.anchorY - SSM.offset_labelY;
             label.render(gl2);
             */
-            filterTexture.anchorX = manufactureScroll.anchorX - SSM.offset_labelX;
+            filterTexture.anchorX = SSM.filterControlAnchorX;
             filterTexture.anchorY = manufactureScroll.anchorY - 15;
             filterTexture.render(gl2);
          }
@@ -888,25 +888,23 @@ public class ModelRenderer extends BaseModelRenderer {
          // Draw in indicator so the users will known which colour is associated with 
          // which selection
          if (SSM.instance().useComparisonMode == true) {
-            ax = manufactureScroll.anchorX-SSM.offset_markerX;
-            //ay = manufactureScroll.anchorY-SSM.offset_markerY;
+            ax = SSM.filterControlAnchorX-20;
             ay = manufactureScroll.anchorY-20;
             gl2.glColor4fv(SchemeManager.comp_1.toArray(), 0);
             gl2.glBegin(GL2.GL_QUADS);    
                gl2.glVertex2f(ax, ay+3);
-               gl2.glVertex2f(ax+20, ay+3);
-               gl2.glVertex2f(ax+20, ay+20-3);
+               gl2.glVertex2f(ax+15, ay+3);
+               gl2.glVertex2f(ax+15, ay+20-3);
                gl2.glVertex2f(ax, ay+20-3);
             gl2.glEnd();
             
-            ax = c_manufactureScroll.anchorX-SSM.offset_markerX;
-            //ay = c_manufactureScroll.anchorY-SSM.offset_markerY;
+            ax = SSM.c_filterControlAnchorX-20;
             ay = c_manufactureScroll.anchorY-20;
             gl2.glColor4fv(SchemeManager.comp_2.toArray(), 0);
             gl2.glBegin(GL2.GL_QUADS);
                gl2.glVertex2f(ax, ay+3);
-               gl2.glVertex2f(ax+20, ay+3);
-               gl2.glVertex2f(ax+20, ay+20-3);
+               gl2.glVertex2f(ax+15, ay+3);
+               gl2.glVertex2f(ax+15, ay+20-3);
                gl2.glVertex2f(ax, ay+20-3);
             gl2.glEnd();
          }
@@ -944,35 +942,69 @@ public class ModelRenderer extends BaseModelRenderer {
       
       // Check if any one of the master scrollpane buttons are pressed
       if (SSM.instance().useComparisonMode == true) {
-         if (DCUtil.between(mx, manufactureScroll.anchorX-SSM.offset_labelX, manufactureScroll.anchorX-20))  {
-            if (DCUtil.between(my, manufactureScroll.anchorY-SSM.offset_labelY, manufactureScroll.anchorY+15)) {
+         if (DCUtil.between(mx, filterTexture.anchorX, filterTexture.anchorX+filterTexture.width))  {
+            if (DCUtil.between(my, filterTexture.anchorY, filterTexture.anchorY+filterTexture.height)) {
                System.err.println("Clicked on master control");   
                this.manufactureScroll.masterVisible = ! this.manufactureScroll.masterVisible;
                this.makeScroll.masterVisible = ! this.makeScroll.masterVisible;
                this.modelScroll.masterVisible = ! this.modelScroll.masterVisible;
                this.yearScroll.masterVisible = ! this.yearScroll.masterVisible;
+               
+               if (this.manufactureScroll.masterVisible) {
+                  this.filterTexture.clearMark();
+                  this.filterTexture.addMark("Filter 1 <<", Color.BLACK, labelFont, 1, 1);
+                  this.filterTexture.renderToTexture(null);
+               } else {
+                  this.filterTexture.clearMark();
+                  this.filterTexture.addMark("Filter 1 >>", Color.BLACK, labelFont, 1, 1);
+                  this.filterTexture.renderToTexture(null);
+               }
+               
                return;
             }
          }
          
-         if (DCUtil.between(mx, c_manufactureScroll.anchorX-SSM.offset_labelX, c_manufactureScroll.anchorX-20))  {
-            if (DCUtil.between(my, c_manufactureScroll.anchorY-SSM.offset_labelY, c_manufactureScroll.anchorY+15)) {
+         if (DCUtil.between(mx, c_filterTexture.anchorX, c_filterTexture.anchorX+c_filterTexture.width))  {
+            if (DCUtil.between(my, c_filterTexture.anchorY, c_filterTexture.anchorY+c_filterTexture.height)) {
                System.err.println("Clicked on c master control");   
                this.c_manufactureScroll.masterVisible = ! this.c_manufactureScroll.masterVisible;
                this.c_makeScroll.masterVisible = ! this.c_makeScroll.masterVisible;
                this.c_modelScroll.masterVisible = ! this.c_modelScroll.masterVisible;
                this.c_yearScroll.masterVisible = ! this.c_yearScroll.masterVisible;
+               
+               if (this.c_manufactureScroll.masterVisible) {
+                  this.c_filterTexture.clearMark();
+                  this.c_filterTexture.addMark("Filter 2 <<", Color.BLACK, labelFont, 1, 1);
+                  this.c_filterTexture.renderToTexture(null);
+               } else {
+                  this.c_filterTexture.clearMark();
+                  this.c_filterTexture.addMark("Filter 2 >>", Color.BLACK, labelFont, 1, 1);
+                  this.c_filterTexture.renderToTexture(null);
+               }
+               
                return;
             }
          }
       } else {
-         if (DCUtil.between(mx, manufactureScroll.anchorX-SSM.offset_labelX, manufactureScroll.anchorX-20))  {
-            if (DCUtil.between(my, manufactureScroll.anchorY-SSM.offset_labelY, manufactureScroll.anchorY+15)) {
+         if (DCUtil.between(mx, filterTexture.anchorX, filterTexture.anchorX+filterTexture.width))  {
+            if (DCUtil.between(my, filterTexture.anchorY, filterTexture.anchorY+filterTexture.height)) {
                System.err.println("Clicked on master control");   
                this.manufactureScroll.masterVisible = ! this.manufactureScroll.masterVisible;
                this.makeScroll.masterVisible = ! this.makeScroll.masterVisible;
                this.modelScroll.masterVisible = ! this.modelScroll.masterVisible;
                this.yearScroll.masterVisible = ! this.yearScroll.masterVisible;
+                              
+               if (this.manufactureScroll.masterVisible) {
+                  this.filterTexture.clearMark();
+                  this.filterTexture.addMark("Filter 1 <<", Color.BLACK, labelFont, 1, 1);
+                  this.filterTexture.renderToTexture(null);
+               } else {
+                  this.filterTexture.clearMark();
+                  this.filterTexture.addMark("Filter 1 >>", Color.BLACK, labelFont, 1, 1);
+                  this.filterTexture.renderToTexture(null);
+               }
+               
+
                return;
             }
          }
@@ -2259,7 +2291,7 @@ public class ModelRenderer extends BaseModelRenderer {
       filterTexture = new TextureFont();
       filterTexture.height = 20;
       filterTexture.width = 120;
-      filterTexture.addMark("Filter 1", Color.BLACK, labelFont, 1, 1);
+      filterTexture.addMark("Filter 1 >>", Color.BLACK, labelFont, 1, 1);
       filterTexture.renderToTexture(null);
       
       
@@ -2298,7 +2330,7 @@ public class ModelRenderer extends BaseModelRenderer {
       c_filterTexture = new TextureFont();
       c_filterTexture.height = 20;
       c_filterTexture.width = 120;
-      c_filterTexture.addMark("Filter 2", Color.BLACK, labelFont, 1, 1);
+      c_filterTexture.addMark("Filter 2 >>", Color.BLACK, labelFont, 1, 1);
       c_filterTexture.renderToTexture(null);
       
       c_manufactureScroll = new DCScrollPane("MFR");
