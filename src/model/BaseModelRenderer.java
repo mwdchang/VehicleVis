@@ -76,7 +76,7 @@ public abstract class BaseModelRenderer implements RenderTask {
    public FrameBufferTexture outlineTexture2;
    
    
-   public static Font labelFont = DCUtil.loadFont("din1451m.ttf", Font.PLAIN, 10f);
+   public static Font labelFont = DCUtil.loadFont("din1451m.ttf", Font.PLAIN, 12f);
    
    
    @Override

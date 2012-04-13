@@ -1956,11 +1956,13 @@ public class ModelRenderer extends BaseModelRenderer {
          SSM.instance().location   = SSM.ELEMENT_LENS;
       } 
       
+      /*
       if (la.magicLensSelected == 1)  {
          gl2.glColor4fv(SchemeManager.selected.toArray(), 0);
       } else {
          gl2.glColor4fv(SchemeManager.unselected.toArray(), 0);
       }
+      */
       
       
       if (la.start >= la.numToDisplay) {
@@ -1978,6 +1980,11 @@ public class ModelRenderer extends BaseModelRenderer {
       double arrowWidth = Math.min(30, Math.max(15, 0.5*lensRadius));
       double arrowHeight = 30;
       if (la.renderTop) {
+         if (la.magicLensSelected == 1)  {
+            gl2.glColor4fv(SchemeManager.selected.toArray(), 0);
+         } else {
+            gl2.glColor4fv(SchemeManager.unselected.toArray(), 0);
+         }
          gl2.glBegin(GL2.GL_TRIANGLES); 
             gl2.glVertex2d(lensX-arrowWidth, (SSM.instance().windowHeight - lensY)+lensRadius+5);
             gl2.glVertex2d(lensX+arrowWidth, (SSM.instance().windowHeight - lensY)+lensRadius+5);
@@ -1995,10 +2002,15 @@ public class ModelRenderer extends BaseModelRenderer {
          
       }
       if (la.renderBottom) {
+         if (la.magicLensSelected == 1)  {
+            gl2.glColor4fv(SchemeManager.selected.toArray(), 0);
+         } else {
+            gl2.glColor4fv(SchemeManager.unselected.toArray(), 0);
+         }
          gl2.glBegin(GL2.GL_TRIANGLES); 
             gl2.glVertex2d(lensX-arrowWidth, (SSM.instance().windowHeight - lensY)-lensRadius-5);
-            gl2.glVertex2d(lensX+arrowWidth, (SSM.instance().windowHeight - lensY)-lensRadius-5);
             gl2.glVertex2d(lensX, (SSM.instance().windowHeight - lensY)-lensRadius-arrowHeight);
+            gl2.glVertex2d(lensX+arrowWidth, (SSM.instance().windowHeight - lensY)-lensRadius-5);
          gl2.glEnd();
          
          if ( (laCnt - (la.start+la.numToDisplay)) != la.l_bottom){

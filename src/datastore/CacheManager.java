@@ -192,7 +192,7 @@ public class CacheManager {
    /////////////////////////////////////////////////////////////////////////////////  
    protected CacheManager() {
       if (DEBUG == true) {
-         this.timeLineStartYear = 2010;         
+         this.timeLineStartYear = 2009;         
          this.timeLineEndYear   = 2010;         
       }
    }
@@ -437,7 +437,7 @@ public class CacheManager {
                sql += "1 = 1"; // Dummy pass thru   
             } else {
                if (SSM.instance().manufactureAttrib.selected != null) 
-                  sql += "AND a.mfr_txt = '" + SSM.instance().manufactureAttrib.selected + "' ";
+                  sql += "a.mfr_txt = '" + SSM.instance().manufactureAttrib.selected + "' ";
                if (SSM.instance().makeAttrib.selected != null) 
                   sql += "AND a.make_txt = '" + SSM.instance().makeAttrib.selected + "' ";
                if (SSM.instance().modelAttrib.selected != null) 
@@ -450,7 +450,7 @@ public class CacheManager {
                sql += "1 = 1"; // Dummy pass thru   
             } else {
                if (SSM.instance().c_manufactureAttrib.selected != null) 
-                  sql += "AND a.mfr_txt = '" + SSM.instance().c_manufactureAttrib.selected + "' ";
+                  sql += "a.mfr_txt = '" + SSM.instance().c_manufactureAttrib.selected + "' ";
                if (SSM.instance().c_makeAttrib.selected != null) 
                   sql += "AND a.make_txt = '" + SSM.instance().c_makeAttrib.selected + "' ";
                if (SSM.instance().c_modelAttrib.selected != null) 
@@ -491,7 +491,6 @@ public class CacheManager {
          }
          
          sql += "limit " + idx + ", " + SSM.instance().globalFetchSize;
-         
          ResultSet rs = dbh.execute( sql, true );
          while (rs.next()) {
             int id  = rs.getInt(1);
