@@ -1425,10 +1425,15 @@ public class ModelRenderer extends BaseModelRenderer {
          //String partName = e.nextElement(); 
          String partName = e.nextElement(); 
          String baseName = MM.currentModel.componentTable.get(partName).baseName;
-         int partId = MM.currentModel.componentTable.get(partName).id;
-         //Integer partId  = HierarchyTable.instance().getGroupId(baseName).size() > 0 ? HierarchyTable.instance().getGroupId(baseName).elementAt(0) : null;
-         //if (partId == null) continue;
+         DCComponent comp = MM.currentModel.componentTable.get(partName);
+         int partId = comp.id;
+         
+         
+         // if partId is not registered just continue
          if (partId < 0) continue;
+         
+         // if the object has no context then continue
+         if (comp.hasContext == false) continue;
          
          gl2.glLoadName(partId);
          gl2.glPushMatrix();
