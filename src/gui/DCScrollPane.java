@@ -78,6 +78,8 @@ public class DCScrollPane {
    
    public short direction;
    
+   public float depth = 0.0f;
+   
    public FontMetrics fm;   
    public Vector<GTag> tagList = new Vector<GTag>();
    
@@ -161,9 +163,9 @@ public class DCScrollPane {
          
          if (i % 2 == 0) 
             //g2d.setColor(Color.GRAY);
-            g2d.setColor(DCColour.fromInt(200, 200, 200, 200).awtRGBA());
+            g2d.setColor(DCColour.fromInt(200, 200, 200, 255).awtRGBA());
          else 
-            g2d.setColor(DCColour.fromInt(230, 230, 230, 200).awtRGBA());
+            g2d.setColor(DCColour.fromInt(230, 230, 230, 255).awtRGBA());
             //g2d.setColor(Color.LIGHT_GRAY);
          g2d.fillRect((int)0, (int)t.yPrime, (int)width, (int)spacing);
          
@@ -216,7 +218,8 @@ public class DCScrollPane {
       t.bind(gl2);
       TextureCoords tc = t.getImageTexCoords();
       
-      gl2.glEnable(GL2.GL_BLEND);
+      //gl2.glEnable(GL2.GL_BLEND);
+      gl2.glDisable(GL2.GL_BLEND);
       gl2.glBlendFunc(GL2.GL_SRC_ALPHA, GL2.GL_ONE_MINUS_SRC_ALPHA);            
       
       
@@ -227,37 +230,37 @@ public class DCScrollPane {
 	      gl2.glBegin(GL2.GL_QUADS);
 	         //gl2.glTexCoord2f(0, 1);
 	         gl2.glTexCoord2f(0, yoffset/texPanelHeight);
-	         gl2.glVertex3f(anchorX, anchorY,0);
+	         gl2.glVertex3f(anchorX, anchorY,depth);
 	         
 	         //gl2.glTexCoord2f(1, 1);
 	         gl2.glTexCoord2f(1, yoffset/texPanelHeight);
-	         gl2.glVertex3f(anchorX+width, anchorY,0);
+	         gl2.glVertex3f(anchorX+width, anchorY,depth);
 	         
 	         //gl2.glTexCoord2f(1, 0);
 	         gl2.glTexCoord2f(1, (yoffset-height)/texPanelHeight);
-	         gl2.glVertex3f(anchorX+width, anchorY+height,0);
+	         gl2.glVertex3f(anchorX+width, anchorY+height,depth);
 	         
 	         //gl2.glTexCoord2f(0, 0);
 	         gl2.glTexCoord2f(0, (yoffset-height)/texPanelHeight);
-	         gl2.glVertex3f(anchorX, anchorY+height,0);
+	         gl2.glVertex3f(anchorX, anchorY+height,depth);
 	      gl2.glEnd();
       } else {
  	      gl2.glBegin(GL2.GL_QUADS);
 	         //gl2.glTexCoord2f(0, 1);
 	         gl2.glTexCoord2f(0, yoffset/texPanelHeight);
-	         gl2.glVertex3f(anchorX, anchorY-height-20,0);
+	         gl2.glVertex3f(anchorX, anchorY-height-20,depth);
 	         
 	         //gl2.glTexCoord2f(1, 1);
 	         gl2.glTexCoord2f(1, yoffset/texPanelHeight);
-	         gl2.glVertex3f(anchorX+width, anchorY-height-20,0);
+	         gl2.glVertex3f(anchorX+width, anchorY-height-20,depth);
 	         
 	         //gl2.glTexCoord2f(1, 0);
 	         gl2.glTexCoord2f(1, (yoffset-height)/texPanelHeight);
-	         gl2.glVertex3f(anchorX+width, anchorY-20,0);
+	         gl2.glVertex3f(anchorX+width, anchorY-20,depth);
 	         
 	         //gl2.glTexCoord2f(0, 0);
 	         gl2.glTexCoord2f(0, (yoffset-height)/texPanelHeight);
-	         gl2.glVertex3f(anchorX, anchorY-20,0);
+	         gl2.glVertex3f(anchorX, anchorY-20,depth);
 	      gl2.glEnd();     	
       }
       t.disable(gl2);      
@@ -268,17 +271,8 @@ public class DCScrollPane {
             DCColour.fromDouble(0.68, 0.68, 0.68, 0.65).toArray(), 
             DCColour.fromDouble(0.77, 0.77, 0.77, 0.65).toArray());
       
-      
       if (current >= 0 && tagList.size() > 0)  {
-         tf.render(gl2);
-         //FontRenderer.instance().renderOnce(gl2, anchorX+10, anchorY-15, 0, tagList.elementAt(current).s);
-         /*
-         if (currentStr.length() > 20) {
-            FontRenderer.instance().renderOnce(gl2, anchorX+10, anchorY-15, 0, label+":"+currentStr.substring(0, 20));
-         } else {
-            FontRenderer.instance().renderOnce(gl2, anchorX+10, anchorY-15, 0, label+":"+currentStr);
-         }
-         */
+         tf.render(gl2, false); // Do not use blending for this, to prevent labels showing through multiple layers
       }
       
       

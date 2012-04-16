@@ -99,25 +99,33 @@ public class TextureFont {
    }
    
    
+   
    // Fetch an openGL texture and renders to the screen
    public void render(GL2 gl2) {
+      render(gl2, true);   
+   }
+   
+   public void render(GL2 gl2, boolean useBlend) {
       if (dirty == 1) {
          //System.out.println("Detected dirty texture");
          renderToTexture(Color.BLACK);
          dirty = 0;
       }         
       
-      
       Texture t = texture.getTexture();
       t.enable(gl2);
       t.bind(gl2);
       TextureCoords tc = t.getImageTexCoords();
       
-      
-      
-      gl2.glDisable(GL2.GL_DEPTH_TEST);
-      gl2.glEnable(GL2.GL_BLEND);
-      gl2.glBlendFunc(GL2.GL_SRC_ALPHA, GL2.GL_ONE_MINUS_SRC_ALPHA);            
+      if (useBlend) {
+         gl2.glDisable(GL2.GL_DEPTH_TEST);
+         gl2.glEnable(GL2.GL_BLEND);
+         gl2.glBlendFunc(GL2.GL_SRC_ALPHA, GL2.GL_ONE_MINUS_SRC_ALPHA);            
+      } else {
+         gl2.glEnable(GL2.GL_DEPTH_TEST);
+         gl2.glEnable(GL2.GL_BLEND);
+         gl2.glBlendFunc(GL2.GL_SRC_ALPHA, GL2.GL_ONE_MINUS_SRC_ALPHA);            
+      }
       
       gl2.glColor4d(1.0, 1.0, 1.0, 1.0);
       gl2.glEnable(GL2.GL_TEXTURE_2D);

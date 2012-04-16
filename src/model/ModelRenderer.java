@@ -549,23 +549,6 @@ public class ModelRenderer extends BaseModelRenderer {
       // Optional, debugging elements
       ////////////////////////////////////////////////////////////////////////////////
       if (SSM.instance().useGuide == true) {
-         setPerspectiveView(gl2); {
-             
-            
-            GraphicUtil.drawAxis(gl2, 0, 0, 0);
-            gl2.glDisable(GL2.GL_LIGHTING);
-            gl2.glDisable(GL2.GL_TEXTURE_2D);
-            gl2.glEnable(GL2.GL_CULL_FACE);
-            gl2.glCullFace(GL2.GL_BACK);
-            gl2.glEnable(GL2.GL_BLEND);
-            
-            //gl2.glDisable(GL2.GL_DEPTH_TEST);
-            /*
-            for (DCComponent comp : MM.currentModel.componentTable.values()) {
-               comp.renderBufferAdj(gl2, DCColour.fromInt(255, 0, 0, 50));
-            }             
-            */
-         }
          
          setOrthonormalView(gl2, 0, SSM.instance().windowWidth, 0, SSM.instance().windowHeight); {
             StatusWindow.tf.anchorX = SSM.instance().windowWidth - StatusWindow.tf.width;
@@ -815,6 +798,7 @@ public class ModelRenderer extends BaseModelRenderer {
       ////////////////////////////////////////////////////////////////////////////////
       setOrthonormalView(gl2, 0, SSM.instance().windowWidth, 0, SSM.instance().windowHeight); {
          // Update the yoffset before rendering
+         gl2.glEnable(GL2.GL_DEPTH_TEST);
          manufactureScroll.yoffset = SSM.instance().manufactureAttrib.yOffset;
          makeScroll.yoffset  = SSM.instance().makeAttrib.yOffset;
          modelScroll.yoffset = SSM.instance().modelAttrib.yOffset;
@@ -835,6 +819,7 @@ public class ModelRenderer extends BaseModelRenderer {
          c_makeScroll.render(gl2);
          c_modelScroll.render(gl2);
          c_yearScroll.render(gl2);
+         gl2.glDisable(GL2.GL_DEPTH_TEST);
          
          float ax;
          float ay;
@@ -925,15 +910,8 @@ public class ModelRenderer extends BaseModelRenderer {
       if (SSM.instance().l_mouseClicked == false) return;
       
       
-      // Something else has triggered a reset, let it run first
-      
-//      if (SSM.instance().dirty == 1 || SSM.instance().dirtyGL == 1) return;
-      
-      //if (SSM.instance().topElement != SSM.ELEMENT_NONE) return;
-      
       // Force trigger depth peel re-render on mouse press action
       SSM.instance().refreshOITTexture = true;
-      
       
       
       float mx = SSM.instance().mouseX;
@@ -1012,65 +990,66 @@ public class ModelRenderer extends BaseModelRenderer {
       // end check
       
       
+      ////////////////////////////////////////////////////////////////////////////////
       // Check the UI elements first
-      // Handling vehicle manufacture
-      this.pickingScrollPane(mx, my, manufactureScroll, SSM.instance().manufactureAttrib, 
+      // The GUIs are implicitly layered, so the top layered gui elements are processed 
+      // first
+      ////////////////////////////////////////////////////////////////////////////////
+      int pick = 0;
+      
+      // Handle vehicle manufacturers
+      pick = pickingScrollPane(mx, my, manufactureScroll, SSM.instance().manufactureAttrib, 
             makeScroll, SSM.instance().makeAttrib,     // level 1
             modelScroll, SSM.instance().modelAttrib,   // level 2
             yearScroll,  SSM.instance().yearAttrib     // level 3
-      );
-      this.scrollPaneTransition(mx, my, manufactureScroll, SSM.instance().manufactureAttrib);
-      
-      
-      // Handling vehicle make
-      this.pickingScrollPane(mx, my, makeScroll, SSM.instance().makeAttrib, 
-            modelScroll, SSM.instance().modelAttrib,   // level 2
-            yearScroll, SSM.instance().yearAttrib      // level 3
-      );
-      this.scrollPaneTransition(mx, my, makeScroll, SSM.instance().makeAttrib);
-      
-      
-      // Handling vehicle model
-      this.pickingScrollPane(mx, my, modelScroll, SSM.instance().modelAttrib,
-            yearScroll, SSM.instance().yearAttrib      // level 3
-      );
-      this.scrollPaneTransition(mx, my, modelScroll, SSM.instance().modelAttrib);
-      
-      
-      // Handling vehicle year
-      this.pickingScrollPane(mx, my, yearScroll, SSM.instance().yearAttrib);
-      this.scrollPaneTransition(mx, my, yearScroll, SSM.instance().yearAttrib);
-      
-      
-      
-      
-      
-      this.pickingScrollPane(mx, my, c_manufactureScroll, SSM.instance().c_manufactureAttrib, 
+      ); if (pick != 0) return;
+      pick = pickingScrollPane(mx, my, c_manufactureScroll, SSM.instance().c_manufactureAttrib, 
             c_makeScroll, SSM.instance().c_makeAttrib,     // level 1
             c_modelScroll, SSM.instance().c_modelAttrib,   // level 2
             c_yearScroll,  SSM.instance().c_yearAttrib     // level 3
-      );
-      this.scrollPaneTransition(mx, my, c_manufactureScroll, SSM.instance().c_manufactureAttrib);
+      );if (pick != 0) return;
       
       
       // Handling vehicle make
-      this.pickingScrollPane(mx, my, c_makeScroll, SSM.instance().c_makeAttrib, 
+      pick = pickingScrollPane(mx, my, makeScroll, SSM.instance().makeAttrib, 
+            modelScroll, SSM.instance().modelAttrib,   // level 2
+            yearScroll, SSM.instance().yearAttrib      // level 3
+      ); if (pick != 0) return;
+      pick = pickingScrollPane(mx, my, c_makeScroll, SSM.instance().c_makeAttrib, 
             c_modelScroll, SSM.instance().c_modelAttrib,   // level 2
             c_yearScroll, SSM.instance().c_yearAttrib      // level 3
-      );
-      this.scrollPaneTransition(mx, my, c_makeScroll, SSM.instance().c_makeAttrib);
+      ); if (pick != 0) return; 
       
       
       // Handling vehicle model
-      this.pickingScrollPane(mx, my, c_modelScroll, SSM.instance().c_modelAttrib,
+      pick = pickingScrollPane(mx, my, modelScroll, SSM.instance().modelAttrib,
+            yearScroll, SSM.instance().yearAttrib      // level 3
+      ); if (pick != 0) return;
+      pick = pickingScrollPane(mx, my, c_modelScroll, SSM.instance().c_modelAttrib,
             c_yearScroll, SSM.instance().c_yearAttrib      // level 3
-      );
-      this.scrollPaneTransition(mx, my, c_modelScroll, SSM.instance().c_modelAttrib);
+      ); if (pick != 0) return;
       
       
       // Handling vehicle year
-      this.pickingScrollPane(mx, my, c_yearScroll, SSM.instance().c_yearAttrib);
-      this.scrollPaneTransition(mx, my, c_yearScroll, SSM.instance().c_yearAttrib);
+      pick = pickingScrollPane(mx, my, yearScroll, SSM.instance().yearAttrib);
+      if (pick != 0) return;
+      pick = pickingScrollPane(mx, my, c_yearScroll, SSM.instance().c_yearAttrib);
+      if (pick != 0) return;
+      
+      
+      // Transitions
+      scrollPaneTransition(mx, my, manufactureScroll, SSM.instance().manufactureAttrib);
+      scrollPaneTransition(mx, my, makeScroll, SSM.instance().makeAttrib);
+      scrollPaneTransition(mx, my, modelScroll, SSM.instance().modelAttrib);
+      scrollPaneTransition(mx, my, yearScroll, SSM.instance().yearAttrib);
+      
+      scrollPaneTransition(mx, my, c_manufactureScroll, SSM.instance().c_manufactureAttrib);
+      scrollPaneTransition(mx, my, c_makeScroll, SSM.instance().c_makeAttrib);
+      scrollPaneTransition(mx, my, c_modelScroll, SSM.instance().c_modelAttrib);
+      scrollPaneTransition(mx, my, c_yearScroll, SSM.instance().c_yearAttrib);
+      
+      
+      
      
       // If is dirty then skip...something is already updating
       if (SSM.instance().dirty == 1 || SSM.instance().dirtyGL == 1) {
@@ -2310,24 +2289,28 @@ public class ModelRenderer extends BaseModelRenderer {
       manufactureScroll = new DCScrollPane("MFR");
       manufactureScroll.anchorX = SSM.instance().manufactureAttrib.anchorX;
       manufactureScroll.anchorY = SSM.instance().manufactureAttrib.anchorY;
+      manufactureScroll.depth = 0.5f;
       manufactureScroll.calculate();
       manufactureScroll.renderToTexture(null);
       
       makeScroll = new DCScrollPane("MAKE");
       makeScroll.anchorX = SSM.instance().makeAttrib.anchorX;
       makeScroll.anchorY = SSM.instance().makeAttrib.anchorY;
+      makeScroll.depth = 0.5f;
       makeScroll.calculate();
       makeScroll.renderToTexture(null);
       
       modelScroll = new DCScrollPane("MODEL");
       modelScroll.anchorX = SSM.instance().modelAttrib.anchorX;
       modelScroll.anchorY = SSM.instance().modelAttrib.anchorY;
+      modelScroll.depth = 0.5f;
       modelScroll.calculate();
       modelScroll.renderToTexture(null);
       
       yearScroll = new DCScrollPane("YEAR");
       yearScroll.anchorX = SSM.instance().yearAttrib.anchorX;
       yearScroll.anchorY = SSM.instance().yearAttrib.anchorY;
+      yearScroll.depth = 0.5f;
       yearScroll.calculate();
       yearScroll.renderToTexture(null);
       
@@ -2430,7 +2413,7 @@ public class ModelRenderer extends BaseModelRenderer {
    ////////////////////////////////////////////////////////////////////////////////
    // Handles select action for hierarchical scrolling panel filters
    ////////////////////////////////////////////////////////////////////////////////
-   public void pickingScrollPane(float mx, float my, DCScrollPane widget, PaneAttrib attrib, Object ...childrenPair) {
+   public int pickingScrollPane(float mx, float my, DCScrollPane widget, PaneAttrib attrib, Object ...childrenPair) {
       if (DCUtil.between(mx, attrib.anchorX, attrib.anchorX+SSM.instance().scrollWidth)) {
          //if (DCUtil.between(my, attrib.anchorY, attrib.anchorY+attrib.height)) {
          boolean yCheck = false;
@@ -2470,23 +2453,19 @@ public class ModelRenderer extends BaseModelRenderer {
                   SSM.instance().refreshMagicLens = true;
                   attrib.selected = i==0? null:t.val; 
                   
-                  
-                  
                   // Clear the children
                   for (int j=0; j < childrenPair.length; j+=2) {
                      ((DCScrollPane)childrenPair[j]).current = 0;
                      ((PaneAttrib)childrenPair[j+1]).selected = null;
                   }
-                  
                   System.out.println(widget.label + " >>>>>>>>>>>>>" + i);
-                  
-                  
                   break;
                }
             }            
-            return;
+            return 1;
          }
       } 
+      return 0;
    }
    
    

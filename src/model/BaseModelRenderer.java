@@ -420,15 +420,15 @@ public abstract class BaseModelRenderer implements RenderTask {
       this.resetPane(c_manufactureHash, c_manufactureScroll, SSM.instance().c_manufactureAttrib);
       
       Hashtable<String, Integer> c_makeHash = this.getHierFilter(startIdx, endIdx, c_manufactureScroll);
-      DCUtil.removeLowerBound(c_makeHash, 20);
+      //DCUtil.removeLowerBound(c_makeHash, 20);
       this.resetPane(c_makeHash, c_makeScroll, SSM.instance().c_makeAttrib);
       
       Hashtable<String, Integer> c_modelHash = this.getHierFilter(startIdx, endIdx, c_manufactureScroll, c_makeScroll);
-      DCUtil.removeLowerBound(c_modelHash, 20);
+      //DCUtil.removeLowerBound(c_modelHash, 20);
       this.resetPane(c_modelHash, c_modelScroll, SSM.instance().c_modelAttrib);
       
       Hashtable<String, Integer> c_yearHash = this.getHierFilter(startIdx, endIdx, c_manufactureScroll, c_makeScroll, c_modelScroll);
-      DCUtil.removeLowerBound(c_yearHash, 20);
+      //DCUtil.removeLowerBound(c_yearHash, 20);
       this.resetPane(c_yearHash, c_yearScroll, SSM.instance().c_yearAttrib);
       
      
