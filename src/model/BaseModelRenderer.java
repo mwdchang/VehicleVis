@@ -54,20 +54,7 @@ public abstract class BaseModelRenderer implements RenderTask {
    
    public DCTextPanel2 dcTextPanel = new DCTextPanel2();
    
-   // Data filter combo boxes
-   public TextureFont label;
-   public TextureFont filterTexture;
-   public DCScrollPane manufactureScroll; 
-   public DCScrollPane makeScroll;
-   public DCScrollPane modelScroll;
-   public DCScrollPane yearScroll;
-   
-   public TextureFont c_label;
-   public TextureFont c_filterTexture;
-   public DCScrollPane c_manufactureScroll; 
-   public DCScrollPane c_makeScroll;
-   public DCScrollPane c_modelScroll;
-   public DCScrollPane c_yearScroll;
+
    
    
    // Flow effect filter
@@ -76,7 +63,6 @@ public abstract class BaseModelRenderer implements RenderTask {
    public FrameBufferTexture outlineTexture2;
    
    
-   public static Font labelFont = DCUtil.loadFont("din1451m.ttf", Font.PLAIN, 12f);
    
    
    @Override
@@ -246,122 +232,7 @@ public abstract class BaseModelRenderer implements RenderTask {
    }   
    
    
-   ////////////////////////////////////////////////////////////////////////////////
-   // Reset a scroll-able panel
-   ////////////////////////////////////////////////////////////////////////////////
-   public void resetPane(Hashtable<String, Integer> table, DCScrollPane widget, PaneAttrib attrib) {
-      int counter = 0;
-      int prevManufacture = -1;
-      widget.tagList.add( new GTag(10.0f, (counter+1)*DCScrollPane.spacing, counter*DCScrollPane.spacing, "--- ALL ---", "--- ALL ---", -1));
-      counter++;
-      
-      Vector<String> list = new Vector<String>();
-      
-      // Add to list and also calculate the max per the category
-      int max = 0;
-      for (String s : table.keySet()) {
-         list.add( s );  
-         if (max < table.get(s) ) max = table.get(s);
-      }
-      widget.maxValue = max;
-      
-      Collections.sort(list);
-      for (int i=0; i < list.size(); i++) {
-         String txt = "";
-         String s = list.elementAt(i);
-         
-         // HACK
-         String s2 = "";
-         if (s.length() > 20) {
-            s2 = s.substring(0, 20);
-            txt = s2 + " (" + table.get(s) + ")";
-         } else {
-            txt = s + " (" + table.get(s) + ")";
-         }
-         
-         GTag t = new GTag(10.0f, (counter+1)*DCScrollPane.spacing, counter*DCScrollPane.spacing, txt, s, table.get(s));
-         if (t.val.equals(attrib.selected)) {
-            prevManufacture = i;
-            widget.currentStr = t.val;
-         }
-         widget.tagList.add( t );
-         counter++;   
-      }
-      widget.texPanelHeight = widget.tagList.lastElement().y;
-      attrib.textureHeight = widget.texPanelHeight;
-      attrib.height = Math.min(attrib.textureHeight, SSM.instance().defaultScrollHeight);
-      
-      if (widget.height > 0) widget.height = attrib.height;
-      widget.dirty = true;       
-      if (prevManufacture < 0) {
-         widget.current = 0;   
-         widget.currentStr = widget.tagList.elementAt(0).val;
-         attrib.selected = null;
-         attrib.yOffset = attrib.height;
-      }
-      
-      // Final adjustment
-      if (prevManufacture >= 0) {
-         float tempY = 0;
-         tempY = widget.tagList.elementAt(prevManufacture).y + DCScrollPane.spacing;
-         attrib.yOffset = Math.max( tempY, attrib.height);
-      }
-      
-      // If the list only contains one element ==> IE: "ALL", then that means we did not select an item
-      // in the upper hierarchy somewhere. So this means that we might as well hide it. 
-      // We will still do the calculations above, just so everything is synchronized
-      if (widget.tagList.size() == 1 ) {
-         widget.visible = false;   
-         widget.height = 0.0f;
-         attrib.height = 0.0f;
-         attrib.active = false;
-      } else {
-         widget.visible = true;
-      }
-      //System.out.println(widget.label + " " + widget.tagList.size());
-   }
-   
-   
-   
-   ////////////////////////////////////////////////////////////////////////////////
-   // Get a list of available filters, based on hierarchical order
-   //  - startIdx : starting time frame
-   //  - endIdx   : ending time frame
-   //  - ancestor : higher level options that is applied to the current filter 
-   ////////////////////////////////////////////////////////////////////////////////
-   public Hashtable<String, Integer> getHierFilter(int startIdx, int endIdx, Object... ancestor) {
-      Hashtable<String, Integer> result = new Hashtable<String, Integer>();
-      
-      for (int i=startIdx; i <= endIdx; i++) {
-         String dtStr = CacheManager.instance().getTimeByIndex(i); 
-         int month = Integer.parseInt(dtStr.substring(4,6)) - 1;
-         if (month < SSM.instance().startMonth || month > SSM.instance().endMonth) continue;      
-         
-         QueryObj root = CacheManager.instance().queryTableU.elementAt(i);
-         QueryObj qobj = root;
-         QueryObj current = root;
-         
-         for (int j=0; j < ancestor.length; j++) {
-            qobj = current.get( ((DCScrollPane)ancestor[j]).currentStr);
-            if (qobj == null) break;
-            current = qobj;
-         }
-         if (qobj == null) continue;
-         
-         for (String s: qobj.children.keySet()) {
-            int count = qobj.children.get(s).count;
-            if (result.containsKey(s)) {
-               int prev = result.get(s);
-               result.put(s, count+prev);
-            } else {
-               result.put(s, count);
-            }
-         } // end for qobj
-         
-      }
-      
-      return result;
-   }
+
    
    
    ////////////////////////////////////////////////////////////////////////////////
@@ -381,55 +252,12 @@ public abstract class BaseModelRenderer implements RenderTask {
       
       
       
-      manufactureScroll.tagList.clear();
-      makeScroll.tagList.clear();
-      modelScroll.tagList.clear();
-      yearScroll.tagList.clear();
-      
-      c_manufactureScroll.tagList.clear();
-      c_makeScroll.tagList.clear();
-      c_modelScroll.tagList.clear();
-      c_yearScroll.tagList.clear();
+
       
       
       DWin.instance().error(SSM.instance().startMonth + " " + SSM.instance().endMonth);
       DWin.instance().error("Starting indices: " + startIdx + " " + endIdx );
       
-      // Set up default 
-      Hashtable<String, Integer> manufactureHash = this.getHierFilter(startIdx, endIdx);
-      DCUtil.removeLowerBound(manufactureHash, 100);
-      this.resetPane(manufactureHash, manufactureScroll, SSM.instance().manufactureAttrib);
-      
-      Hashtable<String, Integer> makeHash = this.getHierFilter(startIdx, endIdx, manufactureScroll);
-      //DCUtil.removeLowerBound(makeHash, 20);
-      this.resetPane(makeHash, makeScroll, SSM.instance().makeAttrib);
-      
-      Hashtable<String, Integer> modelHash = this.getHierFilter(startIdx, endIdx, manufactureScroll, makeScroll);
-      //DCUtil.removeLowerBound(modelHash, 20);
-      this.resetPane(modelHash, modelScroll, SSM.instance().modelAttrib);
-      
-      Hashtable<String, Integer> yearHash = this.getHierFilter(startIdx, endIdx, manufactureScroll, makeScroll, modelScroll);
-      //DCUtil.removeLowerBound(yearHash, 20);
-      this.resetPane(yearHash, yearScroll, SSM.instance().yearAttrib);
-
-            
-      
-      // Set up the comparisons
-      Hashtable<String, Integer> c_manufactureHash = this.getHierFilter(startIdx, endIdx);
-      DCUtil.removeLowerBound(c_manufactureHash, 100);
-      this.resetPane(c_manufactureHash, c_manufactureScroll, SSM.instance().c_manufactureAttrib);
-      
-      Hashtable<String, Integer> c_makeHash = this.getHierFilter(startIdx, endIdx, c_manufactureScroll);
-      //DCUtil.removeLowerBound(c_makeHash, 20);
-      this.resetPane(c_makeHash, c_makeScroll, SSM.instance().c_makeAttrib);
-      
-      Hashtable<String, Integer> c_modelHash = this.getHierFilter(startIdx, endIdx, c_manufactureScroll, c_makeScroll);
-      //DCUtil.removeLowerBound(c_modelHash, 20);
-      this.resetPane(c_modelHash, c_modelScroll, SSM.instance().c_modelAttrib);
-      
-      Hashtable<String, Integer> c_yearHash = this.getHierFilter(startIdx, endIdx, c_manufactureScroll, c_makeScroll, c_modelScroll);
-      //DCUtil.removeLowerBound(c_yearHash, 20);
-      this.resetPane(c_yearHash, c_yearScroll, SSM.instance().c_yearAttrib);
       
      
       
@@ -1140,6 +968,7 @@ public abstract class BaseModelRenderer implements RenderTask {
       
       
       // Reset the scroll labels
+      /*
       label.clearMark();
       if (SSM.instance().manufactureAttrib.selected != null) 
          label.addMark(SSM.instance().manufactureAttrib.selected, Color.BLACK, labelFont, 1, 31);
@@ -1180,6 +1009,7 @@ public abstract class BaseModelRenderer implements RenderTask {
       else
          c_label.addMark("-- ALL --", Color.BLACK, labelFont, 1, 1);
       c_label.renderToTexture(null);      
+      */
       
       
       // Update status

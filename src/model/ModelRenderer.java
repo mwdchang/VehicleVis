@@ -59,52 +59,7 @@ public class ModelRenderer extends BaseModelRenderer {
    }     
    
    
-   ////////////////////////////////////////////////////////////////////////////////
-   // Hack: Just to test if this works
-   // Check if the comparison mode is active
-   // if comparisonMode == true  then adjust the anchorX and anchorY to show the comparison dropdown
-   // if comparisonMode == false then hide the comparison mode
-   ////////////////////////////////////////////////////////////////////////////////
-   public void checkComparisonMode() {
-      if (SSM.instance().useComparisonMode == false) {
-         SSM.instance().manufactureAttrib.anchorY = 50;
-         SSM.instance().makeAttrib.anchorY = 50;
-         SSM.instance().modelAttrib.anchorY = 50;
-         SSM.instance().yearAttrib.anchorY = 50;
-         SSM.instance().c_manufactureAttrib.anchorY = -150;
-         SSM.instance().c_makeAttrib.anchorY = -150;
-         SSM.instance().c_modelAttrib.anchorY = -150;
-         SSM.instance().c_yearAttrib.anchorY = -150;
-         
-         manufactureScroll.anchorY = SSM.instance().manufactureAttrib.anchorY;
-         makeScroll.anchorY = SSM.instance().makeAttrib.anchorY;
-         modelScroll.anchorY = SSM.instance().modelAttrib.anchorY;
-         yearScroll.anchorY = SSM.instance().yearAttrib.anchorY;
-         c_manufactureScroll.anchorY = SSM.instance().c_manufactureAttrib.anchorY;
-         c_makeScroll.anchorY = SSM.instance().c_makeAttrib.anchorY;
-         c_modelScroll.anchorY = SSM.instance().c_modelAttrib.anchorY;
-         c_yearScroll.anchorY = SSM.instance().c_yearAttrib.anchorY;
-      } else {
-         SSM.instance().c_manufactureAttrib.anchorY = 80;
-         SSM.instance().c_makeAttrib.anchorY = 80;
-         SSM.instance().c_modelAttrib.anchorY = 80;
-         SSM.instance().c_yearAttrib.anchorY = 80;
-         
-         SSM.instance().manufactureAttrib.anchorY = 50;
-         SSM.instance().makeAttrib.anchorY = 50;
-         SSM.instance().modelAttrib.anchorY = 50;
-         SSM.instance().yearAttrib.anchorY = 50;
-         
-         manufactureScroll.anchorY = SSM.instance().manufactureAttrib.anchorY;
-         makeScroll.anchorY = SSM.instance().makeAttrib.anchorY;
-         modelScroll.anchorY = SSM.instance().modelAttrib.anchorY;
-         yearScroll.anchorY = SSM.instance().yearAttrib.anchorY;
-         c_manufactureScroll.anchorY = SSM.instance().c_manufactureAttrib.anchorY;
-         c_makeScroll.anchorY = SSM.instance().c_makeAttrib.anchorY;
-         c_modelScroll.anchorY = SSM.instance().c_modelAttrib.anchorY;
-         c_yearScroll.anchorY = SSM.instance().c_yearAttrib.anchorY;
-     }
-   }
+
    
    
    ////////////////////////////////////////////////////////////////////////////////
@@ -118,7 +73,6 @@ public class ModelRenderer extends BaseModelRenderer {
          resetDataGL(gl2);
          SSM.instance().dirtyGL = 0;
       }
-      checkComparisonMode();
       
       if (SSM.instance().use3DModel == true) {
          this.renderIntegratedView(gl2);
@@ -380,84 +334,6 @@ public class ModelRenderer extends BaseModelRenderer {
       }
       
       
-
-     
-     
-      // Hack hack - remove comparison to basemodelrenderer
-      //this.renderComparison(gl2);
-      
-      /*
-      if (SSM.instance().useComparisonMode == true) {
-         float size;
-         float c;
-         outlineTexture1.startRecording(gl2);
-            setPerspectiveView(gl2);
-            basicTransform(gl2);
-            gl2.glClearColor(0, 0, 0, 0);
-            gl2.glClear(GL2.GL_COLOR_BUFFER_BIT);
-            gl2.glDisable(GL2.GL_DEPTH_TEST);
-            
-            c = 1;
-            size = 2+MM.currentModel.componentTable.size();
-            gl2.glPushMatrix();
-            for (DCComponent comp : MM.currentModel.componentTable.values()) {
-               
-               if (comp.hasContext && comp.active && ! SSM.instance().selectedGroup.contains(comp.id)) {
-                  float v1 = CacheManager.instance().groupOccurrence.get(comp.id);
-                  float v2 = CacheManager.instance().c_groupOccurrence.get(comp.id);                  
-                  if (v1 > v2) {
-                     double v = 0.3 + 0.7*(v1-v2)/v1;
-                     comp.renderBuffer(gl2, DCColour.fromDouble(0.5, 0.0, v, 0.2), 2);
-                     //System.out.println("1 : " + comp.cname);
-                  }
-               }
-               c ++;
-            } // end for
-            gl2.glPopMatrix();
-         outlineTexture1.stopRecording(gl2);
-         GraphicUtil.setOrthonormalView(gl2, 0, 1, 0, 1, -10, 10);
-         gl2.glBlendFunc(GL2.GL_SRC_ALPHA, GL2.GL_ONE_MINUS_SRC_ALPHA);
-         outlineTexture1.renderComparison(gl2, 1.0f, SchemeManager.comp_1, SchemeManager.comp_2);
-         
-         
-         outlineTexture2.startRecording(gl2);
-            setPerspectiveView(gl2);
-            basicTransform(gl2);
-            gl2.glClearColor(0, 0, 0, 0);
-            gl2.glClear(GL2.GL_COLOR_BUFFER_BIT);
-            gl2.glDisable(GL2.GL_DEPTH_TEST);
-            
-            c = 1;
-            size = 2+MM.currentModel.componentTable.size();
-            gl2.glPushMatrix();
-            for (DCComponent comp : MM.currentModel.componentTable.values()) {
-               
-               if (comp.hasContext && comp.active && ! SSM.instance().selectedGroup.contains(comp.id)) {
-                  float v1 = CacheManager.instance().groupOccurrence.get(comp.id);
-                  float v2 = CacheManager.instance().c_groupOccurrence.get(comp.id);                  
-                  if (v1 < v2) {
-                     double v = 0.3 + 0.7*(v2-v1)/v2;
-                     comp.renderBuffer(gl2, DCColour.fromDouble(0.0, 0.5, v, 0.2), 2);
-                     //System.out.println("2 : " + comp.cname);
-                  }
-               }
-               c ++;
-            } // end for
-            gl2.glPopMatrix();
-
-         outlineTexture2.stopRecording(gl2);
-         GraphicUtil.setOrthonormalView(gl2, 0, 1, 0, 1, -10, 10);
-         gl2.glBlendFunc(GL2.GL_SRC_ALPHA, GL2.GL_ONE_MINUS_SRC_ALPHA);
-         outlineTexture2.renderComparison(gl2, 1.0f, SchemeManager.comp_1, SchemeManager.comp_2);
-      }
-      */
-      
-      
-      
-      
-      
-      
-      
       ////////////////////////////////////////////////////////////////////////////////
       // Render any filters we want to show
       ////////////////////////////////////////////////////////////////////////////////
@@ -557,11 +433,6 @@ public class ModelRenderer extends BaseModelRenderer {
          }
          
       }         
-      
-      
-      this.renderScrollFilter(gl2);
-      
-
       
      
       
@@ -694,7 +565,7 @@ public class ModelRenderer extends BaseModelRenderer {
       ////////////////////////////////////////////////////////////////////////////////
       // Render the scrollable filters
       ////////////////////////////////////////////////////////////////////////////////
-      this.renderScrollFilter(gl2);
+      //this.renderScrollFilter(gl2);
       
       
       ////////////////////////////////////////////////////////////////////////////////
@@ -792,109 +663,7 @@ public class ModelRenderer extends BaseModelRenderer {
   
    
    
-   public void renderScrollFilter(GL2 gl2) {
-      ////////////////////////////////////////////////////////////////////////////////
-      // Rener the combo boxes
-      ////////////////////////////////////////////////////////////////////////////////
-      setOrthonormalView(gl2, 0, SSM.instance().windowWidth, 0, SSM.instance().windowHeight); {
-         // Update the yoffset before rendering
-         gl2.glEnable(GL2.GL_DEPTH_TEST);
-         manufactureScroll.yoffset = SSM.instance().manufactureAttrib.yOffset;
-         makeScroll.yoffset  = SSM.instance().makeAttrib.yOffset;
-         modelScroll.yoffset = SSM.instance().modelAttrib.yOffset;
-         yearScroll.yoffset  = SSM.instance().yearAttrib.yOffset;
-         
-         manufactureScroll.render(gl2);   
-         makeScroll.render(gl2);
-         modelScroll.render(gl2);
-         yearScroll.render(gl2);
-         
-         
-         c_manufactureScroll.yoffset = SSM.instance().c_manufactureAttrib.yOffset;
-         c_makeScroll.yoffset  = SSM.instance().c_makeAttrib.yOffset;
-         c_modelScroll.yoffset = SSM.instance().c_modelAttrib.yOffset;
-         c_yearScroll.yoffset  = SSM.instance().c_yearAttrib.yOffset;
-         
-         c_manufactureScroll.render(gl2);   
-         c_makeScroll.render(gl2);
-         c_modelScroll.render(gl2);
-         c_yearScroll.render(gl2);
-         gl2.glDisable(GL2.GL_DEPTH_TEST);
-         
-         float ax;
-         float ay;
-         
-         gl2.glEnable(GL2.GL_BLEND);
-         if (SSM.instance().useComparisonMode == true) {
-            GraphicUtil.drawRoundedRect(gl2, SSM.filterControlAnchorX+30, manufactureScroll.anchorY - 10, 0, 
-                  60, 10, 8, 6,
-                  DCColour.fromDouble(0.68, 0.68, 0.68, 0.65).toArray(), 
-                  DCColour.fromDouble(0.77, 0.77, 0.77, 0.65).toArray());
-            
-            /*
-            label.anchorX = manufactureScroll.anchorX - SSM.offset_labelX;   
-            label.anchorY = manufactureScroll.anchorY - SSM.offset_labelY;
-            label.render(gl2);
-            */
-            filterTexture.anchorX = SSM.filterControlAnchorX;
-            filterTexture.anchorY = manufactureScroll.anchorY - 15;
-            filterTexture.render(gl2);
-            
-            GraphicUtil.drawRoundedRect(gl2, SSM.c_filterControlAnchorX+30, c_manufactureScroll.anchorY - 10, 0, 
-                  60, 10, 8, 6,
-                  DCColour.fromDouble(0.68, 0.68, 0.68, 0.65).toArray(), 
-                  DCColour.fromDouble(0.77, 0.77, 0.77, 0.65).toArray());
-                  
-            /*
-            c_label.anchorX = c_manufactureScroll.anchorX - SSM.offset_labelX;   
-            c_label.anchorY = c_manufactureScroll.anchorY - SSM.offset_labelY;
-            c_label.render(gl2);
-            */
-            c_filterTexture.anchorX = SSM.c_filterControlAnchorX;
-            c_filterTexture.anchorY = c_manufactureScroll.anchorY - 15;
-            c_filterTexture.render(gl2);
-         } else {
-            GraphicUtil.drawRoundedRect(gl2, SSM.filterControlAnchorX+30, manufactureScroll.anchorY - 10, 0, 
-                  60, 10, 8, 6,
-                  DCColour.fromDouble(0.68, 0.68, 0.68, 0.65).toArray(), 
-                  DCColour.fromDouble(0.77, 0.77, 0.77, 0.65).toArray());
-                  
-            /*
-            label.anchorX = manufactureScroll.anchorX - SSM.offset_labelX;   
-            label.anchorY = manufactureScroll.anchorY - SSM.offset_labelY;
-            label.render(gl2);
-            */
-            filterTexture.anchorX = SSM.filterControlAnchorX;
-            filterTexture.anchorY = manufactureScroll.anchorY - 15;
-            filterTexture.render(gl2);
-         }
-         
-         
-         // Draw in indicator so the users will known which colour is associated with 
-         // which selection
-         if (SSM.instance().useComparisonMode == true) {
-            ax = SSM.filterControlAnchorX-20;
-            ay = manufactureScroll.anchorY-20;
-            gl2.glColor4fv(SchemeManager.comp_1.toArray(), 0);
-            gl2.glBegin(GL2.GL_QUADS);    
-               gl2.glVertex2f(ax, ay+3);
-               gl2.glVertex2f(ax+15, ay+3);
-               gl2.glVertex2f(ax+15, ay+20-3);
-               gl2.glVertex2f(ax, ay+20-3);
-            gl2.glEnd();
-            
-            ax = SSM.c_filterControlAnchorX-20;
-            ay = c_manufactureScroll.anchorY-20;
-            gl2.glColor4fv(SchemeManager.comp_2.toArray(), 0);
-            gl2.glBegin(GL2.GL_QUADS);
-               gl2.glVertex2f(ax, ay+3);
-               gl2.glVertex2f(ax+15, ay+3);
-               gl2.glVertex2f(ax+15, ay+20-3);
-               gl2.glVertex2f(ax, ay+20-3);
-            gl2.glEnd();
-         }
-      }      
-   }
+
    
    
    
@@ -909,6 +678,8 @@ public class ModelRenderer extends BaseModelRenderer {
       // Quickie way to get out and save unnecessary rendering 
       if (SSM.instance().l_mouseClicked == false) return;
       
+      if (SSM.stopPicking == 1) return;
+      
       
       // Force trigger depth peel re-render on mouse press action
       SSM.instance().refreshOITTexture = true;
@@ -916,139 +687,6 @@ public class ModelRenderer extends BaseModelRenderer {
       
       float mx = SSM.instance().mouseX;
       float my = SSM.instance().windowHeight - SSM.instance().mouseY;
-      
-      
-      // Check if any one of the master scrollpane buttons are pressed
-      if (SSM.instance().useComparisonMode == true) {
-         if (DCUtil.between(mx, filterTexture.anchorX, filterTexture.anchorX+filterTexture.width))  {
-            if (DCUtil.between(my, filterTexture.anchorY, filterTexture.anchorY+filterTexture.height)) {
-               System.err.println("Clicked on master control");   
-               this.manufactureScroll.masterVisible = ! this.manufactureScroll.masterVisible;
-               this.makeScroll.masterVisible = ! this.makeScroll.masterVisible;
-               this.modelScroll.masterVisible = ! this.modelScroll.masterVisible;
-               this.yearScroll.masterVisible = ! this.yearScroll.masterVisible;
-               
-               if (this.manufactureScroll.masterVisible) {
-                  this.filterTexture.clearMark();
-                  this.filterTexture.addMark("Filter 1 <<", Color.BLACK, labelFont, 1, 1);
-                  this.filterTexture.renderToTexture(null);
-               } else {
-                  this.filterTexture.clearMark();
-                  this.filterTexture.addMark("Filter 1 >>", Color.BLACK, labelFont, 1, 1);
-                  this.filterTexture.renderToTexture(null);
-               }
-               
-               return;
-            }
-         }
-         
-         if (DCUtil.between(mx, c_filterTexture.anchorX, c_filterTexture.anchorX+c_filterTexture.width))  {
-            if (DCUtil.between(my, c_filterTexture.anchorY, c_filterTexture.anchorY+c_filterTexture.height)) {
-               System.err.println("Clicked on c master control");   
-               this.c_manufactureScroll.masterVisible = ! this.c_manufactureScroll.masterVisible;
-               this.c_makeScroll.masterVisible = ! this.c_makeScroll.masterVisible;
-               this.c_modelScroll.masterVisible = ! this.c_modelScroll.masterVisible;
-               this.c_yearScroll.masterVisible = ! this.c_yearScroll.masterVisible;
-               
-               if (this.c_manufactureScroll.masterVisible) {
-                  this.c_filterTexture.clearMark();
-                  this.c_filterTexture.addMark("Filter 2 <<", Color.BLACK, labelFont, 1, 1);
-                  this.c_filterTexture.renderToTexture(null);
-               } else {
-                  this.c_filterTexture.clearMark();
-                  this.c_filterTexture.addMark("Filter 2 >>", Color.BLACK, labelFont, 1, 1);
-                  this.c_filterTexture.renderToTexture(null);
-               }
-               
-               return;
-            }
-         }
-      } else {
-         if (DCUtil.between(mx, filterTexture.anchorX, filterTexture.anchorX+filterTexture.width))  {
-            if (DCUtil.between(my, filterTexture.anchorY, filterTexture.anchorY+filterTexture.height)) {
-               System.err.println("Clicked on master control");   
-               this.manufactureScroll.masterVisible = ! this.manufactureScroll.masterVisible;
-               this.makeScroll.masterVisible = ! this.makeScroll.masterVisible;
-               this.modelScroll.masterVisible = ! this.modelScroll.masterVisible;
-               this.yearScroll.masterVisible = ! this.yearScroll.masterVisible;
-                              
-               if (this.manufactureScroll.masterVisible) {
-                  this.filterTexture.clearMark();
-                  this.filterTexture.addMark("Filter 1 <<", Color.BLACK, labelFont, 1, 1);
-                  this.filterTexture.renderToTexture(null);
-               } else {
-                  this.filterTexture.clearMark();
-                  this.filterTexture.addMark("Filter 1 >>", Color.BLACK, labelFont, 1, 1);
-                  this.filterTexture.renderToTexture(null);
-               }
-               
-
-               return;
-            }
-         }
-      }
-      // end check
-      
-      
-      ////////////////////////////////////////////////////////////////////////////////
-      // Check the UI elements first
-      // The GUIs are implicitly layered, so the top layered gui elements are processed 
-      // first
-      ////////////////////////////////////////////////////////////////////////////////
-      int pick = 0;
-      
-      // Handle vehicle manufacturers
-      pick = pickingScrollPane(mx, my, manufactureScroll, SSM.instance().manufactureAttrib, 
-            makeScroll, SSM.instance().makeAttrib,     // level 1
-            modelScroll, SSM.instance().modelAttrib,   // level 2
-            yearScroll,  SSM.instance().yearAttrib     // level 3
-      ); if (pick != 0) return;
-      pick = pickingScrollPane(mx, my, c_manufactureScroll, SSM.instance().c_manufactureAttrib, 
-            c_makeScroll, SSM.instance().c_makeAttrib,     // level 1
-            c_modelScroll, SSM.instance().c_modelAttrib,   // level 2
-            c_yearScroll,  SSM.instance().c_yearAttrib     // level 3
-      );if (pick != 0) return;
-      
-      
-      // Handling vehicle make
-      pick = pickingScrollPane(mx, my, makeScroll, SSM.instance().makeAttrib, 
-            modelScroll, SSM.instance().modelAttrib,   // level 2
-            yearScroll, SSM.instance().yearAttrib      // level 3
-      ); if (pick != 0) return;
-      pick = pickingScrollPane(mx, my, c_makeScroll, SSM.instance().c_makeAttrib, 
-            c_modelScroll, SSM.instance().c_modelAttrib,   // level 2
-            c_yearScroll, SSM.instance().c_yearAttrib      // level 3
-      ); if (pick != 0) return; 
-      
-      
-      // Handling vehicle model
-      pick = pickingScrollPane(mx, my, modelScroll, SSM.instance().modelAttrib,
-            yearScroll, SSM.instance().yearAttrib      // level 3
-      ); if (pick != 0) return;
-      pick = pickingScrollPane(mx, my, c_modelScroll, SSM.instance().c_modelAttrib,
-            c_yearScroll, SSM.instance().c_yearAttrib      // level 3
-      ); if (pick != 0) return;
-      
-      
-      // Handling vehicle year
-      pick = pickingScrollPane(mx, my, yearScroll, SSM.instance().yearAttrib);
-      if (pick != 0) return;
-      pick = pickingScrollPane(mx, my, c_yearScroll, SSM.instance().c_yearAttrib);
-      if (pick != 0) return;
-      
-      
-      // Transitions
-      scrollPaneTransition(mx, my, manufactureScroll, SSM.instance().manufactureAttrib);
-      scrollPaneTransition(mx, my, makeScroll, SSM.instance().makeAttrib);
-      scrollPaneTransition(mx, my, modelScroll, SSM.instance().modelAttrib);
-      scrollPaneTransition(mx, my, yearScroll, SSM.instance().yearAttrib);
-      
-      scrollPaneTransition(mx, my, c_manufactureScroll, SSM.instance().c_manufactureAttrib);
-      scrollPaneTransition(mx, my, c_makeScroll, SSM.instance().c_makeAttrib);
-      scrollPaneTransition(mx, my, c_modelScroll, SSM.instance().c_modelAttrib);
-      scrollPaneTransition(mx, my, c_yearScroll, SSM.instance().c_yearAttrib);
-      
-      
       
      
       // If is dirty then skip...something is already updating
@@ -2278,108 +1916,7 @@ public class ModelRenderer extends BaseModelRenderer {
       super.init(gl2);
       dcTextPanel.init(gl2);
       
-      label = new TextureFont();
-      label.height = 45;
-      label.width = 120;
-      label.addMark("label", Color.black, labelFont, 1, 1);
-      label.renderToTexture(null);
-      
-      filterTexture = new TextureFont();
-      filterTexture.height = 20;
-      filterTexture.width = 120;
-      filterTexture.addMark("Filter 1 >>", Color.BLACK, labelFont, 1, 1);
-      filterTexture.renderToTexture(null);
-      
-      
-      manufactureScroll = new DCScrollPane("MFR");
-      manufactureScroll.anchorX = SSM.instance().manufactureAttrib.anchorX;
-      manufactureScroll.anchorY = SSM.instance().manufactureAttrib.anchorY;
-      manufactureScroll.depth = 0.5f;
-      manufactureScroll.calculate();
-      manufactureScroll.renderToTexture(null);
-      
-      makeScroll = new DCScrollPane("MAKE");
-      makeScroll.anchorX = SSM.instance().makeAttrib.anchorX;
-      makeScroll.anchorY = SSM.instance().makeAttrib.anchorY;
-      makeScroll.depth = 0.5f;
-      makeScroll.calculate();
-      makeScroll.renderToTexture(null);
-      
-      modelScroll = new DCScrollPane("MODEL");
-      modelScroll.anchorX = SSM.instance().modelAttrib.anchorX;
-      modelScroll.anchorY = SSM.instance().modelAttrib.anchorY;
-      modelScroll.depth = 0.5f;
-      modelScroll.calculate();
-      modelScroll.renderToTexture(null);
-      
-      yearScroll = new DCScrollPane("YEAR");
-      yearScroll.anchorX = SSM.instance().yearAttrib.anchorX;
-      yearScroll.anchorY = SSM.instance().yearAttrib.anchorY;
-      yearScroll.depth = 0.5f;
-      yearScroll.calculate();
-      yearScroll.renderToTexture(null);
-      
-      
-      
-      c_label = new TextureFont();
-      c_label.height = 45;
-      c_label.width = 100;
-      c_label.addMark("clabel", Color.black, labelFont, 1, 1);
-      c_label.renderToTexture(null);
-      
-      c_filterTexture = new TextureFont();
-      c_filterTexture.height = 20;
-      c_filterTexture.width = 120;
-      c_filterTexture.addMark("Filter 2 >>", Color.BLACK, labelFont, 1, 1);
-      c_filterTexture.renderToTexture(null);
-      
-      c_manufactureScroll = new DCScrollPane("MFR");
-      c_manufactureScroll.direction = DCScrollPane.UP;
-      c_manufactureScroll.anchorX = SSM.instance().c_manufactureAttrib.anchorX;
-      c_manufactureScroll.anchorY = SSM.instance().c_manufactureAttrib.anchorY;
-      c_manufactureScroll.calculate();
-      c_manufactureScroll.renderToTexture(null);
-      
-      c_makeScroll = new DCScrollPane("MAKE");
-      c_makeScroll.direction = DCScrollPane.UP;
-      c_makeScroll.anchorX = SSM.instance().c_makeAttrib.anchorX;
-      c_makeScroll.anchorY = SSM.instance().c_makeAttrib.anchorY;
-      c_makeScroll.calculate();
-      c_makeScroll.renderToTexture(null);
-      
-      c_modelScroll = new DCScrollPane("MODEL");
-      c_modelScroll.direction = DCScrollPane.UP;
-      c_modelScroll.anchorX = SSM.instance().c_modelAttrib.anchorX;
-      c_modelScroll.anchorY = SSM.instance().c_modelAttrib.anchorY;
-      c_modelScroll.calculate();
-      c_modelScroll.renderToTexture(null);
-      
-      c_yearScroll = new DCScrollPane("YEAR");
-      c_yearScroll.direction = DCScrollPane.UP;
-      c_yearScroll.anchorX = SSM.instance().c_yearAttrib.anchorX;
-      c_yearScroll.anchorY = SSM.instance().c_yearAttrib.anchorY;
-      c_yearScroll.calculate();
-      c_yearScroll.renderToTexture(null);
-      
-      
-      // Resize the width
-      manufactureScroll.width = SSM.instance().manufactureAttrib.width;
-      manufactureScroll.texPanelWidth = SSM.instance().manufactureAttrib.width;
-      makeScroll.width = SSM.instance().makeAttrib.width;
-      makeScroll.texPanelWidth = SSM.instance().makeAttrib.width;
-      modelScroll.width = SSM.instance().modelAttrib.width;
-      modelScroll.texPanelWidth = SSM.instance().modelAttrib.width;
-      yearScroll.width = SSM.instance().yearAttrib.width;
-      yearScroll.texPanelWidth = SSM.instance().yearAttrib.width;
-      
-      c_manufactureScroll.width = SSM.instance().c_manufactureAttrib.width;
-      c_manufactureScroll.texPanelWidth = SSM.instance().c_manufactureAttrib.width;
-      c_makeScroll.width = SSM.instance().c_makeAttrib.width;
-      c_makeScroll.texPanelWidth = SSM.instance().c_makeAttrib.width;
-      c_modelScroll.width = SSM.instance().c_modelAttrib.width;
-      c_modelScroll.texPanelWidth = SSM.instance().c_modelAttrib.width;
-      c_yearScroll.width = SSM.instance().c_yearAttrib.width;
-      c_yearScroll.texPanelWidth = SSM.instance().c_yearAttrib.width;
+
      
       
       MM.instance().initGPU(gl2);
@@ -2393,85 +1930,7 @@ public class ModelRenderer extends BaseModelRenderer {
    
    
    
-   ////////////////////////////////////////////////////////////////////////////////
-   // Handles the animated transition for scrolling panels, specifically those
-   // in the hierarchical search filter
-   ////////////////////////////////////////////////////////////////////////////////
-   public void scrollPaneTransition(float mx, float my, DCScrollPane widget, PaneAttrib attrib ) {
-      if (DCUtil.between(mx, widget.anchorX, widget.anchorX+SSM.instance().scrollWidth)) {
-         if (DCUtil.between(my, widget.anchorY-20, widget.anchorY)) {
-            attrib.active = ! attrib.active;
-            
-            
-            if (attrib.active) {
-               widget.animator = PropertySetter.createAnimator(SSM.SCROLL_DURATION, widget, "height", new FloatEval(), widget.height, attrib.height); 
-               widget.animator.start();
-            } else {
-               widget.animator = PropertySetter.createAnimator(SSM.SCROLL_DURATION, widget, "height", new FloatEval(), widget.height, 0.0f); 
-               widget.animator.start();
-            }
-         }
-      }   
-   }
-   
-   
-   ////////////////////////////////////////////////////////////////////////////////
-   // Handles select action for hierarchical scrolling panel filters
-   ////////////////////////////////////////////////////////////////////////////////
-   public int pickingScrollPane(float mx, float my, DCScrollPane widget, PaneAttrib attrib, Object ...childrenPair) {
-      if (DCUtil.between(mx, attrib.anchorX, attrib.anchorX+SSM.instance().scrollWidth)) {
-         //if (DCUtil.between(my, attrib.anchorY, attrib.anchorY+attrib.height)) {
-         boolean yCheck = false;
-         if (widget.direction == DCScrollPane.UP ) {
-            yCheck = DCUtil.between(my, attrib.anchorY, attrib.anchorY+widget.height); 
-         } else {
-            yCheck = DCUtil.between(my, attrib.anchorY-20-widget.height, attrib.anchorY-20);
-            System.out.println( (attrib.anchorY-20-widget.height) + " " + (attrib.anchorY-20));
-         }
-                  
-         //if (DCUtil.between(my, attrib.anchorY, attrib.anchorY+widget.height)) {
-         if (yCheck) {
-            
-            // 1) Calculate the texture coordinate
-            float texX = mx - attrib.anchorX;
-            float texY = 0; 
-            if (widget.direction == DCScrollPane.UP)
-               texY = my - attrib.anchorY;
-            else
-               texY = widget.height - Math.abs(my - (widget.anchorY-20));
-            
-            // 2) Adjust for Y-offset
-            texY = attrib.yOffset - (texY);
-            System.out.println("Tex : " + texX + " " + texY);
-            
-            for (int i=0; i < widget.tagList.size(); i++) {
-               GTag t = widget.tagList.elementAt(i);                
-               // Window system is upside down
-               if (texY >= t.yPrime && texY <= t.y) {
-                  SSM.instance().dirtyDateFilter = 1;
-                  widget.current = i; 
-                  widget.currentStr = t.val;
-                  widget.dirty  = true;
-                  
-                  SSM.instance().dirty = 1;
-                  SSM.instance().dirtyGL = 1;
-                  SSM.instance().refreshMagicLens = true;
-                  attrib.selected = i==0? null:t.val; 
-                  
-                  // Clear the children
-                  for (int j=0; j < childrenPair.length; j+=2) {
-                     ((DCScrollPane)childrenPair[j]).current = 0;
-                     ((PaneAttrib)childrenPair[j+1]).selected = null;
-                  }
-                  System.out.println(widget.label + " >>>>>>>>>>>>>" + i);
-                  break;
-               }
-            }            
-            return 1;
-         }
-      } 
-      return 0;
-   }
+
    
    
    

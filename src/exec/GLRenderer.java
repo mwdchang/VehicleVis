@@ -93,6 +93,7 @@ public class GLRenderer implements GLEventListener {
             renderTaskList.elementAt(i).picking(gl2);
          }
          SSM.instance().l_mouseClicked = false;
+         SSM.stopPicking = 0;
       }
       
       

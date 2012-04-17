@@ -1,5 +1,6 @@
 package exec;
 
+import gui.DomainFilterTask;
 import gui.FilterTask;
 import gui.LegendTask;
 import gui.SaveLoadTask;
@@ -64,6 +65,10 @@ public class ProjectDriver {
       SaveLoadTask save_task = new SaveLoadTask();
       //renderer.renderTaskList.add( save_task );
       
+      // Add domain filters
+      DomainFilterTask domain_task = new DomainFilterTask();
+      renderer.renderTaskList.add( domain_task );
+      
       
       // Create event manager instance
       EventManager eventManager = new EventManager();
@@ -111,16 +116,20 @@ public class ProjectDriver {
      
       //TODO: Create a timer to control update rate and rendering frame rate ?????
       // Start main loop
-      long updateFrequency = 2000;
+      long updateFrequency = 1000;
       long currentTime = 0;
       long lastTime = System.currentTimeMillis();
       int fps = 0;
       
       while (true) {
-         // Temporary update logic goes in here
+         // Update logic goes in here
+         // Note there is a precedence order here, 
+         // model_renderer.resetData() should always go first because
+         // it resets the cache
          if (SSM.instance().dirty == 1) {
             model_renderer.resetData();
-            // Reset panel if necessary
+            domain_task.resetData();
+            
             SSM.instance().dirty = 0;
          }
          

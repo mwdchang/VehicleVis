@@ -163,18 +163,19 @@ public class SSM {
    // The current focus group/component
    ///////////////////////////////////////////////////////////////////////////////// 
    public Hashtable<Integer, Integer> selectedGroup;
-   
    public Integer occlusionLevel;
-   
    public Vector<Integer> relatedList; // The list of components that are related to the selected components
-   
    public int maxOccurrence = Integer.MAX_VALUE;
    public int minOccurrence = Integer.MIN_VALUE;
+   
+   public static int stopPicking = 0; // Short circuit logic to exit picking loop
    
    
    // For grid selection
    public int selectedX = -1;
    public int selectedY = -1;
+   
+   
    
    
    ////////////////////////////////////////////////////////////////////////////////
@@ -192,13 +193,10 @@ public class SSM {
    public boolean useDualDepthPeeling = true;  // Whether to use OIT transparency
    public boolean useConstantAlpha = false;    // Whether or not to use OIT constant alpha
    public boolean useGlow = true;
-   
    public boolean useComparisonMode = false;   // Whether to compare across time lines
-   
    public boolean useLocalFocus = true;       // Whether to nor to render based on current selected components 
    public boolean use3DModel = true;          // Whether to use integrated 3D view 
    public boolean useFlag = true;             // Just a temporary flag to trigger adhoc tests and stuff, not used for real data
-   //public boolean useMonthMax = true;         // Whether to calculate the heatmap using month maximum or component maximum
    
    
    public int chartMode = 1;
