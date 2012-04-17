@@ -1568,7 +1568,7 @@ public abstract class BaseModelRenderer implements RenderTask {
 
 
         currId = 0;
-        for (int pass = 1; g_useOQ || pass < g_numPasses; pass++) {
+        for (int pass = 1; g_useOQ || pass < SSM.g_numPasses; pass++) {
            currId = pass % 2;
            int prevId = 1 - currId;
            int bufId = currId * 3;
@@ -1778,7 +1778,7 @@ public abstract class BaseModelRenderer implements RenderTask {
               g_shaderDualPeel.setUniform1i(gl2, "useLight", 0);
               if (v1 > v2) {                   
                  double v = 0.4 + 0.6*(v1-v2)/v1;
-                 gl2.glLineWidth(6.0f);
+                 gl2.glLineWidth(4.0f);
                  g_shaderDualPeel.setUniformf(gl2, "compColour", 
                        SchemeManager.comp_1.r,
                        SchemeManager.comp_1.g,
@@ -1788,7 +1788,7 @@ public abstract class BaseModelRenderer implements RenderTask {
                  gl2.glLineWidth(1.0f);
               } else if (v1 < v2 ){
                  double v = 0.4 + 0.6*(v2-v1)/v2;
-                 gl2.glLineWidth(6.0f);
+                 gl2.glLineWidth(4.0f);
                  g_shaderDualPeel.setUniformf(gl2, "compColour", 
                        SchemeManager.comp_2.r,
                        SchemeManager.comp_2.g,
@@ -1829,7 +1829,7 @@ public abstract class BaseModelRenderer implements RenderTask {
            //}
 
         }
-        g_numGeoPasses++;
+        SSM.g_numGeoPasses++;
      }     
      
      public int currId;
@@ -1859,8 +1859,6 @@ public abstract class BaseModelRenderer implements RenderTask {
      public float[] g_opacity = new float[]{0.5f};     
 //     public int g_numPasses = 4;
 //     public int g_numPasses = 8;
-     public int g_numPasses = 4;
-     public int g_numGeoPasses = 0;
      
      
      public ShaderObj g_shaderDualInit;

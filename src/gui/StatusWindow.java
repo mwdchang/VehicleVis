@@ -59,6 +59,7 @@ public class StatusWindow {
       addText("Local mode     : " + convert(SSM.instance().useLocalFocus));
       addText("Compare mode   : " + convert(SSM.instance().useComparisonMode));
       addText("Temp Flag      : " + convert(SSM.instance().useFlag));
+      addText("OIT Pass       : " + SSM.g_numPasses);
       
       switch (SSM.instance().chartMode) {
       case SSM.CHART_MODE_BY_MONTH_MAX: { addText("Chart Mode      : Month Max"); break; }
@@ -70,7 +71,7 @@ public class StatusWindow {
       addText("Num selected   : " + SSM.instance().selectedGroup.size());
       addText("Num related    : " + SSM.instance().relatedList.size());
       addText("================="); 
-      addText("Camera: " + DCCamera.instance().eye);
+      //addText("Camera: " + DCCamera.instance().eye);
       
       
    }

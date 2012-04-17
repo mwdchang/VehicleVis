@@ -53,7 +53,6 @@ public class EventManager implements KeyListener, MouseListener, MouseMotionList
             SSM.instance().refreshMagicLens = true;
             return;
          } else {
-System.out.println("...........................................................................");            
             SSM.instance().l_mouseClicked = true;
          }
       } else  if (e.getButton() == MouseEvent.BUTTON3){
@@ -236,31 +235,6 @@ System.out.println("............................................................
                SSM.instance().location = SSM.ELEMENT_FILTER;
             }
          }
-         
-        
-         
-         
-         
-         
-         /*
-         if ( (mx >= SSM.instance().docAnchorX && mx <= SSM.instance().docAnchorX+SSM.instance().docPadding) ||
-              (mx >= SSM.instance().docAnchorX+SSM.instance().docWidth-SSM.instance().docPadding && mx <= SSM.instance().docAnchorX + SSM.instance().docWidth) ) {
-            if (my >= SSM.instance().docAnchorY && my <= SSM.instance().docAnchorY + SSM.instance().docHeight) {
-               SSM.instance().topElement = SSM.ELEMENT_DOCUMENT;   
-            }
-         }
-         
-         if ( (my >= SSM.instance().docAnchorY && my <= SSM.instance().docAnchorY + SSM.instance().docPadding) || 
-              (my >= SSM.instance().docAnchorY+SSM.instance().docHeight-SSM.instance().docPadding && my <= SSM.instance().docAnchorY + SSM.instance().docHeight)) {
-            if (mx >= SSM.instance().docAnchorX && mx <= SSM.instance().docAnchorX+SSM.instance().docWidth) {
-               SSM.instance().topElement = SSM.ELEMENT_DOCUMENT;   
-            }
-         }
-         */
-      
-         
-         
-         //SSM.instance().mouseState |= SSM.MOUSE_LPRESS;
          SSM.instance().l_mousePressed = true;
       } else if (e.getButton() == MouseEvent.BUTTON3) {
          for (int i=0; i < SSM.instance().lensList.size(); i++) {
@@ -274,13 +248,13 @@ System.out.println("............................................................
                SSM.instance().topElement = SSM.ELEMENT_LENS;
             }
          }
-         
          SSM.instance().r_mousePressed = true;
       }
          
    }
    
 
+   
    @Override
    public void mouseReleased(MouseEvent e) {
       if (e.getButton() == MouseEvent.BUTTON1) {
@@ -334,23 +308,7 @@ System.out.println("............................................................
          SSM.instance().controlKey = true;
       }
       
-      if (e.getKeyChar() == '4') {
-         SSM.instance().useLight = ! SSM.instance().useLight;   
-      }
       
-      
-      // Massive hack hack to get high reslution screen
-      if (e.getKeyChar() == '+') {
-         ProjectDriver.frame.setBounds(0, 0, 3000, 3000);
-      }
-      if (e.getKeyChar() == '-') {
-         ProjectDriver.frame.setBounds(0, 0, 900, 900);
-      }
-      
-      // Switch on/off month_maximum or component_maximum
-      //if (e.getKeyChar() == 'h') {
-      //   SSM.instance().useMonthMax = ! SSM.instance().useMonthMax;
-      //}
       if (e.getKeyChar() == '1') {
          SSM.instance().chartMode = SSM.CHART_MODE_BY_MONTH_MAX;
       }
@@ -360,38 +318,10 @@ System.out.println("............................................................
       if (e.getKeyChar() == '3') {
          SSM.instance().chartMode = SSM.CHART_MODE_BY_GLOBAL_MAX;
       }
-      
-      
       if (e.getKeyChar() == 'd') {
          SSM.instance().use3DModel = ! SSM.instance().use3DModel;   
          SSM.instance().dirty = 1;
          SSM.instance().dirtyGL = 1;
-      }
-      
-      if (e.getKeyChar() == 'w') {
-         SSM.instance().useGlow = ! SSM.instance().useGlow;   
-      }
-      
-      if (e.getKeyChar() == 'o') {
-         SSM.instance().useDualDepthPeeling = ! SSM.instance().useDualDepthPeeling;
-      }
-      
-      if (e.getKeyChar() == '9')  {
-         SSM.instance().useConstantAlpha = ! SSM.instance().useConstantAlpha;   
-      }
-     
-      if (e.getKeyChar() == 't') {
-         SSM.instance().useFlag  = ! SSM.instance().useFlag;
-         SSM.instance().dirty = 1;
-         SSM.instance().dirtyGL = 1;
-         SSM.instance().refreshMagicLens = true;
-      }
-      
-      if (e.getKeyChar() == 'f') {
-         SSM.instance().useLocalFocus = ! SSM.instance().useLocalFocus;    
-         SSM.instance().dirty = 1;
-         SSM.instance().dirtyGL = 1;
-         SSM.instance().refreshMagicLens = true;
       }
       if (e.getKeyChar() == 's') {
          SSM.instance().useComparisonMode =! SSM.instance().useComparisonMode;   
@@ -399,10 +329,54 @@ System.out.println("............................................................
          SSM.instance().dirtyGL = 1;
          SSM.instance().refreshMagicLens = true;
       }
-      
-      
       if (e.getKeyChar() == 'a') {
          SSM.instance().useAggregate = ! SSM.instance().useAggregate;
+         SSM.instance().dirty = 1;
+         SSM.instance().dirtyGL = 1;
+         SSM.instance().refreshMagicLens = true;
+      }
+     
+      
+      
+      ////////////////////////////////////////////////////////////////////////////////
+      // Don't really need the stuff below. Most are either debugging or
+      // experimental functions
+      ////////////////////////////////////////////////////////////////////////////////
+      if (e.getKeyCode() == KeyEvent.VK_UP) {
+         System.out.println("Up Arrow");
+         SSM.g_numPasses ++;   
+      }
+      if (e.getKeyCode() == KeyEvent.VK_DOWN){
+         System.out.println("Down Arrow");
+         SSM.g_numPasses --;   
+      }
+      // Massive hack hack to get high reslution screen
+      if (e.getKeyChar() == '+') {
+         ProjectDriver.frame.setBounds(0, 0, 3000, 3000);
+      }
+      if (e.getKeyChar() == '-') {
+         ProjectDriver.frame.setBounds(0, 0, 900, 900);
+      }
+      if (e.getKeyChar() == '4') {
+         SSM.instance().useLight = ! SSM.instance().useLight;   
+      }
+      if (e.getKeyChar() == 'w') {
+         SSM.instance().useGlow = ! SSM.instance().useGlow;   
+      }
+      if (e.getKeyChar() == 'o') {
+         SSM.instance().useDualDepthPeeling = ! SSM.instance().useDualDepthPeeling;
+      }
+      if (e.getKeyChar() == '9')  {
+         SSM.instance().useConstantAlpha = ! SSM.instance().useConstantAlpha;   
+      }
+      if (e.getKeyChar() == 't') {
+         SSM.instance().useFlag  = ! SSM.instance().useFlag;
+         SSM.instance().dirty = 1;
+         SSM.instance().dirtyGL = 1;
+         SSM.instance().refreshMagicLens = true;
+      }
+      if (e.getKeyChar() == 'f') {
+         SSM.instance().useLocalFocus = ! SSM.instance().useLocalFocus;    
          SSM.instance().dirty = 1;
          SSM.instance().dirtyGL = 1;
          SSM.instance().refreshMagicLens = true;
@@ -448,71 +422,28 @@ System.out.println("............................................................
       if (e.getKeyChar() == 'l') {
          SSM.instance().showLabels = ! SSM.instance().showLabels;   
       }
-      
-      
       if (e.getKeyChar() == '?') {
          SSM.instance().timeFrameStatistics();   
       }
-      
-      
-      // information
-      if (e.getKeyChar() == 'i') {
-        DWin.instance().error("________________________________________");
-        DWin.instance().error("Selected :" + SSM.instance().selectedGroup);   
-        DWin.instance().error("SSM starting year :" + SSM.instance().startYear);   
-        DWin.instance().error("SSM ending   year :" + SSM.instance().endYear);   
-        DWin.instance().error("SSM starting month :" + SSM.instance().startMonth);   
-        DWin.instance().error("SSM ending month   :" + SSM.instance().endMonth);   
-        DWin.instance().error("SSM selected manufacture : " + SSM.instance().manufactureAttrib.selected);
-        DWin.instance().error("SSM selected make: " + SSM.instance().makeAttrib.selected);
-        DWin.instance().error("SSM selected model: " + SSM.instance().modelAttrib.selected);
-        DWin.instance().error("SSM selected year: " + SSM.instance().yearAttrib.selected);
-        DWin.instance().error("________________________________________");
-        DWin.instance().error("Total Vertices : "  + MM.currentModel.getTotalVertices());
-      }
-      
       
       // Turn on/off guides
       if (e.getKeyChar() == 'g') {
          SSM.instance().useGuide = ! SSM.instance().useGuide;      
       }
+      // Show colour editor
       if (e.getKeyChar() == 'x') {
          CEditor.instance().setVisible( !CEditor.instance().isVisible() );   
       }
-      
-      // vim key binding....out of keys...doh ! 
-      /*
-      if (e.getKeyChar() == 'k') {
-         SSM.instance().sparkLineWidth ++;   
-         SSM.instance().dirtyGL = 1;
-      }
-      if (e.getKeyChar() == 'j') {
-         SSM.instance().sparkLineWidth --;
-         SSM.instance().dirtyGL = 1;
-      }
-      */
-      
+      // Print screen to file
       if (e.getKeyChar() == 'p') {
          SSM.instance().captureScreen = true;
       }
-      
-      
+      // Swap model
       if (e.getKeyChar() == 'm') {
          MM.instance().nextModel();   
          SSM.instance().refreshMagicLens = true;
          System.out.println("Current instance is " + MM.instance().modelIndex);
       }
-      
-      /*
-      if (e.getKeyChar() == '0') {
-         SSM.instance().colourRampReverseAlpha = ! SSM.instance().colourRampReverseAlpha;
-         SSM.instance().dirtyGL = 1;
-         SSM.instance().refreshMagicLens = true;
-      }
-      */
-      
-      
-      
       // Camera reset
       if (e.getKeyChar() == 'r') {
          DCCamera.instance().reset();
@@ -545,20 +476,6 @@ System.out.println("............................................................
          SSM.instance().docActive = ! SSM.instance().docActive;
          SSM.instance().resizePanel = 1;
       }
-      /*
-      if (e.getKeyCode() == KeyEvent.VK_1){
-         SSM.instance().renderSihoulette = false;   
-         SSM.instance().useLight = true;
-      } else if (e.getKeyCode() == KeyEvent.VK_2){
-         SSM.instance().renderSihoulette = false; 
-         SSM.instance().useLight = false;
-      }
-      */
-      /*
-      if (e.getKeyChar() == KeyEvent.VK_SHIFT) {
-         shiftKeyPressed = false;   
-      }
-      */
    }
    
 
@@ -584,55 +501,6 @@ System.out.println("............................................................
       SSM.instance().oldMouseY = SSM.instance().mouseY;  
       SSM.instance().mouseX = e.getX();
       SSM.instance().mouseY = e.getY();       
-      
-      // Just a proof of concept of draggable text scrolling
-/*      
-      if (SSM.instance().inDocContext()) {
-         float val = SSM.instance().oldMouseY - SSM.instance().mouseY;
-         
-         // Lock controls when the total panel height is less than that of the display height
-         if (SSM.instance().t1Height + SSM.instance().t2Height <= SSM.instance().docHeight) return;
-         
-         if (val < 0) {
-            // Prevent underflow
-            if (SSM.instance().yoffset <= SSM.instance().docHeight) return;
-            
-            if (SSM.instance().yoffset <= SSM.instance().t1Height && SSM.instance().t1Start > 0 ) {
-               System.out.println("Getting previous text");               
-               //SSM.instance().yoffset -= SSM.instance().t1Height;
-               SSM.instance().t1Start = Math.max(0, SSM.instance().t1Start - SSM.instance().globalFetchSize);
-               SSM.instance().t2Start = Math.max(SSM.instance().globalFetchSize, SSM.instance().t2Start - SSM.instance().globalFetchSize);
-               SSM.instance().docAction = 1;   
-               SSM.instance().dirtyGL = 1;
-            } else {
-               SSM.instance().yoffset += val;
-            }
-            
-         } else {
-            // Check to see if T2 even exist
-            if (SSM.instance().yoffset > SSM.instance().t1Height && SSM.instance().t2Height <= 0) return;
-            
-            // Check to see if we have run off the number allocated for the period
-            if (SSM.instance().t2Start + SSM.instance().globalFetchSize > SSM.instance().docMaxSize) {
-               if (SSM.instance().yoffset >= SSM.instance().t1Height + SSM.instance().t2Height)
-                  return;
-            }
-            
-            if (SSM.instance().yoffset - SSM.instance().docHeight > SSM.instance().t1Height) {
-               
-               System.out.println("Getting next text");
-               SSM.instance().yoffset -= SSM.instance().t1Height;
-               SSM.instance().t1Start += SSM.instance().globalFetchSize;
-               SSM.instance().t2Start += SSM.instance().globalFetchSize;
-               SSM.instance().docAction = 2;   
-               SSM.instance().dirtyGL = 1;
-            } else {
-               SSM.instance().yoffset += val;
-            }
-         }
-         return;
-      } // end if inDocContext
-*/      
       
       if (SSM.instance().currentFocusLayer == 0 &&
           SSM.instance().lensSelected() == 0 &&
@@ -879,34 +747,6 @@ System.out.println("............................................................
          }
          return;
       }
-      
-      // For the scrollable filters
-      /*
-      if (e.getScrollType() == MouseWheelEvent.WHEEL_UNIT_SCROLL) {
-         int unitToScroll = e.getUnitsToScroll()*3;
-         
-         if (SSM.instance().topElement == SSM.ELEMENT_MANUFACTURE_SCROLL) {
-            this.setScrollPanelOffset(SSM.instance().manufactureAttrib, unitToScroll);
-         } else if (SSM.instance().topElement == SSM.ELEMENT_MAKE_SCROLL) {
-            this.setScrollPanelOffset(SSM.instance().makeAttrib, unitToScroll);
-         } else if (SSM.instance().topElement == SSM.ELEMENT_MODEL_SCROLL)  {
-            this.setScrollPanelOffset(SSM.instance().modelAttrib, unitToScroll);
-         } else if (SSM.instance().topElement == SSM.ELEMENT_YEAR_SCROLL)  {
-            this.setScrollPanelOffset(SSM.instance().yearAttrib, unitToScroll);
-         // For comparisons   
-         } else if (SSM.instance().topElement == SSM.ELEMENT_CMANUFACTURE_SCROLL) {
-            this.setScrollPanelOffset(SSM.instance().c_manufactureAttrib, unitToScroll);
-         } else if (SSM.instance().topElement == SSM.ELEMENT_CMAKE_SCROLL) {
-            this.setScrollPanelOffset(SSM.instance().c_makeAttrib, unitToScroll);
-         } else if (SSM.instance().topElement == SSM.ELEMENT_CMODEL_SCROLL)  {
-            this.setScrollPanelOffset(SSM.instance().c_modelAttrib, unitToScroll);
-         } else if (SSM.instance().topElement == SSM.ELEMENT_CYEAR_SCROLL)  {
-            this.setScrollPanelOffset(SSM.instance().c_yearAttrib, unitToScroll);      
-         }
-         return;
-      }
-      */
-      
       
       
       // 3D manipulation should be checked last

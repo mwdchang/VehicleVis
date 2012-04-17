@@ -111,7 +111,7 @@ public class ProjectDriver {
      
       //TODO: Create a timer to control update rate and rendering frame rate ?????
       // Start main loop
-      long updateFrequency = 1000;
+      long updateFrequency = 2000;
       long currentTime = 0;
       long lastTime = System.currentTimeMillis();
       int fps = 0;
@@ -120,7 +120,6 @@ public class ProjectDriver {
          // Temporary update logic goes in here
          if (SSM.instance().dirty == 1) {
             model_renderer.resetData();
-            
             // Reset panel if necessary
             SSM.instance().dirty = 0;
          }
@@ -137,8 +136,6 @@ public class ProjectDriver {
             SSM.instance().currentFocusLayer = 0;
             filter_task.unfocus();
             SSM.instance().l_mousePressed = false; 
-            //SSM.instance().currentState = SSM.STATE_NORMAL;
-            //SSM.instance().currentFocusLayer = 0;
          }
          if (SSM.instance().dirtyLoad == 1) {
          	SSM.instance().dirtyLoad = 0;
