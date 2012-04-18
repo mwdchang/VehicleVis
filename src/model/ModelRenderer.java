@@ -180,10 +180,10 @@ public class ModelRenderer extends BaseModelRenderer {
       // Initialize the glowTexture
       ////////////////////////////////////////////////////////////////////////////////
       if (SSM.instance().refreshGlowTexture == true) {
-        System.out.println("In Modelrenderer init " + SSM.instance().windowHeight + " " + SSM.instance().windowWidth);         
+        System.out.println("In Modelrenderer init " + SSM.windowHeight + " " + SSM.windowWidth);         
         glowTexture= new FrameBufferTexture();
-        glowTexture.TEXTURE_SIZE_W = (int)((float)SSM.instance().windowWidth/GLOW_DOWN_SAMPLE);
-        glowTexture.TEXTURE_SIZE_H = (int)((float)SSM.instance().windowHeight/GLOW_DOWN_SAMPLE);
+        glowTexture.TEXTURE_SIZE_W = (int)((float)SSM.windowWidth/GLOW_DOWN_SAMPLE);
+        glowTexture.TEXTURE_SIZE_H = (int)((float)SSM.windowHeight/GLOW_DOWN_SAMPLE);
         //glowTexture.TEXTURE_SIZE_W = SSM.instance().windowWidth /4;
         //glowTexture.TEXTURE_SIZE_H = SSM.instance().windowHeight/ 4;
         glowTexture.init(gl2);
@@ -205,8 +205,8 @@ public class ModelRenderer extends BaseModelRenderer {
         
         // Down sample
         outlineTexture1 = new FrameBufferTexture();
-        outlineTexture1.TEXTURE_SIZE_W = (int)((float)SSM.instance().windowWidth / OUTLINE_DOWN_SAMPLE);
-        outlineTexture1.TEXTURE_SIZE_H = (int)((float)SSM.instance().windowHeight / OUTLINE_DOWN_SAMPLE);
+        outlineTexture1.TEXTURE_SIZE_W = (int)((float)SSM.windowWidth / OUTLINE_DOWN_SAMPLE);
+        outlineTexture1.TEXTURE_SIZE_H = (int)((float)SSM.windowHeight / OUTLINE_DOWN_SAMPLE);
         outlineTexture1.init(gl2);
         outlineTexture1.shader.createShader(gl2, "src\\Shader\\vert_fbt.glsl", GL2.GL_VERTEX_SHADER);
         outlineTexture1.shader.createShader(gl2, "src\\Shader\\frag_fbt_white2.glsl", GL2.GL_FRAGMENT_SHADER);
@@ -219,8 +219,8 @@ public class ModelRenderer extends BaseModelRenderer {
         
         
         outlineTexture2 = new FrameBufferTexture();
-        outlineTexture2.TEXTURE_SIZE_W = (int)((float)SSM.instance().windowWidth / OUTLINE_DOWN_SAMPLE);
-        outlineTexture2.TEXTURE_SIZE_H = (int)((float)SSM.instance().windowHeight / OUTLINE_DOWN_SAMPLE);
+        outlineTexture2.TEXTURE_SIZE_W = (int)((float)SSM.windowWidth / OUTLINE_DOWN_SAMPLE);
+        outlineTexture2.TEXTURE_SIZE_H = (int)((float)SSM.windowHeight / OUTLINE_DOWN_SAMPLE);
         outlineTexture2.init(gl2);
         outlineTexture2.shader.createShader(gl2, "src\\Shader\\vert_fbt.glsl", GL2.GL_VERTEX_SHADER);
         outlineTexture2.shader.createShader(gl2, "src\\Shader\\frag_fbt_white2.glsl", GL2.GL_FRAGMENT_SHADER);
@@ -240,7 +240,7 @@ public class ModelRenderer extends BaseModelRenderer {
       // Render any scenes that we want to cache...ie: Lens, Filters
       ////////////////////////////////////////////////////////////////////////////////
       if (SSM.instance().refreshMagicLens == true ||
-         MM.instance().currentModel.isAnimationRunning()) {
+         MM.currentModel.isAnimationRunning()) {
          for (int i=0;i < SSM.instance().lensList.size(); i++) {
             LensAttrib la = SSM.instance().lensList.elementAt(i);   
             //if (la.mlen == null) {
@@ -383,7 +383,7 @@ public class ModelRenderer extends BaseModelRenderer {
       ////////////////////////////////////////////////////////////////////////////////
       if (SSM.instance().showLabels == true) {
          for (int i=0; i < SSM.instance().lensList.size(); i++) {
-            setOrthonormalView(gl2, 0, SSM.instance().windowWidth, 0, SSM.instance().windowHeight); {
+            setOrthonormalView(gl2, 0, SSM.windowWidth, 0, SSM.instance().windowHeight); {
                if (SSM.instance().useCircularLabel == true) {
                   renderLabelCircular(gl2, SSM.instance().lensList.elementAt(i));
                } else {
@@ -399,8 +399,8 @@ public class ModelRenderer extends BaseModelRenderer {
          if (dcTextPanel.animatorH != null) dcTextPanel.animatorH.stop();
          if (dcTextPanel.animatorW != null) dcTextPanel.animatorW.stop();
          
-         float goalH = SSM.instance().docActive ? SSM.instance().docHeight : 0.0f;
-         float goalW = SSM.instance().docActive ? SSM.instance().docWidth : 0.0f;
+         float goalH = SSM.instance().docActive ? SSM.docHeight : 0.0f;
+         float goalW = SSM.instance().docActive ? SSM.docWidth : 0.0f;
          
          dcTextPanel.animatorH = PropertySetter.createAnimator(600, dcTextPanel, "displayH", new FloatEval(), dcTextPanel.displayH, goalH);
          dcTextPanel.animatorW = PropertySetter.createAnimator(600, dcTextPanel, "displayW", new FloatEval(), dcTextPanel.displayW, goalW);
@@ -415,7 +415,7 @@ public class ModelRenderer extends BaseModelRenderer {
       ////////////////////////////////////////////////////////////////////////////////
       //if (SSM.instance().docVisible == true) {
       if (dcTextPanel.displayH >= 0.1) {
-         setOrthonormalView(gl2, 0, SSM.instance().windowWidth, 0, SSM.instance().windowHeight); {
+         setOrthonormalView(gl2, 0, SSM.windowWidth, 0, SSM.windowHeight); {
             dcTextPanel.render(gl2);
          }
       }
@@ -426,8 +426,8 @@ public class ModelRenderer extends BaseModelRenderer {
       ////////////////////////////////////////////////////////////////////////////////
       if (SSM.instance().useGuide == true) {
          
-         setOrthonormalView(gl2, 0, SSM.instance().windowWidth, 0, SSM.instance().windowHeight); {
-            StatusWindow.tf.anchorX = SSM.instance().windowWidth - StatusWindow.tf.width;
+         setOrthonormalView(gl2, 0, SSM.windowWidth, 0, SSM.windowHeight); {
+            StatusWindow.tf.anchorX = SSM.windowWidth - StatusWindow.tf.width;
             StatusWindow.tf.anchorY = 10; //StatusWindow.tf.height;
             StatusWindow.render(gl2);
          }
@@ -449,7 +449,7 @@ public class ModelRenderer extends BaseModelRenderer {
       ////////////////////////////////////////////////////////////////////////////////
       // Renders a tool tip
       ////////////////////////////////////////////////////////////////////////////////
-      setOrthonormalView(gl2, 0, SSM.instance().windowWidth, 0, SSM.instance().windowHeight); {
+      setOrthonormalView(gl2, 0, SSM.windowWidth, 0, SSM.windowHeight); {
          DCTip.render(gl2);
       }
             
@@ -485,7 +485,7 @@ public class ModelRenderer extends BaseModelRenderer {
       ////////////////////////////////////////////////////////////////////////////////
       // Render the heat maps
       ////////////////////////////////////////////////////////////////////////////////
-      setOrthonormalView(gl2, 0, SSM.instance().windowWidth, 0, SSM.instance().windowHeight); {
+      setOrthonormalView(gl2, 0, SSM.windowWidth, 0, SSM.windowHeight); {
          for (String key : list) {
             DCComponent comp = MM.currentModel.componentTable.get(key);
             
@@ -571,9 +571,9 @@ public class ModelRenderer extends BaseModelRenderer {
       ////////////////////////////////////////////////////////////////////////////////
       // Render the text panel
       ////////////////////////////////////////////////////////////////////////////////
-      this.dcTextPanel.displayH = SSM.instance().docHeight;
-      this.dcTextPanel.displayW = SSM.instance().docWidth;
-      SSM.instance().docAnchorX = SSM.instance().windowWidth - 1.1f * SSM.instance().docWidth;
+      this.dcTextPanel.displayH = SSM.docHeight;
+      this.dcTextPanel.displayW = SSM.docWidth;
+      SSM.docAnchorX = SSM.windowWidth - 1.1f * SSM.instance().docWidth;
       SSM.instance().docActive = true;
       this.dcTextPanel.render(gl2);
       this.dcTextPanel.displayH = 0;
@@ -583,7 +583,7 @@ public class ModelRenderer extends BaseModelRenderer {
       ////////////////////////////////////////////////////////////////////////////////
       // Renders a tool tip
       ////////////////////////////////////////////////////////////////////////////////
-      setOrthonormalView(gl2, 0, SSM.instance().windowWidth, 0, SSM.instance().windowHeight); {
+      setOrthonormalView(gl2, 0, SSM.windowWidth, 0, SSM.windowHeight); {
          DCTip.render(gl2);
       }      
    }
@@ -677,7 +677,6 @@ public class ModelRenderer extends BaseModelRenderer {
    public void picking(GL2 gl2) {
       // Quickie way to get out and save unnecessary rendering 
       if (SSM.instance().l_mouseClicked == false) return;
-      
       if (SSM.stopPicking == 1) return;
       
       
@@ -685,8 +684,8 @@ public class ModelRenderer extends BaseModelRenderer {
       SSM.instance().refreshOITTexture = true;
       
       
-      float mx = SSM.instance().mouseX;
-      float my = SSM.instance().windowHeight - SSM.instance().mouseY;
+      float mx = SSM.mouseX;
+      float my = SSM.windowHeight - SSM.mouseY;
       
      
       // If is dirty then skip...something is already updating
@@ -696,7 +695,7 @@ public class ModelRenderer extends BaseModelRenderer {
       }
       
       
-      if (SSM.instance().location == SSM.ELEMENT_LENS) {
+      //if (SSM.instance().location == SSM.ELEMENT_LENS) {
           for (int i=0; i < SSM.instance().lensList.size(); i++) {
             Integer obj = picking2DBalanced(gl2, SSM.instance().lensList.elementAt(i));
             // Speical
@@ -714,11 +713,11 @@ public class ModelRenderer extends BaseModelRenderer {
             }
             if (obj != null) break;
          }
-         return;
-      }
+      //   return;
+      //}
       
       
-      if (SSM.instance().location != SSM.ELEMENT_NONE) return; 
+      //if (SSM.instance().location != SSM.ELEMENT_NONE) return; 
       
       Integer obj = null;
       if (SSM.instance().use3DModel == true) {
@@ -870,7 +869,7 @@ public class ModelRenderer extends BaseModelRenderer {
       
       // check if the paddings are out of bound (ie: when we are close up)
       // default the padding space to space padding
-      if ( rpadding + lensX > SSM.instance().windowWidth ) {
+      if ( rpadding + lensX > SSM.windowWidth ) {
          rpadding = spadding;   
       }
       if (lensX - lpadding < 0) {
@@ -925,7 +924,7 @@ public class ModelRenderer extends BaseModelRenderer {
          
          
          float xx = comp.projCenter.x - lensX;
-         float yy = comp.projCenter.y - (SSM.instance().windowHeight - lensY);
+         float yy = comp.projCenter.y - (SSM.windowHeight - lensY);
          float c = (float)Math.sqrt(xx*xx + yy*yy);
          
          if ( c <= lensRadius ) {
@@ -947,10 +946,10 @@ public class ModelRenderer extends BaseModelRenderer {
       } // end for
       
       // Now actually render the labels
-      rightHeight = Math.min((SSM.instance().windowHeight-la.magicLensY) + (rightList.size()/2)*(SSM.instance().sparkLineHeight + vpadding),
-                              SSM.instance().windowHeight-SSM.instance().sparkLineHeight-vpadding);
-      leftHeight  = Math.min((SSM.instance().windowHeight-la.magicLensY) + (leftList.size()/2)*(SSM.instance().sparkLineHeight + vpadding),
-                              SSM.instance().windowHeight-SSM.instance().sparkLineHeight-vpadding); 
+      rightHeight = Math.min((SSM.windowHeight-la.magicLensY) + (rightList.size()/2)*(SSM.instance().sparkLineHeight + vpadding),
+                              SSM.windowHeight-SSM.instance().sparkLineHeight-vpadding);
+      leftHeight  = Math.min((SSM.windowHeight-la.magicLensY) + (leftList.size()/2)*(SSM.instance().sparkLineHeight + vpadding),
+                              SSM.windowHeight-SSM.instance().sparkLineHeight-vpadding); 
       
       
       // Right side
@@ -997,18 +996,18 @@ public class ModelRenderer extends BaseModelRenderer {
       gl2.glLoadName(9999);
       gl2.glPushMatrix();
       gl2.glBegin(GL2.GL_TRIANGLES); 
-         gl2.glVertex2d(lensX-0.5*lensRadius, (SSM.instance().windowHeight - lensY)+lensRadius+5);
-         gl2.glVertex2d(lensX+0.5*lensRadius, (SSM.instance().windowHeight - lensY)+lensRadius+5);
-         gl2.glVertex2d(lensX, (SSM.instance().windowHeight - lensY)+lensRadius+25);
+         gl2.glVertex2d(lensX-0.5*lensRadius, (SSM.windowHeight - lensY)+lensRadius+5);
+         gl2.glVertex2d(lensX+0.5*lensRadius, (SSM.windowHeight - lensY)+lensRadius+5);
+         gl2.glVertex2d(lensX, (SSM.windowHeight - lensY)+lensRadius+25);
       gl2.glEnd();
       gl2.glPopMatrix();
       
       gl2.glLoadName(8888);
       gl2.glPushMatrix();
       gl2.glBegin(GL2.GL_TRIANGLES); 
-         gl2.glVertex2d(lensX-0.5*lensRadius, (SSM.instance().windowHeight - lensY)-lensRadius-5);
-         gl2.glVertex2d(lensX+0.5*lensRadius, (SSM.instance().windowHeight - lensY)-lensRadius-5);
-         gl2.glVertex2d(lensX, (SSM.instance().windowHeight - lensY)-lensRadius-25);
+         gl2.glVertex2d(lensX-0.5*lensRadius, (SSM.windowHeight - lensY)-lensRadius-5);
+         gl2.glVertex2d(lensX+0.5*lensRadius, (SSM.windowHeight - lensY)-lensRadius-5);
+         gl2.glVertex2d(lensX, (SSM.windowHeight - lensY)-lensRadius-25);
       gl2.glEnd();      
       gl2.glPopMatrix();
       
@@ -1038,8 +1037,8 @@ public class ModelRenderer extends BaseModelRenderer {
       LensAttrib clen = null;
       for (int i=0; i < SSM.instance().lensList.size(); i++) {
          la = SSM.instance().lensList.elementAt(i);
-         float x = (float)SSM.instance().mouseX - la.magicLensX;
-         float y = (float)SSM.instance().mouseY - la.magicLensY;
+         float x = (float)SSM.mouseX - la.magicLensX;
+         float y = (float)SSM.mouseY - la.magicLensY;
          float r = (float)la.magicLensRadius;
          float d = (float)Math.sqrt(x*x + y*y);            
          if (d < r) {
@@ -1049,8 +1048,8 @@ public class ModelRenderer extends BaseModelRenderer {
       }
       if (clen != null) {
          GraphicUtil.startPickingPerspective(gl2, buffer, 
-               SSM.instance().mouseX, SSM.instance().mouseY, 
-               SSM.instance().windowWidth, SSM.instance().windowHeight, SSM.instance().fov, clen.nearPlane, clen.farPlane,
+               SSM.mouseX, SSM.mouseY, 
+               SSM.windowWidth, SSM.windowHeight, SSM.instance().fov, clen.nearPlane, clen.farPlane,
                DCCamera.instance().eye.toArray3f(), new float[]{0,0,0}, DCCamera.instance().up.toArray3f());         
       } else {
          this.startPickingPerspective(gl2, buffer);
@@ -1166,8 +1165,8 @@ public class ModelRenderer extends BaseModelRenderer {
       float lensX = la.magicLensX;
       float lensY = la.magicLensY;
       
-      float mx = SSM.instance().mouseX;
-      float my = SSM.instance().windowHeight - SSM.instance().mouseY;
+      float mx = SSM.mouseX;
+      float my = SSM.windowHeight - SSM.mouseY;
       
       // New padding, always apply outside of the 3D model, in addition 
       // position with respect to the radius size ie: do not go "inside" the circumference
@@ -1186,7 +1185,7 @@ public class ModelRenderer extends BaseModelRenderer {
       
       // check if the paddings are out of bound (ie: when we are close up)
       // default the padding space to space padding
-      if ( rpadding + lensX + SSM.instance().sparkLineWidth > SSM.instance().windowWidth ) {
+      if ( rpadding + lensX + SSM.instance().sparkLineWidth > SSM.windowWidth ) {
          rpadding = spadding;   
       }
       if (lensX - lpadding - SSM.instance().sparkLineWidth < 0) {
@@ -1246,7 +1245,7 @@ public class ModelRenderer extends BaseModelRenderer {
          
          
          float xx = comp.projCenter.x - lensX;
-         float yy = comp.projCenter.y - (SSM.instance().windowHeight - lensY);
+         float yy = comp.projCenter.y - (SSM.windowHeight - lensY);
          float c = (float)Math.sqrt(xx*xx + yy*yy);
          
          if ( c <= lensRadius ) {
@@ -1272,10 +1271,10 @@ public class ModelRenderer extends BaseModelRenderer {
       
       
       // Now actually render the labels
-      rightHeight = Math.min((SSM.instance().windowHeight-la.magicLensY) + (rightList.size()/2)*(SSM.instance().sparkLineHeight + vpadding),
-                              SSM.instance().windowHeight-SSM.instance().sparkLineHeight-vpadding);
-      leftHeight  = Math.min((SSM.instance().windowHeight-la.magicLensY) + (leftList.size()/2)*(SSM.instance().sparkLineHeight + vpadding),
-                              SSM.instance().windowHeight-SSM.instance().sparkLineHeight-vpadding); 
+      rightHeight = Math.min((SSM.windowHeight-la.magicLensY) + (rightList.size()/2)*(SSM.instance().sparkLineHeight + vpadding),
+                              SSM.windowHeight-SSM.instance().sparkLineHeight-vpadding);
+      leftHeight  = Math.min((SSM.windowHeight-la.magicLensY) + (leftList.size()/2)*(SSM.instance().sparkLineHeight + vpadding),
+                              SSM.windowHeight-SSM.instance().sparkLineHeight-vpadding); 
       
       
       gl2.glEnable(GL2.GL_BLEND);
@@ -1379,7 +1378,7 @@ public class ModelRenderer extends BaseModelRenderer {
          
          
          // doodle
-         float doodleY = comp.projCenter.y - (SSM.instance().windowHeight - lensY);
+         float doodleY = comp.projCenter.y - (SSM.windowHeight - lensY);
          float doodleAngle = (float)Math.asin( doodleY/lensRadius);
          
          float edgeX = 1.0f*lensRadius*(float)Math.cos(doodleAngle);
@@ -1516,7 +1515,7 @@ public class ModelRenderer extends BaseModelRenderer {
          
             
          // Doodle
-         float doodleY = comp.projCenter.y - (SSM.instance().windowHeight - lensY);
+         float doodleY = comp.projCenter.y - (SSM.windowHeight - lensY);
          float doodleAngle = (float)Math.asin( doodleY/lensRadius);
          float edgeX = 1.0f*lensRadius*(float)Math.cos(doodleAngle);
          
@@ -1562,8 +1561,8 @@ public class ModelRenderer extends BaseModelRenderer {
       // Draw a down and up for scrolling
       Integer obj = this.pickingCircleLabel(gl2, la);
      
-      float x = (float)SSM.instance().mouseX - lensX;
-      float y = (float)SSM.instance().mouseY - lensY;
+      float x = (float)SSM.mouseX - lensX;
+      float y = (float)SSM.mouseY - lensY;
       float r = (float)lensRadius;
       float d = (float)Math.sqrt(x*x + y*y);
       if ( d <= r ) {
@@ -1575,7 +1574,7 @@ public class ModelRenderer extends BaseModelRenderer {
       if (obj != null) {
          la.magicLensSelected = 1;
          SSM.instance().topElement = SSM.ELEMENT_LENS;
-         SSM.instance().location   = SSM.ELEMENT_LENS;
+         //SSM.instance().location   = SSM.ELEMENT_LENS;
       } 
       
       /*
@@ -1608,16 +1607,16 @@ public class ModelRenderer extends BaseModelRenderer {
             gl2.glColor4fv(SchemeManager.unselected.toArray(), 0);
          }
          gl2.glBegin(GL2.GL_TRIANGLES); 
-            gl2.glVertex2d(lensX-arrowWidth, (SSM.instance().windowHeight - lensY)+lensRadius+5);
-            gl2.glVertex2d(lensX+arrowWidth, (SSM.instance().windowHeight - lensY)+lensRadius+5);
-            gl2.glVertex2d(lensX, (SSM.instance().windowHeight - lensY)+lensRadius+arrowHeight);
+            gl2.glVertex2d(lensX-arrowWidth, (SSM.windowHeight - lensY)+lensRadius+5);
+            gl2.glVertex2d(lensX+arrowWidth, (SSM.windowHeight - lensY)+lensRadius+5);
+            gl2.glVertex2d(lensX, (SSM.windowHeight - lensY)+lensRadius+arrowHeight);
          gl2.glEnd();
          
          if (la.start != la.l_top) {
             la.t_top.clearMark();
             la.t_top.addMark(la.start+"", Color.BLACK, new Font("Arial", Font.BOLD, 14), 0, 5, true);
             la.t_top.anchorX = lensX-8;
-            la.t_top.anchorY = (SSM.instance().windowHeight-lensY)+lensRadius+5;
+            la.t_top.anchorY = (SSM.windowHeight-lensY)+lensRadius+5;
             la.t_top.dirty = 1;
          }
          la.t_top.render(gl2);
@@ -1630,16 +1629,16 @@ public class ModelRenderer extends BaseModelRenderer {
             gl2.glColor4fv(SchemeManager.unselected.toArray(), 0);
          }
          gl2.glBegin(GL2.GL_TRIANGLES); 
-            gl2.glVertex2d(lensX-arrowWidth, (SSM.instance().windowHeight - lensY)-lensRadius-5);
-            gl2.glVertex2d(lensX, (SSM.instance().windowHeight - lensY)-lensRadius-arrowHeight);
-            gl2.glVertex2d(lensX+arrowWidth, (SSM.instance().windowHeight - lensY)-lensRadius-5);
+            gl2.glVertex2d(lensX-arrowWidth, (SSM.windowHeight - lensY)-lensRadius-5);
+            gl2.glVertex2d(lensX, (SSM.windowHeight - lensY)-lensRadius-arrowHeight);
+            gl2.glVertex2d(lensX+arrowWidth, (SSM.windowHeight - lensY)-lensRadius-5);
          gl2.glEnd();
          
          if ( (laCnt - (la.start+la.numToDisplay)) != la.l_bottom){
             la.t_bottom.clearMark();
             la.t_bottom.addMark((laCnt-(la.start+la.numToDisplay))+"", Color.BLACK, new Font("Arial", Font.BOLD, 14), 0, 5, true);
             la.t_bottom.anchorX = lensX-8;
-            la.t_bottom.anchorY = (SSM.instance().windowHeight-lensY)-lensRadius-23;
+            la.t_bottom.anchorY = (SSM.windowHeight-lensY)-lensRadius-23;
             la.t_bottom.dirty = 1;
          }
          la.t_bottom.render(gl2);
@@ -1667,9 +1666,9 @@ public class ModelRenderer extends BaseModelRenderer {
          gl2.glLoadName(9999);
          gl2.glPushMatrix();
          gl2.glBegin(GL2.GL_TRIANGLES); 
-            gl2.glVertex2d(lensX-arrowWidth, (SSM.instance().windowHeight - lensY)+lensRadius+5);
-            gl2.glVertex2d(lensX+arrowWidth, (SSM.instance().windowHeight - lensY)+lensRadius+5);
-            gl2.glVertex2d(lensX, (SSM.instance().windowHeight - lensY)+lensRadius+arrowHeight);
+            gl2.glVertex2d(lensX-arrowWidth, (SSM.windowHeight - lensY)+lensRadius+5);
+            gl2.glVertex2d(lensX+arrowWidth, (SSM.windowHeight - lensY)+lensRadius+5);
+            gl2.glVertex2d(lensX, (SSM.windowHeight - lensY)+lensRadius+arrowHeight);
          gl2.glEnd();
          gl2.glPopMatrix();
       }
@@ -1678,9 +1677,9 @@ public class ModelRenderer extends BaseModelRenderer {
          gl2.glLoadName(8888);
          gl2.glPushMatrix();
          gl2.glBegin(GL2.GL_TRIANGLES); 
-            gl2.glVertex2d(lensX-arrowWidth, (SSM.instance().windowHeight - lensY)-lensRadius-5);
-            gl2.glVertex2d(lensX+arrowWidth, (SSM.instance().windowHeight - lensY)-lensRadius-5);
-            gl2.glVertex2d(lensX, (SSM.instance().windowHeight - lensY)-lensRadius-arrowHeight);
+            gl2.glVertex2d(lensX-arrowWidth, (SSM.windowHeight - lensY)-lensRadius-5);
+            gl2.glVertex2d(lensX+arrowWidth, (SSM.windowHeight - lensY)-lensRadius-5);
+            gl2.glVertex2d(lensX, (SSM.windowHeight - lensY)-lensRadius-arrowHeight);
          gl2.glEnd();      
          gl2.glPopMatrix();
       }
@@ -1700,7 +1699,7 @@ public class ModelRenderer extends BaseModelRenderer {
          DCComponent comp = MM.currentModel.componentTable.get(list[i]);
          
          float xx = comp.projCenter.x - la.magicLensX;
-         float yy = comp.projCenter.y - (SSM.instance().windowHeight - la.magicLensY);
+         float yy = comp.projCenter.y - (SSM.windowHeight - la.magicLensY);
          //float xx = comp.projCenter.x - SSM.instance().mouseX;
          //float yy = comp.projCenter.y - (SSM.instance().windowHeight - SSM.instance().mouseY);
          float c = (float)Math.sqrt(xx*xx + yy*yy);

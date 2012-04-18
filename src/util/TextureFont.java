@@ -146,6 +146,7 @@ public class TextureFont {
       t.disable(gl2);         
       
       gl2.glEnable(GL2.GL_DEPTH_TEST);
+      gl2.glEnable(GL2.GL_BLEND);
    }
    
    

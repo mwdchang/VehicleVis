@@ -50,6 +50,9 @@ public class DCRSlider {
    ////////////////////////////////////////////////////////////////////////////////
    public void render(GL2 gl2) {
       gl2.glEnable(GL2.GL_BLEND);
+      gl2.glBlendFunc(GL2.GL_SRC_ALPHA, GL2.GL_ONE_MINUS_SRC_ALPHA);
+      //gl2.glDisable(GL2.GL_DEPTH_TEST);
+      //gl2.glDisable(GL2.GL_TEXTURE2);
       renderMarkerLow(gl2);
       renderMarkerHigh(gl2);
       gl2.glPushMatrix();

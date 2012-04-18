@@ -8,6 +8,7 @@ import javax.media.opengl.GL2;
 import datastore.SSM;
 
 import util.DCCamera;
+import util.DCUtil;
 import util.TextureFont;
 
 /////////////////////////////////////////////////////////////////////////////////
@@ -30,10 +31,7 @@ public class StatusWindow {
          gl2.glVertex2d(tf.anchorX+tf.width, tf.anchorY+tf.height);
          gl2.glVertex2d(tf.anchorX, tf.anchorY+tf.height);
       gl2.glEnd();
-      
-      gl2.glDisable(GL2.GL_BLEND);
       tf.render(gl2);
-      gl2.glEnable(GL2.GL_BLEND);
    }
    
    public static void clear() {
@@ -77,11 +75,11 @@ public class StatusWindow {
    }
    
    public static TextureFont tf;
-   public static Font f  = new Font( "Consolas", Font.PLAIN, 14);    
+   public static Font f  =  DCUtil.loadFont("din1451m.ttf", Font.PLAIN, 12f);
    public static Color c = Color.BLACK;
    public static float tipX;
    public static float tipY;
    public static float TIP_LENGTH = 30;
    public static boolean visible = false;
-   public static float buffer = 20;   
+   public static float buffer = 15;   
 }

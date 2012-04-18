@@ -1,6 +1,10 @@
 package exec;
 
 import gui.DCTip;
+import gui.DomainFilterTask;
+import gui.FilterTask;
+import gui.LegendTask;
+import gui.SaveLoadTask;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -17,6 +21,7 @@ import javax.media.opengl.glu.GLU;
 
 import model.DCColour;
 import model.DCTriple;
+import model.ModelRenderer;
 
 import util.DCCamera;
 import util.DWin;
@@ -39,6 +44,13 @@ public class GLRenderer implements GLEventListener {
    public int windowWidth = 0;
    public double windowAspect = 0.0;
    
+   ModelRenderer model_task = new ModelRenderer();
+   FilterTask filter_task = new FilterTask();
+   LegendTask legend_task = new LegendTask();
+   SaveLoadTask save_task = new SaveLoadTask();
+   DomainFilterTask domain_task = new DomainFilterTask();
+   
+   
    // Renders a test scene for sanity check
    public void renderTest(GL2 gl2) {
       gl2.glPushMatrix();   
@@ -56,6 +68,38 @@ public class GLRenderer implements GLEventListener {
    public void display(GLAutoDrawable glDrawable) {
       GL2 gl2 = glDrawable.getGL().getGL2();   
       
+      // Update logic goes in here
+      // Note there is a precedence order here, 
+      // model_renderer.resetData() should always go first because
+      // it resets the cache
+      if (SSM.instance().dirty == 1) {
+         model_task.resetData();
+         domain_task.resetData();
+         SSM.instance().dirty = 0;
+      }
+      
+      //if (SSM.instance().currentFocusLayer == SSM.UI_LAYER) {
+      if (SSM.instance().topElement == SSM.ELEMENT_FILTER) {
+         filter_task.update(SSM.instance().mouseX);   
+      }
+      
+      // Trigger the range slider to update, under two conditions
+      // 1) The user drags the date slider indicator
+      // 2) The user loads a saved state
+      if (SSM.instance().l_mousePressed == false && filter_task.deferredRefresh) {
+         System.out.println("about to unbind...");
+         filter_task.unfocus();
+         filter_task.deferredRefresh = false;
+      }
+      if (SSM.instance().dirtyLoad == 1) {
+         SSM.instance().dirtyLoad = 0;
+         filter_task.loadFromSSM();
+      }
+      if (SSM.instance().dirtyDateFilter == 1) {
+         SSM.instance().dirtyDateFilter = 0;
+         filter_task.loadFromSSM(); 
+      }      
+      
       
       // Clear the scene
       gl2.glClear(GL2.GL_COLOR_BUFFER_BIT);
@@ -66,11 +110,14 @@ public class GLRenderer implements GLEventListener {
       // Start the scene
       ////////////////////////////////////////////////////////////////////////////////
       DCTip.visible = false;
-      //gl2.glPushMatrix();
-         for (int i=0; i < renderTaskList.size(); i++) {
-            renderTaskList.elementAt(i).render(gl2);
-         }
-      //gl2.glPopMatrix();
+      model_task.render(gl2);
+      filter_task.render(gl2);
+      legend_task.render(gl2);
+      domain_task.render(gl2);
+      
+      //for (int i=0; i < renderTaskList.size(); i++) {
+      //      renderTaskList.elementAt(i).render(gl2);
+      //}
       
       
       ////////////////////////////////////////////////////////////////////////////////
@@ -78,22 +125,19 @@ public class GLRenderer implements GLEventListener {
       // these here as we cannot grab the context in another thread (as far as I know)
       // 1) Click / Picking
       ////////////////////////////////////////////////////////////////////////////////
-      //if (SSM.instance().currentState == SSM.MOUSE_LPRESS) { 
-      // ((SSM.instance().mouseState & SSM.MOUSE_LCLICK) == SSM.MOUSE_LCLICK ) {
+      if ( SSM.instance().l_mouseClicked) {
          //for (int i=0; i < renderTaskList.size(); i++) {
-         //renderTaskList.elementAt(0).picking(gl2);
+         //   renderTaskList.elementAt(i).picking(gl2);
          //}
-         //SSM.instance().currentState = SSM.STATE_NORMAL;   
-      //
-      //if ( (SSM.instance().l_mouseClicked || SSM.instance().l_mousePressed) &&
-      //      SSM.instance().lensSelected() == 0 ) {
-      if ( (SSM.instance().l_mouseClicked || SSM.instance().l_mousePressed)) {
-            //SSM.instance().magicLensSelected == 0) {
-         for (int i=0; i < renderTaskList.size(); i++) {
-            renderTaskList.elementAt(i).picking(gl2);
-         }
+         filter_task.picking(gl2);
+         legend_task.picking(gl2);
+         domain_task.picking(gl2);
+         model_task.picking(gl2);
          SSM.instance().l_mouseClicked = false;
          SSM.stopPicking = 0;
+      }
+      if (SSM.instance().l_mousePressed) {
+         filter_task.picking(gl2);
       }
       
       
@@ -163,9 +207,13 @@ public class GLRenderer implements GLEventListener {
       
       
       // Initialize the rendering items
-      for (int i=0; i < renderTaskList.size(); i++) {
-         renderTaskList.elementAt(i).init(gl2);
-      }
+      //for (int i=0; i < renderTaskList.size(); i++) {
+      //   renderTaskList.elementAt(i).init(gl2);
+      //}
+      model_task.init(gl2);
+      filter_task.init(gl2);
+      legend_task.init(gl2);
+      domain_task.init(gl2);
    }
    
 

@@ -137,11 +137,6 @@ public abstract class BaseModelRenderer implements RenderTask {
          x =  x -(float) rect.getWidth()*scale;
       }
       
-      /*
-      textRenderer.draw3D(s, SSM.instance().mouseX+(int)x, 
-                             (SSM.instance().windowHeight - SSM.instance().mouseY)+(int)y, 
-                             0.0f, scale);
-                             */
       textRenderer.draw3D(s, la.magicLensX+(int)x, 
             (SSM.instance().windowHeight - la.magicLensY)+(int)y, 
             0.0f, scale);      
@@ -158,8 +153,6 @@ public abstract class BaseModelRenderer implements RenderTask {
          x += rect.getWidth()*scale;
       } 
    
-      //gl2.glTranslated(SSM.instance().mouseX + x , 
-      //                 (SSM.instance().windowHeight - SSM.instance().mouseY) + y, 0);
       gl2.glTranslated(la.magicLensX + x , 
                        (SSM.instance().windowHeight - la.magicLensY) + y, 0);
       comp.cchart.renderImmediate(gl2);
@@ -208,8 +201,8 @@ public abstract class BaseModelRenderer implements RenderTask {
    ////////////////////////////////////////////////////////////////////////////////
    public void startPickingPerspective(GL2 gl2, IntBuffer buffer) {
       GraphicUtil.startPickingPerspective(gl2, buffer, 
-            SSM.instance().mouseX, SSM.instance().mouseY, 
-            SSM.instance().windowWidth, SSM.instance().windowHeight, SSM.instance().fov, 
+            SSM.mouseX, SSM.mouseY, 
+            SSM.windowWidth, SSM.windowHeight, SSM.instance().fov, 
             DCCamera.instance().eye.toArray3f(), new float[]{0,0,0}, DCCamera.instance().up.toArray3f());
    }
    
@@ -219,8 +212,8 @@ public abstract class BaseModelRenderer implements RenderTask {
    ////////////////////////////////////////////////////////////////////////////////
    public void startPickingOrtho(GL2 gl2, IntBuffer buffer) {
       GraphicUtil.startPickingOrtho(gl2, buffer, 
-            SSM.instance().mouseX, SSM.instance().mouseY, 
-            SSM.instance().windowWidth, SSM.instance().windowHeight);
+            SSM.mouseX, SSM.mouseY, 
+            SSM.windowWidth, SSM.windowHeight);
    }   
    
    
@@ -691,6 +684,12 @@ public abstract class BaseModelRenderer implements RenderTask {
    // in different threads
    ////////////////////////////////////////////////////////////////////////////////
    public void resetDataGL(GL2 gl2) {
+      long t1 = System.currentTimeMillis();
+      resetDataGL1(gl2);
+      long t2 = System.currentTimeMillis();
+      System.err.println("ResetData GL took ==> "+ (t2-t1));
+   }
+   public void resetDataGL1(GL2 gl2) {
 
          
       int startIdx = CacheManager.instance().getDateKey( SSM.instance().startTimeFrame ) == null ? 0:
@@ -952,6 +951,8 @@ public abstract class BaseModelRenderer implements RenderTask {
          // Need to loop again to get the global maxima
          int start = sYear - origin; 
          int end   = (eYear - origin)+1;
+         //System.out.println(sYear + "--" + origin);
+         //System.out.println("start " + start +  " end " + end);
          for (int x=start; x < end; x++) {
             for (int y=sMonth; y <= eMonth; y++) {
                float tmp = 0;

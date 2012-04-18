@@ -31,6 +31,8 @@ public class FilterTask implements RenderTask {
    
    public static float offsetX = 30.0f;
    
+   public boolean deferredRefresh = false;
+   
    ////////////////////////////////////////////////////////////////////////////////
    // Position various sliders and render
    ////////////////////////////////////////////////////////////////////////////////
@@ -43,7 +45,7 @@ public class FilterTask implements RenderTask {
       
       gl2.glMatrixMode(GL2.GL_PROJECTION);
       gl2.glLoadIdentity();
-      gl2.glOrtho(0, SSM.instance().windowWidth, 0, SSM.instance().windowHeight, -10, 10);
+      gl2.glOrtho(0, SSM.windowWidth, 0, SSM.windowHeight, -10, 10);
       gl2.glMatrixMode(GL2.GL_MODELVIEW);
       gl2.glLoadIdentity();
       
@@ -126,11 +128,11 @@ public class FilterTask implements RenderTask {
       
       // Set the bottom-left of the year range slider
       yearSlider.anchorX = 80;
-      yearSlider.anchorY = SSM.instance().windowHeight - 150;
+      yearSlider.anchorY = SSM.windowHeight - 150;
       
       // Set the bottom left of the month slider
       monthSlider.anchorX = 80;
-      monthSlider.anchorY = SSM.instance().windowHeight - 200;
+      monthSlider.anchorY = SSM.windowHeight - 200;
       
       setYearData();
       setMonthData();
@@ -236,6 +238,8 @@ public class FilterTask implements RenderTask {
    
    
    public void pickSliderIndicator(GL2 gl2) {
+      //if (SSM.instance().l_mousePressed == false) return;
+      if (SSM.stopPicking == 1) return;
       
       
       int hits;
@@ -254,7 +258,9 @@ public class FilterTask implements RenderTask {
          gl2.glLoadIdentity();
 //         mouseY = viewport.get(3) - mouseY;
          glu.gluPickMatrix((float)SSM.instance().mouseX, (float)(viewport.get(3) - SSM.instance().mouseY), 1.0f, 1.0f, viewport);
-         gl2.glOrtho(0, SSM.instance().windowWidth, 0, SSM.instance().windowHeight, -10, 10);
+         SSM.instance();
+         SSM.instance();
+         gl2.glOrtho(0, SSM.windowWidth, 0, SSM.windowHeight, -10, 10);
          gl2.glMatrixMode(GL2.GL_MODELVIEW);
          gl2.glLoadIdentity();      
          
@@ -302,8 +308,9 @@ public class FilterTask implements RenderTask {
       gl2.glMatrixMode(GL2.GL_MODELVIEW);
       hits = gl2.glRenderMode(GL2.GL_RENDER);
       
-//      System.out.println("Hits = " + hits);
       if (hits > 0) {
+         System.out.println("hit in filter");
+         
          int choose = buffer.get(3);
          int depth  = buffer.get(1);
          
@@ -315,18 +322,22 @@ public class FilterTask implements RenderTask {
          }
          
          if (choose < 200) {
+         System.out.println("hit in year");
+         deferredRefresh = true;
             yearSlider.isSelected = true;
             yearSlider.sitem = choose%100;
-            yearSlider.anchor = SSM.instance().mouseX;
+            SSM.instance();
+            yearSlider.anchor = SSM.mouseX;
          } else if (choose < 300) {
+         System.out.println("hit in month");
+         deferredRefresh = true;
             monthSlider.isSelected = true; 
             monthSlider.sitem = choose%100;
-            monthSlider.anchor = SSM.instance().mouseX;
+            SSM.instance();
+            monthSlider.anchor = SSM.mouseX;
          } else if (choose < 2000) {
-            if (SSM.instance().l_mouseClicked == false) return;
+            SSM.stopPicking = 1;
             int index = choose%1000;
-            
-            System.out.println("................................." + yearSlider.lowIdx + " " + yearSlider.highIdx);
             
             // if we selected ourselves, high light all the year
             if (yearSlider.lowIdx == index && yearSlider.highIdx == index) {
@@ -336,16 +347,16 @@ public class FilterTask implements RenderTask {
             
             yearSlider.lowIdx = index;
             yearSlider.highIdx = index;
+            deferredRefresh = true;
          } else if (choose < 3000) {
-            if (SSM.instance().l_mouseClicked == false) return;
+            SSM.stopPicking = 1;
             int index = choose%1000;
             monthSlider.lowIdx = index;
             monthSlider.highIdx = index;
+            deferredRefresh = true;
          }
          
-         SSM.instance().currentFocusLayer = SSM.UI_LAYER;
-         DWin.instance().debug("Switching to UI_LAYER");
-         
+         SSM.instance().topElement = SSM.ELEMENT_FILTER;
          SSM.instance().globalFetchIdx = 0;
          SSM.instance().docStartIdx = 0;
          

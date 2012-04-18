@@ -529,7 +529,7 @@ public class DomainFilterTask implements RenderTask {
       if (DCUtil.between(mx, widget.anchorX, widget.anchorX+SSM.instance().scrollWidth)) {
          if (DCUtil.between(my, widget.anchorY-20, widget.anchorY)) {
             attrib.active = ! attrib.active;
-            
+            SSM.stopPicking = 1;
             
             if (attrib.active) {
                widget.animator = PropertySetter.createAnimator(SSM.SCROLL_DURATION, widget, "height", new FloatEval(), widget.height, attrib.height); 

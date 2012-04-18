@@ -49,25 +49,6 @@ public class ProjectDriver {
       // Create the rendering items
       GLRenderer renderer = new GLRenderer();
       
-      // Add the 3D model viewer
-      ModelRenderer model_renderer = new ModelRenderer();
-      renderer.renderTaskList.add(model_renderer);
-      
-      // Add a filtering task
-      FilterTask filter_task = new FilterTask();
-      renderer.renderTaskList.add( filter_task );
-      
-      // Add the legend rendering task
-      LegendTask legend_task = new LegendTask();
-      renderer.renderTaskList.add( legend_task);
-      
-      // Add save/load
-      SaveLoadTask save_task = new SaveLoadTask();
-      //renderer.renderTaskList.add( save_task );
-      
-      // Add domain filters
-      DomainFilterTask domain_task = new DomainFilterTask();
-      renderer.renderTaskList.add( domain_task );
       
       
       // Create event manager instance
@@ -122,38 +103,7 @@ public class ProjectDriver {
       int fps = 0;
       
       while (true) {
-         // Update logic goes in here
-         // Note there is a precedence order here, 
-         // model_renderer.resetData() should always go first because
-         // it resets the cache
-         if (SSM.instance().dirty == 1) {
-            model_renderer.resetData();
-            domain_task.resetData();
-            
-            SSM.instance().dirty = 0;
-         }
-         
-         if (SSM.instance().currentFocusLayer == SSM.UI_LAYER) {
-            filter_task.update(SSM.instance().mouseX);   
-         }
-         
-         // Trigger the range slider to update, under two conditions
-         // 1) The user drags the date slider indicator
-         // 2) The user loads a saved state
-         if (SSM.instance().l_mousePressed == false &&
-             SSM.instance().currentFocusLayer == SSM.UI_LAYER) {
-            SSM.instance().currentFocusLayer = 0;
-            filter_task.unfocus();
-            SSM.instance().l_mousePressed = false; 
-         }
-         if (SSM.instance().dirtyLoad == 1) {
-         	SSM.instance().dirtyLoad = 0;
-         	filter_task.loadFromSSM();
-         }
-         if (SSM.instance().dirtyDateFilter == 1) {
-            SSM.instance().dirtyDateFilter = 0;
-            filter_task.loadFromSSM(); 
-         }
+
          
          canvas.update(canvas.getGraphics());
          

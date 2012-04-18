@@ -284,14 +284,14 @@ public class SSM {
    public int resizePanel = 0;
    
    // All document sizes are measures in pixels
-   public float docAnchorX = 400;                 // Bottom left of the document panel
-   public float docAnchorY = 400;                 // Bottom left of the document panel
-   public float docPadding = 25;                  // Padding area (for dragging)
-   public float docWidth = 550;                  
-   public float docHeight = 400;
-   public float docHeader = 15;     // not currently used
-   public float docFooter = 15;     // not currently used
-   public float yoffset = docHeight;
+   public static float docAnchorX = 400;                 // Bottom left of the document panel
+   public static float docAnchorY = 400;                 // Bottom left of the document panel
+   public static float docPadding = 25;                  // Padding area (for dragging)
+   public static float docWidth = 550;                  
+   public static float docHeight = 400;
+   public static float docHeader = 15;     // not currently used
+   public static float docFooter = 15;     // not currently used
+   public static float yoffset = docHeight;
    
    public float t1Height = 0; // bad placement, just a proof of concept here
    public float t2Height = 0; // bad placement, just a proof of concept here
@@ -324,27 +324,7 @@ public class SSM {
       return false;
    }
    
-   // Check to see if the mouse cursor is in the area where
-   // the text is drawn
-   public boolean inDocContext() {
-      if ( ! docActive ) return false;
-      float mX = mouseX;
-      float mY = windowHeight - mouseY;
-      if (DCUtil.between( mX, docAnchorX, docAnchorX+docWidth)) {
-         if (DCUtil.between( mY, docAnchorY, docAnchorY+docHeight)) {
-            return true;   
-         }
-      }
-         
-      /*   
-      if (mX >= docAnchorX  && mX <= docAnchorX+docWidth) {
-         if (mX >= docAnchorX + docPadding && mX <= docAnchorX+docWidth-docPadding) {
-            return true;
-         }
-      }
-      */
-      return false;
-   }
+
    
    
    
@@ -354,8 +334,8 @@ public class SSM {
    ////////////////////////////////////////////////////////////////////////////////
    public float getYearAnchorX() { return 30.0f; }
    public float getMonthAnchorX() { return 30.0f; }
-   public float getYearAnchorY() { return this.windowHeight - 80; }
-   public float getMonthAnchorY() { return this.windowHeight - 170; }
+   public float getYearAnchorY() { return windowHeight - 80; }
+   public float getMonthAnchorY() { return windowHeight - 170; }
    public float rangeFilterHeight = 40;
    public float rangeFilterWidth  = 40;
    
@@ -392,7 +372,7 @@ public class SSM {
    public static int ELEMENT_CYEAR_SCROLL = 16;
    
    public int topElement = ELEMENT_NONE;
-   public int location   = ELEMENT_NONE; // Horrible hack
+   //public int location   = ELEMENT_NONE; // Horrible hack
    
    
    ////////////////////////////////////////////////////////////////////////////////
@@ -437,12 +417,12 @@ public class SSM {
    ///////////////////////////////////////////////////////////////////////////////// 
    // Window Environment
    ///////////////////////////////////////////////////////////////////////////////// 
-   public int mouseX;
-   public int mouseY;
-   public int oldMouseX;
-   public int oldMouseY;
-   public int windowWidth;
-   public int windowHeight;
+   public static int mouseX;
+   public static int mouseY;
+   public static int oldMouseX;
+   public static int oldMouseY;
+   public static int windowWidth;
+   public static int windowHeight;
    
    
    ///////////////////////////////////////////////////////////////////////////////// 
@@ -469,7 +449,7 @@ public class SSM {
    // Otherwise an action has taken on non interactive element (IE: camera movement)
    public static int UI_LAYER= 1;
    public static int COMPONENT_LAYER= 2;
-   public int currentFocusLayer = 0;
+   //public int currentFocusLayer = 0;
    
    public int dirty = 0;
    public int dirtyGL = 0;
