@@ -20,6 +20,7 @@ import model.ModelRenderer;
 import util.ALogger;
 import util.DWin;
 import datastore.CacheManager;
+import datastore.Const;
 import datastore.SSM;
 
 /////////////////////////////////////////////////////////////////////////////////
@@ -29,6 +30,8 @@ import datastore.SSM;
 public class ProjectDriver {
    
    public static void main(String args[]) {
+      
+      Const.doRunTimeCheck();
       
       // Get the on-disk and run time database cache out of the way....
       CacheManager.instance(); 

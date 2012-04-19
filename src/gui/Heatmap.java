@@ -7,6 +7,7 @@ import java.util.Hashtable;
 import javax.media.opengl.GL2;
 
 import datastore.CacheManager;
+import datastore.Const;
 import datastore.SSM;
 import datastore.SchemeManager;
 
@@ -311,7 +312,7 @@ public class Heatmap extends ComponentChart {
    //public static Font  smallFont  = new Font("Courier", Font.PLAIN, 5);
    //public static Font  smallFont  = new Font("Tahoma", Font.PLAIN, 8);
    //public static Font  smallFont  = new Font("Consolas", Font.PLAIN, 10);
-   public static Font  smallFont  = DCUtil.loadFont("din1451m.ttf", Font.PLAIN, 14);
+   public static Font  smallFont  = DCUtil.loadFont(Const.FONT_PATH+"din1451m.ttf", Font.PLAIN, 14);
    public float blockHeight = 3;
    public float blockWidth  = 8;
  

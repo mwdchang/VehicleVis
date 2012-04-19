@@ -154,6 +154,7 @@ public class CacheManager {
          //initOccurrenceTable2();   
          initQueryTable();
          setDocumentTag();
+System.out.println("Debugging");         
          initRelatedTable();
       } catch (Exception e) {
          e.printStackTrace();
@@ -162,6 +163,7 @@ public class CacheManager {
       long end = System.currentTimeMillis();
       
       System.out.println("Total time to bring up system : " + (end-start));
+      System.out.flush();
       DWin.instance().msg("Total time to bring up cache : " + (end-start));
       
       
@@ -192,8 +194,8 @@ public class CacheManager {
    /////////////////////////////////////////////////////////////////////////////////  
    protected CacheManager() {
       if (DEBUG == true) {
-         this.timeLineStartYear = 2009;         
-         this.timeLineEndYear   = 2010;         
+         this.timeLineStartYear = 1995;         
+         this.timeLineEndYear   = 1995;         
       }
    }
    

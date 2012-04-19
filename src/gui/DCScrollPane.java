@@ -26,6 +26,7 @@ import com.jogamp.opengl.util.awt.TextureRenderer;
 import com.jogamp.opengl.util.texture.Texture;
 import com.jogamp.opengl.util.texture.TextureCoords;
 
+import datastore.Const;
 import datastore.SSM;
 import datastore.SchemeManager;
 
@@ -71,8 +72,8 @@ public class DCScrollPane {
    
    //public static Font fontArial = new Font( "Arial", Font.PLAIN, 12);   
    //public static Font fontArialBold = new Font( "Arial", Font.BOLD, 12);
-   public static Font font = DCUtil.loadFont("din1451m.ttf", Font.PLAIN, 12f);
-   public static Font fontBold = DCUtil.loadFont("din1451m.ttf", Font.BOLD, 12f);
+   public static Font font = DCUtil.loadFont(Const.FONT_PATH+"din1451m.ttf", Font.PLAIN, 12f);
+   public static Font fontBold = DCUtil.loadFont(Const.FONT_PATH+"din1451m.ttf", Font.BOLD, 12f);
    
    public TextureFont tf = new TextureFont();   
    

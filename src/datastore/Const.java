@@ -1,5 +1,7 @@
 package datastore;
 
+import java.io.File;
+
 // Class to hold some of the global variables...
 // Mostly just try to make it easier to point to different variations
 public class Const {
@@ -24,11 +26,26 @@ public class Const {
    public static final String SWN_FILE = "C:\\Users\\Daniel\\DropBox\\Resources\\SentiWordNet\\SentiWordNet_3.txt";
    
    
+   
    ////////////////////////////////////////////////////////////////////////////
-   // Path for modeller
+   // Runtime path
    ////////////////////////////////////////////////////////////////////////////
-   public static final String MODEL_PATH = "C:\\Users\\Daniel\\DropBox\\Resources\\";
-   public static final String TMP_DIR = "C:\\Users\\daniel\\temporary\\";
+   public static String MODEL_PATH = "C:\\Users\\Daniel\\DropBox\\Resources\\";
+   public static String TMP_DIR = "C:\\Users\\daniel\\temporary\\";
+   public static String FONT_PATH = "C:\\Users\\Daniel\\DropBox\\Resources\\";
+   public static String SHADER_PATH = "src\\Shader\\";
+   
+   // If there is no path, then use local
+   public static void doRunTimeCheck() {
+      File f = new File(SHADER_PATH);   
+      if (! f.exists()) {
+         MODEL_PATH = "LocalResources\\";      
+         TMP_DIR    = "LocalResources\\";
+         FONT_PATH  = "LocalResources\\";
+         SHADER_PATH = "LocalResources\\Shader\\";
+      }
+   }
+   
    
    
    ////////////////////////////////////////////////////////////////////////////

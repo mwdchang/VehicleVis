@@ -94,8 +94,8 @@ public class TUIOTest implements TuioListener {
                System.out.println("possible pinch event");
                System.out.println("Moving closer from " + cursor.getSessionID());   
             }
-            
          }
+         
          
          // Check against single touch events
          if (eventHandled == false) {

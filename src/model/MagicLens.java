@@ -18,6 +18,7 @@ import util.GLSLUtil;
 import util.GraphicUtil;
 import util.ShaderObj;
 
+import datastore.Const;
 import datastore.SSM;
 import datastore.SchemeManager;
 
@@ -351,8 +352,8 @@ public class MagicLens {
    // Initialize the shader programs and their uniform parameters
    public void initShader(GL2 gl2) {
       
-      shaderObj.createShader(gl2, "src\\Shader\\vert_magic_lens.glsl", GL2.GL_VERTEX_SHADER);
-      shaderObj.createShader(gl2, "src\\Shader\\frag_magic_lens.glsl", GL2.GL_FRAGMENT_SHADER);
+      shaderObj.createShader(gl2, Const.SHADER_PATH+"vert_magic_lens.glsl", GL2.GL_VERTEX_SHADER);
+      shaderObj.createShader(gl2, Const.SHADER_PATH+"frag_magic_lens.glsl", GL2.GL_FRAGMENT_SHADER);
       shaderObj.createProgram(gl2);
       
       gl2.glBindAttribLocation(shaderObj.programID,  0, "in_position");
@@ -363,44 +364,6 @@ public class MagicLens {
       
       shaderObj.bindFragColour(gl2, "outColour");
       
-      
-      /*
-      vert_shader = GLSLUtil.createShader(gl2, "src\\Shader\\vert_magic_lens.glsl", GL2.GL_VERTEX_SHADER);
-      frag_shader = GLSLUtil.createShader(gl2, "src\\Shader\\frag_magic_lens.glsl", GL2.GL_FRAGMENT_SHADER);
-      
-      shader_program = gl2.glCreateProgram();
-      gl2.glAttachShader(shader_program, vert_shader);
-      gl2.glAttachShader(shader_program, frag_shader);
-      
-      
-      
-      gl2.glBindAttribLocation(shader_program,  0, "in_position");
-      gl2.glBindAttribLocation(shader_program,  1, "in_colour");
-      gl2.glBindAttribLocation(shader_program,  2, "in_texcoord");
-      
-      
-      // link and validate the shader program
-      gl2.glLinkProgram(shader_program);
-      GLSLUtil.checkLinkAndValidationErrors(gl2, shader_program);
-      
-      
-      // Get the uniform variables
-      projMatrix = gl2.glGetUniformLocation(shader_program, "projection_matrix"); 
-      viewMatrix = gl2.glGetUniformLocation(shader_program, "modelview_matrix"); 
-      inColour   = gl2.glGetUniformLocation(shader_program, "in_colour");
-      texMap     = gl2.glGetUniformLocation(shader_program, "tex");
-      smouseX    = gl2.glGetUniformLocation(shader_program, "smouseX");
-      smouseY    = gl2.glGetUniformLocation(shader_program, "smouseY");
-      sareaHeight = gl2.glGetUniformLocation(shader_program, "areaHeight");
-      sareaWidth  = gl2.glGetUniformLocation(shader_program, "areaWidth");
-      magicLensRadius = gl2.glGetUniformLocation(shader_program, "magicLensRadius");
-      magicLensSelected = gl2.glGetUniformLocation(shader_program, "magicLensSelected");
-      
-      
-      
-      // Bind fragment shader
-      gl2.glBindFragDataLocation(shader_program, 0, "outColour");      
-      */
    }
    
    // Set global parameters

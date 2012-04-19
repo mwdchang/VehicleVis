@@ -37,7 +37,9 @@ import datastore.SSM;
 /////////////////////////////////////////////////////////////////////////////////
 public class EventManager implements KeyListener, MouseListener, MouseMotionListener, MouseWheelListener {
 
-   
+   ////////////////////////////////////////////////////////////////////////////////
+   // Creates a lens at (posX, posY)
+   ////////////////////////////////////////////////////////////////////////////////
    public void createLens(int posX, int posY) {
       LensAttrib la = new LensAttrib( posX, posY, 100.0f, 0);      
       la.magicLensType = LensAttrib.LENS_DEPTH;
@@ -45,6 +47,9 @@ public class EventManager implements KeyListener, MouseListener, MouseMotionList
       SSM.instance().refreshMagicLens = true;
    }
    
+   ////////////////////////////////////////////////////////////////////////////////
+   // Remove a lens at (posX, posY)
+   ////////////////////////////////////////////////////////////////////////////////
    public void removeLens(int posX, int posY) {
       // TODO: This is a bit buggy due to the removal while still iterating the list
       for (int i=0; i < SSM.instance().lensList.size(); i++) {
@@ -58,6 +63,9 @@ public class EventManager implements KeyListener, MouseListener, MouseMotionList
       }
    }
    
+   ////////////////////////////////////////////////////////////////////////////////
+   // Move lens by delta
+   ////////////////////////////////////////////////////////////////////////////////
    public void moveLens(int posX, int posY, int oldPosX, int oldPosY) {
       for (int i=0; i < SSM.instance().lensList.size(); i++) {
          if (SSM.instance().lensList.elementAt(i).magicLensSelected == 1) {
@@ -68,6 +76,9 @@ public class EventManager implements KeyListener, MouseListener, MouseMotionList
       }      
    }
    
+   ////////////////////////////////////////////////////////////////////////////////
+   // Resize lens by delta
+   ////////////////////////////////////////////////////////////////////////////////
    public void resizeLens(int posX, int posY, int oldPosX, int oldPosY) {
       for (int i=0; i < SSM.instance().lensList.size(); i++) {
          if (SSM.instance().lensList.elementAt(i).magicLensSelected == 1) {
@@ -80,6 +91,9 @@ public class EventManager implements KeyListener, MouseListener, MouseMotionList
    }
    
    
+   ////////////////////////////////////////////////////////////////////////////////
+   // Change lens cutting plane
+   ////////////////////////////////////////////////////////////////////////////////
    public int scrollLens(int posX, int posY, int unit) {
       int flag = 0;
       for (int i=0; i < SSM.instance().lensList.size(); i++) {
@@ -115,6 +129,10 @@ public class EventManager implements KeyListener, MouseListener, MouseMotionList
       return flag;
    }
    
+   
+   ////////////////////////////////////////////////////////////////////////////////
+   // Change camera position
+   ////////////////////////////////////////////////////////////////////////////////
    public void setCamera(int posX, int posY, int oldPosX, int oldPosY) {
       double basis[][] = {
             { DCCamera.instance().right.x, DCCamera.instance().right.y, DCCamera.instance().right.z, 0 },      
@@ -166,14 +184,10 @@ public class EventManager implements KeyListener, MouseListener, MouseMotionList
       }      
    }
    
-//   public void setScrollPanelOffset(PaneAttrib attrib, int distance) {
-//      attrib.yOffset -= distance;
-//      if (attrib.yOffset < attrib.height)
-//         attrib.yOffset = attrib.height;
-//      if (attrib.yOffset > attrib.textureHeight)
-//         attrib.yOffset = attrib.textureHeight;   
-//   }
    
+   ////////////////////////////////////////////////////////////////////////////////
+   // Scroll filter panel
+   ////////////////////////////////////////////////////////////////////////////////
    public void setScrollPanelOffset(PaneAttrib attrib, int posY, int oldPosY) {
       attrib.yOffset -= (posY - oldPosY);   
       if (attrib.yOffset < attrib.height)
@@ -182,6 +196,9 @@ public class EventManager implements KeyListener, MouseListener, MouseMotionList
          attrib.yOffset = attrib.textureHeight;   
    }   
    
+   ////////////////////////////////////////////////////////////////////////////////
+   // Check drag movement against GUI elements
+   ////////////////////////////////////////////////////////////////////////////////
    public void checkGUIDrag(int posX, int posY, int oldPosX, int oldPosY) {
       // Check the top level UI elements
       if (SSM.instance().topElement == SSM.ELEMENT_DOCUMENT) {
@@ -215,6 +232,9 @@ public class EventManager implements KeyListener, MouseListener, MouseMotionList
       }      
    }
    
+   ////////////////////////////////////////////////////////////////////////////////
+   // Scroll document panel
+   ////////////////////////////////////////////////////////////////////////////////
    public void checkDocumentScroll(int posX, int posY, int unit) {
       if (unit < 0) {
          // Prevent underflow
@@ -249,8 +269,10 @@ public class EventManager implements KeyListener, MouseListener, MouseMotionList
       }      
    }
    
+   ////////////////////////////////////////////////////////////////////////////////
    // Check to see if the mouse cursor is in the area where
    // the text is drawn
+   ////////////////////////////////////////////////////////////////////////////////
    public boolean inDocContext(int posX, int posY) {
       if ( ! SSM.instance().docActive ) return false;
       float mX = posX;
@@ -262,7 +284,6 @@ public class EventManager implements KeyListener, MouseListener, MouseMotionList
       }
       return false;
    }   
-   
    
    
    ////////////////////////////////////////////////////////////////////////////////
@@ -655,7 +676,7 @@ public class EventManager implements KeyListener, MouseListener, MouseMotionList
          System.out.println("ESC exit...");
          System.exit(0);
       }
-      if (e.getKeyCode() == e.VK_SPACE) {
+      if (e.getKeyCode() == KeyEvent.VK_SPACE) {
          SSM.instance().docActive = ! SSM.instance().docActive;
          SSM.instance().resizePanel = 1;
       }

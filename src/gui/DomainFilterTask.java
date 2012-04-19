@@ -16,6 +16,7 @@ import model.DCColour;
 import model.PaneAttrib;
 
 import datastore.CacheManager;
+import datastore.Const;
 import datastore.SSM;
 import datastore.SchemeManager;
 import db.QueryObj;
@@ -46,7 +47,7 @@ public class DomainFilterTask implements RenderTask {
    public DCScrollPane c_modelScroll;
    public DCScrollPane c_yearScroll;   
    
-   public static Font labelFont = DCUtil.loadFont("din1451m.ttf", Font.PLAIN, 12f);
+   public static Font labelFont = DCUtil.loadFont(Const.FONT_PATH+"din1451m.ttf", Font.PLAIN, 12f);
 
    @Override
    public void render(GL2 gl2) {

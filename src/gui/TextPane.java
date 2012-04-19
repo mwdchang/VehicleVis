@@ -16,6 +16,7 @@ import util.StringUtil;
 import com.jogamp.opengl.util.awt.TextureRenderer;
 
 import datastore.CacheManager;
+import datastore.Const;
 import datastore.HierarchyTable;
 import datastore.SSM;
 import datastore.SchemeManager;
@@ -203,8 +204,8 @@ public class TextPane {
    public Graphics2D g2d;
    //public static Font fontArial = new Font( "Consolas", Font.PLAIN, 14);   
    //public static Font fontArialBold = new Font( "Consolas", Font.BOLD, 14);
-   public static Font fontArial = DCUtil.loadFont("din1451m.ttf", Font.PLAIN, 14f);
-   public static Font fontArialBold = DCUtil.loadFont("din1451m.ttf", Font.BOLD, 14f);
+   public static Font fontArial = DCUtil.loadFont(Const.FONT_PATH+"din1451m.ttf", Font.PLAIN, 14f);
+   public static Font fontArialBold = DCUtil.loadFont(Const.FONT_PATH+"din1451m.ttf", Font.BOLD, 14f);
    public FontMetrics fm;
    
    // documentList holds the original document, tag list hods the actual rendering components

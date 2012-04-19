@@ -5,6 +5,7 @@ import java.awt.Font;
 
 import javax.media.opengl.GL2;
 
+import datastore.Const;
 import datastore.SSM;
 
 import util.DCCamera;
@@ -75,7 +76,7 @@ public class StatusWindow {
    }
    
    public static TextureFont tf;
-   public static Font f  =  DCUtil.loadFont("din1451m.ttf", Font.PLAIN, 12f);
+   public static Font f  =  DCUtil.loadFont(Const.FONT_PATH+"din1451m.ttf", Font.PLAIN, 12f);
    public static Color c = Color.BLACK;
    public static float tipX;
    public static float tipY;

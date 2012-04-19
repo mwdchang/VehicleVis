@@ -21,6 +21,7 @@ import TimingFrameExt.FloatEval;
 import com.jogamp.opengl.util.GLBuffers;
 
 import datastore.CacheManager;
+import datastore.Const;
 import datastore.HierarchyTable;
 import datastore.MM;
 import datastore.SSM;
@@ -189,8 +190,8 @@ public class ModelRenderer extends BaseModelRenderer {
         glowTexture.init(gl2);
         
         // Redo shader inits
-        glowTexture.shader.createShader(gl2, "src\\Shader\\vert_fbt.glsl", GL2.GL_VERTEX_SHADER);
-        glowTexture.shader.createShader(gl2, "src\\Shader\\frag_fbt_white.glsl", GL2.GL_FRAGMENT_SHADER);
+        glowTexture.shader.createShader(gl2, Const.SHADER_PATH+"vert_fbt.glsl", GL2.GL_VERTEX_SHADER);
+        glowTexture.shader.createShader(gl2, Const.SHADER_PATH+"frag_fbt_white.glsl", GL2.GL_FRAGMENT_SHADER);
         glowTexture.shader.createProgram(gl2);
         
         gl2.glBindAttribLocation(glowTexture.shader.programID,  0, "in_position");
@@ -208,8 +209,8 @@ public class ModelRenderer extends BaseModelRenderer {
         outlineTexture1.TEXTURE_SIZE_W = (int)((float)SSM.windowWidth / OUTLINE_DOWN_SAMPLE);
         outlineTexture1.TEXTURE_SIZE_H = (int)((float)SSM.windowHeight / OUTLINE_DOWN_SAMPLE);
         outlineTexture1.init(gl2);
-        outlineTexture1.shader.createShader(gl2, "src\\Shader\\vert_fbt.glsl", GL2.GL_VERTEX_SHADER);
-        outlineTexture1.shader.createShader(gl2, "src\\Shader\\frag_fbt_white2.glsl", GL2.GL_FRAGMENT_SHADER);
+        outlineTexture1.shader.createShader(gl2, Const.SHADER_PATH+"vert_fbt.glsl", GL2.GL_VERTEX_SHADER);
+        outlineTexture1.shader.createShader(gl2, Const.SHADER_PATH+"frag_fbt_white2.glsl", GL2.GL_FRAGMENT_SHADER);
         outlineTexture1.shader.createProgram(gl2);
         gl2.glBindAttribLocation(outlineTexture1.shader.programID, 0, "in_position");
         gl2.glBindAttribLocation(outlineTexture1.shader.programID, 1, "in_colour");
@@ -222,8 +223,8 @@ public class ModelRenderer extends BaseModelRenderer {
         outlineTexture2.TEXTURE_SIZE_W = (int)((float)SSM.windowWidth / OUTLINE_DOWN_SAMPLE);
         outlineTexture2.TEXTURE_SIZE_H = (int)((float)SSM.windowHeight / OUTLINE_DOWN_SAMPLE);
         outlineTexture2.init(gl2);
-        outlineTexture2.shader.createShader(gl2, "src\\Shader\\vert_fbt.glsl", GL2.GL_VERTEX_SHADER);
-        outlineTexture2.shader.createShader(gl2, "src\\Shader\\frag_fbt_white2.glsl", GL2.GL_FRAGMENT_SHADER);
+        outlineTexture2.shader.createShader(gl2, Const.SHADER_PATH+"vert_fbt.glsl", GL2.GL_VERTEX_SHADER);
+        outlineTexture2.shader.createShader(gl2, Const.SHADER_PATH+"frag_fbt_white2.glsl", GL2.GL_FRAGMENT_SHADER);
         outlineTexture2.shader.createProgram(gl2);
         gl2.glBindAttribLocation(outlineTexture2.shader.programID, 0, "in_position");
         gl2.glBindAttribLocation(outlineTexture2.shader.programID, 1, "in_colour");

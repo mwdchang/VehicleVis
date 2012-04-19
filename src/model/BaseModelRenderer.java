@@ -29,6 +29,7 @@ import TimingFrameExt.DCColourEval;
 import com.jogamp.opengl.util.awt.TextRenderer;
 
 import datastore.CacheManager;
+import datastore.Const;
 import datastore.HierarchyTable;
 import datastore.MM;
 import datastore.SSM;
@@ -1304,28 +1305,28 @@ public abstract class BaseModelRenderer implements RenderTask {
         System.err.println("\nloading shaders...\n");
 
         g_shaderDualInit = new ShaderObj();
-        g_shaderDualInit.createShader(gl2, "src\\Shader\\dual_peeling_init_vertex.glsl", GL2.GL_VERTEX_SHADER);
-        g_shaderDualInit.createShader(gl2, "src\\Shader\\dual_peeling_init_fragment.glsl", GL2.GL_FRAGMENT_SHADER);
+        g_shaderDualInit.createShader(gl2, Const.SHADER_PATH+"dual_peeling_init_vertex.glsl", GL2.GL_VERTEX_SHADER);
+        g_shaderDualInit.createShader(gl2, Const.SHADER_PATH+"dual_peeling_init_fragment.glsl", GL2.GL_FRAGMENT_SHADER);
         g_shaderDualInit.createProgram(gl2);
         g_shaderDualInit.linkProgram(gl2);
 
         g_shaderDualPeel = new ShaderObj();
-        g_shaderDualPeel.createShader(gl2, "src\\Shader\\shade_vertex.glsl", GL2.GL_VERTEX_SHADER);
-        g_shaderDualPeel.createShader(gl2, "src\\Shader\\dual_peeling_peel_vertex.glsl", GL2.GL_VERTEX_SHADER);
-        g_shaderDualPeel.createShader(gl2, "src\\Shader\\shade_fragment.glsl", GL2.GL_FRAGMENT_SHADER);
-        g_shaderDualPeel.createShader(gl2, "src\\Shader\\dual_peeling_peel_fragment.glsl", GL2.GL_FRAGMENT_SHADER);
+        g_shaderDualPeel.createShader(gl2, Const.SHADER_PATH+"shade_vertex.glsl", GL2.GL_VERTEX_SHADER);
+        g_shaderDualPeel.createShader(gl2, Const.SHADER_PATH+"dual_peeling_peel_vertex.glsl", GL2.GL_VERTEX_SHADER);
+        g_shaderDualPeel.createShader(gl2, Const.SHADER_PATH+"shade_fragment.glsl", GL2.GL_FRAGMENT_SHADER);
+        g_shaderDualPeel.createShader(gl2, Const.SHADER_PATH+"dual_peeling_peel_fragment.glsl", GL2.GL_FRAGMENT_SHADER);
         g_shaderDualPeel.createProgram(gl2);
         g_shaderDualPeel.linkProgram(gl2);
 
         g_shaderDualBlend = new ShaderObj();
-        g_shaderDualBlend.createShader(gl2, "src\\Shader\\dual_peeling_blend_vertex.glsl", GL2.GL_VERTEX_SHADER);
-        g_shaderDualBlend.createShader(gl2, "src\\Shader\\dual_peeling_blend_fragment.glsl", GL2.GL_FRAGMENT_SHADER);
+        g_shaderDualBlend.createShader(gl2, Const.SHADER_PATH+"dual_peeling_blend_vertex.glsl", GL2.GL_VERTEX_SHADER);
+        g_shaderDualBlend.createShader(gl2, Const.SHADER_PATH+"dual_peeling_blend_fragment.glsl", GL2.GL_FRAGMENT_SHADER);
         g_shaderDualBlend.createProgram(gl2);
         g_shaderDualBlend.linkProgram(gl2);
 
         g_shaderDualFinal = new ShaderObj();
-        g_shaderDualFinal.createShader(gl2, "src\\Shader\\dual_peeling_final_vertex.glsl", GL2.GL_VERTEX_SHADER);
-        g_shaderDualFinal.createShader(gl2, "src\\Shader\\dual_peeling_final_fragment.glsl", GL2.GL_FRAGMENT_SHADER);
+        g_shaderDualFinal.createShader(gl2, Const.SHADER_PATH+"dual_peeling_final_vertex.glsl", GL2.GL_VERTEX_SHADER);
+        g_shaderDualFinal.createShader(gl2, Const.SHADER_PATH+"dual_peeling_final_fragment.glsl", GL2.GL_FRAGMENT_SHADER);
         g_shaderDualFinal.createProgram(gl2);
         g_shaderDualFinal.linkProgram(gl2);
 

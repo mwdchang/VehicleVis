@@ -19,6 +19,7 @@ import org.jdesktop.animation.timing.Animator;
 import com.jogamp.common.nio.Buffers;
 import com.jogamp.opengl.util.GLBuffers;
 
+import datastore.Const;
 import datastore.HierarchyTable;
 import datastore.SSM;
 import datastore.SchemeManager;
@@ -820,18 +821,18 @@ public class DCComponent extends DCObj {
       ////////////////////////////////////////////////////////////////////////////////
       // Start the shaders
       ////////////////////////////////////////////////////////////////////////////////
-      edgeShader.createShader(gl2, "src\\Shader\\vert_adj.glsl", GL2.GL_VERTEX_SHADER);
-      edgeShader.createShader(gl2, "src\\Shader\\geom_adj.glsl", GL3.GL_GEOMETRY_SHADER);
-      edgeShader.createShader(gl2, "src\\Shader\\frag_adj.glsl", GL2.GL_FRAGMENT_SHADER);
+      edgeShader.createShader(gl2, Const.SHADER_PATH+"vert_adj.glsl", GL2.GL_VERTEX_SHADER);
+      edgeShader.createShader(gl2, Const.SHADER_PATH+"geom_adj.glsl", GL3.GL_GEOMETRY_SHADER);
+      edgeShader.createShader(gl2, Const.SHADER_PATH+"frag_adj.glsl", GL2.GL_FRAGMENT_SHADER);
       edgeShader.createProgram(gl2); 
       gl2.glBindAttribLocation(edgeShader.programID,  0, "in_position");
       edgeShader.linkProgram(gl2);
       edgeShader.bindFragColour(gl2, "outColour");
       
      
-      silShader.createShader(gl2, "src\\Shader\\vert_adj.glsl", GL2.GL_VERTEX_SHADER);
-      silShader.createShader(gl2, "src\\Shader\\geom_adj_silhouette.glsl", GL3.GL_GEOMETRY_SHADER);
-      silShader.createShader(gl2, "src\\Shader\\frag_adj.glsl", GL2.GL_FRAGMENT_SHADER);
+      silShader.createShader(gl2, Const.SHADER_PATH+"vert_adj.glsl", GL2.GL_VERTEX_SHADER);
+      silShader.createShader(gl2, Const.SHADER_PATH+"geom_adj_silhouette.glsl", GL3.GL_GEOMETRY_SHADER);
+      silShader.createShader(gl2, Const.SHADER_PATH+"frag_adj.glsl", GL2.GL_FRAGMENT_SHADER);
       silShader.createProgram(gl2); 
       gl2.glBindAttribLocation(silShader.programID,  0, "in_position");
       silShader.linkProgram(gl2);
@@ -925,8 +926,8 @@ public class DCComponent extends DCObj {
       
       
       // Start the shaders
-      normalShader.createShader(gl2, "src\\Shader\\vert_pass_thru.glsl", GL2.GL_VERTEX_SHADER);
-      normalShader.createShader(gl2, "src\\Shader\\frag_pass_thru.glsl", GL2.GL_FRAGMENT_SHADER);
+      normalShader.createShader(gl2, Const.SHADER_PATH+"vert_pass_thru.glsl", GL2.GL_VERTEX_SHADER);
+      normalShader.createShader(gl2, Const.SHADER_PATH+"frag_pass_thru.glsl", GL2.GL_FRAGMENT_SHADER);
       normalShader.createProgram(gl2);
       
       gl2.glBindAttribLocation(normalShader.programID,  0, "in_position");
