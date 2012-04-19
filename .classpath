@@ -17,5 +17,7 @@
 	<classpathentry kind="lib" path="C:/Users/Daniel/Dropbox/Resources/Jama/Jama-1.0.2.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Daniel/Dropbox/Resources/stanford-parser/stanford-parser.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Daniel/Dropbox/Resources/Time/TimingFramework.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Daniel/Dropbox/Resources/Trove/trove-3.0.1.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Daniel/Dropbox/Resources/TUIO/libTUIO.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
