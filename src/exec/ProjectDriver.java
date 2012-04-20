@@ -15,8 +15,11 @@ import javax.media.opengl.awt.GLCanvas;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
+import TUIO.TuioClient;
+
 import model.ModelRenderer;
 
+import touch.TUIOTest;
 import util.ALogger;
 import util.DWin;
 import datastore.CacheManager;
@@ -30,11 +33,34 @@ import datastore.SSM;
 public class ProjectDriver {
    
    public static void main(String args[]) {
-      
       Const.doRunTimeCheck();
+      
+      // hack test
+      TuioClient client = new TuioClient();
+      client.addTuioListener(new TUIOTest());
+      client.connect();
+      // end hack test
       
       // Get the on-disk and run time database cache out of the way....
       CacheManager.instance(); 
+      
+      // There are some parameters to parse...
+      if (args.length > 0) {
+         if (args.length == 2) {
+            System.out.println("getting dates");
+            CacheManager.timeLineStartYear = Integer.parseInt(args[0]);   
+            CacheManager.timeLineEndYear   = Integer.parseInt(args[1]);
+         } else if (args.length == 3) {    
+            System.out.println("getting dates and filters");
+            CacheManager.timeLineStartYear = Integer.parseInt(args[0]);   
+            CacheManager.timeLineEndYear   = Integer.parseInt(args[1]);
+            CacheManager.mfrFilter = args[2];
+         } else {
+            System.out.println("Parameters are : startYear endYear");
+            System.exit(0);   
+         }
+      }
+      
       CacheManager.instance().initSystem();
       
       
@@ -43,7 +69,7 @@ public class ProjectDriver {
       //System.out.println(GLProfile.glAvailabilityToString());
       //GLProfile profile = GLProfile.get(GLProfile.GL3bc);
       GLProfile profile = GLProfile.getMaxProgrammable();
-      DWin.instance().debug(GLProfile.glAvailabilityToString());
+      //DWin.instance().debug(GLProfile.glAvailabilityToString());
       
       GLCapabilities capabilities = new GLCapabilities(profile);
       capabilities.setHardwareAccelerated(true);
@@ -75,7 +101,6 @@ public class ProjectDriver {
       frame = new JFrame("");
       
       JPanel panel = new JPanel(new BorderLayout());
-      
       panel.add(canvas, BorderLayout.CENTER);
       
       //frame.getContentPane().add(canvas);

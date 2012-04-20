@@ -21,6 +21,7 @@ import javax.swing.JFileChooser;
 /////////////////////////////////////////////////////////////////////////////////
 // Miscellaneous stuff that doesn't really belong in any categories
 //
+//  dist                    - Calculate the pythagorean distance
 //  getMonthTransationTable - Convert integer month to string literals
 //  checkPoint              - Pause the project by printing out a check point line and waiting for user input
 //  makeInClause            - Create SQL IN clause
@@ -47,6 +48,10 @@ public class DCUtil {
 //      System.out.println(DCUtil.abbreviation(439));
 //      System.out.println(DCUtil.abbreviation(1910));
 //   }
+   
+   public static double dist(double x, double y) {
+      return Math.sqrt( x*x + y*y);  
+   }
    
    
    public static Font loadFont(String path, int style, float size) {

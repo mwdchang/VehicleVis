@@ -43,9 +43,14 @@ public class CacheManager {
       //CacheManager.DEBUG = false;
       CacheManager.instance();
       CacheManager.instance().initSystem();
-      
-     
    }
+   
+   
+   public static String mfrFilter = null;
+   public static String makeFilter = null;
+   public static String modelFilter = null;
+   public static String yearFilter = null;
+   
    
    ////////////////////////////////////////////////////////////////////////////////
    // Iteratively get the queryObj specified by params
@@ -194,8 +199,8 @@ System.out.println("Debugging");
    /////////////////////////////////////////////////////////////////////////////////  
    protected CacheManager() {
       if (DEBUG == true) {
-         this.timeLineStartYear = 1995;         
-         this.timeLineEndYear   = 1995;         
+         timeLineStartYear = 1995;         
+         timeLineEndYear   = 1995;         
       }
    }
    
@@ -237,11 +242,14 @@ System.out.println("Debugging");
          int counter = 0;
          
          String sql = 
-         "select b.datea, a.groupid, b.mfr_txt, b.make_txt, b.model_txt, b.year_txt, b.cmplid " + 
-         "from projectv3.cmp_x_grp_clean a " + 
+         "SELECT b.datea, a.groupid, b.mfr_txt, b.make_txt, b.model_txt, b.year_txt, b.cmplid " + 
+         "FROM projectv3.cmp_x_grp_clean a " + 
          ",    projectv3.cmp_clean b " + 
-         "where a.cmplid = b.cmplid "  
+         "WHERE a.cmplid = b.cmplid "  
          ;         
+         if (mfrFilter != null) {
+            sql += "AND b.mfr_txt in (" + mfrFilter + ") ";   
+         }
          
          start = System.currentTimeMillis();
          rs    = dbh.execute(sql, true);
