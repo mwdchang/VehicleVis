@@ -14,17 +14,17 @@ public class WCursor {
    public WCursor(int e, TuioCursor c) {
       element = e;
       cursor = c;
-      x = y = 0;
-   }
-   public WCursor(int e, float x, float y, TuioCursor c) {
-      element = e;
-      cursor = c;
-      this.x = x;
-      this.y = y;
+      x = c.getX();
+      y = c.getY();
+      timestamp = c.getTuioTime().getTotalMilliseconds();
    }
    
-   public float x, y;
-   public int element;
-   public TuioCursor cursor;
+   public long holdTime = 0;
+   public int tap = 0;
+   
+   public long timestamp;      // timestamp
+   public float x, y;          // Normalized positions 
+   public int element;         // The element associated with the touch point
+   public TuioCursor cursor; 
    
 }

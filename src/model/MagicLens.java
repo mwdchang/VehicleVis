@@ -310,7 +310,6 @@ public class MagicLens {
       
       initFrameBuffer(gl2);      
       
-      System.out.println("Texture size" + this.TEXTURE_SIZE_W + "," + this.TEXTURE_SIZE_H);
       
       diamondBuffer.put(square);
       colorBuffer.put(color);

@@ -112,7 +112,6 @@ public class ModelRenderer extends BaseModelRenderer {
                   if (v1 > v2) {
                      double v = 0.4 + 0.6*(v1-v2)/v1;
                      comp.renderBuffer(gl2, DCColour.fromDouble(0.5, 0.0, v, 0.2), 2);
-                     //System.out.println("1 : " + comp.cname);
                   }
                }
                c ++;
@@ -143,7 +142,6 @@ public class ModelRenderer extends BaseModelRenderer {
                   if (v1 < v2) {
                      double v = 0.4 + 0.6*(v2-v1)/v2;
                      comp.renderBuffer(gl2, DCColour.fromDouble(0.0, 0.5, v, 0.2), 2);
-                     //System.out.println("2 : " + comp.cname);
                   }
                }
                c ++;
@@ -181,7 +179,6 @@ public class ModelRenderer extends BaseModelRenderer {
       // Initialize the glowTexture
       ////////////////////////////////////////////////////////////////////////////////
       if (SSM.instance().refreshGlowTexture == true) {
-        System.out.println("In Modelrenderer init " + SSM.windowHeight + " " + SSM.windowWidth);         
         glowTexture= new FrameBufferTexture();
         glowTexture.TEXTURE_SIZE_W = (int)((float)SSM.windowWidth/GLOW_DOWN_SAMPLE);
         glowTexture.TEXTURE_SIZE_H = (int)((float)SSM.windowHeight/GLOW_DOWN_SAMPLE);
@@ -248,7 +245,6 @@ public class ModelRenderer extends BaseModelRenderer {
                la.mlen = new MagicLens();   
                la.mlen.init(gl2);
                la.displayList = this.MakeFullScreenQuad(gl2);
-               System.out.println("initing lens " + la.displayList);
             //}
             if (la.t_top == null) {
                la.t_top = new TextureFont();   
@@ -273,7 +269,6 @@ public class ModelRenderer extends BaseModelRenderer {
             
             la.mlen.startRecording(gl2); {
                //this.RenderDualPeeling(gl2, la.displayList);
-               System.out.println("..."  + System.currentTimeMillis());
                this.RenderDualPeeling(gl2, la.displayList);
                
                gl2.glEnable(GL2.GL_BLEND);
@@ -490,7 +485,6 @@ public class ModelRenderer extends BaseModelRenderer {
          for (String key : list) {
             DCComponent comp = MM.currentModel.componentTable.get(key);
             
-            //System.out.println("comp name : " + comp.cname);
             if (comp.hasContext == false) continue;
             if (comp.id < 0) continue;
             
@@ -604,7 +598,6 @@ public class ModelRenderer extends BaseModelRenderer {
          DCComponent comp = MM.currentModel.componentTable.get(key);
          
          
-         //System.out.println("comp name : " + comp.cname);
          if (comp.hasContext == false) continue;
          if (comp.id < 0) continue;
          
@@ -1201,7 +1194,6 @@ public class ModelRenderer extends BaseModelRenderer {
       if (la.start <= 0) la.start = 0;
       int laCnt = 0;
       
-//System.out.println("render label : " + la.start + " " + la.numToDisplay);      
       
       // First filter into left and right list
       for (int i=0; i < list.length; i++) {

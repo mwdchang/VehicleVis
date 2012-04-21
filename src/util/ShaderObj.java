@@ -198,7 +198,7 @@ public class ShaderObj {
       }
       
       try {
-         System.out.println("Creating : " + name );
+         //System.out.println("Creating : " + name );
          
          String fsrc = "";
          String line = "";

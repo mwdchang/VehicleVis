@@ -35,11 +35,6 @@ public class ProjectDriver {
    public static void main(String args[]) {
       Const.doRunTimeCheck();
       
-      // hack test
-      TuioClient client = new TuioClient();
-      client.addTuioListener(new TUIOTest());
-      client.connect();
-      // end hack test
       
       // Get the on-disk and run time database cache out of the way....
       CacheManager.instance(); 
@@ -60,6 +55,10 @@ public class ProjectDriver {
             System.exit(0);   
          }
       }
+      
+      boolean useTUIO = Boolean.parseBoolean(System.getProperty("UseTUIO", "true"));
+      
+      
       
       CacheManager.instance().initSystem();
       
@@ -91,10 +90,16 @@ public class ProjectDriver {
       
           
       // Register event listeners
+      if (useTUIO == true) {
+         TuioClient client = new TuioClient();
+         client.addTuioListener(new TUIOTest());
+         client.connect();
+      } else {
+         canvas.addMouseListener(eventManager);
+         canvas.addMouseMotionListener(eventManager);
+         canvas.addMouseWheelListener(eventManager);
+      }
       canvas.addKeyListener(eventManager);
-      canvas.addMouseListener(eventManager);
-      canvas.addMouseMotionListener(eventManager);
-      canvas.addMouseWheelListener(eventManager);
       
       
       // Create a Java rendering context
@@ -106,9 +111,14 @@ public class ProjectDriver {
       //frame.getContentPane().add(canvas);
       frame.getContentPane().add(panel);
       frame.setSize( frame.getContentPane().getPreferredSize() );
-      frame.setUndecorated(false);
+      
+      // Set frame state
+      //frame.setUndecorated(true);
+      //frame.setExtendedState( frame.getExtendedState() | JFrame.MAXIMIZED_BOTH );
+      
       frame.setVisible(true);
       //frame.requestFocus();
+      
       
       canvas.requestFocusInWindow();
       canvas.requestFocus();
