@@ -75,11 +75,16 @@ public class SSM {
       refreshOITBuffers = true;
       
       
+      
       manufactureAttrib.selected = null;
       makeAttrib.selected = null;
       modelAttrib.selected = null;
       selectedGroup = new Hashtable<Integer, Integer>();
       relatedList.clear();
+      
+      // Clear buffers
+      pickPoints.clear();
+      lensList.clear();
    }
    
    
@@ -166,9 +171,9 @@ public class SSM {
    ///////////////////////////////////////////////////////////////////////////////// 
    // The current focus group/component
    ///////////////////////////////////////////////////////////////////////////////// 
-   public Hashtable<Integer, Integer> selectedGroup;
+   public static Hashtable<Integer, Integer> selectedGroup;
    public Integer occlusionLevel;
-   public Vector<Integer> relatedList; // The list of components that are related to the selected components
+   public static Vector<Integer> relatedList; // The list of components that are related to the selected components
    public int maxOccurrence = Integer.MAX_VALUE;
    public int minOccurrence = Integer.MIN_VALUE;
    

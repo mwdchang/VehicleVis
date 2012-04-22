@@ -35,7 +35,7 @@ public class ProjectDriver {
    public static void main(String args[]) {
       Const.doRunTimeCheck();
       
-      boolean useTUIO = Boolean.parseBoolean(System.getProperty("UseTUIO", "false"));
+      boolean useTUIO = Boolean.parseBoolean(System.getProperty("UseTUIO", "true"));
       
       
       // Get the on-disk and run time database cache out of the way....

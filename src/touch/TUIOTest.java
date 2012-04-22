@@ -99,6 +99,11 @@ public class TUIOTest implements TuioListener {
    };
    
 
+   
+   ////////////////////////////////////////////////////////////////////////////////
+   // Register the touch point, find out which ement is being
+   // touched and add it to the event table
+   ////////////////////////////////////////////////////////////////////////////////
    @Override
    public void addTuioCursor(TuioCursor o) {
       System.err.println("=== Adding TUIO Cursor");
@@ -137,11 +142,34 @@ public class TUIOTest implements TuioListener {
    
    @Override
    public void removeTuioCursor(TuioCursor o) {
-      //System.err.println("=== Removing TUIO Cursor");
-      
-      // Check if this is a tap event (approximate)
+      System.err.println("=== Removing TUIO Cursor");
       WCursor w = eventTable.get(o.getSessionID());
-      if (w.cursor.getPath().size() < 3) {
+      
+      // Check if this is a swipe event
+      if (w.cursor.getPath().size() > 1 && w.state == WCursor.STATE_SWIPE) {
+         // Are they all in the same direction (more or less)?   
+         float x1 = w.cursor.getPath().elementAt(0).getX();
+         float x2 = w.cursor.getPath().elementAt(1).getX();
+         float sign1 = x1-x2;
+         float sign2;
+         boolean sameDirection = true;
+         
+         for (int i=2; i < w.cursor.getPath().size(); i++) {
+            x1 = x2;
+            x2 = w.cursor.getPath().elementAt(i).getX();
+            sign2 = x1-x2;
+            if (sign2*sign1 < 0) { 
+               sameDirection = false; 
+               break; 
+            }
+         }
+         if (sameDirection == true) {
+            System.out.println("Horizontal Swipe detected...");   
+            SSM.instance().colouringMethod++;
+            SSM.instance().colouringMethod %= 5;
+         }
+      // Check if this is a tap event (approximate)
+      } else if (w.cursor.getPath().size() < 2) {
         synchronized(tapActionList) {
            boolean found = false;
             for (int i=0; i < tapActionList.size(); i++) {
@@ -179,15 +207,27 @@ public class TUIOTest implements TuioListener {
    public void updateTuioCursor(TuioCursor o) {
       // Sanity check, ignore small changes (evoluce table seem to send out crap changes)
       WCursor wcursor = eventTable.get(o.getSessionID());
+      wcursor.numUpdate++;
+      
       float ox = eventTable.get(o.getSessionID()).x;
       float oy = eventTable.get(o.getSessionID()).y;
+      
+      // Avoid jitter
       if (DCUtil.dist( (ox-o.getX()), (oy-o.getY())) < sensitivity) return;
+      
+      // Additional down-sampling
+      if (wcursor.numUpdate % 3 != 0) return;
       
       
       System.err.println("=== Updating TUIO Cursor");
-//      System.out.println(o.getSessionID() + "\t" + o.getX() + "\t" + o.getY());
       
-      boolean eventHandled = false;
+      
+
+      
+      
+      ////////////////////////////////////////////////////////////////////////////////
+      // Check for multi touch (pinch/unpinch) events
+      ////////////////////////////////////////////////////////////////////////////////
       if (eventTable.containsKey(o.getSessionID()) && eventTable.size() > 1) {
          
          // Check for multi touch
@@ -200,7 +240,6 @@ public class TUIOTest implements TuioListener {
          int element = eventTable.get(o.getSessionID()).element;
          
          
-         // Check for multi touch (pinch/unpinch) events
          for (WCursor wcursor2 : eventTable.values()) {
             TuioCursor cursor = wcursor2.cursor;
             if (cursor.getSessionID() == o.getSessionID()) continue;
@@ -224,17 +263,34 @@ public class TUIOTest implements TuioListener {
          }
       }
       
-      // We cannot detect any multi gesture event, so check
-      // if this can fit under any single touch gesture events
-      System.out.println("Check single touch event");
+      ////////////////////////////////////////////////////////////////////////////////
+      // Log possible swipe, just save it, we will process at the remove stage
+      // The swipe event will be executed when the cursor is removed
+      ////////////////////////////////////////////////////////////////////////////////
+      if (DCUtil.dist( (wcursor.x - o.getX()), (wcursor.y - o.getY())) >  0.02 && wcursor.state != WCursor.STATE_MOVE) {
+         System.out.println("Possible Swipe");
+         WCursor newCursor = new WCursor(wcursor.element, o);
+         newCursor.state = WCursor.STATE_SWIPE;
+         eventTable.put(o.getSessionID(), newCursor);
+         return;   
+      }      
+      
+      ////////////////////////////////////////////////////////////////////////////////
+      // Execute any move event
+      ////////////////////////////////////////////////////////////////////////////////
       if (wcursor.element == SSM.ELEMENT_NONE){
+         System.out.println("Processing ELEMENT NONE move");
+         WCursor newCursor = new WCursor(wcursor.element, o);
+         newCursor.state = WCursor.STATE_MOVE;
+         eventTable.put(o.getSessionID(), newCursor);
          Event.setCamera(o.getScreenX(SSM.windowWidth), o.getScreenY(SSM.windowHeight), (int)(ox*SSM.windowWidth), (int)(oy*SSM.windowHeight));     
       } else if (wcursor.element == SSM.ELEMENT_LENS){
+         WCursor newCursor = new WCursor(wcursor.element, o);
+         newCursor.state = WCursor.STATE_MOVE;
+         eventTable.put(o.getSessionID(), newCursor);
          Event.moveLensTUIO(o.getScreenX(SSM.windowWidth), o.getScreenY(SSM.windowHeight), (int)(ox*SSM.windowWidth), (int)(oy*SSM.windowHeight));     
       }
       
-      int originElement = wcursor.element;
-      eventTable.put(o.getSessionID(), new WCursor(originElement, o));
    }
    
    

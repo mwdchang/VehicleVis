@@ -106,7 +106,7 @@ public class ModelRenderer extends BaseModelRenderer {
             gl2.glPushMatrix();
             for (DCComponent comp : MM.currentModel.componentTable.values()) {
                
-               if (comp.hasContext && comp.active && ! SSM.instance().selectedGroup.contains(comp.id)) {
+               if (comp.hasContext && comp.active && ! SSM.selectedGroup.contains(comp.id)) {
                   float v1 = CacheManager.instance().groupOccurrence.get(comp.id);
                   float v2 = CacheManager.instance().c_groupOccurrence.get(comp.id);                  
                   if (v1 > v2) {
@@ -136,7 +136,7 @@ public class ModelRenderer extends BaseModelRenderer {
             gl2.glPushMatrix();
             for (DCComponent comp : MM.currentModel.componentTable.values()) {
                
-               if (comp.hasContext && comp.active && ! SSM.instance().selectedGroup.contains(comp.id)) {
+               if (comp.hasContext && comp.active && ! SSM.selectedGroup.contains(comp.id)) {
                   float v1 = CacheManager.instance().groupOccurrence.get(comp.id);
                   float v2 = CacheManager.instance().c_groupOccurrence.get(comp.id);                  
                   if (v1 < v2) {
@@ -348,7 +348,7 @@ public class ModelRenderer extends BaseModelRenderer {
       ////////////////////////////////////////////////////////////////////////////////
       // Record glow effects and render to to a 1-1 square in ortho mode 
       ////////////////////////////////////////////////////////////////////////////////
-      if (SSM.instance().useGlow && SSM.instance().selectedGroup.size() > 0) {
+      if (SSM.instance().useGlow && SSM.selectedGroup.size() > 0) {
          glowTexture.startRecording(gl2); 
             setPerspectiveView(gl2); 
             basicTransform(gl2);
@@ -356,7 +356,7 @@ public class ModelRenderer extends BaseModelRenderer {
             gl2.glClear(GL2.GL_COLOR_BUFFER_BIT);
             gl2.glPushMatrix();
             for (DCComponent comp : MM.currentModel.componentTable.values()) {
-               if ( SSM.instance().selectedGroup.contains(comp.id) ) {
+               if ( SSM.selectedGroup.contains(comp.id) ) {
                   //gl2.glScaled(1.2, 1.2, 1.2);
                   //comp.renderBuffer(gl2, DCColour.fromInt(20, 20, 210));
                   comp.renderBuffer(gl2, SchemeManager.selected);
@@ -492,7 +492,7 @@ public class ModelRenderer extends BaseModelRenderer {
             // If local mode than don't render components that are not related
             comp.cchart.active = true;
             if (SSM.instance().useLocalFocus == true) {
-               if (SSM.instance().selectedGroup.size() > 0 && ! SSM.instance().relatedList.contains(comp.id))  {
+               if (SSM.selectedGroup.size() > 0 && ! SSM.relatedList.contains(comp.id))  {
                   comp.cchart.active = false;
                } else {
                   comp.cchart.active = true;   
@@ -604,7 +604,7 @@ public class ModelRenderer extends BaseModelRenderer {
          // If local mode than don't render components that are not related
          comp.cchart.active = true;
          if (SSM.instance().useLocalFocus == true) {
-            if (SSM.instance().selectedGroup.size() > 0 && ! SSM.instance().relatedList.contains(comp.id))  {
+            if (SSM.selectedGroup.size() > 0 && ! SSM.relatedList.contains(comp.id))  {
                comp.cchart.active = false;
             } else {
                comp.cchart.active = true;   
@@ -748,7 +748,7 @@ public class ModelRenderer extends BaseModelRenderer {
       // This can be a select or a de-select
       /*
       if (obj == null) {
-         SSM.instance().selectedGroup.clear();
+         SSM.selectedGroup.clear();
          SSM.instance().dirty = 1;
          SSM.instance().dirtyGL = 1; // for the text panel
          SSM.instance().t1Start = 0;
@@ -764,22 +764,22 @@ public class ModelRenderer extends BaseModelRenderer {
          // Disable any action if in local focus mode and 
          // the part clicked is not related nor selected
          if (SSM.instance().useLocalFocus == true) {
-            if (SSM.instance().selectedGroup.size() > 0 &&  !SSM.instance().relatedList.contains(obj)) 
+            if (SSM.selectedGroup.size() > 0 &&  !SSM.relatedList.contains(obj)) 
                return;
          }
          
          
-         if (SSM.instance().selectedGroup.size() > 0 ) {
+         if (SSM.selectedGroup.size() > 0 ) {
             // If control key is not held down, clear
             if ( ! SSM.instance().shiftKey) {
-               SSM.instance().selectedGroup.clear();   
+               SSM.selectedGroup.clear();   
             }
             
-            //if ( SSM.instance().selectedGroup.intValue() == obj.intValue()) {
-            if (SSM.instance().selectedGroup.contains(obj)) {
-               SSM.instance().selectedGroup.remove(obj);
+            //if ( SSM.selectedGroup.intValue() == obj.intValue()) {
+            if (SSM.selectedGroup.contains(obj)) {
+               SSM.selectedGroup.remove(obj);
             } else {
-               SSM.instance().selectedGroup.put(obj, obj);
+               SSM.selectedGroup.put(obj, obj);
             }
             
             SSM.instance().dirty = 1;
@@ -788,27 +788,26 @@ public class ModelRenderer extends BaseModelRenderer {
             SSM.instance().t2Start = SSM.instance().globalFetchSize;
             SSM.instance().yoffset = SSM.instance().docHeight;
             SSM.instance().docMaxSize = 0;
-            for (Integer key : SSM.instance().selectedGroup.keySet()) {
+            for (Integer key : SSM.selectedGroup.keySet()) {
                SSM.instance().docMaxSize += CacheManager.instance().groupOccurrence.get( key );
             }
-            //SSM.instance().docMaxSize = CacheManager.instance().groupOccurrence.get( SSM.instance().selectedGroup );
+            //SSM.instance().docMaxSize = CacheManager.instance().groupOccurrence.get( SSM.selectedGroup );
             
          } else {
-            //M.instance().selectedGroup = obj;   
-            SSM.instance().selectedGroup.put(obj,obj);
+            SSM.selectedGroup.put(obj,obj);
             SSM.instance().dirty = 1;
             SSM.instance().dirtyGL = 1; // for the text panel
             SSM.instance().t1Start = 0;
             SSM.instance().t2Start = SSM.instance().globalFetchSize;
             SSM.instance().yoffset = SSM.instance().docHeight;
-            //SSM.instance().docMaxSize = CacheManager.instance().groupOccurrence.get( SSM.instance().selectedGroup );
+            //SSM.instance().docMaxSize = CacheManager.instance().groupOccurrence.get( SSM.selectedGroup );
             SSM.instance().docMaxSize = 0;
-            for (Integer key : SSM.instance().selectedGroup.keySet()) {
+            for (Integer key : SSM.selectedGroup.keySet()) {
                SSM.instance().docMaxSize += CacheManager.instance().groupOccurrence.get( key );
             }
         }
       } else {
-         SSM.instance().selectedGroup.clear();
+         SSM.selectedGroup.clear();
          SSM.instance().dirty = 1;
          SSM.instance().dirtyGL = 1; // for the text panel
          SSM.instance().t1Start = 0;
@@ -889,7 +888,7 @@ public class ModelRenderer extends BaseModelRenderer {
          // If local mode than don't render components that are not related
          comp.cchart.active = true;
          if (SSM.instance().useLocalFocus == true) {
-            if (SSM.instance().selectedGroup.size() > 0 && ! SSM.instance().relatedList.contains(comp.id)) {
+            if (SSM.selectedGroup.size() > 0 && ! SSM.relatedList.contains(comp.id)) {
                comp.cchart.active = false;   
             } else {
                comp.cchart.active = true;   
@@ -1206,7 +1205,7 @@ public class ModelRenderer extends BaseModelRenderer {
          // If local mode than don't render components that are not related
          comp.cchart.active = true;
          if (SSM.instance().useLocalFocus == true) {
-            if (SSM.instance().selectedGroup.size() > 0 && ! SSM.instance().relatedList.contains(comp.id))  {
+            if (SSM.selectedGroup.size() > 0 && ! SSM.relatedList.contains(comp.id))  {
                comp.cchart.active = false;
             } else {
                comp.cchart.active = true;   
@@ -1283,11 +1282,11 @@ public class ModelRenderer extends BaseModelRenderer {
          int relatedOcc = 0;
          int relatedOccNew = 0;
          int c_relatedOccNew = 0;
-         if (SSM.instance().selectedGroup.size() >= 0 ) {
+         if (SSM.selectedGroup.size() >= 0 ) {
             
             if (SSM.instance().useAggregate == true) {
                Vector<Integer> selectedGroup =  new Vector<Integer>();
-               selectedGroup.addAll( SSM.instance().selectedGroup.values());
+               selectedGroup.addAll( SSM.selectedGroup.values());
             
                relatedOccNew = CacheManager.instance().getCoOccurringAgg(
                      startIdx, endIdx, 
@@ -1311,7 +1310,7 @@ public class ModelRenderer extends BaseModelRenderer {
               
             } else {
                Vector<Integer> related =  new Vector<Integer>();
-               related.addAll( SSM.instance().selectedGroup.values());
+               related.addAll( SSM.selectedGroup.values());
                
                Vector<Integer> t = new Vector<Integer>();
                t.add(comp.id);
@@ -1374,9 +1373,9 @@ public class ModelRenderer extends BaseModelRenderer {
          
          float edgeX = 1.0f*lensRadius*(float)Math.cos(doodleAngle);
          
-         if (SSM.instance().selectedGroup.size() > 0  && SSM.instance().selectedGroup.contains(comp.cchart.id)){
+         if (SSM.selectedGroup.size() > 0  && SSM.selectedGroup.contains(comp.cchart.id)){
             gl2.glColor4fv( SchemeManager.selected.toArray(), 0);
-         } else if (SSM.instance().relatedList != null && SSM.instance().relatedList.contains(comp.id)) { 
+         } else if (SSM.relatedList != null && SSM.relatedList.contains(comp.id)) { 
             gl2.glColor4fv( SchemeManager.sparkline_guideline.toArray(), 0);
             //gl2.glColor4fv( SchemeManager.related.toArray(), 0);
          } else {
@@ -1424,11 +1423,11 @@ public class ModelRenderer extends BaseModelRenderer {
          int relatedOccNew = 0;
          int c_relatedOccNew = 0;
          
-         if (SSM.instance().selectedGroup.size() >= 0 ) {
+         if (SSM.selectedGroup.size() >= 0 ) {
             
             if (SSM.instance().useAggregate == true) {
                Vector<Integer> selectedGroup =  new Vector<Integer>();
-               selectedGroup.addAll( SSM.instance().selectedGroup.values());
+               selectedGroup.addAll( SSM.selectedGroup.values());
                
                relatedOccNew = CacheManager.instance().getCoOccurringAgg(
                      startIdx, endIdx, 
@@ -1452,7 +1451,7 @@ public class ModelRenderer extends BaseModelRenderer {
                
             } else {
                Vector<Integer> related =  new Vector<Integer>();
-               related.addAll(SSM.instance().selectedGroup.keySet());
+               related.addAll(SSM.selectedGroup.keySet());
                Vector<Integer> t = new Vector<Integer>();
                t.add(comp.id);
                
@@ -1510,9 +1509,9 @@ public class ModelRenderer extends BaseModelRenderer {
          float doodleAngle = (float)Math.asin( doodleY/lensRadius);
          float edgeX = 1.0f*lensRadius*(float)Math.cos(doodleAngle);
          
-         if (SSM.instance().selectedGroup.size() > 0 && SSM.instance().selectedGroup.contains(comp.cchart.id)){
+         if (SSM.selectedGroup.size() > 0 && SSM.selectedGroup.contains(comp.cchart.id)){
             gl2.glColor4fv( SchemeManager.selected.toArray(), 0);
-         } else if (SSM.instance().relatedList != null && SSM.instance().relatedList.contains(comp.id)) {   
+         } else if (SSM.relatedList != null && SSM.relatedList.contains(comp.id)) {   
             //gl2.glColor4fv( SchemeManager.related.toArray(), 0);
             gl2.glColor4fv( SchemeManager.sparkline_guideline.toArray(), 0);
          } else {
@@ -1823,7 +1822,7 @@ public class ModelRenderer extends BaseModelRenderer {
          
          
 	   
-         if ( SSM.instance().selectedGroup.size() > 0 && SSM.instance().selectedGroup.contains(modelComp.id)) {
+         if ( SSM.selectedGroup.size() > 0 && SSM.selectedGroup.contains(modelComp.id)) {
             gl2.glPolygonMode(GL2.GL_FRONT_AND_BACK, GL2.GL_FILL);
             gl2.glColor4fv(SchemeManager.component_selected.toArray(), 0);
             
@@ -1845,11 +1844,11 @@ public class ModelRenderer extends BaseModelRenderer {
          } 
          
          // TODO:Highlight the related groups - temporary test, should move to better id/string check structure
-         if (SSM.instance().relatedList.size() > 0 ) {
+         if (SSM.relatedList.size() > 0 ) {
             boolean done = false;   
-            for (int i=0; i < SSM.instance().relatedList.size(); i++) {
+            for (int i=0; i < SSM.relatedList.size(); i++) {
                //if ( HierarchyTable.instance().partTable.get(SSM.instance().relatedList.elementAt(i)).contains(modelComp.baseName)) {
-            	if ( modelComp.id == SSM.instance().relatedList.elementAt(i)) {
+            	if ( modelComp.id == SSM.relatedList.elementAt(i)) {
                   done = true;   
                   gl2.glPushMatrix();
                      //modelComp.boundingBox.renderBoundingBox(gl2, DCColour.fromInt(0, 255, 255, 128));
@@ -1932,10 +1931,10 @@ public class ModelRenderer extends BaseModelRenderer {
       res[1] = CacheManager.instance().c_groupOccurrence.get(comp.id);      
       
       
-      if (SSM.instance().selectedGroup.size() > 0 ) {
+      if (SSM.selectedGroup.size() > 0 ) {
          if (SSM.instance().useAggregate == true) {
             Vector<Integer> selectedGroup =  new Vector<Integer>();
-            selectedGroup.addAll( SSM.instance().selectedGroup.values());
+            selectedGroup.addAll( SSM.selectedGroup.values());
          
             res[2] = CacheManager.instance().getCoOccurringAgg(
                   startIdx, endIdx, 
@@ -1959,7 +1958,7 @@ public class ModelRenderer extends BaseModelRenderer {
            
          } else {
             Vector<Integer> related =  new Vector<Integer>();
-            related.addAll( SSM.instance().selectedGroup.values());
+            related.addAll( SSM.selectedGroup.values());
             
             Vector<Integer> t = new Vector<Integer>();
             t.add(comp.id);

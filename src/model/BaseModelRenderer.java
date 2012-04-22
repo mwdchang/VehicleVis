@@ -303,7 +303,7 @@ public abstract class BaseModelRenderer implements RenderTask {
                SSM.instance().c_yearAttrib.selected);
          
           
-          if (SSM.instance().selectedGroup.size() > 0 && SSM.instance().useLocalFocus == true) {
+          if (SSM.selectedGroup.size() > 0 && SSM.instance().useLocalFocus == true) {
              CacheManager.instance().monthMaximum = 
                CacheManager.instance().getMonthMaximumSelected(
                      SSM.instance().manufactureAttrib.selected, 
@@ -353,7 +353,7 @@ public abstract class BaseModelRenderer implements RenderTask {
                SSM.instance().c_modelAttrib.selected,
                SSM.instance().c_yearAttrib.selected);
        
-           if (SSM.instance().selectedGroup.size() > 0 && SSM.instance().useLocalFocus) {
+           if (SSM.selectedGroup.size() > 0 && SSM.instance().useLocalFocus) {
               CacheManager.instance().monthMaximum = 
                 CacheManager.instance().getMonthMaximumSelectedAgg(
                       SSM.instance().manufactureAttrib.selected, 
@@ -391,9 +391,9 @@ public abstract class BaseModelRenderer implements RenderTask {
       
       // Pick up the related group(s) if there is a user
       // selected group in context
-      if (SSM.instance().selectedGroup.size() > 0 ) {
+      if (SSM.selectedGroup.size() > 0 ) {
          Vector<Integer> t = new Vector<Integer>();
-         t.addAll( SSM.instance().selectedGroup.values());
+         t.addAll( SSM.selectedGroup.values());
          
          Vector<Integer> l1 = CacheManager.instance().getRelatedGroup(
                startIdx, endIdx,
@@ -418,10 +418,10 @@ public abstract class BaseModelRenderer implements RenderTask {
                 if ( ! l1.contains(l2.elementAt(i))) l1.add(l2.elementAt(i));
              }
           }
-          SSM.instance().relatedList = l1;   
+          SSM.relatedList = l1;   
       } else {
          // Remove all 
-         SSM.instance().relatedList.clear(); 
+         SSM.relatedList.clear(); 
       }
       
    
@@ -429,11 +429,11 @@ public abstract class BaseModelRenderer implements RenderTask {
       // Finding the maximum and minimum
       // If we are using the selected components as a base point, than the maximum is the total 
       // occurrences for the selected components, otherwise it is the 
-      if (SSM.instance().useLocalFocus && SSM.instance().selectedGroup.size() >  0) {
+      if (SSM.instance().useLocalFocus && SSM.selectedGroup.size() >  0) {
          Vector<Integer> self = new Vector<Integer>();
-         self.addAll(SSM.instance().selectedGroup.values());
+         self.addAll(SSM.selectedGroup.values());
          
-         Vector<Integer> selfAgg = HierarchyTable.instance().getAgg(SSM.instance().selectedGroup);
+         Vector<Integer> selfAgg = HierarchyTable.instance().getAgg(SSM.selectedGroup);
          
          if (SSM.instance().useAggregate) {
             SSM.instance().maxOccurrence = CacheManager.instance().getCoOccurringAgg(
@@ -522,13 +522,13 @@ public abstract class BaseModelRenderer implements RenderTask {
          
          float occ  = 0;
          if (comp.id > 0) {
-            if (SSM.instance().useLocalFocus == true && SSM.instance().selectedGroup.size() > 0) {
+            if (SSM.instance().useLocalFocus == true && SSM.selectedGroup.size() > 0) {
                Vector<Integer> self = new Vector<Integer>();
                Vector<Integer> selfAgg = HierarchyTable.instance().getAgg(comp.id);
                Vector<Integer> selected = new Vector<Integer>();
                
                self.add(comp.id);
-               selected.addAll(SSM.instance().selectedGroup.values());
+               selected.addAll(SSM.selectedGroup.values());
                
                if (SSM.instance().useAggregate) {
                   occ = CacheManager.instance().getCoOccurringAgg(
@@ -633,7 +633,7 @@ public abstract class BaseModelRenderer implements RenderTask {
          
          comp.active = true;
          if (SSM.instance().useLocalFocus == true) {
-            if (SSM.instance().selectedGroup.size() > 0 && ! SSM.instance().relatedList.contains(comp.id)) {
+            if (SSM.selectedGroup.size() > 0 && ! SSM.relatedList.contains(comp.id)) {
                comp.active= false;
             }
          }
@@ -641,12 +641,12 @@ public abstract class BaseModelRenderer implements RenderTask {
          DCColour nextColour = SchemeManager.instance().getColour(comp.id, occ, SSM.instance().maxOccurrence);
          
          // Adjust based on the current focus
-         //Integer selected = SSM.instance().selectedGroup;
+         //Integer selected = SSM.selectedGroup;
          /*
          if (SSM.instance().useLocalFocus != true) {
             if (SSM.instance().useAggregate) {
-               if (SSM.instance().selectedGroup.size() > 0) {
-                  Vector<Integer> v = HierarchyTable.instance().getAgg(SSM.instance().selectedGroup);
+               if (SSM.selectedGroup.size() > 0) {
+                  Vector<Integer> v = HierarchyTable.instance().getAgg(SSM.selectedGroup);
                   if ( ! v.contains(comp.id)) {
                      nextColour = nextColour.adjustAlpha(0.3f);
                   }
@@ -654,7 +654,7 @@ public abstract class BaseModelRenderer implements RenderTask {
             } else {
                // If not the selected group, make it out of focus
                //if (selected != null && selected != comp.id)
-               if (SSM.instance().selectedGroup.size() > 0 && ! SSM.instance().selectedGroup.contains(comp.id)) 
+               if (SSM.selectedGroup.size() > 0 && ! SSM.selectedGroup.contains(comp.id)) 
                   nextColour = nextColour.adjustAlpha(0.3f);
             }
          }
@@ -673,7 +673,7 @@ public abstract class BaseModelRenderer implements RenderTask {
       // Log the changes
       ALogger.instance().log("Selected Year :" + SSM.instance().startYear + "-" + SSM.instance().endYear);
       ALogger.instance().log("Selected Month:" + SSM.instance().startMonth + "-" + SSM.instance().endMonth);
-      ALogger.instance().log("Selected Group:" + SSM.instance().selectedGroup);
+      ALogger.instance().log("Selected Group:" + SSM.selectedGroup);
       
    }   
    
@@ -723,20 +723,20 @@ public abstract class BaseModelRenderer implements RenderTask {
       DWin.instance().debug("startIndex:" + startIdx + "  endIdnex:" + endIdx);
       
       
-      if (SSM.instance().selectedGroup.size() >= 0 ) {
+      if (SSM.selectedGroup.size() >= 0 ) {
          dcTextPanel.t1.documentList.clear();
          dcTextPanel.t2.documentList.clear();
          dcTextPanel.t2.tagList.clear();
          dcTextPanel.t2.tagList.clear();
          
          Vector<Integer> groupList = new Vector<Integer>();
-         groupList.addAll(SSM.instance().selectedGroup.values());
+         groupList.addAll(SSM.selectedGroup.values());
          /*
          if (SSM.instance().useAggregate) {
-            groupList =  HierarchyTable.instance().getAgg(SSM.instance().selectedGroup);
+            groupList =  HierarchyTable.instance().getAgg(SSM.selectedGroup);
          } else {
-            //groupList.add(SSM.instance().selectedGroup);
-            groupList.addAll(SSM.instance().selectedGroup.values());
+            //groupList.add(SSM.selectedGroup);
+            groupList.addAll(SSM.selectedGroup.values());
          }
          */
         
@@ -826,9 +826,9 @@ public abstract class BaseModelRenderer implements RenderTask {
             float value2 = 0;
             
             if (SSM.instance().useAggregate == false) {
-               if (SSM.instance().selectedGroup.size() > 0 && SSM.instance().useLocalFocus == true) {
+               if (SSM.selectedGroup.size() > 0 && SSM.instance().useLocalFocus == true) {
                   Vector<Integer> selectedGroup =  new Vector<Integer>();
-                  selectedGroup.addAll( SSM.instance().selectedGroup.values());
+                  selectedGroup.addAll( SSM.selectedGroup.values());
                   Vector<Integer> t = new Vector<Integer>();
                   t.add(comp.id);                  
                   
@@ -864,9 +864,9 @@ public abstract class BaseModelRenderer implements RenderTask {
                         SSM.instance().c_yearAttrib.selected);
                }
             } else {
-               if (SSM.instance().selectedGroup.size() > 0 && SSM.instance().useLocalFocus == true) {
+               if (SSM.selectedGroup.size() > 0 && SSM.instance().useLocalFocus == true) {
                   Vector<Integer> selectedGroup =  new Vector<Integer>();
-                  selectedGroup.addAll( SSM.instance().selectedGroup.values());                  
+                  selectedGroup.addAll( SSM.selectedGroup.values());                  
                  
                   value = CacheManager.instance().getCoOccurringAgg(
                         idx, 
@@ -938,7 +938,7 @@ public abstract class BaseModelRenderer implements RenderTask {
          comp.cchart.c_data = c_data;
          
          comp.cchart.setMaxValue(localMax);
-         if (SSM.instance().selectedGroup.size() > 0 && SSM.instance().selectedGroup.contains(comp.id)) {
+         if (SSM.selectedGroup.size() > 0 && SSM.selectedGroup.contains(comp.id)) {
             comp.cchart.resize(SSM.instance().sparkLineWidth, 8*range+Heatmap.labelBuffer);
          } else {
             comp.cchart.resize(SSM.instance().sparkLineWidth, 8*range+Heatmap.labelBuffer);
@@ -1474,9 +1474,9 @@ public abstract class BaseModelRenderer implements RenderTask {
         
         
         // If not using glow, then render a bounding box
-        if (! SSM.instance().useGlow && SSM.instance().selectedGroup.size() > 0) {
+        if (! SSM.instance().useGlow && SSM.selectedGroup.size() > 0) {
            for (DCComponent comp : MM.currentModel.componentTable.values()) {
-              if (SSM.instance().selectedGroup.contains(comp.id)) {
+              if (SSM.selectedGroup.contains(comp.id)) {
                  comp.boundingBox.renderBoundingBox(gl, SchemeManager.selected);
               }
            }
@@ -1563,7 +1563,7 @@ public abstract class BaseModelRenderer implements RenderTask {
         gl2.glEnable(GL2.GL_DEPTH_TEST);
         gl2.glEnable(GL2.GL_BLEND);
         for (DCComponent comp : MM.currentModel.componentTable.values()) {
-           if (SSM.instance().relatedList.size() > 0 && SSM.instance().relatedList.contains(comp.id) && !SSM.instance().selectedGroup.contains(comp.id)){
+           if (SSM.relatedList.size() > 0 && SSM.relatedList.contains(comp.id) && !SSM.selectedGroup.contains(comp.id)){
               comp.renderBufferAdj(gl2, SchemeManager.colour_related.adjustAlpha(0.3f));   
            }
         }        
@@ -1646,7 +1646,7 @@ public abstract class BaseModelRenderer implements RenderTask {
            
            
            //comp.renderBufferAdj(gl2, SchemeManager.silhouette_default);
-           //if (SSM.instance().selectedGroup.size() > 0 && SSM.instance().selectedGroup.contains(comp.id)){
+           //if (SSM.selectedGroup.size() > 0 && SSM.selectedGroup.contains(comp.id)){
               //g_opacity[0] = comp.colour.a;
               //g_shaderDualPeel.setUniform1fv(gl2, "Alpha", g_opacity);
               //g_shaderDualPeel.setUniformf(gl2, "compColour", SchemeManager.colour_blue.r, SchemeManager.colour_blue.g, SchemeManager.colour_blue.b, 1.0f);
@@ -1654,7 +1654,7 @@ public abstract class BaseModelRenderer implements RenderTask {
               //g_shaderDualPeel.setUniform1i(gl2, "useLight", 0);
               //comp.boundingBox.renderBoundingBox(gl2);   
               //g_shaderDualPeel.setUniform1fv(gl2, "Alpha", g_opacity);
-           //} else if (SSM.instance().relatedList.size() > 0 && SSM.instance().relatedList.contains(comp.id)) {
+           //} else if (SSM.relatedList.size() > 0 && SSM.relatedList.contains(comp.id)) {
               //g_shaderDualPeel.setUniform1i(gl2, "useLight", 0);
               //g_shaderDualPeel.setUniformf(gl2, "compColour", SchemeManager.colour_related.r, SchemeManager.colour_related.g, SchemeManager.colour_related.b, 1.0f);
               //comp.renderBufferAdj(gl2, SchemeManager.colour_related); 
