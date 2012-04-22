@@ -230,14 +230,14 @@ public class FilterTask implements RenderTask {
    // Position the select-able parts and render
    ////////////////////////////////////////////////////////////////////////////////
    @Override
-   public void picking(GL2 gl2) {
-      pickSliderIndicator(gl2);
+   public void picking(GL2 gl2, float px, float py) {
+      pickSliderIndicator(gl2, px, py);
    }
    
    
    
    
-   public void pickSliderIndicator(GL2 gl2) {
+   public void pickSliderIndicator(GL2 gl2, float px, float py) {
       //if (SSM.instance().l_mousePressed == false) return;
       if (SSM.stopPicking == 1) return;
       
@@ -257,7 +257,7 @@ public class FilterTask implements RenderTask {
       gl2.glPushMatrix();
          gl2.glLoadIdentity();
 //         mouseY = viewport.get(3) - mouseY;
-         glu.gluPickMatrix((float)SSM.instance().mouseX, (float)(viewport.get(3) - SSM.instance().mouseY), 1.0f, 1.0f, viewport);
+         glu.gluPickMatrix((float)px, (float)(viewport.get(3) - py), 1.0f, 1.0f, viewport);
          SSM.instance();
          SSM.instance();
          gl2.glOrtho(0, SSM.windowWidth, 0, SSM.windowHeight, -10, 10);
@@ -327,14 +327,14 @@ public class FilterTask implements RenderTask {
             yearSlider.isSelected = true;
             yearSlider.sitem = choose%100;
             SSM.instance();
-            yearSlider.anchor = SSM.mouseX;
+            yearSlider.anchor = px;
          } else if (choose < 300) {
          System.out.println("hit in month");
          deferredRefresh = true;
             monthSlider.isSelected = true; 
             monthSlider.sitem = choose%100;
             SSM.instance();
-            monthSlider.anchor = SSM.mouseX;
+            monthSlider.anchor = px;
          } else if (choose < 2000) {
             SSM.stopPicking = 1;
             int index = choose%1000;
@@ -360,7 +360,6 @@ public class FilterTask implements RenderTask {
          SSM.instance().globalFetchIdx = 0;
          SSM.instance().docStartIdx = 0;
          
-         //System.out.println(  "Item is : " + choose + " mouseX is " + SSM.instance().mouseX);
          yearSlider.createTexture();
          monthSlider.createTexture();
       }      

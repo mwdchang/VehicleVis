@@ -87,40 +87,10 @@ public class TUIOTest implements TuioListener {
                         System.out.println("Trying to remove lens");
                         Event.removeLens(sx, sy);   
                      }
-                     
                   }
                   System.err.println("Processing taps " + ta.numTap);
                }
                tapActionList.clear();
-               /*
-               Vector<Long> removal = new Vector<Long>();
-               for (WCursor w : eventTable.values()) {
-                  if (w.cursor.getPath().size() > 3) continue;
-                  System.out.println("TAPS:" + w.tap);
-                  removal.add(w.cursor.getSessionID());
-               }
-               for (int i=0; i < removal.size(); i++) {
-                  eventTable.remove(removal.elementAt(i));
-               }
-               */
-               
-               // First increment all the events
-               /*
-               for (WCursor w : eventTable.values()) {
-                  w.holdTime += interval;
-               }
-               for (WCursor w : eventTable.values()) {
-                  if (w.element == SSM.ELEMENT_NONE && w.holdTime > EVENT_RING) {
-                     w.element = SSM.ELEMENT_LENS;
-                     Event.createLens((int)(w.x*SSM.windowWidth), (int)(w.y*SSM.windowHeight));
-                  }
-               }               
-               for (WCursor w : eventTable.values()) {
-                  if (w.element == SSM.ELEMENT_LENS && w.holdTime > EVENT_RING) {
-                     Event.removeLens((int)(w.x*SSM.windowWidth), (int)(w.y*SSM.windowHeight));
-                  }
-               }
-               */
                
                Thread.sleep(interval);
             }
@@ -132,7 +102,6 @@ public class TUIOTest implements TuioListener {
    @Override
    public void addTuioCursor(TuioCursor o) {
       System.err.println("=== Adding TUIO Cursor");
-//      System.out.println(o.getSessionID() + "\t" + o.getX() + "\t" + o.getY());
       
       int posX = (int)(o.getX()*(float)SSM.windowWidth);
       int posY = (int)(o.getY()*(float)SSM.windowHeight);
@@ -189,32 +158,9 @@ public class TUIOTest implements TuioListener {
                tapActionList.add(new TapAction(w.x, w.y));   
             }
          }
-         // Probably a tap, but is this a single or multi tap ?
-         /*
-         for (WCursor w2 : eventTable.values()) {
-            if (w2.cursor.getSessionID() == w.cursor.getSessionID()) continue;      
-            // There is another tap nearby, this is probably a double tap, remove the current one
-            if (DCUtil.dist( (w.x-w2.x), (w.y-w2.y)) < 0.05)  {
-               w2.tap++;   
-               return;
-            } 
-         }
-         w.tap++;
-         */
-      }
-      
-      eventTable.remove(o.getSessionID());
-      
-      /*
-      int num  = getElementPoint(eventTable.get(o.getSessionID()).element);
-      System.out.println("Total TUIO Time : " + time);
-      if (num == 1 && time < EVENT_TAP) {
-         SSM.mouseX = o.getScreenX(SSM.windowWidth);
-         SSM.mouseY = o.getScreenY(SSM.windowHeight);
-         SSM.instance().l_mouseClicked = true;
       }
       eventTable.remove(o.getSessionID());
-      */
+      
    }
 
 

@@ -154,11 +154,11 @@ public class SaveLoadTask implements RenderTask {
 	
 
 	@Override
-	public void picking(GL2 gl2) {
+	public void picking(GL2 gl2, float px, float py) {
       if (SSM.instance().l_mouseClicked == false) return;
       
-      float mx = SSM.instance().mouseX;
-      float my = SSM.instance().windowHeight - SSM.instance().mouseY;
+      float mx = px;
+      float my = SSM.windowHeight - py;
       
       float sl_anchorX = SSM.instance().saveLoadAnchorX;
       float sl_anchorY = SSM.instance().saveLoadAnchorY;

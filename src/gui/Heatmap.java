@@ -135,12 +135,10 @@ public class Heatmap extends ComponentChart {
             
             
             // Tool Tip !
-            if ( DCUtil.between(SSM.instance().mouseX, anchorX+tmpX*blockWidth, anchorX+(1+tmpX)*blockWidth)) {
-               if (DCUtil.between(SSM.instance().windowHeight - SSM.instance().mouseY, anchorY+height-(1+tmpY)*blockHeight-labelBuffer, anchorY+height-tmpY*blockHeight-labelBuffer)) {
+            if ( DCUtil.between(SSM.mouseX, anchorX+tmpX*blockWidth, anchorX+(1+tmpX)*blockWidth)) {
+               if (DCUtil.between(SSM.windowHeight - SSM.mouseY, anchorY+height-(1+tmpY)*blockHeight-labelBuffer, anchorY+height-tmpY*blockHeight-labelBuffer)) {
                   DCTip.visible = true;
                   DCTip.clear();
-                  //DCTip.addText("Year:" +  (int)((tmpY) + SSM.instance().startYear));
-                  //DCTip.addText("Month:" + (int)((1+tmpX) + SSM.instance().startMonth));
                   int cYear  = (int)((tmpY) + SSM.instance().startYear); 
                   int cMonth = (int)((1+tmpX) + SSM.instance().startMonth);
                   
@@ -309,9 +307,6 @@ public class Heatmap extends ComponentChart {
    public void renderImmediate(GL2 gl2) {}
    
    
-   //public static Font  smallFont  = new Font("Courier", Font.PLAIN, 5);
-   //public static Font  smallFont  = new Font("Tahoma", Font.PLAIN, 8);
-   //public static Font  smallFont  = new Font("Consolas", Font.PLAIN, 10);
    public static Font  smallFont  = DCUtil.loadFont(Const.FONT_PATH+"din1451m.ttf", Font.PLAIN, 14);
    public float blockHeight = 3;
    public float blockWidth  = 8;

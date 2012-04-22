@@ -129,15 +129,20 @@ public class GLRenderer implements GLEventListener {
          //for (int i=0; i < renderTaskList.size(); i++) {
          //   renderTaskList.elementAt(i).picking(gl2);
          //}
-         filter_task.picking(gl2);
-         legend_task.picking(gl2);
-         domain_task.picking(gl2);
-         model_task.picking(gl2);
+         for (int i=0; i < SSM.pickPoints.size(); i++) {
+            DCTriple point = SSM.pickPoints.elementAt(i);
+            filter_task.picking(gl2, point.x, point.y);
+            legend_task.picking(gl2, point.x, point.y);
+            domain_task.picking(gl2, point.x, point.y);
+            model_task.picking(gl2, point.x, point.y);
+         }
          SSM.instance().l_mouseClicked = false;
          SSM.stopPicking = 0;
+         SSM.pickPoints.clear();
       }
       if (SSM.instance().l_mousePressed) {
-         filter_task.picking(gl2);
+         //TODO: Fix this later
+         filter_task.picking(gl2, SSM.mouseX, SSM.mouseY);
       }
       
       
@@ -227,8 +232,8 @@ public class GLRenderer implements GLEventListener {
       windowWidth = width;
       windowAspect = (float)windowWidth / (float)windowHeight; 
       
-      SSM.instance().windowHeight = windowHeight;
-      SSM.instance().windowWidth  = windowWidth;
+      SSM.windowHeight = windowHeight;
+      SSM.windowWidth  = windowWidth;
       SSM.instance().refreshMagicLens = true;
       SSM.instance().refreshOITBuffers = true;
       SSM.instance().refreshOITTexture = true;

@@ -583,9 +583,9 @@ public class ModelRenderer extends BaseModelRenderer {
       }      
    }
    
-   public Integer pickingChartsOnly(GL2 gl2) {
+   public Integer pickingChartsOnly(GL2 gl2, float px, float py) {
       IntBuffer buffer = (IntBuffer)GLBuffers.newDirectGLBuffer(GL2.GL_UNSIGNED_INT, 512);
-      this.startPickingOrtho(gl2, buffer);      
+      this.startPickingOrtho(gl2, buffer, px, py);      
       
       String list[] = this.getComponentUnsorted(gl2);
       int counter = 0;
@@ -668,7 +668,7 @@ public class ModelRenderer extends BaseModelRenderer {
    // 2) If object A is picked and B is currently selected, then de-select A and select B
    // 3) If object A is picked and nothing is currently selected, then select A
    ////////////////////////////////////////////////////////////////////////////////
-   public void picking(GL2 gl2) {
+   public void picking(GL2 gl2, float px, float py) {
       // Quickie way to get out and save unnecessary rendering 
       if (SSM.instance().l_mouseClicked == false) return;
       if (SSM.stopPicking == 1) return;
@@ -678,8 +678,8 @@ public class ModelRenderer extends BaseModelRenderer {
       SSM.instance().refreshOITTexture = true;
       
       
-      float mx = SSM.mouseX;
-      float my = SSM.windowHeight - SSM.mouseY;
+      float mx = px;
+      float my = SSM.windowHeight - py;
       
      
       // If is dirty then skip...something is already updating
@@ -691,7 +691,7 @@ public class ModelRenderer extends BaseModelRenderer {
       
       //if (SSM.instance().location == SSM.ELEMENT_LENS) {
           for (int i=0; i < SSM.instance().lensList.size(); i++) {
-            Integer obj = picking2DBalanced(gl2, SSM.instance().lensList.elementAt(i));
+            Integer obj = picking2DBalanced(gl2, SSM.instance().lensList.elementAt(i), px, py);
             // Speical
             if (obj!= null && (obj == 9999 || obj == 8888)) {
                LensAttrib la = SSM.instance().lensList.elementAt(i);
@@ -716,10 +716,10 @@ public class ModelRenderer extends BaseModelRenderer {
       Integer obj = null;
       if (SSM.instance().use3DModel == true) {
          // Check 3D first, then 2D
-         obj = picking3D(gl2);
+         obj = picking3D(gl2, px, py);
          if (obj == null) {
             for (int i=0; i < SSM.instance().lensList.size(); i++) {
-               obj = picking2DBalanced(gl2, SSM.instance().lensList.elementAt(i));
+               obj = picking2DBalanced(gl2, SSM.instance().lensList.elementAt(i), px, py);
                
                // Speical
                /*
@@ -740,7 +740,7 @@ public class ModelRenderer extends BaseModelRenderer {
             }
          }
       } else {
-         obj = pickingChartsOnly(gl2);
+         obj = pickingChartsOnly(gl2, px, py);
       }
       
       
@@ -826,10 +826,10 @@ public class ModelRenderer extends BaseModelRenderer {
    ////////////////////////////////////////////////////////////////////////////////
    // Picking with more or less balanced labels
    ////////////////////////////////////////////////////////////////////////////////
-   public Integer picking2DBalanced(GL2 gl2, LensAttrib la) {
+   public Integer picking2DBalanced(GL2 gl2, LensAttrib la, float px, float py) {
       //if (SSM.instance().l_mouseClicked == false) return;
       IntBuffer buffer = (IntBuffer)GLBuffers.newDirectGLBuffer(GL2.GL_UNSIGNED_INT, 512);
-      this.startPickingOrtho(gl2, buffer);      
+      this.startPickingOrtho(gl2, buffer, px, py);      
       
       String list[] = this.getComponentSortedByProjY(gl2);    
       float rightHeight = 0;
@@ -1017,7 +1017,7 @@ public class ModelRenderer extends BaseModelRenderer {
    // Set state to select mode, then redraw the group components
    // Ported from NeHe site : http://nehe.gamedev.net
    /////////////////////////////////////////////////////////////////////////////////       
-   public Integer picking3D(GL2 gl2) {
+   public Integer picking3D(GL2 gl2, float px, float py) {
       // Quick way to get out and save some FPS from rendering useless cycles
       //if (SSM.instance().l_mouseClicked == false) return null;
       
@@ -1031,8 +1031,8 @@ public class ModelRenderer extends BaseModelRenderer {
       LensAttrib clen = null;
       for (int i=0; i < SSM.instance().lensList.size(); i++) {
          la = SSM.instance().lensList.elementAt(i);
-         float x = (float)SSM.mouseX - la.magicLensX;
-         float y = (float)SSM.mouseY - la.magicLensY;
+         float x = px - la.magicLensX;
+         float y = py - la.magicLensY;
          float r = (float)la.magicLensRadius;
          float d = (float)Math.sqrt(x*x + y*y);            
          if (d < r) {
@@ -1042,11 +1042,11 @@ public class ModelRenderer extends BaseModelRenderer {
       }
       if (clen != null) {
          GraphicUtil.startPickingPerspective(gl2, buffer, 
-               SSM.mouseX, SSM.mouseY, 
+               (int)px, (int)py, 
                SSM.windowWidth, SSM.windowHeight, SSM.instance().fov, clen.nearPlane, clen.farPlane,
                DCCamera.instance().eye.toArray3f(), new float[]{0,0,0}, DCCamera.instance().up.toArray3f());         
       } else {
-         this.startPickingPerspective(gl2, buffer);
+         this.startPickingPerspective(gl2, buffer, px, py);
       }
       
       
@@ -1159,8 +1159,6 @@ public class ModelRenderer extends BaseModelRenderer {
       float lensX = la.magicLensX;
       float lensY = la.magicLensY;
       
-      float mx = SSM.mouseX;
-      float my = SSM.windowHeight - SSM.mouseY;
       
       // New padding, always apply outside of the 3D model, in addition 
       // position with respect to the radius size ie: do not go "inside" the circumference
@@ -1552,7 +1550,9 @@ public class ModelRenderer extends BaseModelRenderer {
       
       
       // Draw a down and up for scrolling
-      Integer obj = this.pickingCircleLabel(gl2, la);
+      // TODO: Fix selection
+      /*
+      Integer obj = this.pickingCircleLabel(gl2, la, px, py);
      
       float x = (float)SSM.mouseX - lensX;
       float y = (float)SSM.mouseY - lensY;
@@ -1567,15 +1567,7 @@ public class ModelRenderer extends BaseModelRenderer {
       if (obj != null) {
          la.magicLensSelected = 1;
          SSM.instance().topElement = SSM.ELEMENT_LENS;
-         //SSM.instance().location   = SSM.ELEMENT_LENS;
       } 
-      
-      /*
-      if (la.magicLensSelected == 1)  {
-         gl2.glColor4fv(SchemeManager.selected.toArray(), 0);
-      } else {
-         gl2.glColor4fv(SchemeManager.unselected.toArray(), 0);
-      }
       */
       
       
@@ -1643,9 +1635,9 @@ public class ModelRenderer extends BaseModelRenderer {
    
    
    
-   public Integer pickingCircleLabel(GL2 gl2, LensAttrib la)  {
+   public Integer pickingCircleLabel(GL2 gl2, LensAttrib la, float px, float py)  {
       IntBuffer buffer = (IntBuffer)GLBuffers.newDirectGLBuffer(GL2.GL_UNSIGNED_INT, 512);
-      this.startPickingOrtho(gl2, buffer);      
+      this.startPickingOrtho(gl2, buffer, px, py);      
       
       float lensX = la.magicLensX;
       float lensY = la.magicLensY;
@@ -1693,8 +1685,6 @@ public class ModelRenderer extends BaseModelRenderer {
          
          float xx = comp.projCenter.x - la.magicLensX;
          float yy = comp.projCenter.y - (SSM.windowHeight - la.magicLensY);
-         //float xx = comp.projCenter.x - SSM.instance().mouseX;
-         //float yy = comp.projCenter.y - (SSM.instance().windowHeight - SSM.instance().mouseY);
          float c = (float)Math.sqrt(xx*xx + yy*yy);
          
          double angle = 0.0f;

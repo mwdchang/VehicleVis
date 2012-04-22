@@ -86,11 +86,10 @@ public class LTree extends JOGLBase implements KeyListener {
       gl2.glLoadIdentity();
       
       gl2.glDisable(GL2.GL_TEXTURE_2D);
-      gl2.glPolygonMode(GL2.GL_FRONT_AND_BACK, GL2.GL_LINE);
+      gl2.glPolygonMode(GL2.GL_FRONT_AND_BACK, GL2.GL_FILL);
       //gl2.glDisable(GL2.GL_DEPTH_TEST);
       gl2.glEnable(GL2.GL_BLEND);
       gl2.glBlendFunc(GL2.GL_SRC_ALPHA, GL2.GL_ONE_MINUS_SRC_ALPHA);
-      gl2.glDisable(GL2.GL_LIGHTING);
       
       int line_index = 0;
       int rot_index = 0;
@@ -103,19 +102,22 @@ public class LTree extends JOGLBase implements KeyListener {
       for (int i=0; i < sb.length(); i++)  {
          char c = sb.charAt(i);   
          
+         /*
          gl2.glColor4d(
-               //((double)line_index / (double)tBuffer.size())*0.6+0.4,
-               0.5,
+               ((double)line_index / (double)tBuffer.size())*0.6+0.4,
                ((double)line_index / (double)tBuffer.size())*0.6+0.4,
                ((double)line_index / (double)tBuffer.size())*0.6+0.4,
                0.5);
+         */
+         gl2.glColor4d(0.7, 0.4 + 0.3*( line_index/(double)tBuffer.size()), 0, 1);
+        
          if (c == 'd') {
             gl2.glMatrixMode(GL2.GL_MODELVIEW);
             gl2.glPushMatrix();
             float tmp[] = stack.pop();
             gl2.glMultMatrixf(tmp, 0);
-            glu.gluCylinder(cyl, tBuffer.elementAt(line_index)*0.15, tBuffer.elementAt(line_index)*0.15, 1, 6, 5);
-            gl2.glTranslatef(0.0f, 0.0f, 1.0f);
+            glu.gluCylinder(cyl, tBuffer.elementAt(line_index)*0.15, tBuffer.elementAt(line_index)*0.15, 0.6, 3, 3);
+            gl2.glTranslatef(0.0f, 0.0f, 0.6f);
             
             float f2[] = new float[16];
             gl2.glGetFloatv(GL2.GL_MODELVIEW_MATRIX, f2, 0);
@@ -154,6 +156,20 @@ public class LTree extends JOGLBase implements KeyListener {
             //System.out.println("stack size: " + stack.size());
          } else if (c == ']') {
             stack.pop();
+         } else if (c == 'l') {
+            gl2.glMatrixMode(GL2.GL_MODELVIEW);
+            gl2.glPushMatrix();
+            float tmp[] = stack.peek();
+            gl2.glMultMatrixf(tmp, 0);
+            
+            gl2.glColor4d(0, ((double)i)/(double)sb.length(), 0.2, 1);
+            gl2.glBegin(GL2.GL_QUADS);
+               gl2.glVertex3d(-0.8, -0.8, 0);
+               gl2.glVertex3d(-0.8,  0.8, 0);
+               gl2.glVertex3d(0.8,   0.8, 0);
+               gl2.glVertex3d(0.5,  -0.8, 0);
+            gl2.glEnd();
+            gl2.glPopMatrix();
          }
       }
       
@@ -201,8 +217,8 @@ public class LTree extends JOGLBase implements KeyListener {
       }
       
       // Calculate rotation
-      float rot_max = 40;
-      float rot_min = 20;
+      float rot_max = 50;
+      float rot_min = 10;
       for (int i=0; i < sb.length(); i++) {
          if (sb.charAt(i) == 'p' || sb.charAt(i) == 'q') {
             this.rxBuffer.add( (float)Math.random()*(rot_max-rot_min));         

@@ -125,7 +125,6 @@ public class SSM {
    
    public short NUM_LENS = 1;   
    
-   
    public Vector<LensAttrib> lensList = new Vector<LensAttrib>();
    
    public void clearLens() {
@@ -141,6 +140,11 @@ public class SSM {
       return 0;
    }
    
+   
+   ///////////////////////////////////////////////////////////////////////////////// 
+   // Hold the coordinates to execute picking
+   ///////////////////////////////////////////////////////////////////////////////// 
+   public static Vector<DCTriple> pickPoints = new Vector<DCTriple>();
    
    
    ///////////////////////////////////////////////////////////////////////////////// 
@@ -257,7 +261,6 @@ public class SSM {
    public int c_yearMax = 0;
    
    
-   
    public float saveLoadAnchorX = 850;
    public float saveLoadAnchorY = 950;
    public float saveLoadYOffset = 200;
@@ -300,29 +303,29 @@ public class SSM {
    public int docAction = 0;
    
    // Check to see if the mouse cursor is in the document header
-   public boolean inDocHeader() {
-      float mX = mouseX;
-      float mY = windowHeight - mouseY;
-      if (mX >= docAnchorX + docPadding && mX <= docAnchorX+docWidth-docPadding) {
-         if (mY >= docAnchorY+docHeight-docPadding-docHeader && mY <= docAnchorY+docHeight-docPadding) {
-            return true;
-         }
-      }
-      return false;
-   }
-   
-   
-   // Check to see if the mouse cursor is in the document footer
-   public boolean inDocFooter() {
-      float mX = mouseX;
-      float mY = windowHeight - mouseY;
-      if (mX >= docAnchorX + docPadding && mX <= docAnchorX+docWidth-docPadding) {
-         if (mY >= docAnchorY+docPadding && mY <= docAnchorY+docPadding+docFooter) {
-            return true;
-         }
-      }
-      return false;
-   }
+//   public boolean inDocHeader(float px, float py) {
+//      float mX = mouseX;
+//      float mY = windowHeight - mouseY;
+//      if (mX >= docAnchorX + docPadding && mX <= docAnchorX+docWidth-docPadding) {
+//         if (mY >= docAnchorY+docHeight-docPadding-docHeader && mY <= docAnchorY+docHeight-docPadding) {
+//            return true;
+//         }
+//      }
+//      return false;
+//   }
+//   
+//   
+//   // Check to see if the mouse cursor is in the document footer
+//   public boolean inDocFooter(float px, float py) {
+//      float mX = mouseX;
+//      float mY = windowHeight - mouseY;
+//      if (mX >= docAnchorX + docPadding && mX <= docAnchorX+docWidth-docPadding) {
+//         if (mY >= docAnchorY+docPadding && mY <= docAnchorY+docPadding+docFooter) {
+//            return true;
+//         }
+//      }
+//      return false;
+//   }
    
 
    
@@ -430,8 +433,6 @@ public class SSM {
    // TODO: this uses a single variable to track mouse events ... this is NOT GOOD....
    // fix this when bored !!!
    ///////////////////////////////////////////////////////////////////////////////// 
-   //public static int STATE_NORMAL   = 0x00000000;
-   
    public boolean l_mouseClicked = false;
    public boolean r_mouseClicked = false;
    public boolean l_mousePressed = false;

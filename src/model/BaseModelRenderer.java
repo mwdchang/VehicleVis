@@ -70,7 +70,7 @@ public abstract class BaseModelRenderer implements RenderTask {
    public abstract void render(GL2 gl2);
 
    @Override
-   public abstract void picking(GL2 gl2);
+   public abstract void picking(GL2 gl2, float px, float py);
    
    @Override
    public void init(GL2 gl2) {
@@ -200,9 +200,9 @@ public abstract class BaseModelRenderer implements RenderTask {
    ////////////////////////////////////////////////////////////////////////////////
    // Set the condition to pick in perspective mode
    ////////////////////////////////////////////////////////////////////////////////
-   public void startPickingPerspective(GL2 gl2, IntBuffer buffer) {
+   public void startPickingPerspective(GL2 gl2, IntBuffer buffer, float px, float py) {
       GraphicUtil.startPickingPerspective(gl2, buffer, 
-            SSM.mouseX, SSM.mouseY, 
+            (int)px, (int)py, 
             SSM.windowWidth, SSM.windowHeight, SSM.instance().fov, 
             DCCamera.instance().eye.toArray3f(), new float[]{0,0,0}, DCCamera.instance().up.toArray3f());
    }
@@ -211,9 +211,9 @@ public abstract class BaseModelRenderer implements RenderTask {
    ////////////////////////////////////////////////////////////////////////////////
    // Setup the viewport and the initial naming stack
    ////////////////////////////////////////////////////////////////////////////////
-   public void startPickingOrtho(GL2 gl2, IntBuffer buffer) {
+   public void startPickingOrtho(GL2 gl2, IntBuffer buffer, float px, float py) {
       GraphicUtil.startPickingOrtho(gl2, buffer, 
-            SSM.mouseX, SSM.mouseY, 
+            (int)px, (int)py, 
             SSM.windowWidth, SSM.windowHeight);
    }   
    

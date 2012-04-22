@@ -205,7 +205,7 @@ public class LegendTask implements RenderTask {
    }
 
    @Override
-   public void picking(GL2 gl2) {
+   public void picking(GL2 gl2, float px, float py) {
 //      
 //      if (SSM.instance().colouringMethod != 4) return;
 //      
