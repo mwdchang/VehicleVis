@@ -13,6 +13,7 @@ import TUIO.TuioClient;
 import TUIO.TuioCursor;
 import TUIO.TuioListener;
 import TUIO.TuioObject;
+import TUIO.TuioPoint;
 import TUIO.TuioTime;
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -46,13 +47,40 @@ public class TUIOTest implements TuioListener {
       t1.start();
    }
    
+   
    // Find how many "points" are activated over the element
+   /*
    public int getElementPoint(int element) {
       int cnt = 0;
       for (WCursor w : eventTable.values()) {
          if (w.element == element) cnt++;   
       }
       return cnt;
+   }
+   */
+   
+   
+   ////////////////////////////////////////////////////////////////////////////////
+   // Find the distance between two points
+   ////////////////////////////////////////////////////////////////////////////////
+   public float distance(WCursor w1, WCursor w2) {
+      return (float)DCUtil.dist((w1.x-w2.x), (w1.y-w2.y));
+   }
+   public float distance(TuioPoint p1, TuioPoint p2) {
+      return (float)DCUtil.dist((p1.getX() - p2.getX()), (p1.getY()-p2.getY()));
+   }
+   
+   ////////////////////////////////////////////////////////////////////////////////
+   // Get the first similar cursor (over the same element) that is 
+   // not itself
+   // TODO: Probably want distance as well
+   ////////////////////////////////////////////////////////////////////////////////
+   public WCursor findSimilarCursor(WCursor w) {
+      for (WCursor k : eventTable.values()) {
+         if (k.cursor.getSessionID() == w.cursor.getSessionID()) continue;   
+         if (k.element == w.element && distance(k, w) < 0.2) return k;
+      }
+      return null;
    }
    
    
@@ -140,33 +168,58 @@ public class TUIOTest implements TuioListener {
    }
    
    
+   
+   
    @Override
    public void removeTuioCursor(TuioCursor o) {
-      System.err.println("=== Removing TUIO Cursor");
+      System.out.println("=== Removing TUIO Cursor " + o.getPath().size());
       WCursor w = eventTable.get(o.getSessionID());
       
       // Check if this is a swipe event
       if (w.cursor.getPath().size() > 1 && w.state == WCursor.STATE_SWIPE) {
-         // Are they all in the same direction (more or less)?   
-         float x1 = w.cursor.getPath().elementAt(0).getX();
-         float x2 = w.cursor.getPath().elementAt(1).getX();
-         float sign1 = x1-x2;
-         float sign2;
-         boolean sameDirection = true;
-         
-         for (int i=2; i < w.cursor.getPath().size(); i++) {
-            x1 = x2;
-            x2 = w.cursor.getPath().elementAt(i).getX();
-            sign2 = x1-x2;
-            if (sign2*sign1 < 0) { 
-               sameDirection = false; 
-               break; 
+         if (Math.abs(w.x - w.cursor.getPath().elementAt(0).getX()) > Math.abs(w.y - w.cursor.getPath().elementAt(0).getY())) {
+            // Are they all in the same direction (more or less)?   
+            float x1 = w.cursor.getPath().elementAt(0).getX();
+            float x2 = w.cursor.getPath().elementAt(1).getX();
+            float sign1 = x1-x2;
+            float sign2;
+            boolean sameDirection = true;
+            for (int i=2; i < w.cursor.getPath().size(); i++) {
+               x1 = x2;
+               x2 = w.cursor.getPath().elementAt(i).getX();
+               sign2 = x1-x2;
+               if (sign2*sign1 < 0) { 
+                  sameDirection = false; 
+                  break; 
+               }
             }
-         }
-         if (sameDirection == true) {
-            System.out.println("Horizontal Swipe detected...");   
-            SSM.instance().colouringMethod++;
-            SSM.instance().colouringMethod %= 5;
+            if (sameDirection == true) {
+               System.out.println("Horizontal Swipe detected...");   
+               SSM.instance().colouringMethod++;
+               SSM.instance().colouringMethod %= 5;
+            }
+         } else {
+            // Are they all in the same direction (more or less)?   
+            float y1 = w.cursor.getPath().elementAt(0).getY();
+            float y2 = w.cursor.getPath().elementAt(1).getY();
+            float sign1 = y1-y2;
+            float sign2;
+            boolean sameDirection = true;
+            for (int i=2; i < w.cursor.getPath().size(); i++) {
+               y1 = y2;
+               y2 = w.cursor.getPath().elementAt(i).getY();
+               sign2 = y1-y2;
+               if (sign2*sign1 < 0) { 
+                  sameDirection = false; 
+                  break; 
+               }
+            }
+            if (sameDirection == true) {
+               System.out.println("Vertical Swipe detected...");   
+               SSM.instance().colouringMethod++;
+               SSM.instance().colouringMethod %= 5;
+            }
+           
          }
       // Check if this is a tap event (approximate)
       } else if (w.cursor.getPath().size() < 2) {
@@ -209,25 +262,55 @@ public class TUIOTest implements TuioListener {
       WCursor wcursor = eventTable.get(o.getSessionID());
       wcursor.numUpdate++;
       
-      float ox = eventTable.get(o.getSessionID()).x;
-      float oy = eventTable.get(o.getSessionID()).y;
+      float ox = o.getX();
+      float oy = o.getY();
       
       // Avoid jitter
-      if (DCUtil.dist( (ox-o.getX()), (oy-o.getY())) < sensitivity) return;
+      if (DCUtil.dist( (ox-wcursor.x), (oy-wcursor.y)) < sensitivity) return;
       
       // Additional down-sampling
       if (wcursor.numUpdate % 3 != 0) return;
       
       
+      
       System.err.println("=== Updating TUIO Cursor");
       
       
+      // There is another touch/gesture over the
+      // same element
+      if (findSimilarCursor(wcursor) != null) {
+         // Check for pinch and spread events
+         WCursor simCursor = findSimilarCursor(wcursor);
+         TuioPoint point     = o.getPosition();
+         TuioPoint oldPoint  = o.getPath().elementAt(o.getPath().size()-2);
+         
+         float distance = this.distance(simCursor.cursor.getPosition(), point);
+         float oldDistance = this.distance(simCursor.cursor.getPosition(), oldPoint);
+         
+         if (distance > oldDistance) {
+            if (wcursor.element == SSM.ELEMENT_LENS) {
+               Event.resizeLens( (int)(point.getX()*SSM.windowWidth), (int)(point.getY()*SSM.windowHeight), (int)(oldPoint.getX()*SSM.windowWidth), (int)(oldPoint.getY()*SSM.windowHeight));
+            } else {
+               DCCamera.instance().move(1.5f);
+            }
+            return;            
+         } else {
+            if (wcursor.element == SSM.ELEMENT_LENS) {
+               Event.resizeLens( (int)(point.getX()*SSM.windowWidth), (int)(point.getY()*SSM.windowHeight), (int)(oldPoint.getX()*SSM.windowWidth), (int)(oldPoint.getY()*SSM.windowHeight));
+            } else {
+               DCCamera.instance().move(-1.5f);
+            }
+            return;
+         }
+             
+      }
 
       
       
       ////////////////////////////////////////////////////////////////////////////////
       // Check for multi touch (pinch/unpinch) events
       ////////////////////////////////////////////////////////////////////////////////
+      /*
       if (eventTable.containsKey(o.getSessionID()) && eventTable.size() > 1) {
          
          // Check for multi touch
@@ -251,23 +334,32 @@ public class TUIOTest implements TuioListener {
             
             if (distance > oldDistance && element == wcursor2.element) {
                //System.out.println("possible pinch event");
-               System.out.println("Moving away from " + cursor.getSessionID());   
-               DCCamera.instance().move(1.5f);
+               //System.out.println("Moving away from " + cursor.getSessionID());   
+               if (wcursor2.element == SSM.ELEMENT_LENS) {
+                  Event.resizeLens( (int)(x*SSM.windowWidth), (int)(y*SSM.windowHeight), (int)(px*SSM.windowWidth), (int)(py*SSM.windowHeight));
+               } else {
+                  DCCamera.instance().move(1.5f);
+               }
                return;
             } else if (distance < oldDistance && element == wcursor2.element) {
                //System.out.println("possible pinch event");
-               System.out.println("Moving closer from " + cursor.getSessionID());   
-               DCCamera.instance().move(-1.5f);
+               //System.out.println("Moving closer from " + cursor.getSessionID());   
+               if (wcursor2.element == SSM.ELEMENT_LENS) {
+                  Event.resizeLens( (int)(x*SSM.windowWidth), (int)(y*SSM.windowHeight), (int)(px*SSM.windowWidth), (int)(py*SSM.windowHeight));
+               } else {
+                  DCCamera.instance().move(-1.5f);
+               }
                return;
             }
          }
       }
+      */
       
       ////////////////////////////////////////////////////////////////////////////////
       // Log possible swipe, just save it, we will process at the remove stage
       // The swipe event will be executed when the cursor is removed
       ////////////////////////////////////////////////////////////////////////////////
-      if (DCUtil.dist( (wcursor.x - o.getX()), (wcursor.y - o.getY())) >  0.02 && wcursor.state != WCursor.STATE_MOVE) {
+      if (DCUtil.dist( (wcursor.x - o.getX()), (wcursor.y - o.getY())) >  0.03 && wcursor.state != WCursor.STATE_MOVE) {
          System.out.println("Possible Swipe");
          WCursor newCursor = new WCursor(wcursor.element, o);
          newCursor.state = WCursor.STATE_SWIPE;
@@ -278,17 +370,26 @@ public class TUIOTest implements TuioListener {
       ////////////////////////////////////////////////////////////////////////////////
       // Execute any move event
       ////////////////////////////////////////////////////////////////////////////////
+      int x1 = (int)(o.getX()*SSM.windowWidth);
+      int y1 = (int)(o.getY()*SSM.windowHeight);
+      int x2 = (int)(wcursor.x*SSM.windowWidth);
+      int y2 = (int)(wcursor.y*SSM.windowHeight);
       if (wcursor.element == SSM.ELEMENT_NONE){
          System.out.println("Processing ELEMENT NONE move");
          WCursor newCursor = new WCursor(wcursor.element, o);
          newCursor.state = WCursor.STATE_MOVE;
          eventTable.put(o.getSessionID(), newCursor);
-         Event.setCamera(o.getScreenX(SSM.windowWidth), o.getScreenY(SSM.windowHeight), (int)(ox*SSM.windowWidth), (int)(oy*SSM.windowHeight));     
+         Event.setCamera(o.getScreenX(SSM.windowWidth), o.getScreenY(SSM.windowHeight), (int)(wcursor.x*SSM.windowWidth), (int)(wcursor.y*SSM.windowHeight));     
       } else if (wcursor.element == SSM.ELEMENT_LENS){
          WCursor newCursor = new WCursor(wcursor.element, o);
          newCursor.state = WCursor.STATE_MOVE;
          eventTable.put(o.getSessionID(), newCursor);
-         Event.moveLensTUIO(o.getScreenX(SSM.windowWidth), o.getScreenY(SSM.windowHeight), (int)(ox*SSM.windowWidth), (int)(oy*SSM.windowHeight));     
+         Event.moveLensTUIO(o.getScreenX(SSM.windowWidth), o.getScreenY(SSM.windowHeight), (int)(wcursor.x*SSM.windowWidth), (int)(wcursor.y*SSM.windowHeight));     
+      } else if (wcursor.element == SSM.ELEMENT_DOCUMENT) {
+         WCursor newCursor = new WCursor(wcursor.element, o);
+         newCursor.state = WCursor.STATE_MOVE;
+         eventTable.put(o.getSessionID(), newCursor);
+         Event.dragDocumentPanel(x1, y1, x2, y2);
       }
       
    }

@@ -19,7 +19,7 @@ public class Event {
    // Creates a lens at (posX, posY)
    ////////////////////////////////////////////////////////////////////////////////
    public static void createLens(int posX, int posY) {
-      LensAttrib la = new LensAttrib( posX, posY, 100.0f, 0);      
+      LensAttrib la = new LensAttrib( posX, posY, 200.0f, 0);      
       la.magicLensType = LensAttrib.LENS_DEPTH;
       SSM.instance().lensList.add( la );
       SSM.instance().refreshMagicLens = true;
@@ -222,6 +222,12 @@ public class Event {
          if (SSM.instance().saveLoadYOffset > SSM.instance().saveLoadTexHeight)
             SSM.instance().saveLoadYOffset = SSM.instance().saveLoadTexHeight;
       }      
+   }
+   
+   
+   public static void dragDocumentPanel(int posX, int posY, int oldPosX, int oldPosY) {
+      SSM.docAnchorX += (posX - oldPosX);   
+      SSM.docAnchorY -= (posY - oldPosY);   
    }
    
    ////////////////////////////////////////////////////////////////////////////////
