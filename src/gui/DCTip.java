@@ -22,14 +22,14 @@ public class DCTip {
    }
    */
    
-   public static void init(GL2 gl2) {
+   public void init(GL2 gl2) {
       tf = new TextureFont();
       tf.height = 80;
       tf.width  = 150;
    }
    
    
-   public static void render(GL2 gl2) {
+   public void render(GL2 gl2) {
       if (! visible) { 
          SSM.instance().selectedX  = -1;
          SSM.instance().selectedY  = -1;
@@ -72,7 +72,7 @@ public class DCTip {
    ////////////////////////////////////////////////////////////////////////////////
    // 
    ////////////////////////////////////////////////////////////////////////////////
-   public static void setTip(float px, float py, float screenWidth, float screenHeight) {
+   public void setTip(float px, float py, float screenWidth, float screenHeight) {
       float centerX = screenWidth/2;
       float centerY = screenHeight/2;
       //tf.clearMark();
@@ -105,22 +105,25 @@ public class DCTip {
       //tf.addMark(txt, c, f, 5, tf.height-25); 
    }
    
-   public static void clear() {
+   public void clear() {
       tf.clearMark();
    }
-   public static void addText(String txt) {
+   public void addText(String txt) {
       tf.addMark( txt, c, f, 5, tf.height-20-tf.marks.size()*buffer);
    }
    
    
    public static Hashtable<String, String> translateTable = DCUtil.getMonthTranslationTable();
    
-   public static TextureFont tf;
-   public static Font f  = new Font( "Arial", Font.BOLD, 16);    
-   public static Color c = Color.BLACK;
-   public static float tipX;
-   public static float tipY;
-   public static float TIP_LENGTH = 30;
-   public static boolean visible = false;
-   public static float buffer = 20;
+   public TextureFont tf;
+   public Font f  = new Font( "Arial", Font.BOLD, 16);    
+   public Color c = Color.BLACK;
+   public float tipX;
+   public float tipY;
+   public float TIP_LENGTH = 30;
+   public boolean visible = false;
+   public float buffer = 20;
+   
+   public int xIndex = -1;
+   public int yIndex = -1;
 }

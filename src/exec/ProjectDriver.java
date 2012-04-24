@@ -142,8 +142,6 @@ public class ProjectDriver {
       int fps = 0;
       
       while (true) {
-
-         
          canvas.update(canvas.getGraphics());
          
          currentTime = System.currentTimeMillis();

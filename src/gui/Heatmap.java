@@ -2,6 +2,7 @@ package gui;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.util.Enumeration;
 import java.util.Hashtable;
 
 import javax.media.opengl.GL2;
@@ -12,6 +13,7 @@ import datastore.SSM;
 import datastore.SchemeManager;
 
 import model.DCColour;
+import model.DCTriple;
 
 import util.DCUtil;
 import util.TextureFont;
@@ -37,11 +39,11 @@ public class Heatmap extends ComponentChart {
       
       
       // Draw the selected/related components
-      if (SSM.instance().selectedGroup.size() > 0 && SSM.instance().selectedGroup.contains(this.id)) {
+      if (SSM.selectedGroup.size() > 0 && SSM.selectedGroup.contains(this.id)) {
          gl2.glLineWidth(3.0f);
          renderBorder(gl2, SchemeManager.selected, GL2.GL_LINE);
          gl2.glLineWidth(0.5f);
-      } else if (SSM.instance().relatedList != null && SSM.instance().relatedList.contains(this.id))  {
+      } else if (SSM.relatedList != null && SSM.relatedList.contains(this.id))  {
          gl2.glLineWidth(1.0f);
          //renderBorder(gl2, SchemeManager.related, GL2.GL_LINE);
          renderBorder(gl2, SchemeManager.sparkline_guideline, GL2.GL_LINE);
@@ -79,7 +81,7 @@ public class Heatmap extends ComponentChart {
       gl2.glEnable(GL2.GL_BLEND);
       gl2.glBlendFunc(GL2.GL_SRC_ALPHA, GL2.GL_ONE_MINUS_SRC_ALPHA);
          
-      int origin = CacheManager.instance().timeLineStartYear;
+      int origin = CacheManager.timeLineStartYear;
       int sYear  = SSM.instance().startYear;
       int eYear  = SSM.instance().endYear; 
       int sMonth = SSM.instance().startMonth;
@@ -134,7 +136,43 @@ public class Heatmap extends ComponentChart {
             }
             
             
+            Enumeration<Long> enumeration = SSM.hoverPoints.keys();
+            while(enumeration.hasMoreElements()) {
+               Long session = enumeration.nextElement();      
+               DCTriple point = SSM.hoverPoints.get(session);
+               
+               if ( DCUtil.between(point.x, anchorX+tmpX*blockWidth, anchorX+(1+tmpX)*blockWidth)) {
+                  if (DCUtil.between(SSM.windowHeight - point.y, anchorY+height-(1+tmpY)*blockHeight-labelBuffer, anchorY+height-tmpY*blockHeight-labelBuffer)) {
+                     if (SSM.tooltips.get(session) == null) {
+                        DCTip tip = new DCTip();   
+                        tip.init(gl2);
+                        SSM.tooltips.put(session, tip);
+                        System.out.println("debug");
+                     }
+                     DCTip  tip = SSM.tooltips.get(session);
+                     tip.visible = true;
+                     tip.clear();
+                     int cYear  = (int)((tmpY) + SSM.instance().startYear); 
+                     int cMonth = (int)((1+tmpX) + SSM.instance().startMonth);
+                     tip.addText("Time:" + DCTip.translateTable.get(cMonth+"") + "-" + cYear); 
+                     if (SSM.instance().useComparisonMode == true) {
+                        tip.addText("Value:" + (int)(v));
+                        tip.addText("Value:" + (int)(c_v));
+                     } else {
+                        tip.addText("Value:" + (int)v);
+                     }
+                     tip.setTip( point.x,
+                           SSM.windowHeight-point.y,
+                           SSM.windowWidth, SSM.windowHeight);   
+                     tip.xIndex = i;
+                     tip.yIndex = j;
+                  }
+               }
+            } // end while
+            
+            
             // Tool Tip !
+            /*
             if ( DCUtil.between(SSM.mouseX, anchorX+tmpX*blockWidth, anchorX+(1+tmpX)*blockWidth)) {
                if (DCUtil.between(SSM.windowHeight - SSM.mouseY, anchorY+height-(1+tmpY)*blockHeight-labelBuffer, anchorY+height-tmpY*blockHeight-labelBuffer)) {
                   DCTip.visible = true;
@@ -150,34 +188,37 @@ public class Heatmap extends ComponentChart {
                      DCTip.addText("Value:" + (int)v);
                   }
                   DCTip.setTip( SSM.instance().mouseX, 
-                        (SSM.instance().windowHeight-SSM.instance().mouseY), 
-                        SSM.instance().windowWidth, SSM.instance().windowHeight);   
+                        (SSM.windowHeight-SSM.instance().mouseY), 
+                        SSM.windowWidth, SSM.instance().windowHeight);   
                   
                   SSM.instance().selectedX = i;
                   SSM.instance().selectedY = j;
                }
             }
+            */
             
             
             // Render an out line to separate the grids
             gl2.glPolygonMode(GL2.GL_FRONT_AND_BACK, GL2.GL_LINE);
             gl2.glBegin(GL2.GL_QUADS);
-               if (i==SSM.instance().selectedX && j==SSM.instance().selectedY){
-                  gl2.glLineWidth(2.0f);
-                  gl2.glColor4fv(SchemeManager.selected.toArray(), 0);
-               } else {
-                  gl2.glLineWidth(1.0f);
-                  if (SSM.instance().useComparisonMode == true) {
-                     if (v > c_v) {
-                        gl2.glColor4fv(SchemeManager.comp_1.toArray(), 0);
-                     } else if (v < c_v) {
-                        gl2.glColor4fv(SchemeManager.comp_2.toArray(), 0);
+               for (DCTip tip : SSM.tooltips.values()) {
+                  if (tip.visible == true && i==tip.xIndex && j==tip.yIndex){
+                     gl2.glLineWidth(2.0f);
+                     gl2.glColor4fv(SchemeManager.selected.toArray(), 0);
+                  } else {
+                     gl2.glLineWidth(1.0f);
+                     if (SSM.instance().useComparisonMode == true) {
+                        if (v > c_v) {
+                           gl2.glColor4fv(SchemeManager.comp_1.toArray(), 0);
+                        } else if (v < c_v) {
+                           gl2.glColor4fv(SchemeManager.comp_2.toArray(), 0);
+                        } else {
+                           gl2.glColor4fv(SchemeManager.silhouette_default.adjustAlpha(0.5f).toArray(), 0);
+                        }
                      } else {
                         gl2.glColor4fv(SchemeManager.silhouette_default.adjustAlpha(0.5f).toArray(), 0);
                      }
-                  } else {
-                     gl2.glColor4fv(SchemeManager.silhouette_default.adjustAlpha(0.5f).toArray(), 0);
-                  }
+                  } // end if tip visible
                }
                gl2.glVertex2i((int)(anchorX + tmpX*blockWidth),     (int)(anchorY+height-tmpY*blockHeight-labelBuffer));
                gl2.glVertex2i((int)(anchorX + (1+tmpX)*blockWidth), (int)(anchorY+height-tmpY*blockHeight-labelBuffer));

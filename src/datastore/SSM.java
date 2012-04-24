@@ -1,5 +1,7 @@
 package datastore;
 
+import gui.DCTip;
+
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Enumeration;
@@ -149,7 +151,11 @@ public class SSM {
    ///////////////////////////////////////////////////////////////////////////////// 
    // Hold the coordinates to execute picking
    ///////////////////////////////////////////////////////////////////////////////// 
-   public static Vector<DCTriple> pickPoints = new Vector<DCTriple>();
+   public static Vector<DCTriple> pickPoints  = new Vector<DCTriple>(0);
+   public static Vector<DCTriple> dragPoints  = new Vector<DCTriple>(0);
+   
+   public static Hashtable<Long, DCTriple> hoverPoints = new Hashtable<Long, DCTriple>();
+   public static Hashtable<Long, DCTip> tooltips = new Hashtable<Long, DCTip>();
    
    
    ///////////////////////////////////////////////////////////////////////////////// 

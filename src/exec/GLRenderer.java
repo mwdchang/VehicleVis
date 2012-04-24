@@ -109,7 +109,7 @@ public class GLRenderer implements GLEventListener {
       ////////////////////////////////////////////////////////////////////////////////
       // Start the scene
       ////////////////////////////////////////////////////////////////////////////////
-      DCTip.visible = false;
+      //DCTip.visible = false;
       model_task.render(gl2);
       filter_task.render(gl2);
       legend_task.render(gl2);
@@ -140,10 +140,18 @@ public class GLRenderer implements GLEventListener {
          SSM.stopPicking = 0;
          SSM.pickPoints.clear();
       }
+      if (SSM.dragPoints.size() > 0) {
+         for (int i=0; i < SSM.dragPoints.size(); i++) {
+            DCTriple p = SSM.dragPoints.elementAt(i);
+            filter_task.picking(gl2, p.x, p.y);
+         }
+      }
+      /*
       if (SSM.instance().l_mousePressed) {
          //TODO: Fix this later
          filter_task.picking(gl2, SSM.mouseX, SSM.mouseY);
       }
+      */
       
       
       
@@ -159,6 +167,10 @@ public class GLRenderer implements GLEventListener {
       
       glDrawable.swapBuffers();
       
+      
+      // Clear event buffers
+      SSM.dragPoints.clear();
+      //SSM.hoverPoints.clear();
    }
 
    

@@ -3,6 +3,8 @@ package touch;
 import java.util.Hashtable;
 import java.util.Vector;
 
+import model.DCTriple;
+
 import util.DCCamera;
 import util.DCUtil;
 
@@ -77,7 +79,7 @@ public class TUIOTest implements TuioListener {
    ////////////////////////////////////////////////////////////////////////////////
    public WCursor findSimilarCursor(WCursor w) {
       for (WCursor k : eventTable.values()) {
-         if (k.cursor.getSessionID() == w.cursor.getSessionID()) continue;   
+         if (k.sessionID == w.sessionID) continue;   
          if (k.element == w.element && distance(k, w) < 0.2) return k;
       }
       return null;
@@ -97,8 +99,9 @@ public class TUIOTest implements TuioListener {
                   
                   // Send a click event
                   if (ta.numTap == 1) {
-                     SSM.mouseX = sx;
-                     SSM.mouseY = sy;
+                     //SSM.mouseX = sx;
+                     //SSM.mouseY = sy;
+                     SSM.pickPoints.add(new DCTriple(sx, sy, 0));
                      SSM.instance().l_mouseClicked = true;
                   }
                   if (ta.numTap == 2) {
@@ -139,32 +142,52 @@ public class TUIOTest implements TuioListener {
       int posX = (int)(o.getX()*(float)SSM.windowWidth);
       int posY = (int)(o.getY()*(float)SSM.windowHeight);
       
+      WCursor w;
       if (Event.checkLens(posX, posY) == SSM.ELEMENT_LENS) {
          System.err.println("Add touch to lens");
-         eventTable.put(o.getSessionID(), new WCursor(SSM.ELEMENT_LENS, o));
+         w = new WCursor(SSM.ELEMENT_LENS, o);
+         //eventTable.put(o.getSessionID(), new WCursor(SSM.ELEMENT_LENS, o));
       } else if (Event.checkDocumentPanel(posX, posY) != SSM.ELEMENT_NONE) {
-         eventTable.put(o.getSessionID(), new WCursor(SSM.ELEMENT_DOCUMENT, o));
+         w = new WCursor(SSM.ELEMENT_DOCUMENT, o);
+         //eventTable.put(o.getSessionID(), new WCursor(SSM.ELEMENT_DOCUMENT, o));
       } else if (Event.checkSlider(posX, posY) != SSM.ELEMENT_NONE) {
-         eventTable.put(o.getSessionID(), new WCursor(SSM.ELEMENT_FILTER, o));
+         w = new WCursor(SSM.ELEMENT_FILTER, o);
+         //eventTable.put(o.getSessionID(), new WCursor(SSM.ELEMENT_FILTER, o));
       } else if (Event.checkScrollPanels(posX, posY, SSM.instance().manufactureAttrib, SSM.ELEMENT_MANUFACTURE_SCROLL) == SSM.ELEMENT_MANUFACTURE_SCROLL) {
-         eventTable.put(o.getSessionID(), new WCursor(SSM.ELEMENT_MANUFACTURE_SCROLL, o));
+         w = new WCursor(SSM.ELEMENT_MANUFACTURE_SCROLL, o);
+         //eventTable.put(o.getSessionID(), new WCursor(SSM.ELEMENT_MANUFACTURE_SCROLL, o));
       } else if (Event.checkScrollPanels(posX, posY, SSM.instance().makeAttrib, SSM.ELEMENT_MAKE_SCROLL) == SSM.ELEMENT_MAKE_SCROLL) {
-         eventTable.put(o.getSessionID(), new WCursor(SSM.ELEMENT_MAKE_SCROLL, o));
+         w = new WCursor(SSM.ELEMENT_MAKE_SCROLL, o);
+         //eventTable.put(o.getSessionID(), new WCursor(SSM.ELEMENT_MAKE_SCROLL, o));
       } else if (Event.checkScrollPanels(posX, posY, SSM.instance().modelAttrib, SSM.ELEMENT_MODEL_SCROLL) == SSM.ELEMENT_MODEL_SCROLL) {
-         eventTable.put(o.getSessionID(), new WCursor(SSM.ELEMENT_MODEL_SCROLL, o));
+         w = new WCursor(SSM.ELEMENT_MODEL_SCROLL, o);
+         //eventTable.put(o.getSessionID(), new WCursor(SSM.ELEMENT_MODEL_SCROLL, o));
       } else if (Event.checkScrollPanels(posX, posY, SSM.instance().yearAttrib, SSM.ELEMENT_YEAR_SCROLL) == SSM.ELEMENT_YEAR_SCROLL) {
-         eventTable.put(o.getSessionID(), new WCursor(SSM.ELEMENT_YEAR_SCROLL, o));
+         w = new WCursor(SSM.ELEMENT_YEAR_SCROLL, o);
+         //eventTable.put(o.getSessionID(), new WCursor(SSM.ELEMENT_YEAR_SCROLL, o));
       } else if (Event.checkScrollPanels(posX, posY, SSM.instance().c_manufactureAttrib, SSM.ELEMENT_CMANUFACTURE_SCROLL) == SSM.ELEMENT_CMANUFACTURE_SCROLL) {
-         eventTable.put(o.getSessionID(), new WCursor(SSM.ELEMENT_CMANUFACTURE_SCROLL, o));
+         w = new WCursor(SSM.ELEMENT_CMANUFACTURE_SCROLL, o);
+         //eventTable.put(o.getSessionID(), new WCursor(SSM.ELEMENT_CMANUFACTURE_SCROLL, o));
       } else if (Event.checkScrollPanels(posX, posY, SSM.instance().c_makeAttrib, SSM.ELEMENT_CMAKE_SCROLL) == SSM.ELEMENT_CMAKE_SCROLL) {
-         eventTable.put(o.getSessionID(), new WCursor(SSM.ELEMENT_CMAKE_SCROLL, o));
+         w = new WCursor(SSM.ELEMENT_CMAKE_SCROLL, o);
+         //eventTable.put(o.getSessionID(), new WCursor(SSM.ELEMENT_CMAKE_SCROLL, o));
       } else if (Event.checkScrollPanels(posX, posY, SSM.instance().c_modelAttrib, SSM.ELEMENT_CMODEL_SCROLL) == SSM.ELEMENT_CMODEL_SCROLL) {
-         eventTable.put(o.getSessionID(), new WCursor(SSM.ELEMENT_CMODEL_SCROLL, o));
+         w = new WCursor(SSM.ELEMENT_CMODEL_SCROLL, o);
+         //eventTable.put(o.getSessionID(), new WCursor(SSM.ELEMENT_CMODEL_SCROLL, o));
       } else if (Event.checkScrollPanels(posX, posY, SSM.instance().c_yearAttrib, SSM.ELEMENT_CYEAR_SCROLL) == SSM.ELEMENT_CYEAR_SCROLL) {
-         eventTable.put(o.getSessionID(), new WCursor(SSM.ELEMENT_CYEAR_SCROLL, o));
+         w = new WCursor(SSM.ELEMENT_CYEAR_SCROLL, o);
+         //eventTable.put(o.getSessionID(), new WCursor(SSM.ELEMENT_CYEAR_SCROLL, o));
       } else {
-         eventTable.put(o.getSessionID(), new WCursor(SSM.ELEMENT_NONE,  o));
+         w = new WCursor(SSM.ELEMENT_NONE, o);
+         //eventTable.put(o.getSessionID(), new WCursor(SSM.ELEMENT_NONE,  o));
       }
+      
+      w.sessionID = o.getSessionID();
+      w.points.add(o.getPosition());
+      
+      eventTable.put(w.sessionID, w);
+      
+      
    }
    
    
@@ -176,17 +199,17 @@ public class TUIOTest implements TuioListener {
       WCursor w = eventTable.get(o.getSessionID());
       
       // Check if this is a swipe event
-      if (w.cursor.getPath().size() > 1 && w.state == WCursor.STATE_SWIPE) {
-         if (Math.abs(w.x - w.cursor.getPath().elementAt(0).getX()) > Math.abs(w.y - w.cursor.getPath().elementAt(0).getY())) {
+      if (w.points.size() > 1 && w.state == WCursor.STATE_SWIPE) {
+         if (Math.abs(w.x - w.points.elementAt(0).getX()) > Math.abs(w.y - w.points.elementAt(0).getY())) {
             // Are they all in the same direction (more or less)?   
-            float x1 = w.cursor.getPath().elementAt(0).getX();
-            float x2 = w.cursor.getPath().elementAt(1).getX();
+            float x1 = w.points.elementAt(0).getX();
+            float x2 = w.points.elementAt(1).getX();
             float sign1 = x1-x2;
             float sign2;
             boolean sameDirection = true;
-            for (int i=2; i < w.cursor.getPath().size(); i++) {
+            for (int i=2; i < w.points.size(); i++) {
                x1 = x2;
-               x2 = w.cursor.getPath().elementAt(i).getX();
+               x2 = w.points.elementAt(i).getX();
                sign2 = x1-x2;
                if (sign2*sign1 < 0) { 
                   sameDirection = false; 
@@ -200,14 +223,14 @@ public class TUIOTest implements TuioListener {
             }
          } else {
             // Are they all in the same direction (more or less)?   
-            float y1 = w.cursor.getPath().elementAt(0).getY();
-            float y2 = w.cursor.getPath().elementAt(1).getY();
+            float y1 = w.points.elementAt(0).getY();
+            float y2 = w.points.elementAt(1).getY();
             float sign1 = y1-y2;
             float sign2;
             boolean sameDirection = true;
-            for (int i=2; i < w.cursor.getPath().size(); i++) {
+            for (int i=2; i < w.points.size(); i++) {
                y1 = y2;
-               y2 = w.cursor.getPath().elementAt(i).getY();
+               y2 = w.points.elementAt(i).getY();
                sign2 = y1-y2;
                if (sign2*sign1 < 0) { 
                   sameDirection = false; 
@@ -222,7 +245,7 @@ public class TUIOTest implements TuioListener {
            
          }
       // Check if this is a tap event (approximate)
-      } else if (w.cursor.getPath().size() < 2) {
+      } else if (w.points.size() < 2) {
         synchronized(tapActionList) {
            boolean found = false;
             for (int i=0; i < tapActionList.size(); i++) {
@@ -271,9 +294,8 @@ public class TUIOTest implements TuioListener {
       // Additional down-sampling
       if (wcursor.numUpdate % 3 != 0) return;
       
-      
-      
       System.err.println("=== Updating TUIO Cursor");
+      wcursor.points.add( o.getPosition() );
       
       
       // There is another touch/gesture over the
@@ -281,12 +303,23 @@ public class TUIOTest implements TuioListener {
       if (findSimilarCursor(wcursor) != null) {
          // Check for pinch and spread events
          WCursor simCursor = findSimilarCursor(wcursor);
-         TuioPoint point     = o.getPosition();
-         TuioPoint oldPoint  = o.getPath().elementAt(o.getPath().size()-2);
+         //TuioPoint point     = o.getPosition();
+         //TuioPoint oldPoint  = o.getPath().elementAt(o.getPath().size()-2);
+         TuioPoint point     = wcursor.points.lastElement();
+         TuioPoint oldPoint  = wcursor.points.elementAt( wcursor.points.size()-2);
          
-         float distance = this.distance(simCursor.cursor.getPosition(), point);
-         float oldDistance = this.distance(simCursor.cursor.getPosition(), oldPoint);
          
+         float distance = this.distance(simCursor.points.lastElement(), point);
+         float oldDistance = this.distance(simCursor.points.lastElement(), oldPoint);
+         
+         // Check document
+         if (wcursor.element == SSM.ELEMENT_DOCUMENT) {
+            float direction = -(point.getY() - oldPoint.getY());
+            Event.checkDocumentScroll(0, 0, (int)(direction*SSM.windowHeight));
+            return;
+         }
+         
+         // Check others
          if (distance > oldDistance) {
             if (wcursor.element == SSM.ELEMENT_LENS) {
                Event.resizeLens( (int)(point.getX()*SSM.windowWidth), (int)(point.getY()*SSM.windowHeight), (int)(oldPoint.getX()*SSM.windowWidth), (int)(oldPoint.getY()*SSM.windowHeight));
@@ -361,9 +394,12 @@ public class TUIOTest implements TuioListener {
       ////////////////////////////////////////////////////////////////////////////////
       if (DCUtil.dist( (wcursor.x - o.getX()), (wcursor.y - o.getY())) >  0.03 && wcursor.state != WCursor.STATE_MOVE) {
          System.out.println("Possible Swipe");
-         WCursor newCursor = new WCursor(wcursor.element, o);
-         newCursor.state = WCursor.STATE_SWIPE;
-         eventTable.put(o.getSessionID(), newCursor);
+         //WCursor newCursor = new WCursor(wcursor.element, o);
+         //newCursor.state = WCursor.STATE_SWIPE;
+         //eventTable.put(o.getSessionID(), newCursor);
+         wcursor.state = WCursor.STATE_SWIPE;
+         wcursor.x = o.getX();
+         wcursor.y = o.getY();
          return;   
       }      
       
@@ -376,19 +412,28 @@ public class TUIOTest implements TuioListener {
       int y2 = (int)(wcursor.y*SSM.windowHeight);
       if (wcursor.element == SSM.ELEMENT_NONE){
          System.out.println("Processing ELEMENT NONE move");
-         WCursor newCursor = new WCursor(wcursor.element, o);
-         newCursor.state = WCursor.STATE_MOVE;
-         eventTable.put(o.getSessionID(), newCursor);
-         Event.setCamera(o.getScreenX(SSM.windowWidth), o.getScreenY(SSM.windowHeight), (int)(wcursor.x*SSM.windowWidth), (int)(wcursor.y*SSM.windowHeight));     
+         //WCursor newCursor = new WCursor(wcursor.element, o);
+         //newCursor.state = WCursor.STATE_MOVE;
+         //eventTable.put(o.getSessionID(), newCursor);
+         wcursor.state = WCursor.STATE_MOVE;
+         wcursor.x = o.getX();
+         wcursor.y = o.getY();
+         Event.setCamera(x1, y1, x2, y2);
       } else if (wcursor.element == SSM.ELEMENT_LENS){
-         WCursor newCursor = new WCursor(wcursor.element, o);
-         newCursor.state = WCursor.STATE_MOVE;
-         eventTable.put(o.getSessionID(), newCursor);
-         Event.moveLensTUIO(o.getScreenX(SSM.windowWidth), o.getScreenY(SSM.windowHeight), (int)(wcursor.x*SSM.windowWidth), (int)(wcursor.y*SSM.windowHeight));     
+         //WCursor newCursor = new WCursor(wcursor.element, o);
+         //newCursor.state = WCursor.STATE_MOVE;
+         //eventTable.put(o.getSessionID(), newCursor);
+         wcursor.state = WCursor.STATE_MOVE;
+         wcursor.x = o.getX();
+         wcursor.y = o.getY();
+         Event.moveLensTUIO(x1, y1, x2, y2);
       } else if (wcursor.element == SSM.ELEMENT_DOCUMENT) {
-         WCursor newCursor = new WCursor(wcursor.element, o);
-         newCursor.state = WCursor.STATE_MOVE;
-         eventTable.put(o.getSessionID(), newCursor);
+         //WCursor newCursor = new WCursor(wcursor.element, o);
+         //newCursor.state = WCursor.STATE_MOVE;
+         //eventTable.put(o.getSessionID(), newCursor);
+         wcursor.state = WCursor.STATE_MOVE;
+         wcursor.x = o.getX();
+         wcursor.y = o.getY();
          Event.dragDocumentPanel(x1, y1, x2, y2);
       }
       

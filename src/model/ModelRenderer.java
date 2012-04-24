@@ -446,7 +446,10 @@ public class ModelRenderer extends BaseModelRenderer {
       // Renders a tool tip
       ////////////////////////////////////////////////////////////////////////////////
       setOrthonormalView(gl2, 0, SSM.windowWidth, 0, SSM.windowHeight); {
-         DCTip.render(gl2);
+         //DCTip.render(gl2);
+         for (DCTip tip: SSM.tooltips.values()) {
+            tip.render(gl2);
+         }
       }
             
    }   
@@ -579,7 +582,10 @@ public class ModelRenderer extends BaseModelRenderer {
       // Renders a tool tip
       ////////////////////////////////////////////////////////////////////////////////
       setOrthonormalView(gl2, 0, SSM.windowWidth, 0, SSM.windowHeight); {
-         DCTip.render(gl2);
+         //DCTip.render(gl2);
+         for (DCTip tip : SSM.tooltips.values()) {
+            tip.render(gl2);
+         }
       }      
    }
    
@@ -1551,7 +1557,7 @@ public class ModelRenderer extends BaseModelRenderer {
       // Draw a down and up for scrolling
       // TODO: Fix selection
       /*
-      Integer obj = this.pickingCircleLabel(gl2, la, px, py);
+      Integer obj = this.pickingCircleLabel(gl2, la, SSM.mouseX, SSM.mouseY);
      
       float x = (float)SSM.mouseX - lensX;
       float y = (float)SSM.mouseY - lensY;
@@ -1568,6 +1574,27 @@ public class ModelRenderer extends BaseModelRenderer {
          SSM.instance().topElement = SSM.ELEMENT_LENS;
       } 
       */
+      
+      
+      for (DCTriple point: SSM.hoverPoints.values()) {
+         Integer obj = this.pickingCircleLabel(gl2, la, point.x, point.y);
+         float x = (float)point.x - lensX;
+         float y = (float)point.y - lensY;
+         float r = (float)lensRadius;
+         float d = (float)Math.sqrt(x*x + y*y);
+         //System.out.println(".....debugging...." + lensX + " " + lensY + " " + point.x + " " + point.y);
+         //System.out.println(".....debugging...." + x + " " + y + " " + r + " " + d);
+         if ( d <= r ) {
+            la.magicLensSelected = 1;
+         } else {
+            la.magicLensSelected = 0;
+         }
+         if (obj != null) {
+            la.magicLensSelected = 1;
+            SSM.instance().topElement = SSM.ELEMENT_LENS;
+         } 
+      }
+      
       
       
       if (la.start >= la.numToDisplay) {

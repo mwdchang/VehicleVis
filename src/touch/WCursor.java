@@ -1,6 +1,9 @@
 package touch;
 
+import java.util.Vector;
+
 import TUIO.TuioCursor;
+import TUIO.TuioPoint;
 
 ////////////////////////////////////////////////////////////////////////////////
 // Place holder for location aware 
@@ -11,6 +14,8 @@ public class WCursor {
       cursor = null;
       x = y = 0;
    }
+   
+   
    public WCursor(int e, TuioCursor c) {
       element = e;
       cursor = c;
@@ -20,6 +25,8 @@ public class WCursor {
    }
    
    
+   
+   public long sessionID = 0;
    public int tap = 0;
    public long timestamp;      // timestamp
    public float x, y;          // Normalized positions 
@@ -30,8 +37,9 @@ public class WCursor {
    
    public int numUpdate = 0;
    
-   public static int STATE_MOVE = 1;
-   public static int STATE_SWIPE = 2;
+   public static int STATE_MOVE = 10;
+   public static int STATE_SWIPE = 11;
+   public Vector<TuioPoint> points = new Vector<TuioPoint>();
    
    
 }

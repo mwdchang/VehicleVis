@@ -1,5 +1,6 @@
 package exec;
 
+import gui.DCTip;
 import gui.StatusWindow;
 
 import java.awt.event.InputEvent;
@@ -108,7 +109,6 @@ public class EventManager implements KeyListener, MouseListener, MouseMotionList
 //               }
 //            }
 //         }
-         
          
  
          SSM.instance().l_mousePressed = true;
@@ -367,6 +367,15 @@ public class EventManager implements KeyListener, MouseListener, MouseMotionList
       SSM.mouseX = e.getX();
       SSM.mouseY = e.getY();       
       
+      SSM.dragPoints.add(new DCTriple(SSM.mouseX, SSM.mouseY, 0));
+      
+      if (SSM.hoverPoints.get(999L) == null) {
+         SSM.hoverPoints.put(999L, new DCTriple());
+      }
+      DCTriple p = SSM.hoverPoints.get(999L);
+      p.x = e.getX();
+      p.y = e.getY();      
+      
       if (SSM.instance().lensSelected() == 0 &&
           SSM.instance().l_mousePressed &&
           SSM.instance().topElement == SSM.ELEMENT_NONE) {
@@ -423,6 +432,17 @@ public class EventManager implements KeyListener, MouseListener, MouseMotionList
       SSM.oldMouseY = SSM.mouseY;  
       SSM.mouseX = e.getX();
       SSM.mouseY = e.getY();
+      
+      if (SSM.hoverPoints.get(999L) == null) {
+         SSM.hoverPoints.put(999L, new DCTriple());
+      }
+      DCTriple p = SSM.hoverPoints.get(999L);
+      p.x = e.getX();
+      p.y = e.getY();
+      
+      for (DCTip tip : SSM.tooltips.values()) {
+         tip.visible = false;
+      }
    }
    
    

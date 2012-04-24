@@ -47,8 +47,8 @@ public class Event {
    public static void moveLens(int posX, int posY, int oldPosX, int oldPosY) {
       for (int i=0; i < SSM.instance().lensList.size(); i++) {
          if (SSM.instance().lensList.elementAt(i).magicLensSelected == 1) {
-            SSM.instance().lensList.elementAt(i).magicLensX += posX - oldPosX;   
-            SSM.instance().lensList.elementAt(i).magicLensY += posY - oldPosY;   
+            SSM.instance().lensList.elementAt(i).magicLensX += (posX - oldPosX);   
+            SSM.instance().lensList.elementAt(i).magicLensY += (posY - oldPosY);   
             SSM.instance().lensList.elementAt(i).start = 0;
          }
       }      

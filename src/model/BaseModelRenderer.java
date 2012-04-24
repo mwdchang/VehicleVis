@@ -93,7 +93,7 @@ public abstract class BaseModelRenderer implements RenderTask {
          
          gl2.glGenQueries(1, g_queryId, 0);
          
-         DCTip.init(gl2);
+         //DCTip.init(gl2);
          StatusWindow.init(gl2);
          
       } catch (Exception e) { 
