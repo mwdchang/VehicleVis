@@ -71,29 +71,29 @@ public class DomainFilterTask implements RenderTask {
       
       
       manufactureScroll = new DCScrollPane("MFR");
-      manufactureScroll.anchorX = SSM.instance().manufactureAttrib.anchorX;
-      manufactureScroll.anchorY = SSM.instance().manufactureAttrib.anchorY;
+      manufactureScroll.anchorX = SSM.manufactureAttrib.anchorX;
+      manufactureScroll.anchorY = SSM.manufactureAttrib.anchorY;
       manufactureScroll.depth = 0.5f;
       manufactureScroll.calculate();
       manufactureScroll.renderToTexture(null);
       
       makeScroll = new DCScrollPane("MAKE");
-      makeScroll.anchorX = SSM.instance().makeAttrib.anchorX;
-      makeScroll.anchorY = SSM.instance().makeAttrib.anchorY;
+      makeScroll.anchorX = SSM.makeAttrib.anchorX;
+      makeScroll.anchorY = SSM.makeAttrib.anchorY;
       makeScroll.depth = 0.5f;
       makeScroll.calculate();
       makeScroll.renderToTexture(null);
       
       modelScroll = new DCScrollPane("MODEL");
-      modelScroll.anchorX = SSM.instance().modelAttrib.anchorX;
-      modelScroll.anchorY = SSM.instance().modelAttrib.anchorY;
+      modelScroll.anchorX = SSM.modelAttrib.anchorX;
+      modelScroll.anchorY = SSM.modelAttrib.anchorY;
       modelScroll.depth = 0.5f;
       modelScroll.calculate();
       modelScroll.renderToTexture(null);
       
       yearScroll = new DCScrollPane("YEAR");
-      yearScroll.anchorX = SSM.instance().yearAttrib.anchorX;
-      yearScroll.anchorY = SSM.instance().yearAttrib.anchorY;
+      yearScroll.anchorX = SSM.yearAttrib.anchorX;
+      yearScroll.anchorY = SSM.yearAttrib.anchorY;
       yearScroll.depth = 0.5f;
       yearScroll.calculate();
       yearScroll.renderToTexture(null);
@@ -114,51 +114,51 @@ public class DomainFilterTask implements RenderTask {
       
       c_manufactureScroll = new DCScrollPane("MFR");
       c_manufactureScroll.direction = DCScrollPane.UP;
-      c_manufactureScroll.anchorX = SSM.instance().c_manufactureAttrib.anchorX;
-      c_manufactureScroll.anchorY = SSM.instance().c_manufactureAttrib.anchorY;
+      c_manufactureScroll.anchorX = SSM.c_manufactureAttrib.anchorX;
+      c_manufactureScroll.anchorY = SSM.c_manufactureAttrib.anchorY;
       c_manufactureScroll.calculate();
       c_manufactureScroll.renderToTexture(null);
       
       c_makeScroll = new DCScrollPane("MAKE");
       c_makeScroll.direction = DCScrollPane.UP;
-      c_makeScroll.anchorX = SSM.instance().c_makeAttrib.anchorX;
-      c_makeScroll.anchorY = SSM.instance().c_makeAttrib.anchorY;
+      c_makeScroll.anchorX = SSM.c_makeAttrib.anchorX;
+      c_makeScroll.anchorY = SSM.c_makeAttrib.anchorY;
       c_makeScroll.calculate();
       c_makeScroll.renderToTexture(null);
       
       c_modelScroll = new DCScrollPane("MODEL");
       c_modelScroll.direction = DCScrollPane.UP;
-      c_modelScroll.anchorX = SSM.instance().c_modelAttrib.anchorX;
-      c_modelScroll.anchorY = SSM.instance().c_modelAttrib.anchorY;
+      c_modelScroll.anchorX = SSM.c_modelAttrib.anchorX;
+      c_modelScroll.anchorY = SSM.c_modelAttrib.anchorY;
       c_modelScroll.calculate();
       c_modelScroll.renderToTexture(null);
       
       c_yearScroll = new DCScrollPane("YEAR");
       c_yearScroll.direction = DCScrollPane.UP;
-      c_yearScroll.anchorX = SSM.instance().c_yearAttrib.anchorX;
-      c_yearScroll.anchorY = SSM.instance().c_yearAttrib.anchorY;
+      c_yearScroll.anchorX = SSM.c_yearAttrib.anchorX;
+      c_yearScroll.anchorY = SSM.c_yearAttrib.anchorY;
       c_yearScroll.calculate();
       c_yearScroll.renderToTexture(null);
       
       
       // Resize the width
-      manufactureScroll.width = SSM.instance().manufactureAttrib.width;
-      manufactureScroll.texPanelWidth = SSM.instance().manufactureAttrib.width;
-      makeScroll.width = SSM.instance().makeAttrib.width;
-      makeScroll.texPanelWidth = SSM.instance().makeAttrib.width;
-      modelScroll.width = SSM.instance().modelAttrib.width;
-      modelScroll.texPanelWidth = SSM.instance().modelAttrib.width;
-      yearScroll.width = SSM.instance().yearAttrib.width;
-      yearScroll.texPanelWidth = SSM.instance().yearAttrib.width;
+      manufactureScroll.width = SSM.manufactureAttrib.width;
+      manufactureScroll.texPanelWidth = SSM.manufactureAttrib.width;
+      makeScroll.width = SSM.makeAttrib.width;
+      makeScroll.texPanelWidth = SSM.makeAttrib.width;
+      modelScroll.width = SSM.modelAttrib.width;
+      modelScroll.texPanelWidth = SSM.modelAttrib.width;
+      yearScroll.width = SSM.yearAttrib.width;
+      yearScroll.texPanelWidth = SSM.yearAttrib.width;
       
-      c_manufactureScroll.width = SSM.instance().c_manufactureAttrib.width;
-      c_manufactureScroll.texPanelWidth = SSM.instance().c_manufactureAttrib.width;
-      c_makeScroll.width = SSM.instance().c_makeAttrib.width;
-      c_makeScroll.texPanelWidth = SSM.instance().c_makeAttrib.width;
-      c_modelScroll.width = SSM.instance().c_modelAttrib.width;
-      c_modelScroll.texPanelWidth = SSM.instance().c_modelAttrib.width;
-      c_yearScroll.width = SSM.instance().c_yearAttrib.width;
-      c_yearScroll.texPanelWidth = SSM.instance().c_yearAttrib.width;  
+      c_manufactureScroll.width = SSM.c_manufactureAttrib.width;
+      c_manufactureScroll.texPanelWidth = SSM.c_manufactureAttrib.width;
+      c_makeScroll.width = SSM.c_makeAttrib.width;
+      c_makeScroll.texPanelWidth = SSM.c_makeAttrib.width;
+      c_modelScroll.width = SSM.c_modelAttrib.width;
+      c_modelScroll.texPanelWidth = SSM.c_modelAttrib.width;
+      c_yearScroll.width = SSM.c_yearAttrib.width;
+      c_yearScroll.texPanelWidth = SSM.c_yearAttrib.width;  
    }
    
 
@@ -250,55 +250,55 @@ public class DomainFilterTask implements RenderTask {
       
       
       // Handle vehicle manufacturers
-      SSM.stopPicking = pickingScrollPane(mx, my, manufactureScroll, SSM.instance().manufactureAttrib, 
-            makeScroll, SSM.instance().makeAttrib,     // level 1
-            modelScroll, SSM.instance().modelAttrib,   // level 2
-            yearScroll,  SSM.instance().yearAttrib     // level 3
+      SSM.stopPicking = pickingScrollPane(mx, my, manufactureScroll, SSM.manufactureAttrib, 
+            makeScroll, SSM.makeAttrib,     // level 1
+            modelScroll, SSM.modelAttrib,   // level 2
+            yearScroll,  SSM.yearAttrib     // level 3
       ); if (SSM.stopPicking != 0) return;
-      SSM.stopPicking = pickingScrollPane(mx, my, c_manufactureScroll, SSM.instance().c_manufactureAttrib, 
-            c_makeScroll, SSM.instance().c_makeAttrib,     // level 1
-            c_modelScroll, SSM.instance().c_modelAttrib,   // level 2
-            c_yearScroll,  SSM.instance().c_yearAttrib     // level 3
+      SSM.stopPicking = pickingScrollPane(mx, my, c_manufactureScroll, SSM.c_manufactureAttrib, 
+            c_makeScroll, SSM.c_makeAttrib,     // level 1
+            c_modelScroll, SSM.c_modelAttrib,   // level 2
+            c_yearScroll,  SSM.c_yearAttrib     // level 3
       );if (SSM.stopPicking != 0) return;
       
       
       // Handling vehicle make
-      SSM.stopPicking = pickingScrollPane(mx, my, makeScroll, SSM.instance().makeAttrib, 
-            modelScroll, SSM.instance().modelAttrib,   // level 2
-            yearScroll, SSM.instance().yearAttrib      // level 3
+      SSM.stopPicking = pickingScrollPane(mx, my, makeScroll, SSM.makeAttrib, 
+            modelScroll, SSM.modelAttrib,   // level 2
+            yearScroll, SSM.yearAttrib      // level 3
       ); if (SSM.stopPicking != 0) return;
-      SSM.stopPicking = pickingScrollPane(mx, my, c_makeScroll, SSM.instance().c_makeAttrib, 
-            c_modelScroll, SSM.instance().c_modelAttrib,   // level 2
-            c_yearScroll, SSM.instance().c_yearAttrib      // level 3
+      SSM.stopPicking = pickingScrollPane(mx, my, c_makeScroll, SSM.c_makeAttrib, 
+            c_modelScroll, SSM.c_modelAttrib,   // level 2
+            c_yearScroll, SSM.c_yearAttrib      // level 3
       ); if (SSM.stopPicking != 0) return; 
       
       
       // Handling vehicle model
-      SSM.stopPicking = pickingScrollPane(mx, my, modelScroll, SSM.instance().modelAttrib,
-            yearScroll, SSM.instance().yearAttrib      // level 3
+      SSM.stopPicking = pickingScrollPane(mx, my, modelScroll, SSM.modelAttrib,
+            yearScroll, SSM.yearAttrib      // level 3
       ); if (SSM.stopPicking != 0) return;
-      SSM.stopPicking = pickingScrollPane(mx, my, c_modelScroll, SSM.instance().c_modelAttrib,
-            c_yearScroll, SSM.instance().c_yearAttrib      // level 3
+      SSM.stopPicking = pickingScrollPane(mx, my, c_modelScroll, SSM.c_modelAttrib,
+            c_yearScroll, SSM.c_yearAttrib      // level 3
       ); if (SSM.stopPicking != 0) return;
       
       
       // Handling vehicle year
-      SSM.stopPicking = pickingScrollPane(mx, my, yearScroll, SSM.instance().yearAttrib);
+      SSM.stopPicking = pickingScrollPane(mx, my, yearScroll, SSM.yearAttrib);
       if (SSM.stopPicking != 0) return;
-      SSM.stopPicking = pickingScrollPane(mx, my, c_yearScroll, SSM.instance().c_yearAttrib);
+      SSM.stopPicking = pickingScrollPane(mx, my, c_yearScroll, SSM.c_yearAttrib);
       if (SSM.stopPicking != 0) return;
       
       
       // Transitions
-      scrollPaneTransition(mx, my, manufactureScroll, SSM.instance().manufactureAttrib);
-      scrollPaneTransition(mx, my, makeScroll, SSM.instance().makeAttrib);
-      scrollPaneTransition(mx, my, modelScroll, SSM.instance().modelAttrib);
-      scrollPaneTransition(mx, my, yearScroll, SSM.instance().yearAttrib);
+      scrollPaneTransition(mx, my, manufactureScroll, SSM.manufactureAttrib);
+      scrollPaneTransition(mx, my, makeScroll, SSM.makeAttrib);
+      scrollPaneTransition(mx, my, modelScroll, SSM.modelAttrib);
+      scrollPaneTransition(mx, my, yearScroll, SSM.yearAttrib);
       
-      scrollPaneTransition(mx, my, c_manufactureScroll, SSM.instance().c_manufactureAttrib);
-      scrollPaneTransition(mx, my, c_makeScroll, SSM.instance().c_makeAttrib);
-      scrollPaneTransition(mx, my, c_modelScroll, SSM.instance().c_modelAttrib);
-      scrollPaneTransition(mx, my, c_yearScroll, SSM.instance().c_yearAttrib);      
+      scrollPaneTransition(mx, my, c_manufactureScroll, SSM.c_manufactureAttrib);
+      scrollPaneTransition(mx, my, c_makeScroll, SSM.c_makeAttrib);
+      scrollPaneTransition(mx, my, c_modelScroll, SSM.c_modelAttrib);
+      scrollPaneTransition(mx, my, c_yearScroll, SSM.c_yearAttrib);      
       
       
    }
@@ -321,38 +321,38 @@ public class DomainFilterTask implements RenderTask {
       // Set up default 
       Hashtable<String, Integer> manufactureHash = this.getHierFilter(startIdx, endIdx);
       DCUtil.removeLowerBound(manufactureHash, 100);
-      this.resetPane(manufactureHash, manufactureScroll, SSM.instance().manufactureAttrib);
+      this.resetPane(manufactureHash, manufactureScroll, SSM.manufactureAttrib);
       
       Hashtable<String, Integer> makeHash = this.getHierFilter(startIdx, endIdx, manufactureScroll);
       //DCUtil.removeLowerBound(makeHash, 20);
-      this.resetPane(makeHash, makeScroll, SSM.instance().makeAttrib);
+      this.resetPane(makeHash, makeScroll, SSM.makeAttrib);
       
       Hashtable<String, Integer> modelHash = this.getHierFilter(startIdx, endIdx, manufactureScroll, makeScroll);
       //DCUtil.removeLowerBound(modelHash, 20);
-      this.resetPane(modelHash, modelScroll, SSM.instance().modelAttrib);
+      this.resetPane(modelHash, modelScroll, SSM.modelAttrib);
       
       Hashtable<String, Integer> yearHash = this.getHierFilter(startIdx, endIdx, manufactureScroll, makeScroll, modelScroll);
       //DCUtil.removeLowerBound(yearHash, 20);
-      this.resetPane(yearHash, yearScroll, SSM.instance().yearAttrib);
+      this.resetPane(yearHash, yearScroll, SSM.yearAttrib);
 
             
       
       // Set up the comparisons
       Hashtable<String, Integer> c_manufactureHash = this.getHierFilter(startIdx, endIdx);
       DCUtil.removeLowerBound(c_manufactureHash, 100);
-      this.resetPane(c_manufactureHash, c_manufactureScroll, SSM.instance().c_manufactureAttrib);
+      this.resetPane(c_manufactureHash, c_manufactureScroll, SSM.c_manufactureAttrib);
       
       Hashtable<String, Integer> c_makeHash = this.getHierFilter(startIdx, endIdx, c_manufactureScroll);
       //DCUtil.removeLowerBound(c_makeHash, 20);
-      this.resetPane(c_makeHash, c_makeScroll, SSM.instance().c_makeAttrib);
+      this.resetPane(c_makeHash, c_makeScroll, SSM.c_makeAttrib);
       
       Hashtable<String, Integer> c_modelHash = this.getHierFilter(startIdx, endIdx, c_manufactureScroll, c_makeScroll);
       //DCUtil.removeLowerBound(c_modelHash, 20);
-      this.resetPane(c_modelHash, c_modelScroll, SSM.instance().c_modelAttrib);
+      this.resetPane(c_modelHash, c_modelScroll, SSM.c_modelAttrib);
       
       Hashtable<String, Integer> c_yearHash = this.getHierFilter(startIdx, endIdx, c_manufactureScroll, c_makeScroll, c_modelScroll);
       //DCUtil.removeLowerBound(c_yearHash, 20);
-      this.resetPane(c_yearHash, c_yearScroll, SSM.instance().c_yearAttrib);
+      this.resetPane(c_yearHash, c_yearScroll, SSM.c_yearAttrib);
       
       
    }
@@ -446,7 +446,7 @@ public class DomainFilterTask implements RenderTask {
       for (int i=startIdx; i <= endIdx; i++) {
          String dtStr = CacheManager.instance().getTimeByIndex(i); 
          int month = Integer.parseInt(dtStr.substring(4,6)) - 1;
-         if (month < SSM.instance().startMonth || month > SSM.instance().endMonth) continue;      
+         if (month < SSM.startMonth || month > SSM.endMonth) continue;      
          
          QueryObj root = CacheManager.instance().queryTableU.elementAt(i);
          QueryObj qobj = root;
@@ -482,42 +482,42 @@ public class DomainFilterTask implements RenderTask {
    ////////////////////////////////////////////////////////////////////////////////
    public void checkComparisonMode() {
       if (SSM.instance().useComparisonMode == false) {
-         SSM.instance().manufactureAttrib.anchorY = 50;
-         SSM.instance().makeAttrib.anchorY = 50;
-         SSM.instance().modelAttrib.anchorY = 50;
-         SSM.instance().yearAttrib.anchorY = 50;
-         SSM.instance().c_manufactureAttrib.anchorY = -150;
-         SSM.instance().c_makeAttrib.anchorY = -150;
-         SSM.instance().c_modelAttrib.anchorY = -150;
-         SSM.instance().c_yearAttrib.anchorY = -150;
+         SSM.manufactureAttrib.anchorY = 50;
+         SSM.makeAttrib.anchorY = 50;
+         SSM.modelAttrib.anchorY = 50;
+         SSM.yearAttrib.anchorY = 50;
+         SSM.c_manufactureAttrib.anchorY = -150;
+         SSM.c_makeAttrib.anchorY = -150;
+         SSM.c_modelAttrib.anchorY = -150;
+         SSM.c_yearAttrib.anchorY = -150;
          
-         manufactureScroll.anchorY = SSM.instance().manufactureAttrib.anchorY;
-         makeScroll.anchorY = SSM.instance().makeAttrib.anchorY;
-         modelScroll.anchorY = SSM.instance().modelAttrib.anchorY;
-         yearScroll.anchorY = SSM.instance().yearAttrib.anchorY;
-         c_manufactureScroll.anchorY = SSM.instance().c_manufactureAttrib.anchorY;
-         c_makeScroll.anchorY = SSM.instance().c_makeAttrib.anchorY;
-         c_modelScroll.anchorY = SSM.instance().c_modelAttrib.anchorY;
-         c_yearScroll.anchorY = SSM.instance().c_yearAttrib.anchorY;
+         manufactureScroll.anchorY = SSM.manufactureAttrib.anchorY;
+         makeScroll.anchorY = SSM.makeAttrib.anchorY;
+         modelScroll.anchorY = SSM.modelAttrib.anchorY;
+         yearScroll.anchorY = SSM.yearAttrib.anchorY;
+         c_manufactureScroll.anchorY = SSM.c_manufactureAttrib.anchorY;
+         c_makeScroll.anchorY = SSM.c_makeAttrib.anchorY;
+         c_modelScroll.anchorY = SSM.c_modelAttrib.anchorY;
+         c_yearScroll.anchorY = SSM.c_yearAttrib.anchorY;
       } else {
-         SSM.instance().c_manufactureAttrib.anchorY = 80;
-         SSM.instance().c_makeAttrib.anchorY = 80;
-         SSM.instance().c_modelAttrib.anchorY = 80;
-         SSM.instance().c_yearAttrib.anchorY = 80;
+         SSM.c_manufactureAttrib.anchorY = 80;
+         SSM.c_makeAttrib.anchorY = 80;
+         SSM.c_modelAttrib.anchorY = 80;
+         SSM.c_yearAttrib.anchorY = 80;
          
-         SSM.instance().manufactureAttrib.anchorY = 50;
-         SSM.instance().makeAttrib.anchorY = 50;
-         SSM.instance().modelAttrib.anchorY = 50;
-         SSM.instance().yearAttrib.anchorY = 50;
+         SSM.manufactureAttrib.anchorY = 50;
+         SSM.makeAttrib.anchorY = 50;
+         SSM.modelAttrib.anchorY = 50;
+         SSM.yearAttrib.anchorY = 50;
          
-         manufactureScroll.anchorY = SSM.instance().manufactureAttrib.anchorY;
-         makeScroll.anchorY = SSM.instance().makeAttrib.anchorY;
-         modelScroll.anchorY = SSM.instance().modelAttrib.anchorY;
-         yearScroll.anchorY = SSM.instance().yearAttrib.anchorY;
-         c_manufactureScroll.anchorY = SSM.instance().c_manufactureAttrib.anchorY;
-         c_makeScroll.anchorY = SSM.instance().c_makeAttrib.anchorY;
-         c_modelScroll.anchorY = SSM.instance().c_modelAttrib.anchorY;
-         c_yearScroll.anchorY = SSM.instance().c_yearAttrib.anchorY;
+         manufactureScroll.anchorY = SSM.manufactureAttrib.anchorY;
+         makeScroll.anchorY = SSM.makeAttrib.anchorY;
+         modelScroll.anchorY = SSM.modelAttrib.anchorY;
+         yearScroll.anchorY = SSM.yearAttrib.anchorY;
+         c_manufactureScroll.anchorY = SSM.c_manufactureAttrib.anchorY;
+         c_makeScroll.anchorY = SSM.c_makeAttrib.anchorY;
+         c_modelScroll.anchorY = SSM.c_modelAttrib.anchorY;
+         c_yearScroll.anchorY = SSM.c_yearAttrib.anchorY;
      }
    }    
    
@@ -610,10 +610,10 @@ public class DomainFilterTask implements RenderTask {
       //setOrthonormalView(gl2, 0, SSM.instance().windowWidth, 0, SSM.instance().windowHeight); {
          // Update the yoffset before rendering
          gl2.glEnable(GL2.GL_DEPTH_TEST);
-         manufactureScroll.yoffset = SSM.instance().manufactureAttrib.yOffset;
-         makeScroll.yoffset  = SSM.instance().makeAttrib.yOffset;
-         modelScroll.yoffset = SSM.instance().modelAttrib.yOffset;
-         yearScroll.yoffset  = SSM.instance().yearAttrib.yOffset;
+         manufactureScroll.yoffset = SSM.manufactureAttrib.yOffset;
+         makeScroll.yoffset  = SSM.makeAttrib.yOffset;
+         modelScroll.yoffset = SSM.modelAttrib.yOffset;
+         yearScroll.yoffset  = SSM.yearAttrib.yOffset;
          
          manufactureScroll.render(gl2);   
          makeScroll.render(gl2);
@@ -621,10 +621,10 @@ public class DomainFilterTask implements RenderTask {
          yearScroll.render(gl2);
          
          
-         c_manufactureScroll.yoffset = SSM.instance().c_manufactureAttrib.yOffset;
-         c_makeScroll.yoffset  = SSM.instance().c_makeAttrib.yOffset;
-         c_modelScroll.yoffset = SSM.instance().c_modelAttrib.yOffset;
-         c_yearScroll.yoffset  = SSM.instance().c_yearAttrib.yOffset;
+         c_manufactureScroll.yoffset = SSM.c_manufactureAttrib.yOffset;
+         c_makeScroll.yoffset  = SSM.c_makeAttrib.yOffset;
+         c_modelScroll.yoffset = SSM.c_modelAttrib.yOffset;
+         c_yearScroll.yoffset  = SSM.c_yearAttrib.yOffset;
          
          c_manufactureScroll.render(gl2);   
          c_makeScroll.render(gl2);

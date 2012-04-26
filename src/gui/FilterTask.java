@@ -125,7 +125,7 @@ public class FilterTask implements RenderTask {
       yearSlider.interval = 45;
       yearSlider.markerSize = 40;
       monthSlider.interval = 45;
-      monthSlider.markerSize = 900;
+      monthSlider.markerSize = 40;
       
       
       yearSlider.barColour = SchemeManager.selected;

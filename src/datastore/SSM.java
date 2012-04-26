@@ -48,9 +48,10 @@ public class SSM {
       occlusionLevel = 0;
       useGuide = false;
       useCircularLabel = false;
-      
       relatedList = new Vector<Integer>();
-      useTUIO = Boolean.parseBoolean(System.getProperty("UseTUIO", "true"));
+      
+      
+      useTUIO = Boolean.parseBoolean(System.getProperty("UseTUIO", "false"));
    }
    
    
@@ -229,8 +230,8 @@ public class SSM {
    ///////////////////////////////////////////////////////////////////////////////// 
    // Indicates the global selected time period
    ///////////////////////////////////////////////////////////////////////////////// 
-   public String startTimeFrame;
-   public String endTimeFrame;
+   public static String startTimeFrame;
+   public static String endTimeFrame;
    public static int startMonth = 0;  // 0 - 11
    public static int endMonth = 0;    // 0 - 11
    public static int startYear = 0;
@@ -250,16 +251,16 @@ public class SSM {
    // Filter Panel management
    ////////////////////////////////////////////////////////////////////////////////
    public static float filterControlAnchorX = 120f;
-   public PaneAttrib manufactureAttrib = new PaneAttrib(230, 150, 220, 200, 1);
-   public PaneAttrib makeAttrib        = new PaneAttrib(480, 150, 220, 200, 1);
-   public PaneAttrib modelAttrib       = new PaneAttrib(730, 150, 220, 200, 1);
-   public PaneAttrib yearAttrib        = new PaneAttrib(980, 150, 220, 200, 1);
+   public static PaneAttrib manufactureAttrib = new PaneAttrib(230, 150, 220, 200, 1);
+   public static PaneAttrib makeAttrib        = new PaneAttrib(480, 150, 220, 200, 1);
+   public static PaneAttrib modelAttrib       = new PaneAttrib(730, 150, 220, 200, 1);
+   public static PaneAttrib yearAttrib        = new PaneAttrib(980, 150, 220, 200, 1);
    
    public static float c_filterControlAnchorX = 120f;
-   public PaneAttrib c_manufactureAttrib = new PaneAttrib(230, 120, 220, 200, 1);
-   public PaneAttrib c_makeAttrib        = new PaneAttrib(480, 120, 220, 200, 1);
-   public PaneAttrib c_modelAttrib       = new PaneAttrib(730, 120, 220, 200, 1);
-   public PaneAttrib c_yearAttrib        = new PaneAttrib(980, 120, 220, 200, 1);
+   public static PaneAttrib c_manufactureAttrib = new PaneAttrib(230, 120, 220, 200, 1);
+   public static PaneAttrib c_makeAttrib        = new PaneAttrib(480, 120, 220, 200, 1);
+   public static PaneAttrib c_modelAttrib       = new PaneAttrib(730, 120, 220, 200, 1);
+   public static PaneAttrib c_yearAttrib        = new PaneAttrib(980, 120, 220, 200, 1);
    
    public static float offset_labelX = 130;
    public static float offset_labelY = 30;
@@ -479,10 +480,10 @@ public class SSM {
    public static int COMPONENT_LAYER= 2;
    //public int currentFocusLayer = 0;
    
-   public int dirty = 0;
-   public int dirtyGL = 0;
-   public int dirtyLoad = 0;
-   public int dirtyDateFilter = 0;
+   public static int dirty = 0;
+   public static int dirtyGL = 0;
+   public static int dirtyLoad = 0;
+   public static int dirtyDateFilter = 0;
    
    
    public float segmentMax = 0;
