@@ -1,10 +1,5 @@
 package exec;
 
-import gui.DomainFilterTask;
-import gui.FilterTask;
-import gui.LegendTask;
-import gui.SaveLoadTask;
-
 import java.awt.BorderLayout;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -17,11 +12,8 @@ import javax.swing.JPanel;
 
 import TUIO.TuioClient;
 
-import model.ModelRenderer;
-
 import touch.TUIOTest;
 import util.ALogger;
-import util.DWin;
 import datastore.CacheManager;
 import datastore.Const;
 import datastore.SSM;
@@ -34,8 +26,8 @@ public class ProjectDriver {
    
    public static void main(String args[]) {
       Const.doRunTimeCheck();
+      SSM.instance();
       
-      boolean useTUIO = Boolean.parseBoolean(System.getProperty("UseTUIO", "true"));
       
       
       // Get the on-disk and run time database cache out of the way....
@@ -91,7 +83,7 @@ public class ProjectDriver {
       
           
       // Register event listeners
-      if (useTUIO == true) {
+      if (SSM.useTUIO == true) {
          TuioClient client = new TuioClient();
          client.addTuioListener(new TUIOTest());
          client.connect();

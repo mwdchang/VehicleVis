@@ -12,13 +12,14 @@ import util.TextureFont;
 
 import com.jogamp.opengl.util.GLBuffers;
 
+import datastore.Const;
 import datastore.SSM;
 import datastore.SchemeManager;
 
 import model.DCColour;
 
 /////////////////////////////////////////////////////////////////////////////////
-// A stand alone DIY slider widget
+// A stand-alone DIY slider widget
 // with 'scented' bars showing the aggregated value at each slider point.
 /////////////////////////////////////////////////////////////////////////////////
 public class DCRSlider {
@@ -182,10 +183,12 @@ public class DCRSlider {
    // anchor position refer to the last mouse interaction with
    // either the low or the high slider indicator
    ////////////////////////////////////////////////////////////////////////////////
-   public void update(double newAnchor) {
-      if (! isSelected) return;
+   public boolean update(double newAnchor) {
+      if (! isSelected) return false;
       
-//      System.out.println("hack : " + sitem);
+      int oldH = (int)highIdx;
+      int oldL = (int)lowIdx;
+      
       
       if (sitem == 2) {
          highIdx += (newAnchor-anchor)/interval;   
@@ -197,7 +200,15 @@ public class DCRSlider {
          if (lowIdx <= 0) lowIdx = 0;
          if (lowIdx >= highIdx) lowIdx = highIdx;
       } 
-//      System.out.println(lowIdx + "=" + highIdx);
+      
+      //System.out.println(oldH + " " + (int)highIdx);
+      
+      if (oldH != (int)highIdx || oldL != (int)lowIdx) {
+         System.out.println("SHould have an update here ....");
+         return true;
+      }
+      
+      return false;
    }
    
    
@@ -235,8 +246,7 @@ public class DCRSlider {
    	for (int i=0; i < tempData.length; i++) {
    		float v = (float)(tempData[i].value*height/tempMaxValue);
    		String s = tempData[i].value > 1000 ? DCUtil.abbreviation((int)tempData[i].value) : (int)tempData[i].value+"";
-   	   //tf.addMark( (int)tempData[i].value+"", labelColour, labelFont, (float)(3+(i*interval)), v+13);	
-   	   tf.addMark( s, labelColour, labelFont, (float)(3+(i*interval)), v+15);	
+   	   tf.addMark( s, labelColour, labelFont, (float)(3+(i*interval)), v+15, false);	
    	}
    	
    	// Add the key labels (time period names)
@@ -245,8 +255,9 @@ public class DCRSlider {
    	   if (keyTranslation != null && keyTranslation.get(tempData[i].key) != null) {
             s = keyTranslation.get( tempData[i].key );
    	   }
-   	   tf.addMark( s, labelColour, labelFont, (float)(10+(i*interval)), 3);   
+   	   tf.addMark( s, labelColour, labelFont, (float)(10+(i*interval)), 3, false);   
    	}
+   	tf.renderToTexture(null);
    }
    
    
@@ -254,7 +265,6 @@ public class DCRSlider {
    public DCPair[] tempData;         // Hack to have a maximum for the texture while the actual max value is in animated transition
    
    public double maxValue = 1.0;
-   //public double height = 40.0;
    public double height = SSM.instance().rangeFilterHeight;
    
    public DCPair[] data;      // Primary Data
@@ -262,8 +272,7 @@ public class DCRSlider {
    
    //public String labelTxt;
    public double interval;
-   //public int hover = -1;
-   public double markerSize = 15;
+   public double markerSize = 17;
    public double lowIdx = 0;
    public double highIdx = 0;
   
@@ -284,7 +293,8 @@ public class DCRSlider {
    
    // Font as textured quads
    public static Color labelColour = Color.BLACK;
-   public static Font  labelFont  = new Font("Arial", Font.PLAIN, 10);
+   //public static Font labelFont = DCUtil.loadFont(Const.FONT_PATH+"din1451m.ttf", Font.PLAIN, 12f);   
+   public static Font labelFont = new Font("Arial", Font.PLAIN, 10);
    public TextureFont tf = new TextureFont();   
    
 }

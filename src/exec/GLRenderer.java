@@ -79,18 +79,31 @@ public class GLRenderer implements GLEventListener {
       }
       
       //if (SSM.instance().currentFocusLayer == SSM.UI_LAYER) {
+      /*
       if (SSM.instance().topElement == SSM.ELEMENT_FILTER) {
          filter_task.update(SSM.instance().mouseX);   
+      }
+      */
+      for (DCTriple point : SSM.dragPoints.values()) {
+         filter_task.update(point.x);
       }
       
       // Trigger the range slider to update, under two conditions
       // 1) The user drags the date slider indicator
       // 2) The user loads a saved state
-      if (SSM.instance().l_mousePressed == false && filter_task.deferredRefresh) {
+      //if (SSM.instance().l_mousePressed == false && filter_task.deferredRefresh) {
+      if (SSM.instance().l_mousePressed == false && filter_task.deferredRefresh && SSM.useTUIO == false) {
          System.out.println("about to unbind...");
          filter_task.unfocus();
          filter_task.deferredRefresh = false;
       }
+      if (SSM.instance().checkDragEvent == true) {
+         filter_task.unfocus();
+         filter_task.deferredRefresh = false;
+         SSM.instance().checkDragEvent = false;
+      }
+      
+      
       if (SSM.instance().dirtyLoad == 1) {
          SSM.instance().dirtyLoad = 0;
          filter_task.loadFromSSM();
@@ -141,8 +154,7 @@ public class GLRenderer implements GLEventListener {
          SSM.pickPoints.clear();
       }
       if (SSM.dragPoints.size() > 0) {
-         for (int i=0; i < SSM.dragPoints.size(); i++) {
-            DCTriple p = SSM.dragPoints.elementAt(i);
+         for (DCTriple p : SSM.dragPoints.values())  {  
             filter_task.picking(gl2, p.x, p.y);
          }
       }
@@ -169,7 +181,7 @@ public class GLRenderer implements GLEventListener {
       
       
       // Clear event buffers
-      SSM.dragPoints.clear();
+      //SSM.dragPoints.clear();
       //SSM.hoverPoints.clear();
    }
 

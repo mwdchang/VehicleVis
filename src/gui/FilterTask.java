@@ -8,6 +8,8 @@ import java.util.Vector;
 import javax.media.opengl.GL2;
 import javax.media.opengl.glu.GLU;
 
+import model.DCTriple;
+
 import org.jdesktop.animation.timing.Animator;
 import org.jdesktop.animation.timing.interpolation.PropertySetter;
 
@@ -29,7 +31,6 @@ import exec.RenderTask;
 /////////////////////////////////////////////////////////////////////////////////
 public class FilterTask implements RenderTask {
    
-   public static float offsetX = 30.0f;
    
    public boolean deferredRefresh = false;
    
@@ -51,17 +52,13 @@ public class FilterTask implements RenderTask {
       
       
       // Set the anchor here so it is with respect to the ortho
-      //yearSlider.anchorX = 30;
       yearSlider.anchorX = SSM.instance().getYearAnchorX();
-      //yearSlider.anchorY = SSM.instance().windowHeight - 80;
       yearSlider.anchorY = SSM.instance().getYearAnchorY();
       
       yearSlider.tf.anchorX = yearSlider.anchorX;
       yearSlider.tf.anchorY = yearSlider.anchorY-12;
       
-      //monthSlider.anchorX = 30;
       monthSlider.anchorX = SSM.instance().getMonthAnchorX();
-      //monthSlider.anchorY = SSM.instance().windowHeight - 170;
       monthSlider.anchorY = SSM.instance().getMonthAnchorY();
       monthSlider.tf.anchorX = monthSlider.anchorX;
       monthSlider.tf.anchorY = monthSlider.anchorY-12;
@@ -76,16 +73,23 @@ public class FilterTask implements RenderTask {
       gl2.glLoadIdentity();
       yearSlider.render(gl2);
       
-      /*
-      if (CacheManager.instance().filterYearData != null) {
-         yearSlider.renderData(gl2, CacheManager.instance().filterYearData);  
-      }
-      */
+      SSM.yearLow[0] = new DCTriple(yearSlider.anchorX+yearSlider.lowIdx * yearSlider.interval - yearSlider.markerSize, yearSlider.anchorY-yearSlider.markerSize, 0.0);
+      SSM.yearLow[1] = new DCTriple(yearSlider.anchorX+yearSlider.lowIdx * yearSlider.interval, yearSlider.anchorY-yearSlider.markerSize, 0);
+      SSM.yearLow[2] = new DCTriple(yearSlider.anchorX+yearSlider.lowIdx * yearSlider.interval, yearSlider.anchorY, 0);
+      SSM.yearHigh[0] = new DCTriple( yearSlider.anchorX+(yearSlider.highIdx+1) * yearSlider.interval + yearSlider.markerSize, yearSlider.anchorY-yearSlider.markerSize, 0);
+      SSM.yearHigh[1] = new DCTriple( yearSlider.anchorX+(yearSlider.highIdx+1) * yearSlider.interval, yearSlider.anchorY, 0);
+      SSM.yearHigh[2] = new DCTriple( yearSlider.anchorX+(yearSlider.highIdx+1) * yearSlider.interval, yearSlider.anchorY-yearSlider.markerSize, 0);      
       
       // Render the month slider filter
       gl2.glLoadIdentity();
       monthSlider.render(gl2);
       
+      SSM.monthLow[0] = new DCTriple(monthSlider.anchorX+monthSlider.lowIdx * monthSlider.interval - monthSlider.markerSize, monthSlider.anchorY-monthSlider.markerSize, 0.0);
+      SSM.monthLow[1] = new DCTriple(monthSlider.anchorX+monthSlider.lowIdx * monthSlider.interval, monthSlider.anchorY-monthSlider.markerSize, 0);
+      SSM.monthLow[2] = new DCTriple(monthSlider.anchorX+monthSlider.lowIdx * monthSlider.interval, monthSlider.anchorY, 0);
+      SSM.monthHigh[0] = new DCTriple( monthSlider.anchorX+(monthSlider.highIdx+1) * monthSlider.interval + monthSlider.markerSize, monthSlider.anchorY-monthSlider.markerSize, 0);
+      SSM.monthHigh[1] = new DCTriple( monthSlider.anchorX+(monthSlider.highIdx+1) * monthSlider.interval, monthSlider.anchorY, 0);
+      SSM.monthHigh[2] = new DCTriple( monthSlider.anchorX+(monthSlider.highIdx+1) * monthSlider.interval, monthSlider.anchorY-monthSlider.markerSize, 0);      
       
       monthSlider.tf.render(gl2);
       yearSlider.tf.render(gl2);
@@ -118,11 +122,12 @@ public class FilterTask implements RenderTask {
       
       
       // Override default interval amount
-      yearSlider.interval = 40;
-      monthSlider.interval = 40;
+      yearSlider.interval = 45;
+      yearSlider.markerSize = 40;
+      monthSlider.interval = 45;
+      monthSlider.markerSize = 900;
       
-      //yearSlider.barColour = new DCColour(0.9f, 0.3f, 0.3f, 0.6f);
-      //monthSlider.barColour = new DCColour(0.9f, 0.3f, 0.3f, 0.6f);
+      
       yearSlider.barColour = SchemeManager.selected;
       monthSlider.barColour = SchemeManager.selected;
       
@@ -133,6 +138,9 @@ public class FilterTask implements RenderTask {
       // Set the bottom left of the month slider
       monthSlider.anchorX = 80;
       monthSlider.anchorY = SSM.windowHeight - 200;
+      
+      monthSlider.createTexture();
+      yearSlider.createTexture();
       
       setYearData();
       setMonthData();
@@ -322,18 +330,16 @@ public class FilterTask implements RenderTask {
          }
          
          if (choose < 200) {
-         System.out.println("hit in year");
-         deferredRefresh = true;
+            System.out.println("Hit in year marker " + px);
+            deferredRefresh = true;
             yearSlider.isSelected = true;
             yearSlider.sitem = choose%100;
-            SSM.instance();
             yearSlider.anchor = px;
          } else if (choose < 300) {
-         System.out.println("hit in month");
-         deferredRefresh = true;
+            System.out.println("Hit in month marker " + px);
+            deferredRefresh = true;
             monthSlider.isSelected = true; 
             monthSlider.sitem = choose%100;
-            SSM.instance();
             monthSlider.anchor = px;
          } else if (choose < 2000) {
             SSM.stopPicking = 1;
@@ -367,15 +373,20 @@ public class FilterTask implements RenderTask {
    }
    
    
-   public void update(double newAnchor) {
+   public boolean update(double newAnchor) {
+      boolean refresh = false; 
       if (yearSlider.isSelected) {
-         yearSlider.update(newAnchor);   
+         if (yearSlider.update(newAnchor) == true) refresh=true;   
          yearSlider.anchor = newAnchor;
       }
       if (monthSlider.isSelected) {
-         monthSlider.update(newAnchor);
+         if (monthSlider.update(newAnchor) == true) refresh=true;
          monthSlider.anchor = newAnchor;
       }
+      
+      
+      
+      return refresh;
    }
    
    
@@ -407,6 +418,7 @@ public class FilterTask implements RenderTask {
    // When user stops dragging the markers
    ////////////////////////////////////////////////////////////////////////////////
    public void unfocus() {
+      System.err.println("In Unfocus");
       yearSlider.isSelected = false;
       yearSlider.highIdx = (int)yearSlider.highIdx;
       yearSlider.lowIdx = (int)yearSlider.lowIdx;
@@ -432,18 +444,21 @@ public class FilterTask implements RenderTask {
       
       
       
+      // Do not do unnecessary updates
+      if (SSM.startMonth != (int)monthSlider.lowIdx ||
+          SSM.endMonth != (int)monthSlider.highIdx ||
+          SSM.startYear != Integer.parseInt(yearData[ (int)yearSlider.lowIdx ].key) ||
+          SSM.endYear != Integer.parseInt(yearData[ (int)yearSlider.highIdx ].key)) {
+         SSM.instance().dirty = 1;
+         SSM.instance().dirtyGL = 1;
+      }
       DWin.instance().msg("New data rage " + str_lowIdx + " to " + str_highIdx);
-      
-      
-      // Pray....may need to redo occurrence table in CacheManager 
       SSM.instance().startTimeFrame = str_lowIdx;
       SSM.instance().endTimeFrame   = str_highIdx;
-      SSM.instance().dirty = 1;
-      SSM.instance().dirtyGL = 1;
-      SSM.instance().startMonth = (int)monthSlider.lowIdx;
-      SSM.instance().endMonth = (int)monthSlider.highIdx;
-      SSM.instance().startYear = Integer.parseInt(yearData[ (int)yearSlider.lowIdx ].key);
-      SSM.instance().endYear = Integer.parseInt(yearData[ (int)yearSlider.highIdx ].key);
+      SSM.startMonth = (int)monthSlider.lowIdx;
+      SSM.endMonth = (int)monthSlider.highIdx;
+      SSM.startYear = Integer.parseInt(yearData[ (int)yearSlider.lowIdx ].key);
+      SSM.endYear = Integer.parseInt(yearData[ (int)yearSlider.highIdx ].key);
                  
       setMonthData();
       
@@ -454,6 +469,9 @@ public class FilterTask implements RenderTask {
                  
       yearSlider.createTexture();
       monthSlider.createTexture();
+      
+
+
    }
    
    
@@ -464,30 +482,7 @@ public class FilterTask implements RenderTask {
       return cal.getActualMaximum(Calendar.DAY_OF_MONTH);
    }
    
-   // Is there a native java function that returns month String literals ????
-//   public String getMonthLiteral(int i) {
-//     switch(i) {
-//     case 1: return "Jan";
-//     case 2: return "Feb";
-//     case 3: return "Mar";
-//     case 4: return "Apr";
-//     case 5: return "May";
-//     case 6: return "Jun";
-//     case 7: return "Jul";
-//     case 8: return "Aug";
-//     case 9: return "Sep";
-//     case 10: return "Oct";
-//     case 11: return "Nov";
-//     case 12: return "Dec";
-//     default: 
-//        return "Doh";
-//     }
-//   }
    
-   
-   
-   // Based on year
-   //public Vector<DCPair> year = new Vector<DCPair>();
    
    public DCPair[] yearData;
    public DCPair[] monthData;

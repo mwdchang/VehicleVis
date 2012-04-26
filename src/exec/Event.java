@@ -381,6 +381,17 @@ System.out.println("=============================================> Found Lens");
             return SSM.ELEMENT_FILTER;
          }
       }      
+      
+      // Check the markers
+      
+      DCTriple point = new DCTriple(mx, my, 0);
+      if (DCUtil.pointInTriangle(point, SSM.yearHigh[0], SSM.yearHigh[1], SSM.yearHigh[2])) return SSM.ELEMENT_FILTER;
+      if (DCUtil.pointInTriangle(point, SSM.yearLow[0], SSM.yearLow[1], SSM.yearLow[2])) return SSM.ELEMENT_FILTER;
+      if (DCUtil.pointInTriangle(point, SSM.monthHigh[0], SSM.monthHigh[1], SSM.monthHigh[2])) return SSM.ELEMENT_FILTER;
+      if (DCUtil.pointInTriangle(point, SSM.monthLow[0], SSM.monthLow[1], SSM.monthLow[2])) return SSM.ELEMENT_FILTER;
+      
+      
+      
       return SSM.ELEMENT_NONE; 
    }
    

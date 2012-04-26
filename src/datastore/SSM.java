@@ -50,8 +50,11 @@ public class SSM {
       useCircularLabel = false;
       
       relatedList = new Vector<Integer>();
+      useTUIO = Boolean.parseBoolean(System.getProperty("UseTUIO", "true"));
    }
    
+   
+   public static boolean useTUIO = false;
    
    public static SSM instance() {
       if (instance == null) instance = new SSM();
@@ -152,7 +155,8 @@ public class SSM {
    // Hold the coordinates to execute picking
    ///////////////////////////////////////////////////////////////////////////////// 
    public static Vector<DCTriple> pickPoints  = new Vector<DCTriple>(0);
-   public static Vector<DCTriple> dragPoints  = new Vector<DCTriple>(0);
+   
+   public static Hashtable<Long, DCTriple> dragPoints = new Hashtable<Long, DCTriple>(0);
    
    public static Hashtable<Long, DCTriple> hoverPoints = new Hashtable<Long, DCTriple>();
    public static Hashtable<Long, DCTip> tooltips = new Hashtable<Long, DCTip>();
@@ -213,6 +217,7 @@ public class SSM {
    public boolean use3DModel = true;          // Whether to use integrated 3D view 
    public boolean useFlag = true;             // Just a temporary flag to trigger adhoc tests and stuff, not used for real data
    
+   public boolean checkDragEvent = false; 
    
    public int chartMode = 1;
    public static final int CHART_MODE_BY_MONTH_MAX     = 1;
@@ -226,12 +231,12 @@ public class SSM {
    ///////////////////////////////////////////////////////////////////////////////// 
    public String startTimeFrame;
    public String endTimeFrame;
-   public int startMonth = 0;  // 0 - 11
-   public int endMonth = 0;    // 0 - 11
-   public int startYear = 0;
-   public int endYear = 0;
-   public int startIdx = 0;
-   public int endIdx = 0;
+   public static int startMonth = 0;  // 0 - 11
+   public static int endMonth = 0;    // 0 - 11
+   public static int startYear = 0;
+   public static int endYear = 0;
+   public static int startIdx = 0;
+   public static int endIdx = 0;
    
    
    ////////////////////////////////////////////////////////////////////////////////
@@ -285,6 +290,17 @@ public class SSM {
    
    
    public String selectedSaveLoad = null;
+   
+   
+   
+   // These are not anchor points, they are actually
+   // the reverse, the widgets update these so 
+   // it can be used in other place where the widgets
+   // are not visisble.
+   public static DCTriple yearLow[] = new DCTriple[3];
+   public static DCTriple yearHigh[] = new DCTriple[3];
+   public static DCTriple monthLow[] = new DCTriple[3];
+   public static DCTriple monthHigh[] = new DCTriple[3];
    
    
    ////////////////////////////////////////////////////////////////////////////////

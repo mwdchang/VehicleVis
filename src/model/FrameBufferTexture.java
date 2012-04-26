@@ -159,7 +159,7 @@ public class FrameBufferTexture {
       // Generate vertex buffer
       gl2.glGenBuffers(3, vbo, 0);
       
-      System.out.println("FBT ... " + vbo[0] + " " + vbo[1] + " " + vbo[2]);
+      //System.out.println("FBT ... " + vbo[0] + " " + vbo[1] + " " + vbo[2]);
       
       gl2.glBindBuffer(GL2.GL_ARRAY_BUFFER, vbo[0]);
       gl2.glBufferData(GL2.GL_ARRAY_BUFFER, 12*4, quadBuffer, GL2.GL_STATIC_DRAW);

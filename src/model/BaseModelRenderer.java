@@ -127,7 +127,7 @@ public abstract class BaseModelRenderer implements RenderTask {
       float y;
       x = radius * (float)Math.cos(angle);
       y = radius * (float)Math.sin(angle);
-      textRenderer.beginRendering(SSM.instance().windowWidth, SSM.instance().windowHeight);
+      textRenderer.beginRendering(SSM.windowWidth, SSM.windowHeight);
       Rectangle2D rect = textRenderer.getBounds(s);
       
       angle = angle*180.0f/3.14f;
@@ -139,7 +139,7 @@ public abstract class BaseModelRenderer implements RenderTask {
       }
       
       textRenderer.draw3D(s, la.magicLensX+(int)x, 
-            (SSM.instance().windowHeight - la.magicLensY)+(int)y, 
+            (SSM.windowHeight - la.magicLensY)+(int)y, 
             0.0f, scale);      
       textRenderer.endRendering();
       gl2.glDisable(GL2.GL_TEXTURE_2D);          
@@ -155,7 +155,7 @@ public abstract class BaseModelRenderer implements RenderTask {
       } 
    
       gl2.glTranslated(la.magicLensX + x , 
-                       (SSM.instance().windowHeight - la.magicLensY) + y, 0);
+                       (SSM.windowHeight - la.magicLensY) + y, 0);
       comp.cchart.renderImmediate(gl2);
       
    }
@@ -166,7 +166,7 @@ public abstract class BaseModelRenderer implements RenderTask {
    // Standard transformation for model rendering
    ////////////////////////////////////////////////////////////////////////////////
    public void setPerspectiveView(GL2 gl2) {
-      float aspect = (float)SSM.instance().windowWidth/ (float)SSM.instance().windowHeight;
+      float aspect = (float)SSM.windowWidth/ (float)SSM.windowHeight;
       GraphicUtil.setPerspectiveView(gl2, aspect, SSM.instance().fov, 
             1, 1000, 
             DCCamera.instance().eye.toArray3f(), new float[]{0,0,0}, DCCamera.instance().up.toArray3f());
@@ -180,7 +180,7 @@ public abstract class BaseModelRenderer implements RenderTask {
    // Perspective with near and far
    ////////////////////////////////////////////////////////////////////////////////
    public void setPerspectiveView(GL2 gl2, float near, float far) {
-      float aspect = (float)SSM.instance().windowWidth/ (float)SSM.instance().windowHeight;
+      float aspect = (float)SSM.windowWidth/ (float)SSM.windowHeight;
       GraphicUtil.setPerspectiveView(gl2, aspect, SSM.instance().fov, 
             near, far, 
             DCCamera.instance().eye.toArray3f(), new float[]{0,0,0}, DCCamera.instance().up.toArray3f());
@@ -504,9 +504,9 @@ public abstract class BaseModelRenderer implements RenderTask {
       
       
       System.out.println("Resetting Model Renderer Data : " + SSM.instance().startIdx + " " + SSM.instance().endIdx);
-      System.out.println("Max occurrence : " + SSM.instance().maxOccurrence);
-      System.out.println("Min occurrence : " + SSM.instance().minOccurrence);
-      System.out.println("\n");
+      //System.out.println("Max occurrence : " + SSM.instance().maxOccurrence);
+      //System.out.println("Min occurrence : " + SSM.instance().minOccurrence);
+      //System.out.println("\n");
       
       
       // Calculate the colour for each component
@@ -796,10 +796,10 @@ public abstract class BaseModelRenderer implements RenderTask {
       } 
       
       if (SSM.instance().docAction == 1) {
-         SSM.instance().yoffset = SSM.instance().t1Height + SSM.instance().docHeight;
+         SSM.yoffset = SSM.instance().t1Height + SSM.docHeight;
       }
-      if (SSM.instance().yoffset > dcTextPanel.t1.textPaneHeight + dcTextPanel.t2.textPaneHeight) {
-         SSM.instance().yoffset = SSM.instance().docHeight;
+      if (SSM.yoffset > dcTextPanel.t1.textPaneHeight + dcTextPanel.t2.textPaneHeight) {
+         SSM.yoffset = SSM.docHeight;
       }
     
       
@@ -939,9 +939,9 @@ public abstract class BaseModelRenderer implements RenderTask {
          
          comp.cchart.setMaxValue(localMax);
          if (SSM.selectedGroup.size() > 0 && SSM.selectedGroup.contains(comp.id)) {
-            comp.cchart.resize(SSM.instance().sparkLineWidth, 8*range+Heatmap.labelBuffer);
+            comp.cchart.resize(SSM.instance().sparkLineWidth, 10*range+Heatmap.labelBuffer);
          } else {
-            comp.cchart.resize(SSM.instance().sparkLineWidth, 8*range+Heatmap.labelBuffer);
+            comp.cchart.resize(SSM.instance().sparkLineWidth, 10*range+Heatmap.labelBuffer);
          }
          comp.cchart.createSegment( segSize ); // needs to go after setData and setHeight
          
@@ -1092,8 +1092,8 @@ public abstract class BaseModelRenderer implements RenderTask {
       
       for (int i=0; i < sortingList.length; i++) {
          for (int j=0; j < sortingList.length; j++) {
-            float d1 = MM.instance().currentModel.componentTable.get(sortingList[i]).center.sub(new DCTriple(0,0,0)).mag();
-            float d2 = MM.instance().currentModel.componentTable.get(sortingList[j]).center.sub(new DCTriple(0,0,0)).mag();
+            float d1 = MM.currentModel.componentTable.get(sortingList[i]).center.sub(new DCTriple(0,0,0)).mag();
+            float d2 = MM.currentModel.componentTable.get(sortingList[j]).center.sub(new DCTriple(0,0,0)).mag();
             if ( d1 < d2 ) {
                String tmp = sortingList[i];   
                sortingList[i] = sortingList[j];
@@ -1213,7 +1213,7 @@ public abstract class BaseModelRenderer implements RenderTask {
    // Copyright (c) NVIDIA Corporation. All rights reserved.
    //--------------------------------------------------------------------------------------
      public void InitDualPeelingRenderTargets(GL2 gl) {
-        DWin.instance().msg("SSM height is : " + SSM.instance().windowHeight + " SSM width : " + SSM.instance().windowWidth);
+        DWin.instance().msg("SSM height is : " + SSM.windowHeight + " SSM width : " + SSM.windowWidth);
         
         gl.glGenTextures(2, g_dualDepthTexId, 0);
         gl.glGenTextures(2, g_dualFrontBlenderTexId, 0);
@@ -1228,7 +1228,7 @@ public abstract class BaseModelRenderer implements RenderTask {
            
            //gl.glEnable( GL2.GL_PIXEL_UNPACK_BUFFER );
            gl.glTexImage2D( GL2.GL_TEXTURE_RECTANGLE_ARB, 0,  GL2.GL_FLOAT_RG32_NV, 
-                 SSM.instance().windowWidth, SSM.instance().windowHeight,
+                 SSM.windowWidth, SSM.windowHeight,
                  0,  GL2.GL_RGB,  GL2.GL_FLOAT, null);
 
            gl.glBindTexture( GL2.GL_TEXTURE_RECTANGLE_ARB, g_dualFrontBlenderTexId[i]);
@@ -1237,7 +1237,7 @@ public abstract class BaseModelRenderer implements RenderTask {
            gl.glTexParameteri( GL2.GL_TEXTURE_RECTANGLE_ARB,  GL2.GL_TEXTURE_MIN_FILTER,  GL2.GL_NEAREST);
            gl.glTexParameteri( GL2.GL_TEXTURE_RECTANGLE_ARB,  GL2.GL_TEXTURE_MAG_FILTER,  GL2.GL_NEAREST);
            gl.glTexImage2D( GL2.GL_TEXTURE_RECTANGLE_ARB, 0,  GL2.GL_RGBA, 
-                 SSM.instance().windowWidth, SSM.instance().windowHeight,
+                 SSM.windowWidth, SSM.windowHeight,
                  0,  GL2.GL_RGBA,  GL2.GL_FLOAT, null);
 
            gl.glBindTexture( GL2.GL_TEXTURE_RECTANGLE_ARB, g_dualBackTempTexId[i]);
@@ -1246,7 +1246,7 @@ public abstract class BaseModelRenderer implements RenderTask {
            gl.glTexParameteri( GL2.GL_TEXTURE_RECTANGLE_ARB,  GL2.GL_TEXTURE_MIN_FILTER,  GL2.GL_NEAREST);
            gl.glTexParameteri( GL2.GL_TEXTURE_RECTANGLE_ARB,  GL2.GL_TEXTURE_MAG_FILTER,  GL2.GL_NEAREST);
            gl.glTexImage2D( GL2.GL_TEXTURE_RECTANGLE_ARB, 0,  GL2.GL_RGBA, 
-                 SSM.instance().windowWidth, SSM.instance().windowHeight,
+                 SSM.windowWidth, SSM.windowHeight,
                  0,  GL2.GL_RGBA,  GL2.GL_FLOAT, null);
         }
 
@@ -1257,7 +1257,7 @@ public abstract class BaseModelRenderer implements RenderTask {
         gl.glTexParameteri( GL2.GL_TEXTURE_RECTANGLE_ARB,  GL2.GL_TEXTURE_MIN_FILTER,  GL2.GL_NEAREST);
         gl.glTexParameteri( GL2.GL_TEXTURE_RECTANGLE_ARB,  GL2.GL_TEXTURE_MAG_FILTER,  GL2.GL_NEAREST);
         gl.glTexImage2D( GL2.GL_TEXTURE_RECTANGLE_ARB, 0, GL2.GL_RGB, 
-              SSM.instance().windowWidth, SSM.instance().windowHeight,
+              SSM.windowWidth, SSM.windowHeight,
               0, GL2.GL_RGB, GL2.GL_FLOAT, null);
 
         gl.glGenFramebuffers(1, g_dualBackBlenderFboId, 0);

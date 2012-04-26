@@ -70,8 +70,6 @@ public class DCScrollPane {
    public TextureRenderer texture; 
    public Graphics2D g2d;
    
-   //public static Font fontArial = new Font( "Arial", Font.PLAIN, 12);   
-   //public static Font fontArialBold = new Font( "Arial", Font.BOLD, 12);
    public static Font font = DCUtil.loadFont(Const.FONT_PATH+"din1451m.ttf", Font.PLAIN, 12f);
    public static Font fontBold = DCUtil.loadFont(Const.FONT_PATH+"din1451m.ttf", Font.BOLD, 12f);
    

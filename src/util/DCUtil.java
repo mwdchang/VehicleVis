@@ -18,6 +18,9 @@ import java.util.Vector;
 
 import javax.swing.JFileChooser;
 
+import model.DCFace;
+import model.DCTriple;
+
 /////////////////////////////////////////////////////////////////////////////////
 // Miscellaneous stuff that doesn't really belong in any categories
 //
@@ -48,6 +51,37 @@ public class DCUtil {
 //      System.out.println(DCUtil.abbreviation(439));
 //      System.out.println(DCUtil.abbreviation(1910));
 //   }
+   
+   public static void main(String args[]) {
+      DCTriple a = new DCTriple(0, 0, 0);
+      DCTriple b = new DCTriple(2, 0, 0);
+      DCTriple c = new DCTriple(2, 2, 0);
+      DCTriple test = new DCTriple(1.5, 1.6, 0);
+      
+      System.out.println(DCUtil.areaTriangle(a, b, c));
+      System.out.println(DCUtil.pointInTriangle(test, a, b, c));
+   }
+   
+   
+   public static boolean pointInTriangle(DCTriple point, DCTriple a, DCTriple b, DCTriple c) {
+      double areaABC = areaTriangle(a, b, c);   
+      double area1   = areaTriangle(point, a, b)/areaABC;
+      double area2   = areaTriangle(point, b, c)/areaABC;
+      double area3   =  1- area1 - area2;
+      
+      if (area1 < 0 || area1 > 1) return false;
+      if (area2 < 0 || area2 > 1) return false;
+      if (area3 < 0 || area3 > 1) return false;
+      System.out.println( area1 + " " + area2 + " " + area3);
+      
+      return true;
+   }
+   
+   
+   public static double areaTriangle(DCTriple p1, DCTriple p2, DCTriple p3) {
+      return 0.5*(p1.sub(p2)).cross( p2.sub(p3)).mag(); 
+   }
+   
    
    public static double dist(double x, double y) {
       return Math.sqrt( x*x + y*y);  

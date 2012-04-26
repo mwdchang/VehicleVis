@@ -29,6 +29,10 @@ public class DCTriple extends DCObj {
       this.x = x; this.y = y; this.z = z;
    }
    
+   public DCTriple(double x, double y, double z) {
+      this.x = (float)x; this.y = (float)y; this.z = (float)z;
+   }   
+   
    // Addition
    public DCTriple add(DCTriple p) {
       return new DCTriple(this.x + p.x, this.y+p.y, this.z+p.z);

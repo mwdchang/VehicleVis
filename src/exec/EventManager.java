@@ -79,6 +79,7 @@ public class EventManager implements KeyListener, MouseListener, MouseMotionList
    public void mousePressed(MouseEvent e) {
       
       if (e.getButton() == MouseEvent.BUTTON1) {
+         
          // Check the lens
          Event.checkLens(e.getX(), e.getY());
          
@@ -110,6 +111,13 @@ public class EventManager implements KeyListener, MouseListener, MouseMotionList
 //            }
 //         }
          
+         if (SSM.dragPoints.get(999L) == null) {
+            SSM.dragPoints.put(999L, new DCTriple());   
+         }
+         DCTriple d = SSM.dragPoints.get(999L);
+         d.x = e.getX();
+         d.y = e.getY();         
+         
  
          SSM.instance().l_mousePressed = true;
       } else if (e.getButton() == MouseEvent.BUTTON3) {
@@ -126,11 +134,13 @@ public class EventManager implements KeyListener, MouseListener, MouseMotionList
       if (e.getButton() == MouseEvent.BUTTON1) {
          SSM.instance().l_mousePressed = false;
          SSM.instance().clearLens();
+         SSM.dragPoints.clear();
       } else if (e.getButton() == MouseEvent.BUTTON3) {
          SSM.instance().r_mousePressed = false;
          SSM.instance().clearLens();
       }
       SSM.instance().topElement = SSM.ELEMENT_NONE;
+      
       
    }
 
@@ -367,7 +377,12 @@ public class EventManager implements KeyListener, MouseListener, MouseMotionList
       SSM.mouseX = e.getX();
       SSM.mouseY = e.getY();       
       
-      SSM.dragPoints.add(new DCTriple(SSM.mouseX, SSM.mouseY, 0));
+      if (SSM.dragPoints.get(999L) == null) {
+         SSM.dragPoints.put(999L, new DCTriple());   
+      }
+      DCTriple d = SSM.dragPoints.get(999L);
+      d.x = e.getX();
+      d.y = e.getY();
       
       if (SSM.hoverPoints.get(999L) == null) {
          SSM.hoverPoints.put(999L, new DCTriple());
