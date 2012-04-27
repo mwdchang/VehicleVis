@@ -30,17 +30,17 @@ public class EventManager implements KeyListener, MouseListener, MouseMotionList
    @Override
    public void mouseClicked(MouseEvent e) {
       if (e.getButton() == MouseEvent.BUTTON1) {
-         if (SSM.instance().controlKey == true) {
+         if (SSM.controlKey == true) {
             Event.createLens(SSM.mouseX, SSM.mouseY);
          } else {
             SSM.pickPoints.add(new DCTriple(SSM.mouseX, SSM.mouseY, 0));
-            SSM.instance().l_mouseClicked = true;
+            SSM.l_mouseClicked = true;
          }
       } else  if (e.getButton() == MouseEvent.BUTTON3){
-         if (SSM.instance().controlKey == true) {
+         if (SSM.controlKey == true) {
             Event.removeLens(SSM.mouseX, SSM.mouseY);
          } else  {
-            SSM.instance().r_mouseClicked = true;
+            SSM.r_mouseClicked = true;
          }
       } // end if 
    }
@@ -102,10 +102,10 @@ public class EventManager implements KeyListener, MouseListener, MouseMotionList
          d.y = e.getY();         
          
  
-         SSM.instance().l_mousePressed = true;
+         SSM.l_mousePressed = true;
       } else if (e.getButton() == MouseEvent.BUTTON3) {
          Event.checkLens(e.getX(), e.getY());
-         SSM.instance().r_mousePressed = true;
+         SSM.r_mousePressed = true;
       }
          
    }
@@ -115,14 +115,14 @@ public class EventManager implements KeyListener, MouseListener, MouseMotionList
    @Override
    public void mouseReleased(MouseEvent e) {
       if (e.getButton() == MouseEvent.BUTTON1) {
-         SSM.instance().l_mousePressed = false;
-         SSM.instance().clearLens();
+         SSM.l_mousePressed = false;
+         SSM.clearLens();
          SSM.dragPoints.clear();
       } else if (e.getButton() == MouseEvent.BUTTON3) {
-         SSM.instance().r_mousePressed = false;
-         SSM.instance().clearLens();
+         SSM.r_mousePressed = false;
+         SSM.clearLens();
       }
-      SSM.instance().topElement = SSM.ELEMENT_NONE;
+      SSM.topElement = SSM.ELEMENT_NONE;
       
       
    }
@@ -160,39 +160,39 @@ public class EventManager implements KeyListener, MouseListener, MouseMotionList
       
       // Special meta
       if (e.isShiftDown()) {
-         SSM.instance().shiftKey = true;
+         SSM.shiftKey = true;
          return; 
       }
       if (e.isControlDown()) {
-         SSM.instance().controlKey = true;
+         SSM.controlKey = true;
       }
       
       
       if (e.getKeyChar() == '1') {
-         SSM.instance().chartMode = SSM.CHART_MODE_BY_MONTH_MAX;
+         SSM.chartMode = SSM.CHART_MODE_BY_MONTH_MAX;
       }
       if (e.getKeyChar() == '2') {
-         SSM.instance().chartMode = SSM.CHART_MODE_BY_COMPONENT_MAX;
+         SSM.chartMode = SSM.CHART_MODE_BY_COMPONENT_MAX;
       }
       if (e.getKeyChar() == '3') {
-         SSM.instance().chartMode = SSM.CHART_MODE_BY_GLOBAL_MAX;
+         SSM.chartMode = SSM.CHART_MODE_BY_GLOBAL_MAX;
       }
       if (e.getKeyChar() == 'd') {
-         SSM.instance().use3DModel = ! SSM.instance().use3DModel;   
+         SSM.use3DModel = ! SSM.use3DModel;   
          SSM.dirty = 1;
          SSM.dirtyGL = 1;
       }
       if (e.getKeyChar() == 's') {
-         SSM.instance().useComparisonMode =! SSM.instance().useComparisonMode;   
+         SSM.useComparisonMode =! SSM.useComparisonMode;   
          SSM.dirty = 1;
          SSM.dirtyGL = 1;
-         SSM.instance().refreshMagicLens = true;
+         SSM.refreshMagicLens = true;
       }
       if (e.getKeyChar() == 'a') {
-         SSM.instance().useAggregate = ! SSM.instance().useAggregate;
+         SSM.useAggregate = ! SSM.useAggregate;
          SSM.dirty = 1;
          SSM.dirtyGL = 1;
-         SSM.instance().refreshMagicLens = true;
+         SSM.refreshMagicLens = true;
       }
      
       
@@ -217,47 +217,47 @@ public class EventManager implements KeyListener, MouseListener, MouseMotionList
          ProjectDriver.frame.setBounds(0, 0, 900, 900);
       }
       if (e.getKeyChar() == '4') {
-         SSM.instance().useLight = ! SSM.instance().useLight;   
+         SSM.useLight = ! SSM.useLight;   
       }
       if (e.getKeyChar() == 'w') {
-         SSM.instance().useGlow = ! SSM.instance().useGlow;   
+         SSM.useGlow = ! SSM.useGlow;   
       }
       if (e.getKeyChar() == 'o') {
-         SSM.instance().useDualDepthPeeling = ! SSM.instance().useDualDepthPeeling;
+         SSM.useDualDepthPeeling = ! SSM.useDualDepthPeeling;
       }
       if (e.getKeyChar() == '9')  {
-         SSM.instance().useConstantAlpha = ! SSM.instance().useConstantAlpha;   
+         SSM.useConstantAlpha = ! SSM.useConstantAlpha;   
       }
       if (e.getKeyChar() == 't') {
-         SSM.instance().useFlag  = ! SSM.instance().useFlag;
+         SSM.useFlag  = ! SSM.useFlag;
          SSM.dirty = 1;
          SSM.dirtyGL = 1;
-         SSM.instance().refreshMagicLens = true;
+         SSM.refreshMagicLens = true;
       }
       if (e.getKeyChar() == 'f') {
-         SSM.instance().useLocalFocus = ! SSM.instance().useLocalFocus;    
+         SSM.useLocalFocus = ! SSM.useLocalFocus;    
          SSM.dirty = 1;
          SSM.dirtyGL = 1;
-         SSM.instance().refreshMagicLens = true;
+         SSM.refreshMagicLens = true;
       }
       if (e.getKeyChar() == ';') {
-         SSM.instance().sortingMethod ++;
-         SSM.instance().sortingMethod %= 3;
-         SSM.instance().refreshMagicLens = true;
+         SSM.sortingMethod ++;
+         SSM.sortingMethod %= 3;
+         SSM.refreshMagicLens = true;
          SSM.dirtyGL = 1;
       }
       if (e.getKeyChar() == 'c') {
-         SSM.instance().colouringMethod ++;
-         SSM.instance().colouringMethod %= 5;
-         SSM.instance().refreshMagicLens = true;
+         SSM.colouringMethod ++;
+         SSM.colouringMethod %= 5;
+         SSM.refreshMagicLens = true;
          SSM.dirty = 1; // Need to change this later
          SSM.dirtyGL = 1;
       }
       if (e.getKeyChar() == 'v') {
-         SSM.instance().colouringMethod --;
-         if (SSM.instance().colouringMethod < 0) SSM.instance().colouringMethod = 4;
-         SSM.instance().colouringMethod %= 5;
-         SSM.instance().refreshMagicLens = true;
+         SSM.colouringMethod --;
+         if (SSM.colouringMethod < 0) SSM.colouringMethod = 4;
+         SSM.colouringMethod %= 5;
+         SSM.refreshMagicLens = true;
          SSM.dirty = 1; // Need to change this later
          SSM.dirtyGL = 1;
       }
@@ -272,14 +272,14 @@ public class EventManager implements KeyListener, MouseListener, MouseMotionList
 //      
       if (e.getKeyChar() == ']') {
          System.out.println("Increasing occ level");
-         SSM.instance().occlusionLevel ++;
+         SSM.occlusionLevel ++;
       }
       if (e.getKeyChar() == '[') {
          System.out.println("Decreasing occ level");
-         SSM.instance().occlusionLevel --; 
+         SSM.occlusionLevel --; 
       }
       if (e.getKeyChar() == 'l') {
-         SSM.instance().showLabels = ! SSM.instance().showLabels;   
+         SSM.showLabels = ! SSM.showLabels;   
       }
       if (e.getKeyChar() == '?') {
          SSM.instance().timeFrameStatistics();   
@@ -287,7 +287,7 @@ public class EventManager implements KeyListener, MouseListener, MouseMotionList
       
       // Turn on/off guides
       if (e.getKeyChar() == 'g') {
-         SSM.instance().useGuide = ! SSM.instance().useGuide;      
+         SSM.useGuide = ! SSM.useGuide;      
       }
       // Show colour editor
       if (e.getKeyChar() == 'x') {
@@ -295,12 +295,12 @@ public class EventManager implements KeyListener, MouseListener, MouseMotionList
       }
       // Print screen to file
       if (e.getKeyChar() == 'p') {
-         SSM.instance().captureScreen = true;
+         SSM.captureScreen = true;
       }
       // Swap model
       if (e.getKeyChar() == 'm') {
          MM.instance().nextModel();   
-         SSM.instance().refreshMagicLens = true;
+         SSM.refreshMagicLens = true;
          System.out.println("Current instance is " + MM.instance().modelIndex);
       }
       // Camera reset
@@ -319,10 +319,10 @@ public class EventManager implements KeyListener, MouseListener, MouseMotionList
    public void keyReleased(KeyEvent e) {
       
       if ( ! e.isShiftDown()) {
-         SSM.instance().shiftKey = false;   
+         SSM.shiftKey = false;   
       }
       if ( ! e.isControlDown()) {
-         SSM.instance().controlKey = false;   
+         SSM.controlKey = false;   
       }
       
       if (e.getKeyCode() == KeyEvent.VK_ESCAPE){
@@ -331,8 +331,8 @@ public class EventManager implements KeyListener, MouseListener, MouseMotionList
          System.exit(0);
       }
       if (e.getKeyCode() == KeyEvent.VK_SPACE) {
-         SSM.instance().docActive = ! SSM.instance().docActive;
-         SSM.instance().resizePanel = 1;
+         SSM.docActive = ! SSM.docActive;
+         SSM.resizePanel = 1;
       }
    }
    
@@ -374,12 +374,12 @@ public class EventManager implements KeyListener, MouseListener, MouseMotionList
       p.x = e.getX();
       p.y = e.getY();      
       
-      if (SSM.instance().lensSelected() == 0 &&
-          SSM.instance().l_mousePressed &&
-          SSM.instance().topElement == SSM.ELEMENT_NONE) {
+      if (SSM.lensSelected() == 0 &&
+          SSM.l_mousePressed &&
+          SSM.topElement == SSM.ELEMENT_NONE) {
          
 
-         if ( SSM.instance().shiftKey && (SSM.oldMouseX > SSM.mouseX ||
+         if ( SSM.shiftKey && (SSM.oldMouseX > SSM.mouseX ||
               SSM.oldMouseX < SSM.mouseX)) {
             float val = (float)(SSM.mouseX - SSM.oldMouseX);
             SSM.rotateY += val;
@@ -399,19 +399,19 @@ public class EventManager implements KeyListener, MouseListener, MouseMotionList
          */
          
          Event.setCamera(SSM.mouseX, SSM.mouseY, SSM.oldMouseX, SSM.oldMouseY);
-         SSM.instance().refreshMagicLens = true;
+         SSM.refreshMagicLens = true;
       }
       
       Event.checkGUIDrag(SSM.mouseX, SSM.mouseY, SSM.oldMouseX, SSM.oldMouseY);
       
       
       // Moving the lens
-      if (SSM.instance().l_mousePressed) {
+      if (SSM.l_mousePressed) {
          Event.moveLens(SSM.mouseX, SSM.mouseY, SSM.oldMouseX, SSM.oldMouseY);
       }
       
       // Resize the lens
-      if (SSM.instance().r_mousePressed) {
+      if (SSM.r_mousePressed) {
          Event.resizeLens(SSM.mouseX, SSM.mouseY, SSM.oldMouseX, SSM.oldMouseY);
       }
    }
@@ -463,12 +463,12 @@ public class EventManager implements KeyListener, MouseListener, MouseMotionList
       if (e.getScrollType() == MouseWheelEvent.WHEEL_UNIT_SCROLL && ! Event.inDocContext(e.getX(), e.getY())) {
          if (e.getUnitsToScroll() > 0) {
             DCCamera.instance().move(-1.5f);
-            SSM.instance().refreshMagicLens = true;
-            SSM.instance().refreshOITTexture = true;
+            SSM.refreshMagicLens = true;
+            SSM.refreshOITTexture = true;
          } else {
             DCCamera.instance().move(1.5f);
-            SSM.instance().refreshMagicLens = true;
-            SSM.instance().refreshOITTexture = true;
+            SSM.refreshMagicLens = true;
+            SSM.refreshOITTexture = true;
          }
       }       
       

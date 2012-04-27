@@ -234,7 +234,7 @@ public class MagicLens {
          gl2.glGenerateMipmap(GL2.GL_TEXTURE_2D);
          
          shaderObj.setUniform1i(gl2, "tex", 0);
-         if (SSM.instance().useDualDepthPeeling) {
+         if (SSM.useDualDepthPeeling) {
             shaderObj.setUniform1i(gl2, "useTexture", 1);
          } else {
             shaderObj.setUniform1i(gl2, "useTexture", 1);

@@ -92,6 +92,8 @@ public class ProjectDriver {
          canvas.addMouseMotionListener(eventManager);
          canvas.addMouseWheelListener(eventManager);
       }
+      
+      // Key listener is always enabled
       canvas.addKeyListener(eventManager);
       
       
@@ -105,9 +107,10 @@ public class ProjectDriver {
       frame.getContentPane().add(panel);
       frame.setSize( frame.getContentPane().getPreferredSize() );
       
-      // Set frame state
-      //frame.setUndecorated(true);
-      //frame.setExtendedState( frame.getExtendedState() | JFrame.MAXIMIZED_BOTH );
+      if (SSM.useFullScreen == true) {
+         frame.setUndecorated(true);
+         frame.setExtendedState( frame.getExtendedState() | JFrame.MAXIMIZED_BOTH );
+      }
       
       frame.setVisible(true);
       //frame.requestFocus();

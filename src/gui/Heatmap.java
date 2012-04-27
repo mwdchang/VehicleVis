@@ -110,7 +110,7 @@ public class Heatmap extends ComponentChart {
             float max = 0;
             float c_max = 0;
             
-            switch(SSM.instance().chartMode) {
+            switch(SSM.chartMode) {
                case SSM.CHART_MODE_BY_MONTH_MAX: {
                   // month_score % max_month
                   max = CacheManager.instance().monthMaximum.elementAt(12*i+j);
@@ -150,7 +150,7 @@ public class Heatmap extends ComponentChart {
                      int cYear  = (int)((tmpY) + SSM.startYear); 
                      int cMonth = (int)((1+tmpX) + SSM.startMonth);
                      tip.addText("Time:" + DCTip.translateTable.get(cMonth+"") + "-" + cYear); 
-                     if (SSM.instance().useComparisonMode == true) {
+                     if (SSM.useComparisonMode == true) {
                         tip.addText("Value:" + (int)(v));
                         tip.addText("Value:" + (int)(c_v));
                      } else {
@@ -202,7 +202,7 @@ public class Heatmap extends ComponentChart {
                      gl2.glColor4fv(SchemeManager.selected.toArray(), 0);
                   } else {
                      gl2.glLineWidth(1.0f);
-                     if (SSM.instance().useComparisonMode == true) {
+                     if (SSM.useComparisonMode == true) {
                         if (v > c_v) {
                            gl2.glColor4fv(SchemeManager.comp_1.toArray(), 0);
                         } else if (v < c_v) {
@@ -224,7 +224,7 @@ public class Heatmap extends ComponentChart {
             // Render the individual grid
             gl2.glPolygonMode(GL2.GL_FRONT_AND_BACK, GL2.GL_FILL);
             gl2.glBegin(GL2.GL_QUADS);
-               if (SSM.instance().useComparisonMode == true) {
+               if (SSM.useComparisonMode == true) {
                   gl2.glColor4fv(SchemeManager.instance().getColour(0, v+c_v, max+c_max).toArray(), 0);
                } else {
                   gl2.glColor4fv(SchemeManager.instance().getColour(0, v, max).toArray(), 0);

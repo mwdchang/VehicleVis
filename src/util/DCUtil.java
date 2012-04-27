@@ -22,6 +22,8 @@ import model.DCTriple;
 /////////////////////////////////////////////////////////////////////////////////
 // Miscellaneous stuff that doesn't really belong in any categories
 //
+//  pointInTriangle         - Check if point is in triangle
+//  areaTriangle            - Calculate area of triangle with cross product
 //  dist                    - Calculate the pythagorean distance
 //  getMonthTransationTable - Convert integer month to string literals
 //  checkPoint              - Pause the project by printing out a check point line and waiting for user input
@@ -50,17 +52,20 @@ public class DCUtil {
 //      System.out.println(DCUtil.abbreviation(1910));
 //   }
    
-   public static void main(String args[]) {
-      DCTriple a = new DCTriple(0, 0, 0);
-      DCTriple b = new DCTriple(2, 0, 0);
-      DCTriple c = new DCTriple(2, 2, 0);
-      DCTriple test = new DCTriple(1.5, 1.6, 0);
-      
-      System.out.println(DCUtil.areaTriangle(a, b, c));
-      System.out.println(DCUtil.pointInTriangle(test, a, b, c));
-   }
+//   public static void main(String args[]) {
+//      DCTriple a = new DCTriple(0, 0, 0);
+//      DCTriple b = new DCTriple(2, 0, 0);
+//      DCTriple c = new DCTriple(2, 2, 0);
+//      DCTriple test = new DCTriple(1.5, 1.6, 0);
+//      
+//      System.out.println(DCUtil.areaTriangle(a, b, c));
+//      System.out.println(DCUtil.pointInTriangle(test, a, b, c));
+//   }
    
    
+   ////////////////////////////////////////////////////////////////////////////////
+   // Check if a point P is in triangle abc using barycentric coordinates
+   ////////////////////////////////////////////////////////////////////////////////
    public static boolean pointInTriangle(DCTriple point, DCTriple a, DCTriple b, DCTriple c) {
       double areaABC = areaTriangle(a, b, c);   
       double area1   = areaTriangle(point, a, b)/areaABC;
@@ -70,22 +75,30 @@ public class DCUtil {
       if (area1 < 0 || area1 > 1) return false;
       if (area2 < 0 || area2 > 1) return false;
       if (area3 < 0 || area3 > 1) return false;
-      System.out.println( area1 + " " + area2 + " " + area3);
       
       return true;
    }
    
    
+   ////////////////////////////////////////////////////////////////////////////////
+   // Returns the area of a triangle using cross products
+   ////////////////////////////////////////////////////////////////////////////////
    public static double areaTriangle(DCTriple p1, DCTriple p2, DCTriple p3) {
       return 0.5*(p1.sub(p2)).cross( p2.sub(p3)).mag(); 
    }
    
    
+   ////////////////////////////////////////////////////////////////////////////////
+   // Returns distance 
+   ////////////////////////////////////////////////////////////////////////////////
    public static double dist(double x, double y) {
       return Math.sqrt( x*x + y*y);  
    }
    
    
+   ////////////////////////////////////////////////////////////////////////////////
+   // Load default font
+   ////////////////////////////////////////////////////////////////////////////////
    public static Font loadFont(String path, int style, float size) {
       try {
          InputStream is = new FileInputStream(new File(path));   

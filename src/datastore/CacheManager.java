@@ -441,7 +441,7 @@ System.out.println("Debugging");
                       "AND   MONTH(a.datea) <= " + (toMonth+1) + " ";
          
          // Dynamic clause filter
-         if (SSM.instance().useComparisonMode == true ) {
+         if (SSM.useComparisonMode == true ) {
             sql += "AND ((" ;
             if (SSM.manufactureAttrib.selected == null) {
                sql += "1 = 1"; // Dummy pass thru   
@@ -500,7 +500,7 @@ System.out.println("Debugging");
             }
          }
          
-         sql += "limit " + idx + ", " + SSM.instance().globalFetchSize;
+         sql += "limit " + idx + ", " + SSM.globalFetchSize;
          ResultSet rs = dbh.execute( sql, true );
          while (rs.next()) {
             int id  = rs.getInt(1);
@@ -537,7 +537,7 @@ System.out.println("Debugging");
                       "AND   MONTH(a.datea) <= " + (toMonth+1) + " ";
          
          // Dynamic clause filter
-         if (SSM.instance().useComparisonMode == true ) {
+         if (SSM.useComparisonMode == true ) {
             sql += "AND ((" ;
             if (SSM.manufactureAttrib.selected == null) {
                sql += " 1=1 ";
@@ -596,7 +596,7 @@ System.out.println("Debugging");
             }
          }
          
-         sql += "limit " + idx + ", " + SSM.instance().globalFetchSize;
+         sql += "limit " + idx + ", " + SSM.globalFetchSize;
          
          ResultSet rs = dbh.execute( sql, true );
          while (rs.next()) {

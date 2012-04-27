@@ -56,8 +56,8 @@ public class LensAttrib {
    public MagicLens mlen;
    
    
-   public float nearPlane = SSM.instance().nearPlane;
-   public float farPlane  = SSM.instance().farPlane;
+   public float nearPlane = SSM.nearPlane;
+   public float farPlane  = SSM.farPlane;
    
    // Number of labels to display
    public int start = 0;

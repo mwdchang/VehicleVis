@@ -160,7 +160,7 @@ public abstract class BaseModelRenderer implements RenderTask {
    ////////////////////////////////////////////////////////////////////////////////
    public void setPerspectiveView(GL2 gl2) {
       float aspect = (float)SSM.windowWidth/ (float)SSM.windowHeight;
-      GraphicUtil.setPerspectiveView(gl2, aspect, SSM.instance().fov, 
+      GraphicUtil.setPerspectiveView(gl2, aspect, SSM.fov, 
             1, 1000, 
             DCCamera.instance().eye.toArray3f(), new float[]{0,0,0}, DCCamera.instance().up.toArray3f());
       
@@ -174,7 +174,7 @@ public abstract class BaseModelRenderer implements RenderTask {
    ////////////////////////////////////////////////////////////////////////////////
    public void setPerspectiveView(GL2 gl2, float near, float far) {
       float aspect = (float)SSM.windowWidth/ (float)SSM.windowHeight;
-      GraphicUtil.setPerspectiveView(gl2, aspect, SSM.instance().fov, 
+      GraphicUtil.setPerspectiveView(gl2, aspect, SSM.fov, 
             near, far, 
             DCCamera.instance().eye.toArray3f(), new float[]{0,0,0}, DCCamera.instance().up.toArray3f());
       
@@ -196,7 +196,7 @@ public abstract class BaseModelRenderer implements RenderTask {
    public void startPickingPerspective(GL2 gl2, IntBuffer buffer, float px, float py) {
       GraphicUtil.startPickingPerspective(gl2, buffer, 
             (int)px, (int)py, 
-            SSM.windowWidth, SSM.windowHeight, SSM.instance().fov, 
+            SSM.windowWidth, SSM.windowHeight, SSM.fov, 
             DCCamera.instance().eye.toArray3f(), new float[]{0,0,0}, DCCamera.instance().up.toArray3f());
    }
    
@@ -269,12 +269,12 @@ public abstract class BaseModelRenderer implements RenderTask {
       
       
       // Reset the occurrence frequency table
-      SSM.instance().maxOccurrence = 0;
-      SSM.instance().minOccurrence = 0;
+      SSM.maxOccurrence = 0;
+      SSM.minOccurrence = 0;
       
       
       // Reset the global values
-      if (SSM.instance().useAggregate == false) {
+      if (SSM.useAggregate == false) {
           CacheManager.instance().groupOccurrence = 
             CacheManager.instance().getPartOccurrenceFilter(
                startIdx, endIdx, 
@@ -296,7 +296,7 @@ public abstract class BaseModelRenderer implements RenderTask {
                SSM.c_yearAttrib.selected);
          
           
-          if (SSM.selectedGroup.size() > 0 && SSM.instance().useLocalFocus == true) {
+          if (SSM.selectedGroup.size() > 0 && SSM.useLocalFocus == true) {
              CacheManager.instance().monthMaximum = 
                CacheManager.instance().getMonthMaximumSelected(
                      SSM.manufactureAttrib.selected, 
@@ -346,7 +346,7 @@ public abstract class BaseModelRenderer implements RenderTask {
                SSM.c_modelAttrib.selected,
                SSM.c_yearAttrib.selected);
        
-           if (SSM.selectedGroup.size() > 0 && SSM.instance().useLocalFocus) {
+           if (SSM.selectedGroup.size() > 0 && SSM.useLocalFocus) {
               CacheManager.instance().monthMaximum = 
                 CacheManager.instance().getMonthMaximumSelectedAgg(
                       SSM.manufactureAttrib.selected, 
@@ -406,7 +406,7 @@ public abstract class BaseModelRenderer implements RenderTask {
                SSM.c_modelAttrib.selected,
                SSM.c_yearAttrib.selected);
           
-          if (SSM.instance().useComparisonMode == true) {
+          if (SSM.useComparisonMode == true) {
              for (int i=0; i < l2.size(); i++) {
                 if ( ! l1.contains(l2.elementAt(i))) l1.add(l2.elementAt(i));
              }
@@ -422,14 +422,14 @@ public abstract class BaseModelRenderer implements RenderTask {
       // Finding the maximum and minimum
       // If we are using the selected components as a base point, than the maximum is the total 
       // occurrences for the selected components, otherwise it is the 
-      if (SSM.instance().useLocalFocus && SSM.selectedGroup.size() >  0) {
+      if (SSM.useLocalFocus && SSM.selectedGroup.size() >  0) {
          Vector<Integer> self = new Vector<Integer>();
          self.addAll(SSM.selectedGroup.values());
          
          Vector<Integer> selfAgg = HierarchyTable.instance().getAgg(SSM.selectedGroup);
          
-         if (SSM.instance().useAggregate) {
-            SSM.instance().maxOccurrence = CacheManager.instance().getCoOccurringAgg(
+         if (SSM.useAggregate) {
+            SSM.maxOccurrence = CacheManager.instance().getCoOccurringAgg(
                   startIdx, endIdx, 
                   SSM.startMonth, SSM.endMonth, 
                   selfAgg, 
@@ -440,8 +440,8 @@ public abstract class BaseModelRenderer implements RenderTask {
                   SSM.yearAttrib.selected
                   );
             
-            if (SSM.instance().useComparisonMode == true) {
-               SSM.instance().maxOccurrence += CacheManager.instance().getCoOccurringAgg(
+            if (SSM.useComparisonMode == true) {
+               SSM.maxOccurrence += CacheManager.instance().getCoOccurringAgg(
                      startIdx, endIdx, 
                      SSM.startMonth, SSM.endMonth, 
                      selfAgg, 
@@ -454,7 +454,7 @@ public abstract class BaseModelRenderer implements RenderTask {
                 
             }
          } else {
-            SSM.instance().maxOccurrence = CacheManager.instance().getCoOccurring(
+            SSM.maxOccurrence = CacheManager.instance().getCoOccurring(
                   startIdx, endIdx, 
                   SSM.startMonth, SSM.endMonth,
                   self, 
@@ -464,8 +464,8 @@ public abstract class BaseModelRenderer implements RenderTask {
                   SSM.modelAttrib.selected,
                   SSM.yearAttrib.selected);
             
-            if (SSM.instance().useComparisonMode == true ) {
-               SSM.instance().maxOccurrence += CacheManager.instance().getCoOccurring(
+            if (SSM.useComparisonMode == true ) {
+               SSM.maxOccurrence += CacheManager.instance().getCoOccurring(
                      startIdx, endIdx, 
                      SSM.startMonth, SSM.endMonth,
                      self, 
@@ -478,7 +478,7 @@ public abstract class BaseModelRenderer implements RenderTask {
          }
       } else {
          Hashtable<Integer, Integer> t;
-         if (SSM.instance().useComparisonMode == true) {
+         if (SSM.useComparisonMode == true) {
             t = DCUtil.mergeHash(
                   CacheManager.instance().groupOccurrence, 
                   CacheManager.instance().c_groupOccurrence);
@@ -489,8 +489,8 @@ public abstract class BaseModelRenderer implements RenderTask {
          Iterator<Integer> iter = t.values().iterator();
          while (iter.hasNext()) {
             Integer v = iter.next();
-            if (SSM.instance().maxOccurrence < v) SSM.instance().maxOccurrence = v;
-            if (SSM.instance().minOccurrence > v) SSM.instance().minOccurrence = v;
+            if (SSM.maxOccurrence < v) SSM.maxOccurrence = v;
+            if (SSM.minOccurrence > v) SSM.minOccurrence = v;
          }     
      }
       
@@ -515,7 +515,7 @@ public abstract class BaseModelRenderer implements RenderTask {
          
          float occ  = 0;
          if (comp.id > 0) {
-            if (SSM.instance().useLocalFocus == true && SSM.selectedGroup.size() > 0) {
+            if (SSM.useLocalFocus == true && SSM.selectedGroup.size() > 0) {
                Vector<Integer> self = new Vector<Integer>();
                Vector<Integer> selfAgg = HierarchyTable.instance().getAgg(comp.id);
                Vector<Integer> selected = new Vector<Integer>();
@@ -523,7 +523,7 @@ public abstract class BaseModelRenderer implements RenderTask {
                self.add(comp.id);
                selected.addAll(SSM.selectedGroup.values());
                
-               if (SSM.instance().useAggregate) {
+               if (SSM.useAggregate) {
                   occ = CacheManager.instance().getCoOccurringAgg(
                         startIdx, endIdx, 
                         SSM.startMonth, SSM.endMonth, 
@@ -535,7 +535,7 @@ public abstract class BaseModelRenderer implements RenderTask {
                         SSM.yearAttrib.selected
                         );
                   
-                  if (SSM.instance().useComparisonMode == true) {
+                  if (SSM.useComparisonMode == true) {
                      occ += CacheManager.instance().getCoOccurringAgg(
                            startIdx, endIdx, 
                            SSM.startMonth, SSM.endMonth, 
@@ -558,7 +558,7 @@ public abstract class BaseModelRenderer implements RenderTask {
                         SSM.modelAttrib.selected,
                         SSM.yearAttrib.selected);
                   
-                  if (SSM.instance().useComparisonMode == true) {
+                  if (SSM.useComparisonMode == true) {
                      occ += CacheManager.instance().getCoOccurring(
                            startIdx, endIdx, 
                            SSM.startMonth, SSM.endMonth,
@@ -577,7 +577,7 @@ public abstract class BaseModelRenderer implements RenderTask {
                   occ =  CacheManager.instance().groupOccurrence.get(comp.id);     
                }
                
-               if (SSM.instance().useComparisonMode == true) {
+               if (SSM.useComparisonMode == true) {
                   if (null != CacheManager.instance().c_groupOccurrence.get(comp.id)) {
                      occ += CacheManager.instance().c_groupOccurrence.get(comp.id);       
                   }
@@ -593,7 +593,7 @@ public abstract class BaseModelRenderer implements RenderTask {
          if ( comp.id < 0 ) 
             comp.hasContext = false;
          
-         if (SSM.instance().useComparisonMode == true) {
+         if (SSM.useComparisonMode == true) {
             Integer t1 = CacheManager.instance().groupOccurrence.get(comp.id);
             Integer t2 = CacheManager.instance().c_groupOccurrence.get(comp.id);
             if ( (null == t1 || t1 == 0) && (null == t2 || t2 == 0)) comp.hasContext = false;
@@ -625,13 +625,13 @@ public abstract class BaseModelRenderer implements RenderTask {
          
          
          comp.active = true;
-         if (SSM.instance().useLocalFocus == true) {
+         if (SSM.useLocalFocus == true) {
             if (SSM.selectedGroup.size() > 0 && ! SSM.relatedList.contains(comp.id)) {
                comp.active= false;
             }
          }
          
-         DCColour nextColour = SchemeManager.instance().getColour(comp.id, occ, SSM.instance().maxOccurrence);
+         DCColour nextColour = SchemeManager.instance().getColour(comp.id, occ, SSM.maxOccurrence);
          
          // Adjust based on the current focus
          //Integer selected = SSM.selectedGroup;
@@ -706,7 +706,7 @@ public abstract class BaseModelRenderer implements RenderTask {
       int chartSize     = size;
       
       // Reassign the time-period for the graphs
-      if (SSM.instance().useFullTimeLine == true) {
+      if (SSM.useFullTimeLine == true) {
          chartSize = CacheManager.instance().queryTable.size();      
          chartStartIdx = 0;
          chartEndIdx   = chartSize - 1;
@@ -733,14 +733,14 @@ public abstract class BaseModelRenderer implements RenderTask {
          }
          */
         
-         if (SSM.instance().useAggregate == true) {
+         if (SSM.useAggregate == true) {
             dcTextPanel.t1.documentList = CacheManager.instance().setDocumentDataAgg(
                   SSM.startTimeFrame,
                   SSM.endTimeFrame,
                   SSM.startMonth,
                   SSM.endMonth,
                   groupList,
-                  SSM.instance().t1Start);
+                  SSM.t1Start);
             
             dcTextPanel.t2.documentList = CacheManager.instance().setDocumentDataAgg(
                   SSM.startTimeFrame,
@@ -748,7 +748,7 @@ public abstract class BaseModelRenderer implements RenderTask {
                   SSM.startMonth,
                   SSM.endMonth,
                   groupList,
-                  SSM.instance().t2Start);           
+                  SSM.t2Start);           
          } else {
             dcTextPanel.t1.documentList = CacheManager.instance().setDocumentData(
                   SSM.startTimeFrame,
@@ -756,7 +756,7 @@ public abstract class BaseModelRenderer implements RenderTask {
                   SSM.startMonth,
                   SSM.endMonth,
                   groupList,
-                  SSM.instance().t1Start);
+                  SSM.t1Start);
             
             dcTextPanel.t2.documentList = CacheManager.instance().setDocumentData(
                   SSM.startTimeFrame,
@@ -764,7 +764,7 @@ public abstract class BaseModelRenderer implements RenderTask {
                   SSM.startMonth,
                   SSM.endMonth,
                   groupList,
-                  SSM.instance().t2Start);
+                  SSM.t2Start);
          }
          
          DWin.instance().debug("Panel 1 size : " + dcTextPanel.t1.documentList.size());
@@ -780,16 +780,16 @@ public abstract class BaseModelRenderer implements RenderTask {
       if (dcTextPanel.t1.documentList.size() >= 0) {
          dcTextPanel.t1.calculate();
          dcTextPanel.t1.renderToTexture(Color.BLACK);
-         SSM.instance().t1Height = dcTextPanel.t1.textPaneHeight;
+         SSM.t1Height = dcTextPanel.t1.textPaneHeight;
       } 
       if (dcTextPanel.t2.documentList.size() >= 0) {
          dcTextPanel.t2.calculate();
          dcTextPanel.t2.renderToTexture(Color.BLACK);
-         SSM.instance().t2Height = dcTextPanel.t2.textPaneHeight;
+         SSM.t2Height = dcTextPanel.t2.textPaneHeight;
       } 
       
-      if (SSM.instance().docAction == 1) {
-         SSM.yoffset = SSM.instance().t1Height + SSM.docHeight;
+      if (SSM.docAction == 1) {
+         SSM.yoffset = SSM.t1Height + SSM.docHeight;
       }
       if (SSM.yoffset > dcTextPanel.t1.textPaneHeight + dcTextPanel.t2.textPaneHeight) {
          SSM.yoffset = SSM.docHeight;
@@ -818,8 +818,8 @@ public abstract class BaseModelRenderer implements RenderTask {
             float value = 0;
             float value2 = 0;
             
-            if (SSM.instance().useAggregate == false) {
-               if (SSM.selectedGroup.size() > 0 && SSM.instance().useLocalFocus == true) {
+            if (SSM.useAggregate == false) {
+               if (SSM.selectedGroup.size() > 0 && SSM.useLocalFocus == true) {
                   Vector<Integer> selectedGroup =  new Vector<Integer>();
                   selectedGroup.addAll( SSM.selectedGroup.values());
                   Vector<Integer> t = new Vector<Integer>();
@@ -857,7 +857,7 @@ public abstract class BaseModelRenderer implements RenderTask {
                         SSM.c_yearAttrib.selected);
                }
             } else {
-               if (SSM.selectedGroup.size() > 0 && SSM.instance().useLocalFocus == true) {
+               if (SSM.selectedGroup.size() > 0 && SSM.useLocalFocus == true) {
                   Vector<Integer> selectedGroup =  new Vector<Integer>();
                   selectedGroup.addAll( SSM.selectedGroup.values());                  
                  
@@ -923,18 +923,18 @@ public abstract class BaseModelRenderer implements RenderTask {
          
          
          comp.cchart.setHighlight(h);
-         if (SSM.instance().sparklineMode == 0) {
+         if (SSM.sparklineMode == 0) {
             comp.cchart.setData( DCUtil.getDeriv(data) );
-         } else if (SSM.instance().sparklineMode == 1){
+         } else if (SSM.sparklineMode == 1){
             comp.cchart.setData( data ); // Original
          }
          comp.cchart.c_data = c_data;
          
          comp.cchart.setMaxValue(localMax);
          if (SSM.selectedGroup.size() > 0 && SSM.selectedGroup.contains(comp.id)) {
-            comp.cchart.resize(SSM.instance().sparkLineWidth, 10*range+Heatmap.labelBuffer);
+            comp.cchart.resize(SSM.sparkLineWidth, 10*range+Heatmap.labelBuffer);
          } else {
-            comp.cchart.resize(SSM.instance().sparkLineWidth, 10*range+Heatmap.labelBuffer);
+            comp.cchart.resize(SSM.sparkLineWidth, 10*range+Heatmap.labelBuffer);
          }
          comp.cchart.createSegment( segSize ); // needs to go after setData and setHeight
          
@@ -950,7 +950,7 @@ public abstract class BaseModelRenderer implements RenderTask {
          for (int x=start; x < end; x++) {
             for (int y=sMonth; y <= eMonth; y++) {
                float tmp = 0;
-               if (SSM.instance().useComparisonMode == true) {
+               if (SSM.useComparisonMode == true) {
                   tmp = comp.cchart.data[12*x+y] + comp.cchart.c_data[12*x+y];  
                } else {
                   tmp = comp.cchart.data[12*x+y];
@@ -1467,7 +1467,7 @@ public abstract class BaseModelRenderer implements RenderTask {
         
         
         // If not using glow, then render a bounding box
-        if (! SSM.instance().useGlow && SSM.selectedGroup.size() > 0) {
+        if (! SSM.useGlow && SSM.selectedGroup.size() > 0) {
            for (DCComponent comp : MM.currentModel.componentTable.values()) {
               if (SSM.selectedGroup.contains(comp.id)) {
                  comp.boundingBox.renderBoundingBox(gl, SchemeManager.selected);
@@ -1578,7 +1578,7 @@ public abstract class BaseModelRenderer implements RenderTask {
               g_shaderDualPeel.setUniform1i(gl2, "useLight", 0);
            
            // Hack Test
-           if (SSM.instance().useConstantAlpha == false) {
+           if (SSM.useConstantAlpha == false) {
               g_opacity[0] = comp.colour.a;
               g_shaderDualPeel.setUniform1fv(gl2, "Alpha", g_opacity);
            }
@@ -1596,7 +1596,7 @@ public abstract class BaseModelRenderer implements RenderTask {
            
            
            // Try to send in other special effects
-           if (SSM.instance().useComparisonMode == true) {
+           if (SSM.useComparisonMode == true) {
               float v1 = CacheManager.instance().groupOccurrence.get(comp.id);
               float v2 = CacheManager.instance().c_groupOccurrence.get(comp.id);                  
               

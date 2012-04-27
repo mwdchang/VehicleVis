@@ -71,7 +71,7 @@ public class ModelRenderer extends BaseModelRenderer {
          SSM.dirtyGL = 0;
       }
       
-      if (SSM.instance().use3DModel == true) {
+      if (SSM.use3DModel == true) {
          this.renderIntegratedView(gl2);
       } else {
          this.renderChartsOnly(gl2);
@@ -85,7 +85,7 @@ public class ModelRenderer extends BaseModelRenderer {
    // Render a comparison outline
    ////////////////////////////////////////////////////////////////////////////////
    public void renderComparison(GL2 gl2) {
-      if (SSM.instance().useComparisonMode == true) {
+      if (SSM.useComparisonMode == true) {
          float size;
          float c;
          outlineTexture1.startRecording(gl2);
@@ -163,18 +163,18 @@ public class ModelRenderer extends BaseModelRenderer {
       ////////////////////////////////////////////////////////////////////////////////
       // Need to re-adjust the buffer size if the screen size is changed
       ////////////////////////////////////////////////////////////////////////////////
-      if (SSM.instance().refreshOITBuffers == true) {
+      if (SSM.refreshOITBuffers == true) {
          this.DeleteDualPeelingRenderTargets(gl2);
          this.InitDualPeelingRenderTargets(gl2);
-         SSM.instance().refreshOITTexture = true;
-         SSM.instance().refreshOITBuffers = false;   
+         SSM.refreshOITTexture = true;
+         SSM.refreshOITBuffers = false;   
       }
       
       
       ////////////////////////////////////////////////////////////////////////////////
       // Initialize the glowTexture
       ////////////////////////////////////////////////////////////////////////////////
-      if (SSM.instance().refreshGlowTexture == true) {
+      if (SSM.refreshGlowTexture == true) {
         glowTexture= new FrameBufferTexture();
         glowTexture.TEXTURE_SIZE_W = (int)((float)SSM.windowWidth/GLOW_DOWN_SAMPLE);
         glowTexture.TEXTURE_SIZE_H = (int)((float)SSM.windowHeight/GLOW_DOWN_SAMPLE);
@@ -194,7 +194,7 @@ public class ModelRenderer extends BaseModelRenderer {
         glowTexture.shader.linkProgram(gl2);
         glowTexture.shader.bindFragColour(gl2, "outColour");   
         
-        SSM.instance().refreshGlowTexture = false;
+        SSM.refreshGlowTexture = false;
         
         
         // Down sample
@@ -233,10 +233,10 @@ public class ModelRenderer extends BaseModelRenderer {
       ////////////////////////////////////////////////////////////////////////////////
       // Render any scenes that we want to cache...ie: Lens, Filters
       ////////////////////////////////////////////////////////////////////////////////
-      if (SSM.instance().refreshMagicLens == true ||
+      if (SSM.refreshMagicLens == true ||
          MM.currentModel.isAnimationRunning()) {
-         for (int i=0;i < SSM.instance().lensList.size(); i++) {
-            LensAttrib la = SSM.instance().lensList.elementAt(i);   
+         for (int i=0;i < SSM.lensList.size(); i++) {
+            LensAttrib la = SSM.lensList.elementAt(i);   
             //if (la.mlen == null) {
                la.mlen = new MagicLens();   
                la.mlen.init(gl2);
@@ -296,7 +296,7 @@ public class ModelRenderer extends BaseModelRenderer {
             
             
          }
-         SSM.instance().refreshMagicLens = false;
+         SSM.refreshMagicLens = false;
       }
       
     
@@ -309,8 +309,8 @@ public class ModelRenderer extends BaseModelRenderer {
          basicTransform(gl2);
          gl2.glEnable(GL2.GL_BLEND);
          
-         if (SSM.instance().useDualDepthPeeling) {
-            if (SSM.instance().refreshOITTexture) {
+         if (SSM.useDualDepthPeeling) {
+            if (SSM.refreshOITTexture) {
                this.ProcessDualPeeling(gl2, this.g_quadDisplayList);
                // weeee
                this.RenderDualPeeling(gl2, this.g_quadDisplayList);
@@ -329,8 +329,8 @@ public class ModelRenderer extends BaseModelRenderer {
       ////////////////////////////////////////////////////////////////////////////////
       // Render any filters we want to show
       ////////////////////////////////////////////////////////////////////////////////
-      for (int i=0; i < SSM.instance().lensList.size(); i++) {
-         LensAttrib la = SSM.instance().lensList.elementAt(i);
+      for (int i=0; i < SSM.lensList.size(); i++) {
+         LensAttrib la = SSM.lensList.elementAt(i);
          setOrthonormalView(gl2); {
             if (la.mlen != null) {
               la.mlen.renderLens( gl2, la );
@@ -344,7 +344,7 @@ public class ModelRenderer extends BaseModelRenderer {
       ////////////////////////////////////////////////////////////////////////////////
       // Record glow effects and render to to a 1-1 square in ortho mode 
       ////////////////////////////////////////////////////////////////////////////////
-      if (SSM.instance().useGlow && SSM.selectedGroup.size() > 0) {
+      if (SSM.useGlow && SSM.selectedGroup.size() > 0) {
          glowTexture.startRecording(gl2); 
             setPerspectiveView(gl2); 
             basicTransform(gl2);
@@ -373,10 +373,10 @@ public class ModelRenderer extends BaseModelRenderer {
       ////////////////////////////////////////////////////////////////////////////////
       // Render any 2D components
       ////////////////////////////////////////////////////////////////////////////////
-      if (SSM.instance().showLabels == true) {
+      if (SSM.showLabels == true) {
          for (int i=0; i < SSM.instance().lensList.size(); i++) {
             setOrthonormalView(gl2, 0, SSM.windowWidth, 0, SSM.windowHeight); {
-               if (SSM.instance().useCircularLabel == true) {
+               if (SSM.useCircularLabel == true) {
                   renderLabelCircular(gl2, SSM.instance().lensList.elementAt(i));
                } else {
                   renderLabelBalanced(gl2, SSM.instance().lensList.elementAt(i));
@@ -387,18 +387,18 @@ public class ModelRenderer extends BaseModelRenderer {
       
       
       // TODO : Move this out later...just to test if animation can work, probably have a flag and put in resetDataGL or soemthing
-      if (SSM.instance().resizePanel == 1) {
+      if (SSM.resizePanel == 1) {
          if (dcTextPanel.animatorH != null) dcTextPanel.animatorH.stop();
          if (dcTextPanel.animatorW != null) dcTextPanel.animatorW.stop();
          
-         float goalH = SSM.instance().docActive ? SSM.docHeight : 0.0f;
-         float goalW = SSM.instance().docActive ? SSM.docWidth : 0.0f;
+         float goalH = SSM.docActive ? SSM.docHeight : 0.0f;
+         float goalW = SSM.docActive ? SSM.docWidth : 0.0f;
          
          dcTextPanel.animatorH = PropertySetter.createAnimator(600, dcTextPanel, "displayH", new FloatEval(), dcTextPanel.displayH, goalH);
          dcTextPanel.animatorW = PropertySetter.createAnimator(600, dcTextPanel, "displayW", new FloatEval(), dcTextPanel.displayW, goalW);
          dcTextPanel.animatorH.start();
          dcTextPanel.animatorW.start();
-         SSM.instance().resizePanel = 0;   
+         SSM.resizePanel = 0;   
       }
       
       
@@ -416,7 +416,7 @@ public class ModelRenderer extends BaseModelRenderer {
       ////////////////////////////////////////////////////////////////////////////////
       // Optional, debugging elements
       ////////////////////////////////////////////////////////////////////////////////
-      if (SSM.instance().useGuide == true) {
+      if (SSM.useGuide == true) {
          
          setOrthonormalView(gl2, 0, SSM.windowWidth, 0, SSM.windowHeight); {
             StatusWindow.tf.anchorX = SSM.windowWidth - StatusWindow.tf.width;
@@ -490,7 +490,7 @@ public class ModelRenderer extends BaseModelRenderer {
             
             // If local mode than don't render components that are not related
             comp.cchart.active = true;
-            if (SSM.instance().useLocalFocus == true) {
+            if (SSM.useLocalFocus == true) {
                if (SSM.selectedGroup.size() > 0 && ! SSM.relatedList.contains(comp.id))  {
                   comp.cchart.active = false;
                } else {
@@ -501,7 +501,7 @@ public class ModelRenderer extends BaseModelRenderer {
 
             // Check parent and model table capability in aggregation mode
             boolean skip = false;
-            if (SSM.instance().useAggregate == true) {
+            if (SSM.useAggregate == true) {
                Integer parentId = comp.id;
                while(true) {
                   parentId = HierarchyTable.instance().getParentId(parentId);   
@@ -535,7 +535,7 @@ public class ModelRenderer extends BaseModelRenderer {
             comp.cchart.tf.height = comp.cchart.height;
             comp.cchart.tf.anchorX = comp.cchart.anchorX;
             comp.cchart.tf.anchorY = comp.cchart.anchorY;
-            if (SSM.instance().useComparisonMode==true) {
+            if (SSM.useComparisonMode==true) {
                comp.cchart.setLabel(comp.baseName + " " + occ[2] + "/" + occ[0]);
             } else {
                comp.cchart.setLabel(comp.baseName + " " + (occ[2]+occ[3]) + "/" + (occ[0]+occ[1]));
@@ -568,7 +568,7 @@ public class ModelRenderer extends BaseModelRenderer {
       this.dcTextPanel.displayH = SSM.docHeight;
       this.dcTextPanel.displayW = SSM.docWidth;
       SSM.docAnchorX = SSM.windowWidth - 1.1f * SSM.docWidth;
-      SSM.instance().docActive = true;
+      SSM.docActive = true;
       this.dcTextPanel.render(gl2);
       this.dcTextPanel.displayH = 0;
       this.dcTextPanel.displayW = 0;
@@ -605,7 +605,7 @@ public class ModelRenderer extends BaseModelRenderer {
          
          // If local mode than don't render components that are not related
          comp.cchart.active = true;
-         if (SSM.instance().useLocalFocus == true) {
+         if (SSM.useLocalFocus == true) {
             if (SSM.selectedGroup.size() > 0 && ! SSM.relatedList.contains(comp.id))  {
                comp.cchart.active = false;
             } else {
@@ -616,7 +616,7 @@ public class ModelRenderer extends BaseModelRenderer {
 
          // Check parent and model table capability in aggregation mode
          boolean skip = false;
-         if (SSM.instance().useAggregate == true) {
+         if (SSM.useAggregate == true) {
             Integer parentId = comp.id;
             while(true) {
                parentId = HierarchyTable.instance().getParentId(parentId);   
@@ -672,12 +672,12 @@ public class ModelRenderer extends BaseModelRenderer {
    ////////////////////////////////////////////////////////////////////////////////
    public void picking(GL2 gl2, float px, float py) {
       // Quickie way to get out and save unnecessary rendering 
-      if (SSM.instance().l_mouseClicked == false) return;
+      if (SSM.l_mouseClicked == false) return;
       if (SSM.stopPicking == 1) return;
       
       
       // Force trigger depth peel re-render on mouse press action
-      SSM.instance().refreshOITTexture = true;
+      SSM.refreshOITTexture = true;
       
       
       float mx = px;
@@ -692,11 +692,11 @@ public class ModelRenderer extends BaseModelRenderer {
       
       
       //if (SSM.instance().location == SSM.ELEMENT_LENS) {
-          for (int i=0; i < SSM.instance().lensList.size(); i++) {
-            Integer obj = picking2DBalanced(gl2, SSM.instance().lensList.elementAt(i), px, py);
+          for (int i=0; i < SSM.lensList.size(); i++) {
+            Integer obj = picking2DBalanced(gl2, SSM.lensList.elementAt(i), px, py);
             // Speical
             if (obj!= null && (obj == 9999 || obj == 8888)) {
-               LensAttrib la = SSM.instance().lensList.elementAt(i);
+               LensAttrib la = SSM.lensList.elementAt(i);
                System.out.println("Clicked either up or down lens");
                
                if (obj == 8888)
@@ -716,12 +716,12 @@ public class ModelRenderer extends BaseModelRenderer {
       //if (SSM.instance().location != SSM.ELEMENT_NONE) return; 
       
       Integer obj = null;
-      if (SSM.instance().use3DModel == true) {
+      if (SSM.use3DModel == true) {
          // Check 3D first, then 2D
          obj = picking3D(gl2, px, py);
          if (obj == null) {
-            for (int i=0; i < SSM.instance().lensList.size(); i++) {
-               obj = picking2DBalanced(gl2, SSM.instance().lensList.elementAt(i), px, py);
+            for (int i=0; i < SSM.lensList.size(); i++) {
+               obj = picking2DBalanced(gl2, SSM.lensList.elementAt(i), px, py);
                
                // Speical
                /*
@@ -765,7 +765,7 @@ public class ModelRenderer extends BaseModelRenderer {
          
          // Disable any action if in local focus mode and 
          // the part clicked is not related nor selected
-         if (SSM.instance().useLocalFocus == true) {
+         if (SSM.useLocalFocus == true) {
             if (SSM.selectedGroup.size() > 0 &&  !SSM.relatedList.contains(obj)) 
                return;
          }
@@ -773,7 +773,7 @@ public class ModelRenderer extends BaseModelRenderer {
          
          if (SSM.selectedGroup.size() > 0 ) {
             // If control key is not held down, clear
-            if ( ! SSM.instance().shiftKey) {
+            if ( ! SSM.shiftKey) {
                SSM.selectedGroup.clear();   
             }
             
@@ -786,12 +786,12 @@ public class ModelRenderer extends BaseModelRenderer {
             
             SSM.dirty = 1;
             SSM.dirtyGL = 1; // for the text panel
-            SSM.instance().t1Start = 0;
-            SSM.instance().t2Start = SSM.instance().globalFetchSize;
+            SSM.t1Start = 0;
+            SSM.t2Start = SSM.globalFetchSize;
             SSM.yoffset = SSM.docHeight;
-            SSM.instance().docMaxSize = 0;
+            SSM.docMaxSize = 0;
             for (Integer key : SSM.selectedGroup.keySet()) {
-               SSM.instance().docMaxSize += CacheManager.instance().groupOccurrence.get( key );
+               SSM.docMaxSize += CacheManager.instance().groupOccurrence.get( key );
             }
             //SSM.instance().docMaxSize = CacheManager.instance().groupOccurrence.get( SSM.selectedGroup );
             
@@ -799,23 +799,23 @@ public class ModelRenderer extends BaseModelRenderer {
             SSM.selectedGroup.put(obj,obj);
             SSM.dirty = 1;
             SSM.dirtyGL = 1; // for the text panel
-            SSM.instance().t1Start = 0;
-            SSM.instance().t2Start = SSM.instance().globalFetchSize;
+            SSM.t1Start = 0;
+            SSM.t2Start = SSM.globalFetchSize;
             SSM.yoffset = SSM.docHeight;
             //SSM.instance().docMaxSize = CacheManager.instance().groupOccurrence.get( SSM.selectedGroup );
-            SSM.instance().docMaxSize = 0;
+            SSM.docMaxSize = 0;
             for (Integer key : SSM.selectedGroup.keySet()) {
-               SSM.instance().docMaxSize += CacheManager.instance().groupOccurrence.get( key );
+               SSM.docMaxSize += CacheManager.instance().groupOccurrence.get( key );
             }
         }
       } else {
          SSM.selectedGroup.clear();
          SSM.dirty = 1;
          SSM.dirtyGL = 1; // for the text panel
-         SSM.instance().t1Start = 0;
-         SSM.instance().t2Start = SSM.instance().globalFetchSize;
+         SSM.t1Start = 0;
+         SSM.t2Start = SSM.globalFetchSize;
          SSM.yoffset = SSM.docHeight;
-         SSM.instance().docMaxSize = 0;
+         SSM.docMaxSize = 0;
       }
       
       
@@ -889,7 +889,7 @@ public class ModelRenderer extends BaseModelRenderer {
          
          // If local mode than don't render components that are not related
          comp.cchart.active = true;
-         if (SSM.instance().useLocalFocus == true) {
+         if (SSM.useLocalFocus == true) {
             if (SSM.selectedGroup.size() > 0 && ! SSM.relatedList.contains(comp.id)) {
                comp.cchart.active = false;   
             } else {
@@ -901,7 +901,7 @@ public class ModelRenderer extends BaseModelRenderer {
          
          // Check parent and model table capability in aggregation mode
          boolean skip = false;
-         if (SSM.instance().useAggregate == true) {
+         if (SSM.useAggregate == true) {
             Integer parentId = comp.id;
             while(true) {
                parentId = HierarchyTable.instance().getParentId(parentId);   
@@ -941,10 +941,10 @@ public class ModelRenderer extends BaseModelRenderer {
       } // end for
       
       // Now actually render the labels
-      rightHeight = Math.min((SSM.windowHeight-la.magicLensY) + (rightList.size()/2)*(SSM.instance().sparkLineHeight + vpadding),
-                              SSM.windowHeight-SSM.instance().sparkLineHeight-vpadding);
-      leftHeight  = Math.min((SSM.windowHeight-la.magicLensY) + (leftList.size()/2)*(SSM.instance().sparkLineHeight + vpadding),
-                              SSM.windowHeight-SSM.instance().sparkLineHeight-vpadding); 
+      rightHeight = Math.min((SSM.windowHeight-la.magicLensY) + (rightList.size()/2)*(SSM.sparkLineHeight + vpadding),
+                              SSM.windowHeight-SSM.sparkLineHeight-vpadding);
+      leftHeight  = Math.min((SSM.windowHeight-la.magicLensY) + (leftList.size()/2)*(SSM.sparkLineHeight + vpadding),
+                              SSM.windowHeight-SSM.sparkLineHeight-vpadding); 
       
       
       // Right side
@@ -1029,8 +1029,8 @@ public class ModelRenderer extends BaseModelRenderer {
       // instead of the default near and far plane
       LensAttrib la = null;
       LensAttrib clen = null;
-      for (int i=0; i < SSM.instance().lensList.size(); i++) {
-         la = SSM.instance().lensList.elementAt(i);
+      for (int i=0; i < SSM.lensList.size(); i++) {
+         la = SSM.lensList.elementAt(i);
          float x = px - la.magicLensX;
          float y = py - la.magicLensY;
          float r = (float)la.magicLensRadius;
@@ -1043,7 +1043,7 @@ public class ModelRenderer extends BaseModelRenderer {
       if (clen != null) {
          GraphicUtil.startPickingPerspective(gl2, buffer, 
                (int)px, (int)py, 
-               SSM.windowWidth, SSM.windowHeight, SSM.instance().fov, clen.nearPlane, clen.farPlane,
+               SSM.windowWidth, SSM.windowHeight, SSM.fov, clen.nearPlane, clen.farPlane,
                DCCamera.instance().eye.toArray3f(), new float[]{0,0,0}, DCCamera.instance().up.toArray3f());         
       } else {
          this.startPickingPerspective(gl2, buffer, px, py);
@@ -1070,7 +1070,7 @@ public class ModelRenderer extends BaseModelRenderer {
          gl2.glPushMatrix();
             // Make sure the transform is also in picking mode 
             basicTransform(gl2);
-            if (MM.currentModel.componentTable.get(partName).level >= SSM.instance().occlusionLevel) 
+            if (MM.currentModel.componentTable.get(partName).level >= SSM.occlusionLevel) 
                 MM.currentModel.componentTable.get(partName).renderBasicMesh(gl2);
             //model.componentTable.get(partName).boundingBox.renderBoundingBox(gl2);  
          gl2.glPopMatrix();
@@ -1177,10 +1177,10 @@ public class ModelRenderer extends BaseModelRenderer {
       
       // check if the paddings are out of bound (ie: when we are close up)
       // default the padding space to space padding
-      if ( rpadding + lensX + SSM.instance().sparkLineWidth > SSM.windowWidth ) {
+      if ( rpadding + lensX + SSM.sparkLineWidth > SSM.windowWidth ) {
          rpadding = spadding;   
       }
-      if (lensX - lpadding - SSM.instance().sparkLineWidth < 0) {
+      if (lensX - lpadding - SSM.sparkLineWidth < 0) {
          lpadding = spadding;   
       }
       
@@ -1205,7 +1205,7 @@ public class ModelRenderer extends BaseModelRenderer {
          
          // If local mode than don't render components that are not related
          comp.cchart.active = true;
-         if (SSM.instance().useLocalFocus == true) {
+         if (SSM.useLocalFocus == true) {
             if (SSM.selectedGroup.size() > 0 && ! SSM.relatedList.contains(comp.id))  {
                comp.cchart.active = false;
             } else {
@@ -1217,7 +1217,7 @@ public class ModelRenderer extends BaseModelRenderer {
          
          // Check parent and model table capability in aggregation mode
          boolean skip = false;
-         if (SSM.instance().useAggregate == true) {
+         if (SSM.useAggregate == true) {
             Integer parentId = comp.id;
             while(true) {
                parentId = HierarchyTable.instance().getParentId(parentId);   
@@ -1262,10 +1262,10 @@ public class ModelRenderer extends BaseModelRenderer {
       
       
       // Now actually render the labels
-      rightHeight = Math.min((SSM.windowHeight-la.magicLensY) + (rightList.size()/2)*(SSM.instance().sparkLineHeight + vpadding),
-                              SSM.windowHeight-SSM.instance().sparkLineHeight-vpadding);
-      leftHeight  = Math.min((SSM.windowHeight-la.magicLensY) + (leftList.size()/2)*(SSM.instance().sparkLineHeight + vpadding),
-                              SSM.windowHeight-SSM.instance().sparkLineHeight-vpadding); 
+      rightHeight = Math.min((SSM.windowHeight-la.magicLensY) + (rightList.size()/2)*(SSM.sparkLineHeight + vpadding),
+                              SSM.windowHeight-SSM.sparkLineHeight-vpadding);
+      leftHeight  = Math.min((SSM.windowHeight-la.magicLensY) + (leftList.size()/2)*(SSM.sparkLineHeight + vpadding),
+                              SSM.windowHeight-SSM.sparkLineHeight-vpadding); 
       
       
       gl2.glEnable(GL2.GL_BLEND);
@@ -1285,7 +1285,7 @@ public class ModelRenderer extends BaseModelRenderer {
          int c_relatedOccNew = 0;
          if (SSM.selectedGroup.size() >= 0 ) {
             
-            if (SSM.instance().useAggregate == true) {
+            if (SSM.useAggregate == true) {
                Vector<Integer> selectedGroup =  new Vector<Integer>();
                selectedGroup.addAll( SSM.selectedGroup.values());
             
@@ -1339,7 +1339,7 @@ public class ModelRenderer extends BaseModelRenderer {
             }
          }
          String txt = "";
-         if (SSM.instance().useComparisonMode == true) {
+         if (SSM.useComparisonMode == true) {
             //txt = comp.baseName+"(" + (relatedOccNew+c_relatedOccNew) + "/" + relatedOcc + "/" + (c_occ+occ) + ")";
             txt = comp.baseName+" (" + (relatedOccNew+c_relatedOccNew) + "/" + (c_occ+occ) + ")";
          } else {
@@ -1426,7 +1426,7 @@ public class ModelRenderer extends BaseModelRenderer {
          
          if (SSM.selectedGroup.size() >= 0 ) {
             
-            if (SSM.instance().useAggregate == true) {
+            if (SSM.useAggregate == true) {
                Vector<Integer> selectedGroup =  new Vector<Integer>();
                selectedGroup.addAll( SSM.selectedGroup.values());
                
@@ -1479,7 +1479,7 @@ public class ModelRenderer extends BaseModelRenderer {
             }
          }
          String txt = "";
-         if (SSM.instance().useComparisonMode == true) {
+         if (SSM.useComparisonMode == true) {
             //txt = comp.baseName+"(" + (relatedOccNew+c_relatedOccNew) + "/" + relatedOcc + "/" + (occ+c_occ) + ")";
             txt = comp.baseName+" (" + (relatedOccNew+c_relatedOccNew) + "/" + (occ+c_occ) + ")";
          } else {
@@ -1586,7 +1586,7 @@ public class ModelRenderer extends BaseModelRenderer {
          }
          if (obj != null) {
             la.magicLensSelected = 1;
-            SSM.instance().topElement = SSM.ELEMENT_LENS;
+            SSM.topElement = SSM.ELEMENT_LENS;
          } 
       }
       
@@ -1720,7 +1720,7 @@ public class ModelRenderer extends BaseModelRenderer {
             */
          	if (comp.id < 0) continue;
             
-            float scale = 1.0f + (float)CacheManager.instance().groupOccurrence.get(comp.id)/(float)SSM.instance().maxOccurrence;
+            float scale = 1.0f + (float)CacheManager.instance().groupOccurrence.get(comp.id)/(float)SSM.maxOccurrence;
             textRenderer.setColor( 0.0f, 0.5f, 2.0f, 1.0f);
             this.renderTextPolar(gl2, la, (float)angle, scale, comp, comp.cname+"(" + CacheManager.instance().groupOccurrence.get(comp.id) + ")");
          }
@@ -1825,7 +1825,7 @@ public class ModelRenderer extends BaseModelRenderer {
       
       //String[] clist = this.getComponentSortedByCentroid(gl2);
       String[] clist = null; 
-      switch (SSM.instance().sortingMethod) {
+      switch (SSM.sortingMethod) {
          case 0: clist = this.getComponentSortedByCentroid2(gl2); break;
          case 1: clist = this.getComponentSortedByCentroid(gl2); break;
          case 2: clist = this.getComponentUnsorted(gl2); break;
@@ -1858,7 +1858,7 @@ public class ModelRenderer extends BaseModelRenderer {
                modelComp.boundingBox.renderBoundingBox(gl2);
                gl2.glLineWidth(0.5f);
                
-               if (SSM.instance().renderSihoulette) {
+               if (SSM.renderSihoulette) {
                   modelComp.renderBufferAdj(gl2, null);
                }
             gl2.glPopMatrix();
@@ -1897,7 +1897,7 @@ public class ModelRenderer extends BaseModelRenderer {
                modelComp.renderBuffer(gl2, modelComp.colour);
                //modelComp.renderFNormal(gl2);
                
-               if (SSM.instance().renderSihoulette) {
+               if (SSM.renderSihoulette) {
                   gl2.glLineWidth(0.5f);
                   modelComp.renderBufferAdj(gl2, null);
                }
@@ -1954,7 +1954,7 @@ public class ModelRenderer extends BaseModelRenderer {
       
       
       if (SSM.selectedGroup.size() > 0 ) {
-         if (SSM.instance().useAggregate == true) {
+         if (SSM.useAggregate == true) {
             Vector<Integer> selectedGroup =  new Vector<Integer>();
             selectedGroup.addAll( SSM.selectedGroup.values());
          

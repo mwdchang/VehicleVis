@@ -48,10 +48,15 @@ public class TUIOTest implements TuioListener {
    // Some sensors are too sensitive and need to be toned down in order for gestures to work,
    // others have difference screen sizes and have a different metrics of what "near" means
    // ... etc etc
+   /*
    public static long  REFRESH_INTERVAL = 800;  // Thread refresh every 800 milliseconds
    public static int   DOWNSAMPLE_RATE = 3;     // Sample every 3 update messages
    public static float NEAR_THRESHOLD = 0.2f;   // "Near" items are <= 0.2 normalized distance 
+   */
    
+   public static long  REFRESH_INTERVAL = SSM.refreshRate;
+   public static int   DOWNSAMPLE_RATE  = SSM.downsampleRate;
+   public static float NEAR_THRESHOLD   = SSM.nearThreshold;
    
    public Hashtable<Long, WCursor> eventTable = new Hashtable<Long, WCursor>();
    public Vector<TapAction> tapActionList = new Vector<TapAction>();

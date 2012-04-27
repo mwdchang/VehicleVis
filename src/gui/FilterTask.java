@@ -362,9 +362,9 @@ public class FilterTask implements RenderTask {
             deferredRefresh = true;
          }
          
-         SSM.instance().topElement = SSM.ELEMENT_FILTER;
-         SSM.instance().globalFetchIdx = 0;
-         SSM.instance().docStartIdx = 0;
+         SSM.topElement = SSM.ELEMENT_FILTER;
+         SSM.globalFetchIdx = 0;
+         SSM.docStartIdx = 0;
          
          yearSlider.createTexture();
          monthSlider.createTexture();

@@ -84,15 +84,15 @@ public class GLRenderer implements GLEventListener {
       // 1) The user drags the date slider indicator
       // 2) The user loads a saved state
       //if (SSM.instance().l_mousePressed == false && filter_task.deferredRefresh) {
-      if (SSM.instance().l_mousePressed == false && filter_task.deferredRefresh && SSM.useTUIO == false) {
+      if (SSM.l_mousePressed == false && filter_task.deferredRefresh && SSM.useTUIO == false) {
          System.out.println("about to unbind...");
          filter_task.unfocus();
          filter_task.deferredRefresh = false;
       }
-      if (SSM.instance().checkDragEvent == true) {
+      if (SSM.checkDragEvent == true) {
          filter_task.unfocus();
          filter_task.deferredRefresh = false;
-         SSM.instance().checkDragEvent = false;
+         SSM.checkDragEvent = false;
       }
       
       
@@ -130,7 +130,7 @@ public class GLRenderer implements GLEventListener {
       // these here as we cannot grab the context in another thread (as far as I know)
       // 1) Click / Picking
       ////////////////////////////////////////////////////////////////////////////////
-      if ( SSM.instance().l_mouseClicked) {
+      if ( SSM.l_mouseClicked) {
          //for (int i=0; i < renderTaskList.size(); i++) {
          //   renderTaskList.elementAt(i).picking(gl2);
          //}
@@ -141,7 +141,7 @@ public class GLRenderer implements GLEventListener {
             domain_task.picking(gl2, point.x, point.y);
             model_task.picking(gl2, point.x, point.y);
          }
-         SSM.instance().l_mouseClicked = false;
+         SSM.l_mouseClicked = false;
          SSM.stopPicking = 0;
          SSM.pickPoints.clear();
       }
@@ -159,11 +159,11 @@ public class GLRenderer implements GLEventListener {
       
       
       
-      if (SSM.instance().captureScreen) {
+      if (SSM.captureScreen) {
          String s = SSM.instance().now();
          GraphicUtil.screenCap(gl2, s);
          DWin.instance().debug("Saving Screen Cap : " + s);
-         SSM.instance().captureScreen = false;
+         SSM.captureScreen = false;
       }
       
       // Because we can...
@@ -197,8 +197,8 @@ public class GLRenderer implements GLEventListener {
       if (screenDimension.length <= 0) {
       	System.out.println("Unable to fetch screen device dimension...exiting...");
       }
-      SSM.instance().LEN_TEXTURE_WIDTH  = screenDimension[0][0];
-      SSM.instance().LEN_TEXTURE_HEIGHT = screenDimension[0][1];
+      SSM.LEN_TEXTURE_WIDTH  = screenDimension[0][0];
+      SSM.LEN_TEXTURE_HEIGHT = screenDimension[0][1];
       
       
       gl2.glShadeModel(GL2.GL_SMOOTH);
@@ -250,11 +250,11 @@ public class GLRenderer implements GLEventListener {
       
       SSM.windowHeight = windowHeight;
       SSM.windowWidth  = windowWidth;
-      SSM.instance().refreshMagicLens = true;
-      SSM.instance().refreshOITBuffers = true;
-      SSM.instance().refreshOITTexture = true;
-      SSM.instance().refreshGlowTexture = true;
-      SSM.instance().dirtyGL = 1;
+      SSM.refreshMagicLens = true;
+      SSM.refreshOITBuffers = true;
+      SSM.refreshOITTexture = true;
+      SSM.refreshGlowTexture = true;
+      SSM.dirtyGL = 1;
       
       gl2.glViewport(0, 0, width, height);
       /*

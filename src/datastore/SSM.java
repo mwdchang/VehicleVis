@@ -50,16 +50,29 @@ public class SSM {
       relatedList = new Vector<Integer>();
       
       
-      useTUIO = Boolean.parseBoolean(System.getProperty("UseTUIO", "false"));
+      // Parse runtime parameters
+      useTUIO         = Boolean.parseBoolean(System.getProperty("UseTUIO", "false"));
+      useFullScreen   = Boolean.parseBoolean(System.getProperty("UseFullScreen", "false"));
+      refreshRate     = Long.parseLong(System.getProperty("RefreshRate", "800"));
+      nearThreshold   = Float.parseFloat(System.getProperty("NearThreshold", "0.2f")); 
+      downsampleRate  = Integer.parseInt(System.getProperty("DownsampleRate", "3"));
+      
+      
    }
    
-   
-   public static boolean useTUIO = false;
    
    public static SSM instance() {
       if (instance == null) instance = new SSM();
       return instance;
    }
+   
+   
+   // Runtime parameters
+   public static boolean useTUIO = false;
+   public static boolean useFullScreen = false;
+   public static long refreshRate = 800L;
+   public static float nearThreshold = 0.2f;
+   public static int downsampleRate = 3;
    
    
    ////////////////////////////////////////////////////////////////////////////////
@@ -104,12 +117,12 @@ public class SSM {
    ///////////////////////////////////////////////////////////////////////////////// 
    // 3D perspective variables
    ///////////////////////////////////////////////////////////////////////////////// 
-   public float fov = 30.0f;
-   public float nearPlane = 1.0f;
-   public float farPlane  = 1000.0f; 
+   public static float fov = 30.0f;
+   public static float nearPlane = 1.0f;
+   public static float farPlane  = 1000.0f; 
    
-   public boolean  renderSihoulette;
-   public boolean  useLight = true;
+   public static boolean  renderSihoulette;
+   public static boolean  useLight = true;
    public static float rotateX = 0.0f;
    public static float rotateY = 0.0f;
    
@@ -126,24 +139,24 @@ public class SSM {
    // Indicators for graphic effects
    ///////////////////////////////////////////////////////////////////////////////// 
    
-   public int LEN_TEXTURE_WIDTH = 800;   
-   public int LEN_TEXTURE_HEIGHT = 800;
-   public boolean refreshMagicLens;
-   public boolean refreshOITBuffers = true;
-   public boolean refreshOITTexture = true;
-   public boolean refreshGlowTexture = true;
+   public static int LEN_TEXTURE_WIDTH = 800;   
+   public static int LEN_TEXTURE_HEIGHT = 800;
+   public static boolean refreshMagicLens;
+   public static boolean refreshOITBuffers = true;
+   public static boolean refreshOITTexture = true;
+   public static boolean refreshGlowTexture = true;
    
-   public short NUM_LENS = 1;   
+   //public short NUM_LENS = 1;   
    
-   public Vector<LensAttrib> lensList = new Vector<LensAttrib>();
+   public static Vector<LensAttrib> lensList = new Vector<LensAttrib>();
    
-   public void clearLens() {
+   public static void clearLens() {
       for (int i=0; i < lensList.size(); i++) {
          lensList.elementAt(i).magicLensSelected = 0;
       }
    }
    
-   public int lensSelected() {
+   public static int lensSelected() {
       for (int i=0; i < lensList.size(); i++) {
          if (lensList.elementAt(i).magicLensSelected == 1) return 1;    
       }
@@ -172,9 +185,9 @@ public class SSM {
    ///////////////////////////////////////////////////////////////////////////////// 
    // GUI Environment
    ///////////////////////////////////////////////////////////////////////////////// 
-   public float sparkLineHeight  = 80;
-   public float sparkLineWidth   = 200.0f;
-   public int   sparkLineSegment = 50; 
+   public static float sparkLineHeight  = 80;
+   public static float sparkLineWidth   = 200.0f;
+   public static int   sparkLineSegment = 50; 
    
    
    
@@ -182,10 +195,10 @@ public class SSM {
    // The current focus group/component
    ///////////////////////////////////////////////////////////////////////////////// 
    public static Hashtable<Integer, Integer> selectedGroup;
-   public Integer occlusionLevel;
+   public static Integer occlusionLevel;
    public static Vector<Integer> relatedList; // The list of components that are related to the selected components
-   public int maxOccurrence = Integer.MAX_VALUE;
-   public int minOccurrence = Integer.MIN_VALUE;
+   public static int maxOccurrence = Integer.MAX_VALUE;
+   public static int minOccurrence = Integer.MIN_VALUE;
    
    public static int stopPicking = 0; // Short circuit logic to exit picking loop
    
@@ -200,26 +213,26 @@ public class SSM {
    ////////////////////////////////////////////////////////////////////////////////
    // Switches
    ////////////////////////////////////////////////////////////////////////////////
-   public boolean useGuide = false;         // Show various debugging artifacts
-   public boolean useCircularLabel = false; // Whether to laybel the sparklines in a circular pattern 
-   public boolean showLabels = true;        // Whether to show labels at all
-   public boolean captureScreen = false;
-   public int sortingMethod = 0;            // Controls how the components are sorted (with respect to rendering order)
-   public int colouringMethod = 4;
-   public int sparklineMode = 1;
-   public boolean useAggregate = false;        // Whether the occurrence count should crawl the parts hierarchy
-   public boolean useFullTimeLine = true;      // Whether to use the entire timeline for the component chart
-   public boolean useDualDepthPeeling = true;  // Whether to use OIT transparency
-   public boolean useConstantAlpha = false;    // Whether or not to use OIT constant alpha
-   public boolean useGlow = true;
-   public boolean useComparisonMode = false;   // Whether to compare across time lines
-   public boolean useLocalFocus = true;       // Whether to nor to render based on current selected components 
-   public boolean use3DModel = true;          // Whether to use integrated 3D view 
-   public boolean useFlag = true;             // Just a temporary flag to trigger adhoc tests and stuff, not used for real data
+   public static boolean useGuide = false;         // Show various debugging artifacts
+   public static boolean useCircularLabel = false; // Whether to laybel the sparklines in a circular pattern 
+   public static boolean showLabels = true;        // Whether to show labels at all
+   public static boolean captureScreen = false;
+   public static int sortingMethod = 0;            // Controls how the components are sorted (with respect to rendering order)
+   public static int colouringMethod = 4;
+   public static int sparklineMode = 1;
+   public static boolean useAggregate = false;        // Whether the occurrence count should crawl the parts hierarchy
+   public static boolean useFullTimeLine = true;      // Whether to use the entire timeline for the component chart
+   public static boolean useDualDepthPeeling = true;  // Whether to use OIT transparency
+   public static boolean useConstantAlpha = false;    // Whether or not to use OIT constant alpha
+   public static boolean useGlow = true;
+   public static boolean useComparisonMode = false;   // Whether to compare across time lines
+   public static boolean useLocalFocus = true;       // Whether to nor to render based on current selected components 
+   public static boolean use3DModel = true;          // Whether to use integrated 3D view 
+   public static boolean useFlag = true;             // Just a temporary flag to trigger adhoc tests and stuff, not used for real data
    
-   public boolean checkDragEvent = false; 
+   public static boolean checkDragEvent = false; 
    
-   public int chartMode = 1;
+   public static int chartMode = 1;
    public static final int CHART_MODE_BY_MONTH_MAX     = 1;
    public static final int CHART_MODE_BY_COMPONENT_MAX = 2;
    public static final int CHART_MODE_BY_GLOBAL_MAX    = 3;
@@ -243,7 +256,7 @@ public class SSM {
    // Just for fun
    // Things that may or may not be useful but seems interesting to do (to me)
    ////////////////////////////////////////////////////////////////////////////////
-   public boolean colourRampReverseAlpha = false; // Whether to inverse the alpha in the colour scale 
+   public static boolean colourRampReverseAlpha = false; // Whether to inverse the alpha in the colour scale 
    
    
    ////////////////////////////////////////////////////////////////////////////////
@@ -267,29 +280,29 @@ public class SSM {
    public static float offset_markerY = 30;
    
    
-   public int manufactureMax = 0;
-   public int makeMax = 0;
-   public int modelMax = 0;
-   public int yearMax = 0;
-   public int c_manufactureMax = 0;
-   public int c_makeMax = 0;
-   public int c_modelMax = 0;
-   public int c_yearMax = 0;
+   public static int manufactureMax = 0;
+   public static int makeMax = 0;
+   public static int modelMax = 0;
+   public static int yearMax = 0;
+   public static int c_manufactureMax = 0;
+   public static int c_makeMax = 0;
+   public static int c_modelMax = 0;
+   public static int c_yearMax = 0;
    
    
-   public float saveLoadAnchorX = 850;
-   public float saveLoadAnchorY = 950;
-   public float saveLoadYOffset = 200;
-   public float saveLoadHeight = 200;
-   public float saveLoadTexHeight = 200;
-   public boolean saveLoadActive = false;
+   public static float saveLoadAnchorX = 850;
+   public static float saveLoadAnchorY = 950;
+   public static float saveLoadYOffset = 200;
+   public static float saveLoadHeight = 200;
+   public static float saveLoadTexHeight = 200;
+   public static boolean saveLoadActive = false;
    
    
-   public float scrollWidth = 200;
-   public float defaultScrollHeight = 200;
+   public static float scrollWidth = 200;
+   public static float defaultScrollHeight = 200;
    
    
-   public String selectedSaveLoad = null;
+   public static String selectedSaveLoad = null;
    
    
    
@@ -306,12 +319,12 @@ public class SSM {
    ////////////////////////////////////////////////////////////////////////////////
    // Document Management
    ////////////////////////////////////////////////////////////////////////////////
-   public int globalFetchIdx = 0;
-   public int globalFetchSize = 30;
-   public int docMaxSize = 0;
-   public int docStartIdx = 0; 
-   public boolean docActive = false;
-   public int resizePanel = 0;
+   public static int globalFetchIdx = 0;
+   public static int globalFetchSize = 30;
+   public static int docMaxSize = 0;
+   public static int docStartIdx = 0; 
+   public static boolean docActive = false;
+   public static int resizePanel = 0;
    
    // All document sizes are measures in pixels
    public static float docAnchorX = 400;                 // Bottom left of the document panel
@@ -323,11 +336,11 @@ public class SSM {
    public static float docFooter = 15;     // not currently used
    public static float yoffset = docHeight;
    
-   public float t1Height = 0; // bad placement, just a proof of concept here
-   public float t2Height = 0; // bad placement, just a proof of concept here
-   public int t1Start = 0;
-   public int t2Start = globalFetchSize;
-   public int docAction = 0;
+   public static float t1Height = 0; // bad placement, just a proof of concept here
+   public static float t2Height = 0; // bad placement, just a proof of concept here
+   public static int t1Start = 0;
+   public static int t2Start = globalFetchSize;
+   public static int docAction = 0;
    
    // Check to see if the mouse cursor is in the document header
 //   public boolean inDocHeader(float px, float py) {
@@ -401,7 +414,7 @@ public class SSM {
    public static int ELEMENT_CMODEL_SCROLL = 15;
    public static int ELEMENT_CYEAR_SCROLL = 16;
    
-   public int topElement = ELEMENT_NONE;
+   public static int topElement = ELEMENT_NONE;
    //public int location   = ELEMENT_NONE; // Horrible hack
    
    
@@ -460,15 +473,15 @@ public class SSM {
    // TODO: this uses a single variable to track mouse events ... this is NOT GOOD....
    // fix this when bored !!!
    ///////////////////////////////////////////////////////////////////////////////// 
-   public boolean l_mouseClicked = false;
-   public boolean r_mouseClicked = false;
-   public boolean l_mousePressed = false;
-   public boolean r_mousePressed = false;
+   public static boolean l_mouseClicked = false;
+   public static boolean r_mouseClicked = false;
+   public static boolean l_mousePressed = false;
+   public static boolean r_mousePressed = false;
    
    
    
-   public boolean controlKey = false;
-   public boolean shiftKey = false;
+   public static boolean controlKey = false;
+   public static boolean shiftKey = false;
    
    
    // Figure out which parts are selected based on a precedence order of :
