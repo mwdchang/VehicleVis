@@ -105,8 +105,8 @@ public class MagicLens {
    public MagicLens() {
    	//TEXTURE_SIZE_W = SSM.instance().LEN_TEXTURE_WIDTH;
    	//TEXTURE_SIZE_H = SSM.instance().LEN_TEXTURE_HEIGHT;
-   	TEXTURE_SIZE_H = SSM.instance().windowHeight;
-   	TEXTURE_SIZE_W = SSM.instance().windowWidth;
+   	TEXTURE_SIZE_H = SSM.windowHeight;
+   	TEXTURE_SIZE_W = SSM.windowWidth;
    }
    
    
@@ -202,7 +202,7 @@ public class MagicLens {
          
          
          shaderObj.setUniform1i(gl2, "smouseX", la.magicLensX);
-         shaderObj.setUniform1i(gl2, "smouseY", SSM.instance().windowHeight - la.magicLensY);
+         shaderObj.setUniform1i(gl2, "smouseY", SSM.windowHeight - la.magicLensY);
          
          //shaderObj.setUniform1i(gl2, "areaHeight", SSM.instance().windowHeight);
          //shaderObj.setUniform1i(gl2, "areaWidth", SSM.instance().windowWidth);

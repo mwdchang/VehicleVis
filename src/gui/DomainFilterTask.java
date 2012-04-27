@@ -577,13 +577,13 @@ public class DomainFilterTask implements RenderTask {
                GTag t = widget.tagList.elementAt(i);                
                // Window system is upside down
                if (texY >= t.yPrime && texY <= t.y) {
-                  SSM.instance().dirtyDateFilter = 1;
+                  SSM.dirtyDateFilter = 1;
                   widget.current = i; 
                   widget.currentStr = t.val;
                   widget.dirty  = true;
                   
-                  SSM.instance().dirty = 1;
-                  SSM.instance().dirtyGL = 1;
+                  SSM.dirty = 1;
+                  SSM.dirtyGL = 1;
                   SSM.instance().refreshMagicLens = true;
                   attrib.selected = i==0? null:t.val; 
                   

@@ -158,16 +158,16 @@ public class FilterTask implements RenderTask {
       // Get all 
       //Vector<DCPair> yV = CacheManager.instance().getFilterYearlyStat(null, null, null);
       Vector<DCPair> yV = CacheManager.instance().getFilterYearlyStat(
-            SSM.instance().manufactureAttrib.selected, 
-            SSM.instance().makeAttrib.selected, 
-            SSM.instance().modelAttrib.selected,
-            SSM.instance().yearAttrib.selected);
+            SSM.manufactureAttrib.selected, 
+            SSM.makeAttrib.selected, 
+            SSM.modelAttrib.selected,
+            SSM.yearAttrib.selected);
       
       Vector<DCPair> cyV = CacheManager.instance().getFilterYearlyStat(
-            SSM.instance().c_manufactureAttrib.selected, 
-            SSM.instance().c_makeAttrib.selected, 
-            SSM.instance().c_modelAttrib.selected,
-            SSM.instance().c_yearAttrib.selected);
+            SSM.c_manufactureAttrib.selected, 
+            SSM.c_makeAttrib.selected, 
+            SSM.c_modelAttrib.selected,
+            SSM.c_yearAttrib.selected);
       
       
       yearData = new DCPair[ yV.size()];
@@ -198,17 +198,17 @@ public class FilterTask implements RenderTask {
    ////////////////////////////////////////////////////////////////////////////////
    public void setMonthData() {
       int max = 0;
-      int[] mdata = CacheManager.instance().getFilterMonthlyStat(SSM.instance().startTimeFrame, SSM.instance().endTimeFrame, 
-            SSM.instance().manufactureAttrib.selected,
-            SSM.instance().makeAttrib.selected,
-            SSM.instance().modelAttrib.selected,
-            SSM.instance().yearAttrib.selected); 
+      int[] mdata = CacheManager.instance().getFilterMonthlyStat(SSM.startTimeFrame, SSM.endTimeFrame, 
+            SSM.manufactureAttrib.selected,
+            SSM.makeAttrib.selected,
+            SSM.modelAttrib.selected,
+            SSM.yearAttrib.selected); 
       
-      int[] cmdata = CacheManager.instance().getFilterMonthlyStat(SSM.instance().startTimeFrame, SSM.instance().endTimeFrame, 
-            SSM.instance().c_manufactureAttrib.selected,
-            SSM.instance().c_makeAttrib.selected,
-            SSM.instance().c_modelAttrib.selected,
-            SSM.instance().c_yearAttrib.selected); 
+      int[] cmdata = CacheManager.instance().getFilterMonthlyStat(SSM.startTimeFrame, SSM.endTimeFrame, 
+            SSM.c_manufactureAttrib.selected,
+            SSM.c_makeAttrib.selected,
+            SSM.c_modelAttrib.selected,
+            SSM.c_yearAttrib.selected); 
      
       monthData = new DCPair[mdata.length];
       for (int i=0; i < mdata.length; i++) {
@@ -396,11 +396,11 @@ public class FilterTask implements RenderTask {
    ////////////////////////////////////////////////////////////////////////////////
    public void loadFromSSM() {
    	for (int i=0; i < yearData.length; i++) {
-   	   if (SSM.instance().startYear == Integer.parseInt(yearData[i].key)) yearSlider.lowIdx = i; 	
-   	   if (SSM.instance().endYear == Integer.parseInt(yearData[i].key)) yearSlider.highIdx = i; 	
+   	   if (SSM.startYear == Integer.parseInt(yearData[i].key)) yearSlider.lowIdx = i; 	
+   	   if (SSM.endYear == Integer.parseInt(yearData[i].key)) yearSlider.highIdx = i; 	
    	}
-   	monthSlider.lowIdx = SSM.instance().startMonth;
-   	monthSlider.highIdx = SSM.instance().endMonth;
+   	monthSlider.lowIdx = SSM.startMonth;
+   	monthSlider.highIdx = SSM.endMonth;
    	
    	setYearData();
       setMonthData();
@@ -449,12 +449,12 @@ public class FilterTask implements RenderTask {
           SSM.endMonth != (int)monthSlider.highIdx ||
           SSM.startYear != Integer.parseInt(yearData[ (int)yearSlider.lowIdx ].key) ||
           SSM.endYear != Integer.parseInt(yearData[ (int)yearSlider.highIdx ].key)) {
-         SSM.instance().dirty = 1;
-         SSM.instance().dirtyGL = 1;
+         SSM.dirty = 1;
+         SSM.dirtyGL = 1;
       }
       DWin.instance().msg("New data rage " + str_lowIdx + " to " + str_highIdx);
-      SSM.instance().startTimeFrame = str_lowIdx;
-      SSM.instance().endTimeFrame   = str_highIdx;
+      SSM.startTimeFrame = str_lowIdx;
+      SSM.endTimeFrame   = str_highIdx;
       SSM.startMonth = (int)monthSlider.lowIdx;
       SSM.endMonth = (int)monthSlider.highIdx;
       SSM.startYear = Integer.parseInt(yearData[ (int)yearSlider.lowIdx ].key);

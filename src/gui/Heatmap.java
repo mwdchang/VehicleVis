@@ -1,10 +1,7 @@
 package gui;
 
-import java.awt.Color;
 import java.awt.Font;
 import java.util.Enumeration;
-import java.util.Hashtable;
-
 import javax.media.opengl.GL2;
 
 import datastore.CacheManager;
@@ -16,8 +13,6 @@ import model.DCColour;
 import model.DCTriple;
 
 import util.DCUtil;
-import util.TextureFont;
-import util.TextureFont.Mark;
 
 /////////////////////////////////////////////////////////////////////////////////
 // Implements a heatmap chart
@@ -82,10 +77,10 @@ public class Heatmap extends ComponentChart {
       gl2.glBlendFunc(GL2.GL_SRC_ALPHA, GL2.GL_ONE_MINUS_SRC_ALPHA);
          
       int origin = CacheManager.timeLineStartYear;
-      int sYear  = SSM.instance().startYear;
-      int eYear  = SSM.instance().endYear; 
-      int sMonth = SSM.instance().startMonth;
-      int eMonth = SSM.instance().endMonth;
+      int sYear  = SSM.startYear;
+      int eYear  = SSM.endYear; 
+      int sMonth = SSM.startMonth;
+      int eMonth = SSM.endMonth;
       
       
       // If < 0 then something bad happened...
@@ -152,8 +147,8 @@ public class Heatmap extends ComponentChart {
                      DCTip  tip = SSM.tooltips.get(session);
                      tip.visible = true;
                      tip.clear();
-                     int cYear  = (int)((tmpY) + SSM.instance().startYear); 
-                     int cMonth = (int)((1+tmpX) + SSM.instance().startMonth);
+                     int cYear  = (int)((tmpY) + SSM.startYear); 
+                     int cMonth = (int)((1+tmpX) + SSM.startMonth);
                      tip.addText("Time:" + DCTip.translateTable.get(cMonth+"") + "-" + cYear); 
                      if (SSM.instance().useComparisonMode == true) {
                         tip.addText("Value:" + (int)(v));
@@ -277,11 +272,11 @@ public class Heatmap extends ComponentChart {
       
       
       // Draw the selected time period
-      float startX = SSM.instance().startMonth;
-      float endX = SSM.instance().endMonth+1;
+      float startX = SSM.startMonth;
+      float endX = SSM.endMonth+1;
       
-      float startY = SSM.instance().startYear - CacheManager.timeLineStartYear;
-      float endY   = 1+SSM.instance().endYear - CacheManager.timeLineStartYear;
+      float startY = SSM.startYear - CacheManager.timeLineStartYear;
+      float endY   = 1+SSM.endYear - CacheManager.timeLineStartYear;
       
       float tmpY = (float) Math.floor(data.length/12.0f);
       gl2.glPolygonMode(GL2.GL_FRONT_AND_BACK, GL2.GL_LINE);

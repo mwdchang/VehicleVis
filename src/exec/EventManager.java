@@ -3,7 +3,6 @@ package exec;
 import gui.DCTip;
 import gui.StatusWindow;
 
-import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
@@ -11,25 +10,9 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
-import java.util.Enumeration;
-import java.util.Hashtable;
-
-import javax.swing.event.MouseInputListener;
-
 import model.DCTriple;
-import model.LensAttrib;
-import model.PaneAttrib;
-
-import Jama.Matrix;
-
 import util.ALogger;
 import util.DCCamera;
-import util.DCUtil;
-import util.DWin;
-import util.MatrixUtil;
-import util.SerializeUtil;
-
-import datastore.CacheManager;
 import datastore.MM;
 import datastore.SSM;
 
@@ -87,15 +70,15 @@ public class EventManager implements KeyListener, MouseListener, MouseMotionList
          Event.checkDocumentPanel(e.getX(), e.getY());
          
          // For default filter
-         Event.checkScrollPanels(e.getX(), e.getY(), SSM.instance().manufactureAttrib, SSM.ELEMENT_MANUFACTURE_SCROLL);
-         Event.checkScrollPanels(e.getX(), e.getY(), SSM.instance().makeAttrib, SSM.ELEMENT_MAKE_SCROLL);
-         Event.checkScrollPanels(e.getX(), e.getY(), SSM.instance().modelAttrib, SSM.ELEMENT_MODEL_SCROLL);
-         Event.checkScrollPanels(e.getX(), e.getY(), SSM.instance().yearAttrib, SSM.ELEMENT_YEAR_SCROLL);
+         Event.checkScrollPanels(e.getX(), e.getY(), SSM.manufactureAttrib, SSM.ELEMENT_MANUFACTURE_SCROLL);
+         Event.checkScrollPanels(e.getX(), e.getY(), SSM.makeAttrib, SSM.ELEMENT_MAKE_SCROLL);
+         Event.checkScrollPanels(e.getX(), e.getY(), SSM.modelAttrib, SSM.ELEMENT_MODEL_SCROLL);
+         Event.checkScrollPanels(e.getX(), e.getY(), SSM.yearAttrib, SSM.ELEMENT_YEAR_SCROLL);
          
-         Event.checkScrollPanels(e.getX(), e.getY(), SSM.instance().c_manufactureAttrib, SSM.ELEMENT_CMANUFACTURE_SCROLL);
-         Event.checkScrollPanels(e.getX(), e.getY(), SSM.instance().c_makeAttrib, SSM.ELEMENT_CMAKE_SCROLL);
-         Event.checkScrollPanels(e.getX(), e.getY(), SSM.instance().c_modelAttrib, SSM.ELEMENT_CMODEL_SCROLL);
-         Event.checkScrollPanels(e.getX(), e.getY(), SSM.instance().c_yearAttrib, SSM.ELEMENT_CYEAR_SCROLL);
+         Event.checkScrollPanels(e.getX(), e.getY(), SSM.c_manufactureAttrib, SSM.ELEMENT_CMANUFACTURE_SCROLL);
+         Event.checkScrollPanels(e.getX(), e.getY(), SSM.c_makeAttrib, SSM.ELEMENT_CMAKE_SCROLL);
+         Event.checkScrollPanels(e.getX(), e.getY(), SSM.c_modelAttrib, SSM.ELEMENT_CMODEL_SCROLL);
+         Event.checkScrollPanels(e.getX(), e.getY(), SSM.c_yearAttrib, SSM.ELEMENT_CYEAR_SCROLL);
          
          // Check the ranged slider
          Event.checkSlider(e.getX(), e.getY());
@@ -196,19 +179,19 @@ public class EventManager implements KeyListener, MouseListener, MouseMotionList
       }
       if (e.getKeyChar() == 'd') {
          SSM.instance().use3DModel = ! SSM.instance().use3DModel;   
-         SSM.instance().dirty = 1;
-         SSM.instance().dirtyGL = 1;
+         SSM.dirty = 1;
+         SSM.dirtyGL = 1;
       }
       if (e.getKeyChar() == 's') {
          SSM.instance().useComparisonMode =! SSM.instance().useComparisonMode;   
-         SSM.instance().dirty = 1;
-         SSM.instance().dirtyGL = 1;
+         SSM.dirty = 1;
+         SSM.dirtyGL = 1;
          SSM.instance().refreshMagicLens = true;
       }
       if (e.getKeyChar() == 'a') {
          SSM.instance().useAggregate = ! SSM.instance().useAggregate;
-         SSM.instance().dirty = 1;
-         SSM.instance().dirtyGL = 1;
+         SSM.dirty = 1;
+         SSM.dirtyGL = 1;
          SSM.instance().refreshMagicLens = true;
       }
      
@@ -247,36 +230,36 @@ public class EventManager implements KeyListener, MouseListener, MouseMotionList
       }
       if (e.getKeyChar() == 't') {
          SSM.instance().useFlag  = ! SSM.instance().useFlag;
-         SSM.instance().dirty = 1;
-         SSM.instance().dirtyGL = 1;
+         SSM.dirty = 1;
+         SSM.dirtyGL = 1;
          SSM.instance().refreshMagicLens = true;
       }
       if (e.getKeyChar() == 'f') {
          SSM.instance().useLocalFocus = ! SSM.instance().useLocalFocus;    
-         SSM.instance().dirty = 1;
-         SSM.instance().dirtyGL = 1;
+         SSM.dirty = 1;
+         SSM.dirtyGL = 1;
          SSM.instance().refreshMagicLens = true;
       }
       if (e.getKeyChar() == ';') {
          SSM.instance().sortingMethod ++;
          SSM.instance().sortingMethod %= 3;
          SSM.instance().refreshMagicLens = true;
-         SSM.instance().dirtyGL = 1;
+         SSM.dirtyGL = 1;
       }
       if (e.getKeyChar() == 'c') {
          SSM.instance().colouringMethod ++;
          SSM.instance().colouringMethod %= 5;
          SSM.instance().refreshMagicLens = true;
-         SSM.instance().dirty = 1; // Need to change this later
-         SSM.instance().dirtyGL = 1;
+         SSM.dirty = 1; // Need to change this later
+         SSM.dirtyGL = 1;
       }
       if (e.getKeyChar() == 'v') {
          SSM.instance().colouringMethod --;
          if (SSM.instance().colouringMethod < 0) SSM.instance().colouringMethod = 4;
          SSM.instance().colouringMethod %= 5;
          SSM.instance().refreshMagicLens = true;
-         SSM.instance().dirty = 1; // Need to change this later
-         SSM.instance().dirtyGL = 1;
+         SSM.dirty = 1; // Need to change this later
+         SSM.dirtyGL = 1;
       }
       
       // Camera move

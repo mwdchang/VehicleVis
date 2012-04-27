@@ -8,8 +8,6 @@ import java.nio.charset.Charset;
 
 import javax.media.opengl.GL;
 import javax.media.opengl.GL2;
-import javax.media.opengl.GL3;
-
 import com.jogamp.opengl.util.GLBuffers;
 
 // Static functions for setting up shader profile, validation and error checking

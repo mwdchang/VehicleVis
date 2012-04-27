@@ -2,11 +2,6 @@ package TimingFrameExt;
 
 import org.jdesktop.animation.timing.interpolation.Evaluator;
 import model.DCColour;
-
-/////////////////////////////////////////////////////////////////////////////////
-// Linear colour interpolation
-/////////////////////////////////////////////////////////////////////////////////
-import org.jdesktop.animation.timing.interpolation.Evaluator;
 public class DCColourEval extends Evaluator<DCColour> {
 
    @Override

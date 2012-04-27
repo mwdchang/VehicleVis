@@ -1,12 +1,7 @@
 package datastore;
 
 import java.util.Enumeration;
-import java.util.Hashtable;
-
 import javax.media.opengl.GL2;
-
-import util.DWin;
-
 
 import model.DCModel;
 import model.PlyLoader;

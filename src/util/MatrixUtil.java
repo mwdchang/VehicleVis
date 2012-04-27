@@ -1,9 +1,6 @@
 package util;
 
-import java.nio.DoubleBuffer;
 import java.text.DecimalFormat;
-import java.text.NumberFormat;
-
 import Jama.Matrix;
 
 ////////////////////////////////////////////////////////////////////////////////

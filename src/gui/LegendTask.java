@@ -1,10 +1,6 @@
 package gui;
 
-import java.nio.IntBuffer;
-
 import javax.media.opengl.GL2;
-
-import com.jogamp.opengl.util.GLBuffers;
 
 import model.DCColour;
 
@@ -12,7 +8,6 @@ import datastore.CacheManager;
 import datastore.SSM;
 import datastore.SchemeManager;
 
-import util.FontRenderer;
 import util.GraphicUtil;
 
 import exec.RenderTask;
@@ -120,8 +115,8 @@ public class LegendTask implements RenderTask {
       
       
       // Draw an indicator of where the currently selected item located
-      if (SSM.instance().selectedGroup.size() > 0 ) {
-         float val = (float)CacheManager.instance().groupOccurrence.get(SSM.instance().selectedGroup)/(float)SSM.instance().maxOccurrence;
+      if (SSM.selectedGroup.size() > 0 ) {
+         float val = (float)CacheManager.instance().groupOccurrence.get(SSM.selectedGroup)/(float)SSM.instance().maxOccurrence;
          gl2.glBegin(GL2.GL_QUADS);
             gl2.glColor4fv(SchemeManager.selected.toArray(), 0);
             gl2.glVertex3d(startX + val*width, startY, 0); 
@@ -136,7 +131,7 @@ public class LegendTask implements RenderTask {
    
    @Override
    public void render(GL2 gl2) {
-      GraphicUtil.setOrthonormalView(gl2, 0, SSM.instance().windowWidth, 0, SSM.instance().windowHeight, -10, 10);
+      GraphicUtil.setOrthonormalView(gl2, 0, SSM.windowWidth, 0, SSM.windowHeight, -10, 10);
       
       this.startX = 30;
       this.startY = 20;
@@ -188,7 +183,7 @@ public class LegendTask implements RenderTask {
    
    @Override
    public void init(GL2 gl2) {
-      if (this.DIRECTION == HORIZONTAL) {
+      if (DIRECTION == HORIZONTAL) {
          this.width = 200;
          this.height = 40;
       } else {

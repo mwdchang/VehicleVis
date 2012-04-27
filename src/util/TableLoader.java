@@ -1,8 +1,6 @@
 package util;
 
 import java.sql.Statement;
-import java.text.SimpleDateFormat;
-
 import db.DBWrapper;
 
 /////////////////////////////////////////////////////////////////////////////////

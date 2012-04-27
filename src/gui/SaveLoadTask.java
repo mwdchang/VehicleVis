@@ -26,7 +26,7 @@ public class SaveLoadTask implements RenderTask {
 
 	@Override
 	public void render(GL2 gl2) {
-	   GraphicUtil.setOrthonormalView(gl2, 0, SSM.instance().windowWidth, 0, SSM.instance().windowHeight, -10, 10);
+	   GraphicUtil.setOrthonormalView(gl2, 0, SSM.windowWidth, 0, SSM.windowHeight, -10, 10);
 	   saveLoad.yoffset = SSM.instance().saveLoadYOffset;
 	   saveLoad.render(gl2);
 	   
@@ -66,22 +66,22 @@ public class SaveLoadTask implements RenderTask {
    ////////////////////////////////////////////////////////////////////////////////	
 	public void loadState(SaveState ss) {
 		// Restore state variables
-      SSM.instance().startTimeFrame = ss.startTimeFrame;
-		SSM.instance().endTimeFrame   = ss.endTimeFrame;
-		SSM.instance().startMonth     = ss.startMonth;
-		SSM.instance().endMonth       = ss.endMonth;
-		SSM.instance().startYear      = ss.startYear;
-		SSM.instance().endYear        = ss.endYear;
-		SSM.instance().manufactureAttrib.selected = ss.selectedManufacture;
-		SSM.instance().makeAttrib.selected = ss.selectedMake;
-		SSM.instance().modelAttrib.selected = ss.selectedModel;
-		SSM.instance().yearAttrib.selected = ss.selectedYear;
+      SSM.startTimeFrame = ss.startTimeFrame;
+		SSM.endTimeFrame   = ss.endTimeFrame;
+		SSM.startMonth     = ss.startMonth;
+		SSM.endMonth       = ss.endMonth;
+		SSM.startYear      = ss.startYear;
+		SSM.endYear        = ss.endYear;
+		SSM.manufactureAttrib.selected = ss.selectedManufacture;
+		SSM.makeAttrib.selected = ss.selectedMake;
+		SSM.modelAttrib.selected = ss.selectedModel;
+		SSM.yearAttrib.selected = ss.selectedYear;
 		
 		// Reset all views
-		SSM.instance().dirty = 1;
-		SSM.instance().dirtyGL = 1;
+		SSM.dirty = 1;
+		SSM.dirtyGL = 1;
 		
-		System.err.println("About to load state : " + SSM.instance().startTimeFrame + " " + SSM.instance().endTimeFrame);
+		System.err.println("About to load state : " + SSM.startTimeFrame + " " + SSM.endTimeFrame);
 		//SSM.instance().lensList.clear();
 		
 	}
@@ -92,16 +92,16 @@ public class SaveLoadTask implements RenderTask {
    ////////////////////////////////////////////////////////////////////////////////	
 	public void saveState(GL2 gl2) {
 		SaveState ss = new SaveState();
-		ss.startTimeFrame = SSM.instance().startTimeFrame;
-		ss.endTimeFrame   = SSM.instance().endTimeFrame;
-		ss.startMonth     = SSM.instance().startMonth;
-		ss.endMonth       = SSM.instance().endMonth;
-		ss.startYear      = SSM.instance().startYear;
-		ss.endYear        = SSM.instance().endYear;
-		ss.selectedManufacture = SSM.instance().manufactureAttrib.selected;
-		ss.selectedMake = SSM.instance().makeAttrib.selected;
-		ss.selectedModel = SSM.instance().modelAttrib.selected;
-		ss.selectedYear = SSM.instance().yearAttrib.selected;
+		ss.startTimeFrame = SSM.startTimeFrame;
+		ss.endTimeFrame   = SSM.endTimeFrame;
+		ss.startMonth     = SSM.startMonth;
+		ss.endMonth       = SSM.endMonth;
+		ss.startYear      = SSM.startYear;
+		ss.endYear        = SSM.endYear;
+		ss.selectedManufacture = SSM.manufactureAttrib.selected;
+		ss.selectedMake = SSM.makeAttrib.selected;
+		ss.selectedModel = SSM.modelAttrib.selected;
+		ss.selectedYear = SSM.yearAttrib.selected;
 		ss.label = ss.startTimeFrame + "-" + ss.endTimeFrame;
 		stateList.add(ss);
 		
@@ -195,8 +195,8 @@ public class SaveLoadTask implements RenderTask {
                   saveLoad.currentStr = t.val;
                   saveLoad.dirty  = true;
                   
-                  SSM.instance().dirty = 1;
-                  SSM.instance().dirtyGL = 1;
+                  SSM.dirty = 1;
+                  SSM.dirtyGL = 1;
                   SSM.instance().selectedSaveLoad = i==0? null:t.val;
                   
                   System.out.println("Clicked on " + t.val);
@@ -204,7 +204,7 @@ public class SaveLoadTask implements RenderTask {
                   // Translate item value to previous state
                   SaveState ss = stateList.elementAt(Integer.parseInt(t.val)); 
                   loadState(ss);
-                  SSM.instance().dirtyLoad = 1;
+                  SSM.dirtyLoad = 1;
                   // Fake a slider movement
                   //SSM.instance().currentFocusLayer = SSM.UI_LAYER; 
                   //SSM.instance().l_mousePressed = false;

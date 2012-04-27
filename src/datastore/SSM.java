@@ -8,7 +8,6 @@ import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Vector;
 
-import util.DCUtil;
 import util.DWin;
 import model.DCTriple;
 import model.LensAttrib;

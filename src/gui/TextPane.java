@@ -54,10 +54,10 @@ public class TextPane {
       
       Vector<Integer> keyList = new Vector<Integer>();
       if (SSM.instance().useAggregate == true) {
-         keyList = HierarchyTable.instance().getAgg(SSM.instance().selectedGroup);
+         keyList = HierarchyTable.instance().getAgg(SSM.selectedGroup);
       } else {
          //keyList.add( SSM.instance().selectedGroup );   
-         keyList.addAll( SSM.instance().selectedGroup.values() );   
+         keyList.addAll( SSM.selectedGroup.values() );   
       }
       
       
@@ -78,10 +78,10 @@ public class TextPane {
          
          // Text colour with accordance to comparison mode ?
          if (SSM.instance().useComparisonMode == true) {
-            String s = SSM.instance().manufactureAttrib.selected == null? "" : SSM.instance().manufactureAttrib.selected;  
-            s += SSM.instance().makeAttrib.selected  == null? "" : SSM.instance().makeAttrib.selected;
-            s += SSM.instance().modelAttrib.selected == null? "" : SSM.instance().modelAttrib.selected;
-            s += SSM.instance().yearAttrib.selected  == null? "" : SSM.instance().yearAttrib.selected;
+            String s = SSM.manufactureAttrib.selected == null? "" : SSM.manufactureAttrib.selected;  
+            s += SSM.makeAttrib.selected  == null? "" : SSM.makeAttrib.selected;
+            s += SSM.modelAttrib.selected == null? "" : SSM.modelAttrib.selected;
+            s += SSM.yearAttrib.selected  == null? "" : SSM.yearAttrib.selected;
             String c = d.mfr + d.make + d.model + d.year;
             
 //            System.out.println("In Text Panel : " + s + "<>" + c);
@@ -196,7 +196,7 @@ public class TextPane {
    
    // Default
    //public float textPaneWidth = 300.0f;
-   public float textPaneWidth = SSM.instance().docWidth;
+   public float textPaneWidth = SSM.docWidth;
    public float textPaneHeight = 900.0f;
    public float fontHeight = 15.0f;
 

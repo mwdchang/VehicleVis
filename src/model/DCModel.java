@@ -1,15 +1,10 @@
 package model;
 import java.util.Enumeration;
 import java.util.Hashtable;
-import java.util.Vector;
-
 import javax.media.opengl.GL2;
 import javax.media.opengl.glu.GLU;
 
-import datastore.Const;
-
 import util.BSPTree;
-import util.DCCamera;
 import util.GraphicUtil;
 
 public class DCModel extends DCObj {

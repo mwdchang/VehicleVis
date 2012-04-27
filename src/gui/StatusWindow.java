@@ -8,7 +8,6 @@ import javax.media.opengl.GL2;
 import datastore.Const;
 import datastore.SSM;
 
-import util.DCCamera;
 import util.DCUtil;
 import util.TextureFont;
 
@@ -67,8 +66,8 @@ public class StatusWindow {
       }
       
       addText("================="); 
-      addText("Num selected   : " + SSM.instance().selectedGroup.size());
-      addText("Num related    : " + SSM.instance().relatedList.size());
+      addText("Num selected   : " + SSM.selectedGroup.size());
+      addText("Num related    : " + SSM.relatedList.size());
       addText("================="); 
       //addText("Camera: " + DCCamera.instance().eye);
       

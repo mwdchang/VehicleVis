@@ -16,11 +16,7 @@ import javax.imageio.ImageIO;
 import javax.media.opengl.GL;
 import javax.media.opengl.GL2;
 import javax.media.opengl.glu.GLU;
-import javax.swing.JButton;
 import javax.swing.JComponent;
-import javax.swing.JPanel;
-
-
 import com.jogamp.opengl.util.GLBuffers;
 import com.jogamp.opengl.util.awt.TextureRenderer;
 import com.jogamp.opengl.util.texture.Texture;

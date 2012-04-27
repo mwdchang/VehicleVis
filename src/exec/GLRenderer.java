@@ -1,29 +1,21 @@
 package exec;
 
-import gui.DCTip;
 import gui.DomainFilterTask;
 import gui.FilterTask;
 import gui.LegendTask;
 import gui.SaveLoadTask;
 
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Vector;
 
 import javax.media.opengl.GL2;
-import javax.media.opengl.GL2ES1;
 import javax.media.opengl.GL3;
 import javax.media.opengl.GLAutoDrawable;
 import javax.media.opengl.GLEventListener;
-import javax.media.opengl.fixedfunc.GLLightingFunc;
-import javax.media.opengl.fixedfunc.GLMatrixFunc;
 import javax.media.opengl.glu.GLU;
 
-import model.DCColour;
 import model.DCTriple;
 import model.ModelRenderer;
 
-import util.DCCamera;
 import util.DWin;
 import util.GraphicUtil;
 
@@ -72,10 +64,10 @@ public class GLRenderer implements GLEventListener {
       // Note there is a precedence order here, 
       // model_renderer.resetData() should always go first because
       // it resets the cache
-      if (SSM.instance().dirty == 1) {
+      if (SSM.dirty == 1) {
          model_task.resetData();
          domain_task.resetData();
-         SSM.instance().dirty = 0;
+         SSM.dirty = 0;
       }
       
       //if (SSM.instance().currentFocusLayer == SSM.UI_LAYER) {
@@ -104,12 +96,12 @@ public class GLRenderer implements GLEventListener {
       }
       
       
-      if (SSM.instance().dirtyLoad == 1) {
-         SSM.instance().dirtyLoad = 0;
+      if (SSM.dirtyLoad == 1) {
+         SSM.dirtyLoad = 0;
          filter_task.loadFromSSM();
       }
-      if (SSM.instance().dirtyDateFilter == 1) {
-         SSM.instance().dirtyDateFilter = 0;
+      if (SSM.dirtyDateFilter == 1) {
+         SSM.dirtyDateFilter = 0;
          filter_task.loadFromSSM(); 
       }      
       

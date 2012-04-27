@@ -443,44 +443,44 @@ System.out.println("Debugging");
          // Dynamic clause filter
          if (SSM.instance().useComparisonMode == true ) {
             sql += "AND ((" ;
-            if (SSM.instance().manufactureAttrib.selected == null) {
+            if (SSM.manufactureAttrib.selected == null) {
                sql += "1 = 1"; // Dummy pass thru   
             } else {
-               if (SSM.instance().manufactureAttrib.selected != null) 
-                  sql += "a.mfr_txt = '" + SSM.instance().manufactureAttrib.selected + "' ";
-               if (SSM.instance().makeAttrib.selected != null) 
-                  sql += "AND a.make_txt = '" + SSM.instance().makeAttrib.selected + "' ";
-               if (SSM.instance().modelAttrib.selected != null) 
-                  sql += "AND a.model_txt = '" + SSM.instance().modelAttrib.selected + "' ";
-               if (SSM.instance().yearAttrib.selected != null) 
-                  sql += "AND a.year_txt = '" + SSM.instance().yearAttrib.selected + "' ";
+               if (SSM.manufactureAttrib.selected != null) 
+                  sql += "a.mfr_txt = '" + SSM.manufactureAttrib.selected + "' ";
+               if (SSM.makeAttrib.selected != null) 
+                  sql += "AND a.make_txt = '" + SSM.makeAttrib.selected + "' ";
+               if (SSM.modelAttrib.selected != null) 
+                  sql += "AND a.model_txt = '" + SSM.modelAttrib.selected + "' ";
+               if (SSM.yearAttrib.selected != null) 
+                  sql += "AND a.year_txt = '" + SSM.yearAttrib.selected + "' ";
             }
             sql += " ) OR ( "; 
-            if (SSM.instance().c_manufactureAttrib.selected == null) {
+            if (SSM.c_manufactureAttrib.selected == null) {
                sql += "1 = 1"; // Dummy pass thru   
             } else {
-               if (SSM.instance().c_manufactureAttrib.selected != null) 
-                  sql += "a.mfr_txt = '" + SSM.instance().c_manufactureAttrib.selected + "' ";
-               if (SSM.instance().c_makeAttrib.selected != null) 
-                  sql += "AND a.make_txt = '" + SSM.instance().c_makeAttrib.selected + "' ";
-               if (SSM.instance().c_modelAttrib.selected != null) 
-                  sql += "AND a.model_txt = '" + SSM.instance().c_modelAttrib.selected + "' ";
-               if (SSM.instance().c_yearAttrib.selected != null) 
-                  sql += "AND a.year_txt = '" + SSM.instance().c_yearAttrib.selected + "' ";
+               if (SSM.c_manufactureAttrib.selected != null) 
+                  sql += "a.mfr_txt = '" + SSM.c_manufactureAttrib.selected + "' ";
+               if (SSM.c_makeAttrib.selected != null) 
+                  sql += "AND a.make_txt = '" + SSM.c_makeAttrib.selected + "' ";
+               if (SSM.c_modelAttrib.selected != null) 
+                  sql += "AND a.model_txt = '" + SSM.c_modelAttrib.selected + "' ";
+               if (SSM.c_yearAttrib.selected != null) 
+                  sql += "AND a.year_txt = '" + SSM.c_yearAttrib.selected + "' ";
             }
             sql += " )) ";
          } else {
-            if (SSM.instance().manufactureAttrib.selected != null) {
-               sql += "AND a.mfr_txt = '" + SSM.instance().manufactureAttrib.selected + "' ";
+            if (SSM.manufactureAttrib.selected != null) {
+               sql += "AND a.mfr_txt = '" + SSM.manufactureAttrib.selected + "' ";
             }
-            if (SSM.instance().makeAttrib.selected != null) {
-               sql += "AND a.make_txt = '" + SSM.instance().makeAttrib.selected + "' ";
+            if (SSM.makeAttrib.selected != null) {
+               sql += "AND a.make_txt = '" + SSM.makeAttrib.selected + "' ";
             }
-            if (SSM.instance().modelAttrib.selected != null) {
-               sql += "AND a.model_txt = '" + SSM.instance().modelAttrib.selected + "' ";
+            if (SSM.modelAttrib.selected != null) {
+               sql += "AND a.model_txt = '" + SSM.modelAttrib.selected + "' ";
             }
-            if (SSM.instance().yearAttrib.selected != null) {
-               sql += "AND a.year_txt = '" + SSM.instance().yearAttrib.selected + "' ";
+            if (SSM.yearAttrib.selected != null) {
+               sql += "AND a.year_txt = '" + SSM.yearAttrib.selected + "' ";
             }
          }
          
@@ -539,44 +539,44 @@ System.out.println("Debugging");
          // Dynamic clause filter
          if (SSM.instance().useComparisonMode == true ) {
             sql += "AND ((" ;
-            if (SSM.instance().manufactureAttrib.selected == null) {
+            if (SSM.manufactureAttrib.selected == null) {
                sql += " 1=1 ";
             } else {
-               if (SSM.instance().manufactureAttrib.selected != null) 
-                  sql += "a.mfr_txt = '" + SSM.instance().manufactureAttrib.selected + "' ";
-               if (SSM.instance().makeAttrib.selected != null) 
-                  sql += "AND a.make_txt = '" + SSM.instance().makeAttrib.selected + "' ";
-               if (SSM.instance().modelAttrib.selected != null) 
-                  sql += "AND a.model_txt = '" + SSM.instance().modelAttrib.selected + "' ";
-               if (SSM.instance().yearAttrib.selected != null) 
-                  sql += "AND a.year_txt = '" + SSM.instance().yearAttrib.selected + "' ";
+               if (SSM.manufactureAttrib.selected != null) 
+                  sql += "a.mfr_txt = '" + SSM.manufactureAttrib.selected + "' ";
+               if (SSM.makeAttrib.selected != null) 
+                  sql += "AND a.make_txt = '" + SSM.makeAttrib.selected + "' ";
+               if (SSM.modelAttrib.selected != null) 
+                  sql += "AND a.model_txt = '" + SSM.modelAttrib.selected + "' ";
+               if (SSM.yearAttrib.selected != null) 
+                  sql += "AND a.year_txt = '" + SSM.yearAttrib.selected + "' ";
             }
             sql += " ) OR ( "; 
-            if (SSM.instance().c_manufactureAttrib.selected == null) {
+            if (SSM.c_manufactureAttrib.selected == null) {
                sql += "1=1";
             } else {
-               if (SSM.instance().c_manufactureAttrib.selected != null) 
-                  sql += "a.mfr_txt = '" + SSM.instance().c_manufactureAttrib.selected + "' ";
-               if (SSM.instance().c_makeAttrib.selected != null) 
-                  sql += "AND a.make_txt = '" + SSM.instance().c_makeAttrib.selected + "' ";
-               if (SSM.instance().c_modelAttrib.selected != null) 
-                  sql += "AND a.model_txt = '" + SSM.instance().c_modelAttrib.selected + "' ";
-               if (SSM.instance().c_yearAttrib.selected != null) 
-                  sql += "AND a.year_txt = '" + SSM.instance().c_yearAttrib.selected + "' ";
+               if (SSM.c_manufactureAttrib.selected != null) 
+                  sql += "a.mfr_txt = '" + SSM.c_manufactureAttrib.selected + "' ";
+               if (SSM.c_makeAttrib.selected != null) 
+                  sql += "AND a.make_txt = '" + SSM.c_makeAttrib.selected + "' ";
+               if (SSM.c_modelAttrib.selected != null) 
+                  sql += "AND a.model_txt = '" + SSM.c_modelAttrib.selected + "' ";
+               if (SSM.c_yearAttrib.selected != null) 
+                  sql += "AND a.year_txt = '" + SSM.c_yearAttrib.selected + "' ";
             }
             sql += " )) "; 
          } else {
-            if (SSM.instance().manufactureAttrib.selected != null) {
-               sql += "AND a.mfr_txt = '" + SSM.instance().manufactureAttrib.selected + "' ";
+            if (SSM.manufactureAttrib.selected != null) {
+               sql += "AND a.mfr_txt = '" + SSM.manufactureAttrib.selected + "' ";
             }
-            if (SSM.instance().makeAttrib.selected != null) {
-               sql += "AND a.make_txt = '" + SSM.instance().makeAttrib.selected + "' ";
+            if (SSM.makeAttrib.selected != null) {
+               sql += "AND a.make_txt = '" + SSM.makeAttrib.selected + "' ";
             }
-            if (SSM.instance().modelAttrib.selected != null) {
-               sql += "AND a.model_txt = '" + SSM.instance().modelAttrib.selected + "' ";
+            if (SSM.modelAttrib.selected != null) {
+               sql += "AND a.model_txt = '" + SSM.modelAttrib.selected + "' ";
             }
-            if (SSM.instance().yearAttrib.selected != null) {
-               sql += "AND a.year_txt = '" + SSM.instance().yearAttrib.selected + "' ";
+            if (SSM.yearAttrib.selected != null) {
+               sql += "AND a.year_txt = '" + SSM.yearAttrib.selected + "' ";
             }         
          }
          
@@ -682,7 +682,7 @@ System.out.println("Debugging");
       for (int i=0; i < queryTable.size(); i++) result.add(0);   
       
       Vector<Integer> selectedGroup = new Vector<Integer>();
-      selectedGroup.addAll(SSM.instance().selectedGroup.values());
+      selectedGroup.addAll(SSM.selectedGroup.values());
       
       for (int i=0; i < result.size(); i++) {
          int value = this.getCoOccurring(i, selectedGroup, selectedGroup, params);
@@ -700,9 +700,9 @@ System.out.println("Debugging");
       Vector<Integer> result = new Vector<Integer>();
       for (int i=0; i < queryTable.size(); i++) result.add(0);   
       
-      Vector<Integer> selectedGroup = HierarchyTable.instance().getAgg(SSM.instance().selectedGroup);
+      Vector<Integer> selectedGroup = HierarchyTable.instance().getAgg(SSM.selectedGroup);
       Vector<Integer> relatedGroup = new Vector<Integer>();
-      relatedGroup.addAll(SSM.instance().selectedGroup.values());
+      relatedGroup.addAll(SSM.selectedGroup.values());
       
       for (int i=0; i < result.size(); i++) {
          int value = this.getCoOccurringAgg(i, selectedGroup, relatedGroup, params);
@@ -1005,7 +1005,6 @@ System.out.println("Debugging");
    }
    public int getCoOccurring(int idx, Vector<Integer> groupIds, Vector<Integer> relatedIds, String ... params) {
       int result = 0;
-      QueryObj root;
       QueryObj query;
       
       // 0) Check for 0's
@@ -1042,7 +1041,6 @@ System.out.println("Debugging");
    
    public int getCoOccurringAgg(int idx, Vector<Integer> groupIds, Vector<Integer> relatedIds, String ... params) {
       int result = 0;
-      QueryObj root;
       QueryObj query;
       
       // 0) Check for 0's

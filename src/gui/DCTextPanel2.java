@@ -35,13 +35,13 @@ public class DCTextPanel2 {
    // Render the panel(s)
    ////////////////////////////////////////////////////////////////////////////////
    public void render(GL2 gl2) {
-      float anchorX  = SSM.instance().docAnchorX;
-      float anchorY  = SSM.instance().docAnchorY;
+      float anchorX  = SSM.docAnchorX;
+      float anchorY  = SSM.docAnchorY;
       
      // float displayW = SSM.instance().docWidth; 
      // float displayH = SSM.instance().docHeight;
-      float yoffset  = SSM.instance().yoffset;
-      double padding = SSM.instance().docPadding;
+      float yoffset  = SSM.yoffset;
+      double padding = SSM.docPadding;
       
 
       gl2.glEnable(GL2.GL_BLEND);

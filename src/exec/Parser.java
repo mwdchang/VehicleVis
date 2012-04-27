@@ -1,7 +1,5 @@
 package exec;
 
-import java.util.Hashtable;
-
 import datastore.Const;
 
 import parser.DependencyParser;

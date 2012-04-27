@@ -2,7 +2,6 @@ package gui;
 
 import java.awt.Color;
 import java.awt.Font;
-import java.nio.IntBuffer;
 import java.util.Hashtable;
 
 import javax.media.opengl.GL2;
@@ -10,9 +9,6 @@ import javax.media.opengl.GL2;
 import util.DCUtil;
 import util.TextureFont;
 
-import com.jogamp.opengl.util.GLBuffers;
-
-import datastore.Const;
 import datastore.SSM;
 import datastore.SchemeManager;
 

@@ -1,15 +1,11 @@
 package gui;
 
-import java.awt.Color;
 import java.awt.Font;
 
 import javax.media.opengl.GL2;
 
 import datastore.SSM;
 import datastore.SchemeManager;
-
-import util.FontRenderer;
-import util.TextureFont;
 
 import model.DCColour;
 
@@ -88,7 +84,7 @@ public class SegmentSparkLine extends ComponentChart {
             start ++;
             leftover = 0;
          }
-         while (Math.abs(dw) > SSM.instance().EPS) {
+         while (Math.abs(dw) > SSM.EPS) {
             if (dw - 1.0f >= 0) {
                dw -= 1.0f;   
                value +=  data[ start ];
@@ -211,7 +207,7 @@ public class SegmentSparkLine extends ComponentChart {
       //gl2.glEnable(GL2.GL_BLEND);
       gl2.glBegin(GL2.GL_QUADS);
       for (int i=0; i < segData.length; i++) {
-         if (SSM.instance().selectedGroup.size() > 0 && SSM.instance().selectedGroup.contains(this.id)) {
+         if (SSM.selectedGroup.size() > 0 && SSM.selectedGroup.contains(this.id)) {
             if (highlight[ (int)Math.floor(i*d)] == 1) {
                gl2.glColor4fv(SchemeManager.selected.toArray(), 0);
             } else {
@@ -234,11 +230,11 @@ public class SegmentSparkLine extends ComponentChart {
       gl2.glEnd();
       
       //renderBorder(gl2);
-      if (SSM.instance().selectedGroup.size() > 0 && SSM.instance().selectedGroup.contains(this.id)) {
+      if (SSM.selectedGroup.size() > 0 && SSM.selectedGroup.contains(this.id)) {
          gl2.glLineWidth(1.5f);
          renderBorder(gl2, SchemeManager.selected, GL2.GL_LINE);
          gl2.glLineWidth(0.5f);
-      } else if (SSM.instance().relatedList != null && SSM.instance().relatedList.contains(this.id))  {
+      } else if (SSM.relatedList != null && SSM.relatedList.contains(this.id))  {
          gl2.glLineWidth(1.5f);
          renderBorder(gl2, SchemeManager.related, GL2.GL_LINE);
          gl2.glLineWidth(0.5f);

@@ -1,7 +1,6 @@
 package exec;
 
 import datastore.Const;
-import db.DBWrapper;
 import parser.HierarchyParser;
 import parser.KeywordParser;
 import parser.Normalizer;

@@ -1,7 +1,5 @@
 package gui;
 
-import gui.TextPane.Tag;
-
 import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Font;
@@ -18,7 +16,6 @@ import org.jdesktop.animation.timing.Animator;
 
 import util.DCUtil;
 import util.DWin;
-import util.FontRenderer;
 import util.GraphicUtil;
 import util.TextureFont;
 
@@ -27,7 +24,6 @@ import com.jogamp.opengl.util.texture.Texture;
 import com.jogamp.opengl.util.texture.TextureCoords;
 
 import datastore.Const;
-import datastore.SSM;
 import datastore.SchemeManager;
 
 

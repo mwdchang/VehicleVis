@@ -198,25 +198,25 @@ public class Event {
          SSM.docAnchorY -= (posY - oldPosY);   
       // For default filter   
       } else if (SSM.instance().topElement == SSM.ELEMENT_MANUFACTURE_SCROLL) {
-         setScrollPanelOffset(SSM.instance().manufactureAttrib, posY, oldPosY);
+         setScrollPanelOffset(SSM.manufactureAttrib, posY, oldPosY);
       } else if (SSM.instance().topElement == SSM.ELEMENT_MAKE_SCROLL) {
-         setScrollPanelOffset(SSM.instance().makeAttrib, posY, oldPosY);
+         setScrollPanelOffset(SSM.makeAttrib, posY, oldPosY);
       } else if (SSM.instance().topElement == SSM.ELEMENT_MODEL_SCROLL)  {
-         setScrollPanelOffset(SSM.instance().modelAttrib, posY, oldPosY);
+         setScrollPanelOffset(SSM.modelAttrib, posY, oldPosY);
       } else if (SSM.instance().topElement == SSM.ELEMENT_YEAR_SCROLL)  {
-         setScrollPanelOffset(SSM.instance().yearAttrib, posY, oldPosY);
+         setScrollPanelOffset(SSM.yearAttrib, posY, oldPosY);
       // For comparisons   
       } else if (SSM.instance().topElement == SSM.ELEMENT_CMANUFACTURE_SCROLL) {
-         setScrollPanelOffset(SSM.instance().c_manufactureAttrib, posY, oldPosY);
+         setScrollPanelOffset(SSM.c_manufactureAttrib, posY, oldPosY);
       } else if (SSM.instance().topElement == SSM.ELEMENT_CMAKE_SCROLL) {
-         setScrollPanelOffset(SSM.instance().c_makeAttrib, posY, oldPosY);
+         setScrollPanelOffset(SSM.c_makeAttrib, posY, oldPosY);
       } else if (SSM.instance().topElement == SSM.ELEMENT_CMODEL_SCROLL)  {
-         setScrollPanelOffset(SSM.instance().c_modelAttrib, posY, oldPosY);
+         setScrollPanelOffset(SSM.c_modelAttrib, posY, oldPosY);
       } else if (SSM.instance().topElement == SSM.ELEMENT_CYEAR_SCROLL)  {
-         setScrollPanelOffset(SSM.instance().c_yearAttrib, posY, oldPosY);
+         setScrollPanelOffset(SSM.c_yearAttrib, posY, oldPosY);
       // Save and load stuff         
       } else if (SSM.instance().topElement == SSM.ELEMENT_SAVELOAD_SCROLL) {
-         SSM.instance().saveLoadYOffset -= (SSM.instance().mouseY - SSM.instance().oldMouseY);   
+         SSM.instance().saveLoadYOffset -= (SSM.mouseY - SSM.oldMouseY);   
          if (SSM.instance().saveLoadYOffset < SSM.instance().saveLoadHeight)
             SSM.instance().saveLoadYOffset = SSM.instance().saveLoadHeight;
          if (SSM.instance().saveLoadYOffset > SSM.instance().saveLoadTexHeight)
@@ -242,7 +242,7 @@ public class Event {
             SSM.instance().t1Start = Math.max(0, SSM.instance().t1Start - SSM.instance().globalFetchSize);
             SSM.instance().t2Start = Math.max(SSM.instance().globalFetchSize, SSM.instance().t2Start - SSM.instance().globalFetchSize);
             SSM.instance().docAction = 1;   
-            SSM.instance().dirtyGL = 1;
+            SSM.dirtyGL = 1;
          } else {
             SSM.yoffset += unit*5;
          }            
@@ -260,7 +260,7 @@ public class Event {
             SSM.instance().t1Start += SSM.instance().globalFetchSize;
             SSM.instance().t2Start += SSM.instance().globalFetchSize;
             SSM.instance().docAction = 2;   
-            SSM.instance().dirtyGL = 1;
+            SSM.dirtyGL = 1;
          } else {
             SSM.yoffset += unit*5;
          }            

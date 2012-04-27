@@ -13,7 +13,6 @@ import javax.media.opengl.glu.GLU;
 import org.jdesktop.animation.timing.interpolation.PropertySetter;
 
 import util.DCCamera;
-import util.DCUtil;
 import util.GraphicUtil;
 import util.TextureFont;
 import TimingFrameExt.FloatEval;
@@ -26,11 +25,8 @@ import datastore.HierarchyTable;
 import datastore.MM;
 import datastore.SSM;
 import datastore.SchemeManager;
-import gui.DCScrollPane;
 import gui.DCTip;
-import gui.GTag;
 import gui.StatusWindow;
-import gui.TextPane;
 
 /////////////////////////////////////////////////////////////////////////////////
 // This class is responsible for rendering the 3D part of the visualizaiton
@@ -70,9 +66,9 @@ public class ModelRenderer extends BaseModelRenderer {
       gl2.glClear(GL2.GL_COLOR_BUFFER_BIT);
       // To avoid threading issues, lets
       // just put the update GL stuff here
-      if (SSM.instance().dirtyGL == 1) {
+      if (SSM.dirtyGL == 1) {
          resetDataGL(gl2);
-         SSM.instance().dirtyGL = 0;
+         SSM.dirtyGL = 0;
       }
       
       if (SSM.instance().use3DModel == true) {
@@ -379,7 +375,7 @@ public class ModelRenderer extends BaseModelRenderer {
       ////////////////////////////////////////////////////////////////////////////////
       if (SSM.instance().showLabels == true) {
          for (int i=0; i < SSM.instance().lensList.size(); i++) {
-            setOrthonormalView(gl2, 0, SSM.windowWidth, 0, SSM.instance().windowHeight); {
+            setOrthonormalView(gl2, 0, SSM.windowWidth, 0, SSM.windowHeight); {
                if (SSM.instance().useCircularLabel == true) {
                   renderLabelCircular(gl2, SSM.instance().lensList.elementAt(i));
                } else {
@@ -469,10 +465,10 @@ public class ModelRenderer extends BaseModelRenderer {
    ////////////////////////////////////////////////////////////////////////////////
    public void renderChartsOnly(GL2 gl2) {
       String list[] = this.getComponentUnsorted(gl2);
-      int startIdx = CacheManager.instance().getDateKey( SSM.instance().startTimeFrame ) == null ? 0:
-         CacheManager.instance().getDateKey( SSM.instance().startTimeFrame );
-      int endIdx   = CacheManager.instance().getDateKey( SSM.instance().endTimeFrame) == null ? CacheManager.instance().timeLineSize:
-         CacheManager.instance().getDateKey( SSM.instance().endTimeFrame );      
+      int startIdx = CacheManager.instance().getDateKey( SSM.startTimeFrame ) == null ? 0:
+         CacheManager.instance().getDateKey( SSM.startTimeFrame );
+      int endIdx   = CacheManager.instance().getDateKey( SSM.endTimeFrame) == null ? CacheManager.instance().timeLineSize:
+         CacheManager.instance().getDateKey( SSM.endTimeFrame );      
      
       int counter = 0;
       Hashtable<String, String> uniqueTable = new Hashtable<String, String>();
@@ -571,7 +567,7 @@ public class ModelRenderer extends BaseModelRenderer {
       ////////////////////////////////////////////////////////////////////////////////
       this.dcTextPanel.displayH = SSM.docHeight;
       this.dcTextPanel.displayW = SSM.docWidth;
-      SSM.docAnchorX = SSM.windowWidth - 1.1f * SSM.instance().docWidth;
+      SSM.docAnchorX = SSM.windowWidth - 1.1f * SSM.docWidth;
       SSM.instance().docActive = true;
       this.dcTextPanel.render(gl2);
       this.dcTextPanel.displayH = 0;
@@ -689,7 +685,7 @@ public class ModelRenderer extends BaseModelRenderer {
       
      
       // If is dirty then skip...something is already updating
-      if (SSM.instance().dirty == 1 || SSM.instance().dirtyGL == 1) {
+      if (SSM.dirty == 1 || SSM.dirtyGL == 1) {
          System.out.println("........ dirty exit ........");
          return;
       }
@@ -788,11 +784,11 @@ public class ModelRenderer extends BaseModelRenderer {
                SSM.selectedGroup.put(obj, obj);
             }
             
-            SSM.instance().dirty = 1;
-            SSM.instance().dirtyGL = 1; // for the text panel
+            SSM.dirty = 1;
+            SSM.dirtyGL = 1; // for the text panel
             SSM.instance().t1Start = 0;
             SSM.instance().t2Start = SSM.instance().globalFetchSize;
-            SSM.instance().yoffset = SSM.instance().docHeight;
+            SSM.yoffset = SSM.docHeight;
             SSM.instance().docMaxSize = 0;
             for (Integer key : SSM.selectedGroup.keySet()) {
                SSM.instance().docMaxSize += CacheManager.instance().groupOccurrence.get( key );
@@ -801,11 +797,11 @@ public class ModelRenderer extends BaseModelRenderer {
             
          } else {
             SSM.selectedGroup.put(obj,obj);
-            SSM.instance().dirty = 1;
-            SSM.instance().dirtyGL = 1; // for the text panel
+            SSM.dirty = 1;
+            SSM.dirtyGL = 1; // for the text panel
             SSM.instance().t1Start = 0;
             SSM.instance().t2Start = SSM.instance().globalFetchSize;
-            SSM.instance().yoffset = SSM.instance().docHeight;
+            SSM.yoffset = SSM.docHeight;
             //SSM.instance().docMaxSize = CacheManager.instance().groupOccurrence.get( SSM.selectedGroup );
             SSM.instance().docMaxSize = 0;
             for (Integer key : SSM.selectedGroup.keySet()) {
@@ -814,11 +810,11 @@ public class ModelRenderer extends BaseModelRenderer {
         }
       } else {
          SSM.selectedGroup.clear();
-         SSM.instance().dirty = 1;
-         SSM.instance().dirtyGL = 1; // for the text panel
+         SSM.dirty = 1;
+         SSM.dirtyGL = 1; // for the text panel
          SSM.instance().t1Start = 0;
          SSM.instance().t2Start = SSM.instance().globalFetchSize;
-         SSM.instance().yoffset = SSM.instance().docHeight;
+         SSM.yoffset = SSM.docHeight;
          SSM.instance().docMaxSize = 0;
       }
       
@@ -1026,7 +1022,6 @@ public class ModelRenderer extends BaseModelRenderer {
       // Quick way to get out and save some FPS from rendering useless cycles
       //if (SSM.instance().l_mouseClicked == false) return null;
       
-      int hits;
       IntBuffer buffer = (IntBuffer)GLBuffers.newDirectGLBuffer(GL2.GL_UNSIGNED_INT, 512);
       
       
@@ -1151,10 +1146,10 @@ public class ModelRenderer extends BaseModelRenderer {
       float rightHeight = 0;
       float leftHeight = 0;
       
-      int startIdx = CacheManager.instance().getDateKey( SSM.instance().startTimeFrame ) == null ? 0:
-         CacheManager.instance().getDateKey( SSM.instance().startTimeFrame );
-      int endIdx   = CacheManager.instance().getDateKey( SSM.instance().endTimeFrame) == null ? CacheManager.instance().timeLineSize:
-         CacheManager.instance().getDateKey( SSM.instance().endTimeFrame );      
+      int startIdx = CacheManager.instance().getDateKey( SSM.startTimeFrame ) == null ? 0:
+         CacheManager.instance().getDateKey( SSM.startTimeFrame );
+      int endIdx   = CacheManager.instance().getDateKey( SSM.endTimeFrame) == null ? CacheManager.instance().timeLineSize:
+         CacheManager.instance().getDateKey( SSM.endTimeFrame );      
       
      
       Vector<DCComponent> rightList = new Vector<DCComponent>();
@@ -1296,23 +1291,23 @@ public class ModelRenderer extends BaseModelRenderer {
             
                relatedOccNew = CacheManager.instance().getCoOccurringAgg(
                      startIdx, endIdx, 
-                     SSM.instance().startMonth, SSM.instance().endMonth, 
+                     SSM.startMonth, SSM.endMonth, 
                      HierarchyTable.instance().getAgg(comp.id),
                      selectedGroup,
-                     SSM.instance().manufactureAttrib.selected,
-                     SSM.instance().makeAttrib.selected, 
-                     SSM.instance().modelAttrib.selected,
-                     SSM.instance().yearAttrib.selected);
+                     SSM.manufactureAttrib.selected,
+                     SSM.makeAttrib.selected, 
+                     SSM.modelAttrib.selected,
+                     SSM.yearAttrib.selected);
                
                c_relatedOccNew = CacheManager.instance().getCoOccurringAgg(
                      startIdx, endIdx, 
-                     SSM.instance().startMonth, SSM.instance().endMonth, 
+                     SSM.startMonth, SSM.endMonth, 
                      HierarchyTable.instance().getAgg(comp.id),
                      selectedGroup,
-                     SSM.instance().c_manufactureAttrib.selected,
-                     SSM.instance().c_makeAttrib.selected, 
-                     SSM.instance().c_modelAttrib.selected,
-                     SSM.instance().c_yearAttrib.selected);
+                     SSM.c_manufactureAttrib.selected,
+                     SSM.c_makeAttrib.selected, 
+                     SSM.c_modelAttrib.selected,
+                     SSM.c_yearAttrib.selected);
               
             } else {
                Vector<Integer> related =  new Vector<Integer>();
@@ -1323,23 +1318,23 @@ public class ModelRenderer extends BaseModelRenderer {
                
                relatedOccNew = CacheManager.instance().getCoOccurring(
                      startIdx, endIdx, 
-                     SSM.instance().startMonth, SSM.instance().endMonth, 
+                     SSM.startMonth, SSM.endMonth, 
                      t,
                      related,
-                     SSM.instance().manufactureAttrib.selected,
-                     SSM.instance().makeAttrib.selected, 
-                     SSM.instance().modelAttrib.selected,
-                     SSM.instance().yearAttrib.selected);              
+                     SSM.manufactureAttrib.selected,
+                     SSM.makeAttrib.selected, 
+                     SSM.modelAttrib.selected,
+                     SSM.yearAttrib.selected);              
                
                c_relatedOccNew = CacheManager.instance().getCoOccurring(
                      startIdx, endIdx, 
-                     SSM.instance().startMonth, SSM.instance().endMonth, 
+                     SSM.startMonth, SSM.endMonth, 
                      t,
                      related,
-                     SSM.instance().c_manufactureAttrib.selected,
-                     SSM.instance().c_makeAttrib.selected, 
-                     SSM.instance().c_modelAttrib.selected,
-                     SSM.instance().c_yearAttrib.selected);              
+                     SSM.c_manufactureAttrib.selected,
+                     SSM.c_makeAttrib.selected, 
+                     SSM.c_modelAttrib.selected,
+                     SSM.c_yearAttrib.selected);              
               
             }
          }
@@ -1437,23 +1432,23 @@ public class ModelRenderer extends BaseModelRenderer {
                
                relatedOccNew = CacheManager.instance().getCoOccurringAgg(
                      startIdx, endIdx, 
-                     SSM.instance().startMonth, SSM.instance().endMonth, 
+                     SSM.startMonth, SSM.endMonth, 
                      HierarchyTable.instance().getAgg(comp.id),
                      selectedGroup,
-                     SSM.instance().manufactureAttrib.selected,
-                     SSM.instance().makeAttrib.selected, 
-                     SSM.instance().modelAttrib.selected,
-                     SSM.instance().yearAttrib.selected);               
+                     SSM.manufactureAttrib.selected,
+                     SSM.makeAttrib.selected, 
+                     SSM.modelAttrib.selected,
+                     SSM.yearAttrib.selected);               
                
                c_relatedOccNew = CacheManager.instance().getCoOccurringAgg(
                      startIdx, endIdx, 
-                     SSM.instance().startMonth, SSM.instance().endMonth, 
+                     SSM.startMonth, SSM.endMonth, 
                      HierarchyTable.instance().getAgg(comp.id),
                      selectedGroup,
-                     SSM.instance().c_manufactureAttrib.selected,
-                     SSM.instance().c_makeAttrib.selected, 
-                     SSM.instance().c_modelAttrib.selected,
-                     SSM.instance().c_yearAttrib.selected);               
+                     SSM.c_manufactureAttrib.selected,
+                     SSM.c_makeAttrib.selected, 
+                     SSM.c_modelAttrib.selected,
+                     SSM.c_yearAttrib.selected);               
                
             } else {
                Vector<Integer> related =  new Vector<Integer>();
@@ -1463,23 +1458,23 @@ public class ModelRenderer extends BaseModelRenderer {
                
                relatedOccNew = CacheManager.instance().getCoOccurring(
                      startIdx, endIdx, 
-                     SSM.instance().startMonth, SSM.instance().endMonth, 
+                     SSM.startMonth, SSM.endMonth, 
                      t,
                      related,
-                     SSM.instance().manufactureAttrib.selected,
-                     SSM.instance().makeAttrib.selected, 
-                     SSM.instance().modelAttrib.selected,
-                     SSM.instance().yearAttrib.selected);                   
+                     SSM.manufactureAttrib.selected,
+                     SSM.makeAttrib.selected, 
+                     SSM.modelAttrib.selected,
+                     SSM.yearAttrib.selected);                   
                
                c_relatedOccNew = CacheManager.instance().getCoOccurring(
                      startIdx, endIdx, 
-                     SSM.instance().startMonth, SSM.instance().endMonth, 
+                     SSM.startMonth, SSM.endMonth, 
                      t,
                      related,
-                     SSM.instance().c_manufactureAttrib.selected,
-                     SSM.instance().c_makeAttrib.selected, 
-                     SSM.instance().c_modelAttrib.selected,
-                     SSM.instance().c_yearAttrib.selected);                   
+                     SSM.c_manufactureAttrib.selected,
+                     SSM.c_makeAttrib.selected, 
+                     SSM.c_modelAttrib.selected,
+                     SSM.c_yearAttrib.selected);                   
               
             }
          }
@@ -1928,8 +1923,8 @@ public class ModelRenderer extends BaseModelRenderer {
      
       
       MM.instance().initGPU(gl2);
-      SSM.instance().dirty = 1;
-      SSM.instance().dirtyGL = 1;
+      SSM.dirty = 1;
+      SSM.dirtyGL = 1;
       
       
       this.resetData();
@@ -1965,23 +1960,23 @@ public class ModelRenderer extends BaseModelRenderer {
          
             res[2] = CacheManager.instance().getCoOccurringAgg(
                   startIdx, endIdx, 
-                  SSM.instance().startMonth, SSM.instance().endMonth, 
+                  SSM.startMonth, SSM.endMonth, 
                   HierarchyTable.instance().getAgg(comp.id),
                   selectedGroup,
-                  SSM.instance().manufactureAttrib.selected,
-                  SSM.instance().makeAttrib.selected, 
-                  SSM.instance().modelAttrib.selected,
-                  SSM.instance().yearAttrib.selected);
+                  SSM.manufactureAttrib.selected,
+                  SSM.makeAttrib.selected, 
+                  SSM.modelAttrib.selected,
+                  SSM.yearAttrib.selected);
             
             res[3] = CacheManager.instance().getCoOccurringAgg(
                   startIdx, endIdx, 
-                  SSM.instance().startMonth, SSM.instance().endMonth, 
+                  SSM.startMonth, SSM.endMonth, 
                   HierarchyTable.instance().getAgg(comp.id),
                   selectedGroup,
-                  SSM.instance().c_manufactureAttrib.selected,
-                  SSM.instance().c_makeAttrib.selected, 
-                  SSM.instance().c_modelAttrib.selected,
-                  SSM.instance().c_yearAttrib.selected);
+                  SSM.c_manufactureAttrib.selected,
+                  SSM.c_makeAttrib.selected, 
+                  SSM.c_modelAttrib.selected,
+                  SSM.c_yearAttrib.selected);
            
          } else {
             Vector<Integer> related =  new Vector<Integer>();
@@ -1992,23 +1987,23 @@ public class ModelRenderer extends BaseModelRenderer {
             
             res[2] = CacheManager.instance().getCoOccurring(
                   startIdx, endIdx, 
-                  SSM.instance().startMonth, SSM.instance().endMonth, 
+                  SSM.startMonth, SSM.endMonth, 
                   t,
                   related,
-                  SSM.instance().manufactureAttrib.selected,
-                  SSM.instance().makeAttrib.selected, 
-                  SSM.instance().modelAttrib.selected,
-                  SSM.instance().yearAttrib.selected);              
+                  SSM.manufactureAttrib.selected,
+                  SSM.makeAttrib.selected, 
+                  SSM.modelAttrib.selected,
+                  SSM.yearAttrib.selected);              
             
             res[3] = CacheManager.instance().getCoOccurring(
                   startIdx, endIdx, 
-                  SSM.instance().startMonth, SSM.instance().endMonth, 
+                  SSM.startMonth, SSM.endMonth, 
                   t,
                   related,
-                  SSM.instance().c_manufactureAttrib.selected,
-                  SSM.instance().c_makeAttrib.selected, 
-                  SSM.instance().c_modelAttrib.selected,
-                  SSM.instance().c_yearAttrib.selected);              
+                  SSM.c_manufactureAttrib.selected,
+                  SSM.c_makeAttrib.selected, 
+                  SSM.c_modelAttrib.selected,
+                  SSM.c_yearAttrib.selected);              
          }
       }
       return res;

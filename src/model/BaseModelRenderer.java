@@ -4,7 +4,6 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.geom.Rectangle2D;
 import java.nio.IntBuffer;
-import java.util.Collections;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Iterator;
@@ -22,7 +21,6 @@ import util.DWin;
 import util.GraphicUtil;
 import util.MatrixUtil;
 import util.ShaderObj;
-import util.TextureFont;
 import Jama.Matrix;
 import TimingFrameExt.DCColourEval;
 
@@ -34,15 +32,10 @@ import datastore.HierarchyTable;
 import datastore.MM;
 import datastore.SSM;
 import datastore.SchemeManager;
-import db.QueryObj;
 import exec.RenderTask;
-import gui.DCScrollPane;
 import gui.DCTextPanel2;
-import gui.DCTip;
-import gui.GTag;
 import gui.Heatmap;
 import gui.StatusWindow;
-import gui.TextPane;
 
 /////////////////////////////////////////////////////////////////////////////////
 // This class provides basic function that should be shared among all model rendering classes
@@ -235,13 +228,13 @@ public abstract class BaseModelRenderer implements RenderTask {
    ////////////////////////////////////////////////////////////////////////////////
    public void resetData() {
       
-      int startIdx = CacheManager.instance().getDateKey( SSM.instance().startTimeFrame ) == null ? 0:
-         CacheManager.instance().getDateKey( SSM.instance().startTimeFrame );
-      int endIdx   = CacheManager.instance().getDateKey( SSM.instance().endTimeFrame) == null ? CacheManager.instance().timeLineSize:
-         CacheManager.instance().getDateKey( SSM.instance().endTimeFrame);
+      int startIdx = CacheManager.instance().getDateKey( SSM.startTimeFrame ) == null ? 0:
+         CacheManager.instance().getDateKey( SSM.startTimeFrame );
+      int endIdx   = CacheManager.instance().getDateKey( SSM.endTimeFrame) == null ? CacheManager.instance().timeLineSize:
+         CacheManager.instance().getDateKey( SSM.endTimeFrame);
       
-      SSM.instance().startIdx = startIdx;
-      SSM.instance().endIdx = endIdx;
+      SSM.startIdx = startIdx;
+      SSM.endIdx = endIdx;
 
       
       
@@ -249,7 +242,7 @@ public abstract class BaseModelRenderer implements RenderTask {
 
       
       
-      DWin.instance().error(SSM.instance().startMonth + " " + SSM.instance().endMonth);
+      DWin.instance().error(SSM.startMonth + " " + SSM.endMonth);
       DWin.instance().error("Starting indices: " + startIdx + " " + endIdx );
       
       
@@ -285,102 +278,102 @@ public abstract class BaseModelRenderer implements RenderTask {
           CacheManager.instance().groupOccurrence = 
             CacheManager.instance().getPartOccurrenceFilter(
                startIdx, endIdx, 
-               SSM.instance().startMonth,
-               SSM.instance().endMonth, 
-               SSM.instance().manufactureAttrib.selected, 
-               SSM.instance().makeAttrib.selected, 
-               SSM.instance().modelAttrib.selected,
-               SSM.instance().yearAttrib.selected);
+               SSM.startMonth,
+               SSM.endMonth, 
+               SSM.manufactureAttrib.selected, 
+               SSM.makeAttrib.selected, 
+               SSM.modelAttrib.selected,
+               SSM.yearAttrib.selected);
       
           CacheManager.instance().c_groupOccurrence = 
             CacheManager.instance().getPartOccurrenceFilter(
                startIdx, endIdx, 
-               SSM.instance().startMonth,
-               SSM.instance().endMonth, 
-               SSM.instance().c_manufactureAttrib.selected, 
-               SSM.instance().c_makeAttrib.selected, 
-               SSM.instance().c_modelAttrib.selected,
-               SSM.instance().c_yearAttrib.selected);
+               SSM.startMonth,
+               SSM.endMonth, 
+               SSM.c_manufactureAttrib.selected, 
+               SSM.c_makeAttrib.selected, 
+               SSM.c_modelAttrib.selected,
+               SSM.c_yearAttrib.selected);
          
           
           if (SSM.selectedGroup.size() > 0 && SSM.instance().useLocalFocus == true) {
              CacheManager.instance().monthMaximum = 
                CacheManager.instance().getMonthMaximumSelected(
-                     SSM.instance().manufactureAttrib.selected, 
-                     SSM.instance().makeAttrib.selected, 
-                     SSM.instance().modelAttrib.selected,
-                     SSM.instance().yearAttrib.selected);
+                     SSM.manufactureAttrib.selected, 
+                     SSM.makeAttrib.selected, 
+                     SSM.modelAttrib.selected,
+                     SSM.yearAttrib.selected);
              
              CacheManager.instance().c_monthMaximum = 
                 CacheManager.instance().getMonthMaximumSelected(
-                      SSM.instance().c_manufactureAttrib.selected, 
-                      SSM.instance().c_makeAttrib.selected, 
-                      SSM.instance().c_modelAttrib.selected,
-                      SSM.instance().c_yearAttrib.selected);             
+                      SSM.c_manufactureAttrib.selected, 
+                      SSM.c_makeAttrib.selected, 
+                      SSM.c_modelAttrib.selected,
+                      SSM.c_yearAttrib.selected);             
           } else {
              CacheManager.instance().monthMaximum = 
                CacheManager.instance().getMonthMaximum(
-                     SSM.instance().manufactureAttrib.selected, 
-                     SSM.instance().makeAttrib.selected, 
-                     SSM.instance().modelAttrib.selected,
-                     SSM.instance().yearAttrib.selected);
+                     SSM.manufactureAttrib.selected, 
+                     SSM.makeAttrib.selected, 
+                     SSM.modelAttrib.selected,
+                     SSM.yearAttrib.selected);
              
              CacheManager.instance().c_monthMaximum = 
                 CacheManager.instance().getMonthMaximum(
-                      SSM.instance().c_manufactureAttrib.selected, 
-                      SSM.instance().c_makeAttrib.selected, 
-                      SSM.instance().c_modelAttrib.selected,
-                      SSM.instance().c_yearAttrib.selected);             
+                      SSM.c_manufactureAttrib.selected, 
+                      SSM.c_makeAttrib.selected, 
+                      SSM.c_modelAttrib.selected,
+                      SSM.c_yearAttrib.selected);             
           }
       } else {
           CacheManager.instance().groupOccurrence = 
             CacheManager.instance().getPartOccurrenceFilterAgg(
                startIdx, endIdx, 
-               SSM.instance().startMonth,
-               SSM.instance().endMonth, 
-               SSM.instance().manufactureAttrib.selected, 
-               SSM.instance().makeAttrib.selected, 
-               SSM.instance().modelAttrib.selected,
-               SSM.instance().yearAttrib.selected);
+               SSM.startMonth,
+               SSM.endMonth, 
+               SSM.manufactureAttrib.selected, 
+               SSM.makeAttrib.selected, 
+               SSM.modelAttrib.selected,
+               SSM.yearAttrib.selected);
           
            CacheManager.instance().c_groupOccurrence = 
              CacheManager.instance().getPartOccurrenceFilterAgg(
                startIdx, endIdx, 
-               SSM.instance().startMonth,
-               SSM.instance().endMonth, 
-               SSM.instance().c_manufactureAttrib.selected, 
-               SSM.instance().c_makeAttrib.selected, 
-               SSM.instance().c_modelAttrib.selected,
-               SSM.instance().c_yearAttrib.selected);
+               SSM.startMonth,
+               SSM.endMonth, 
+               SSM.c_manufactureAttrib.selected, 
+               SSM.c_makeAttrib.selected, 
+               SSM.c_modelAttrib.selected,
+               SSM.c_yearAttrib.selected);
        
            if (SSM.selectedGroup.size() > 0 && SSM.instance().useLocalFocus) {
               CacheManager.instance().monthMaximum = 
                 CacheManager.instance().getMonthMaximumSelectedAgg(
-                      SSM.instance().manufactureAttrib.selected, 
-                      SSM.instance().makeAttrib.selected, 
-                      SSM.instance().modelAttrib.selected,
-                      SSM.instance().yearAttrib.selected);
+                      SSM.manufactureAttrib.selected, 
+                      SSM.makeAttrib.selected, 
+                      SSM.modelAttrib.selected,
+                      SSM.yearAttrib.selected);
               
               CacheManager.instance().c_monthMaximum = 
                  CacheManager.instance().getMonthMaximumSelectedAgg(
-                       SSM.instance().c_manufactureAttrib.selected, 
-                       SSM.instance().c_makeAttrib.selected, 
-                       SSM.instance().c_modelAttrib.selected,
-                       SSM.instance().c_yearAttrib.selected);              
+                       SSM.c_manufactureAttrib.selected, 
+                       SSM.c_makeAttrib.selected, 
+                       SSM.c_modelAttrib.selected,
+                       SSM.c_yearAttrib.selected);              
            } else {
               CacheManager.instance().monthMaximum = 
                 CacheManager.instance().getMonthMaximumAgg(
-                      SSM.instance().manufactureAttrib.selected, 
-                      SSM.instance().makeAttrib.selected, 
-                      SSM.instance().modelAttrib.selected,
-                      SSM.instance().yearAttrib.selected);
+                      SSM.manufactureAttrib.selected, 
+                      SSM.makeAttrib.selected, 
+                      SSM.modelAttrib.selected,
+                      SSM.yearAttrib.selected);
               
               CacheManager.instance().c_monthMaximum = 
                  CacheManager.instance().getMonthMaximumAgg(
-                       SSM.instance().c_manufactureAttrib.selected, 
-                       SSM.instance().c_makeAttrib.selected, 
-                       SSM.instance().c_modelAttrib.selected,
-                       SSM.instance().c_yearAttrib.selected);              
+                       SSM.c_manufactureAttrib.selected, 
+                       SSM.c_makeAttrib.selected, 
+                       SSM.c_modelAttrib.selected,
+                       SSM.c_yearAttrib.selected);              
            }
       }
       
@@ -397,21 +390,21 @@ public abstract class BaseModelRenderer implements RenderTask {
          
          Vector<Integer> l1 = CacheManager.instance().getRelatedGroup(
                startIdx, endIdx,
-               SSM.instance().startMonth, SSM.instance().endMonth,
+               SSM.startMonth, SSM.endMonth,
                t,
-               SSM.instance().manufactureAttrib.selected,
-               SSM.instance().makeAttrib.selected,
-               SSM.instance().modelAttrib.selected,
-               SSM.instance().yearAttrib.selected);
+               SSM.manufactureAttrib.selected,
+               SSM.makeAttrib.selected,
+               SSM.modelAttrib.selected,
+               SSM.yearAttrib.selected);
          
           Vector<Integer> l2 = CacheManager.instance().getRelatedGroup(
                startIdx, endIdx,
-               SSM.instance().startMonth, SSM.instance().endMonth,
+               SSM.startMonth, SSM.endMonth,
                t,
-               SSM.instance().c_manufactureAttrib.selected,
-               SSM.instance().c_makeAttrib.selected,
-               SSM.instance().c_modelAttrib.selected,
-               SSM.instance().c_yearAttrib.selected);
+               SSM.c_manufactureAttrib.selected,
+               SSM.c_makeAttrib.selected,
+               SSM.c_modelAttrib.selected,
+               SSM.c_yearAttrib.selected);
           
           if (SSM.instance().useComparisonMode == true) {
              for (int i=0; i < l2.size(); i++) {
@@ -438,49 +431,49 @@ public abstract class BaseModelRenderer implements RenderTask {
          if (SSM.instance().useAggregate) {
             SSM.instance().maxOccurrence = CacheManager.instance().getCoOccurringAgg(
                   startIdx, endIdx, 
-                  SSM.instance().startMonth, SSM.instance().endMonth, 
+                  SSM.startMonth, SSM.endMonth, 
                   selfAgg, 
                   self, 
-                  SSM.instance().manufactureAttrib.selected,
-                  SSM.instance().makeAttrib.selected,
-                  SSM.instance().modelAttrib.selected,
-                  SSM.instance().yearAttrib.selected
+                  SSM.manufactureAttrib.selected,
+                  SSM.makeAttrib.selected,
+                  SSM.modelAttrib.selected,
+                  SSM.yearAttrib.selected
                   );
             
             if (SSM.instance().useComparisonMode == true) {
                SSM.instance().maxOccurrence += CacheManager.instance().getCoOccurringAgg(
                      startIdx, endIdx, 
-                     SSM.instance().startMonth, SSM.instance().endMonth, 
+                     SSM.startMonth, SSM.endMonth, 
                      selfAgg, 
                      self, 
-                     SSM.instance().c_manufactureAttrib.selected,
-                     SSM.instance().c_makeAttrib.selected,
-                     SSM.instance().c_modelAttrib.selected,
-                     SSM.instance().c_yearAttrib.selected
+                     SSM.c_manufactureAttrib.selected,
+                     SSM.c_makeAttrib.selected,
+                     SSM.c_modelAttrib.selected,
+                     SSM.c_yearAttrib.selected
                      );
                 
             }
          } else {
             SSM.instance().maxOccurrence = CacheManager.instance().getCoOccurring(
                   startIdx, endIdx, 
-                  SSM.instance().startMonth, SSM.instance().endMonth,
+                  SSM.startMonth, SSM.endMonth,
                   self, 
                   self, 
-                  SSM.instance().manufactureAttrib.selected,
-                  SSM.instance().makeAttrib.selected,
-                  SSM.instance().modelAttrib.selected,
-                  SSM.instance().yearAttrib.selected);
+                  SSM.manufactureAttrib.selected,
+                  SSM.makeAttrib.selected,
+                  SSM.modelAttrib.selected,
+                  SSM.yearAttrib.selected);
             
             if (SSM.instance().useComparisonMode == true ) {
                SSM.instance().maxOccurrence += CacheManager.instance().getCoOccurring(
                      startIdx, endIdx, 
-                     SSM.instance().startMonth, SSM.instance().endMonth,
+                     SSM.startMonth, SSM.endMonth,
                      self, 
                      self, 
-                     SSM.instance().c_manufactureAttrib.selected,
-                     SSM.instance().c_makeAttrib.selected,
-                     SSM.instance().c_modelAttrib.selected,
-                     SSM.instance().c_yearAttrib.selected);
+                     SSM.c_manufactureAttrib.selected,
+                     SSM.c_makeAttrib.selected,
+                     SSM.c_modelAttrib.selected,
+                     SSM.c_yearAttrib.selected);
             }
          }
       } else {
@@ -503,7 +496,7 @@ public abstract class BaseModelRenderer implements RenderTask {
       
       
       
-      System.out.println("Resetting Model Renderer Data : " + SSM.instance().startIdx + " " + SSM.instance().endIdx);
+      System.out.println("Resetting Model Renderer Data : " + SSM.startIdx + " " + SSM.endIdx);
       //System.out.println("Max occurrence : " + SSM.instance().maxOccurrence);
       //System.out.println("Min occurrence : " + SSM.instance().minOccurrence);
       //System.out.println("\n");
@@ -533,48 +526,48 @@ public abstract class BaseModelRenderer implements RenderTask {
                if (SSM.instance().useAggregate) {
                   occ = CacheManager.instance().getCoOccurringAgg(
                         startIdx, endIdx, 
-                        SSM.instance().startMonth, SSM.instance().endMonth, 
+                        SSM.startMonth, SSM.endMonth, 
                         selfAgg, 
                         selected, 
-                        SSM.instance().manufactureAttrib.selected,
-                        SSM.instance().makeAttrib.selected,
-                        SSM.instance().modelAttrib.selected,
-                        SSM.instance().yearAttrib.selected
+                        SSM.manufactureAttrib.selected,
+                        SSM.makeAttrib.selected,
+                        SSM.modelAttrib.selected,
+                        SSM.yearAttrib.selected
                         );
                   
                   if (SSM.instance().useComparisonMode == true) {
                      occ += CacheManager.instance().getCoOccurringAgg(
                            startIdx, endIdx, 
-                           SSM.instance().startMonth, SSM.instance().endMonth, 
+                           SSM.startMonth, SSM.endMonth, 
                            selfAgg, 
                            selected, 
-                           SSM.instance().c_manufactureAttrib.selected,
-                           SSM.instance().c_makeAttrib.selected,
-                           SSM.instance().c_modelAttrib.selected,
-                           SSM.instance().c_yearAttrib.selected
+                           SSM.c_manufactureAttrib.selected,
+                           SSM.c_makeAttrib.selected,
+                           SSM.c_modelAttrib.selected,
+                           SSM.c_yearAttrib.selected
                            );
                   }
                } else {
                   occ = CacheManager.instance().getCoOccurring(
                         startIdx, endIdx, 
-                        SSM.instance().startMonth, SSM.instance().endMonth,
+                        SSM.startMonth, SSM.endMonth,
                         self, 
                         selected, 
-                        SSM.instance().manufactureAttrib.selected,
-                        SSM.instance().makeAttrib.selected,
-                        SSM.instance().modelAttrib.selected,
-                        SSM.instance().yearAttrib.selected);
+                        SSM.manufactureAttrib.selected,
+                        SSM.makeAttrib.selected,
+                        SSM.modelAttrib.selected,
+                        SSM.yearAttrib.selected);
                   
                   if (SSM.instance().useComparisonMode == true) {
                      occ += CacheManager.instance().getCoOccurring(
                            startIdx, endIdx, 
-                           SSM.instance().startMonth, SSM.instance().endMonth,
+                           SSM.startMonth, SSM.endMonth,
                            self, 
                            selected, 
-                           SSM.instance().c_manufactureAttrib.selected,
-                           SSM.instance().c_makeAttrib.selected,
-                           SSM.instance().c_modelAttrib.selected,
-                           SSM.instance().c_yearAttrib.selected);
+                           SSM.c_manufactureAttrib.selected,
+                           SSM.c_makeAttrib.selected,
+                           SSM.c_modelAttrib.selected,
+                           SSM.c_yearAttrib.selected);
                   }
                   
                   
@@ -671,8 +664,8 @@ public abstract class BaseModelRenderer implements RenderTask {
       
       
       // Log the changes
-      ALogger.instance().log("Selected Year :" + SSM.instance().startYear + "-" + SSM.instance().endYear);
-      ALogger.instance().log("Selected Month:" + SSM.instance().startMonth + "-" + SSM.instance().endMonth);
+      ALogger.instance().log("Selected Year :" + SSM.startYear + "-" + SSM.endYear);
+      ALogger.instance().log("Selected Month:" + SSM.startMonth + "-" + SSM.endMonth);
       ALogger.instance().log("Selected Group:" + SSM.selectedGroup);
       
    }   
@@ -693,19 +686,19 @@ public abstract class BaseModelRenderer implements RenderTask {
    public void resetDataGL1(GL2 gl2) {
 
          
-      int startIdx = CacheManager.instance().getDateKey( SSM.instance().startTimeFrame ) == null ? 0:
-                     CacheManager.instance().getDateKey( SSM.instance().startTimeFrame );
+      int startIdx = CacheManager.instance().getDateKey( SSM.startTimeFrame ) == null ? 0:
+                     CacheManager.instance().getDateKey( SSM.startTimeFrame );
       
       //TODO: Need to fix this later, as dates may not be exact
-      int endIdx   = CacheManager.instance().getDateKey( SSM.instance().endTimeFrame) == null ? CacheManager.instance().timeLineSize:
-                     CacheManager.instance().getDateKey( SSM.instance().endTimeFrame );
+      int endIdx   = CacheManager.instance().getDateKey( SSM.endTimeFrame) == null ? CacheManager.instance().timeLineSize:
+                     CacheManager.instance().getDateKey( SSM.endTimeFrame );
       int size = (endIdx - startIdx) + 1;      
       
-      int origin = CacheManager.instance().timeLineStartYear;
-      int sYear  = SSM.instance().startYear;
-      int eYear  = SSM.instance().endYear; 
-      int sMonth = SSM.instance().startMonth;
-      int eMonth = SSM.instance().endMonth;      
+      int origin = CacheManager.timeLineStartYear;
+      int sYear  = SSM.startYear;
+      int eYear  = SSM.endYear; 
+      int sMonth = SSM.startMonth;
+      int eMonth = SSM.endMonth;      
       
       
       int chartStartIdx = startIdx;
@@ -742,34 +735,34 @@ public abstract class BaseModelRenderer implements RenderTask {
         
          if (SSM.instance().useAggregate == true) {
             dcTextPanel.t1.documentList = CacheManager.instance().setDocumentDataAgg(
-                  SSM.instance().startTimeFrame,
-                  SSM.instance().endTimeFrame,
-                  SSM.instance().startMonth,
-                  SSM.instance().endMonth,
+                  SSM.startTimeFrame,
+                  SSM.endTimeFrame,
+                  SSM.startMonth,
+                  SSM.endMonth,
                   groupList,
                   SSM.instance().t1Start);
             
             dcTextPanel.t2.documentList = CacheManager.instance().setDocumentDataAgg(
-                  SSM.instance().startTimeFrame,
-                  SSM.instance().endTimeFrame,
-                  SSM.instance().startMonth,
-                  SSM.instance().endMonth,
+                  SSM.startTimeFrame,
+                  SSM.endTimeFrame,
+                  SSM.startMonth,
+                  SSM.endMonth,
                   groupList,
                   SSM.instance().t2Start);           
          } else {
             dcTextPanel.t1.documentList = CacheManager.instance().setDocumentData(
-                  SSM.instance().startTimeFrame,
-                  SSM.instance().endTimeFrame,
-                  SSM.instance().startMonth,
-                  SSM.instance().endMonth,
+                  SSM.startTimeFrame,
+                  SSM.endTimeFrame,
+                  SSM.startMonth,
+                  SSM.endMonth,
                   groupList,
                   SSM.instance().t1Start);
             
             dcTextPanel.t2.documentList = CacheManager.instance().setDocumentData(
-                  SSM.instance().startTimeFrame,
-                  SSM.instance().endTimeFrame,
-                  SSM.instance().startMonth,
-                  SSM.instance().endMonth,
+                  SSM.startTimeFrame,
+                  SSM.endTimeFrame,
+                  SSM.startMonth,
+                  SSM.endMonth,
                   groupList,
                   SSM.instance().t2Start);
          }
@@ -805,7 +798,7 @@ public abstract class BaseModelRenderer implements RenderTask {
       
       float range = (CacheManager.timeLineEndYear - CacheManager.timeLineStartYear)+1;
       
-      range = (SSM.instance().endYear - SSM.instance().startYear)+1; 
+      range = (SSM.endYear - SSM.startYear)+1; 
       
       
       String[] clist = getComponentUnsorted( null ); //passing in null (no context)         
@@ -836,32 +829,32 @@ public abstract class BaseModelRenderer implements RenderTask {
                         idx, 
                         t, 
                         selectedGroup, 
-                        SSM.instance().manufactureAttrib.selected,
-                        SSM.instance().makeAttrib.selected,
-                        SSM.instance().modelAttrib.selected,
-                        SSM.instance().yearAttrib.selected);
+                        SSM.manufactureAttrib.selected,
+                        SSM.makeAttrib.selected,
+                        SSM.modelAttrib.selected,
+                        SSM.yearAttrib.selected);
                   
                    value2 = CacheManager.instance().getCoOccurring(
                         idx, 
                         t, 
                         selectedGroup, 
-                        SSM.instance().c_manufactureAttrib.selected,
-                        SSM.instance().c_makeAttrib.selected,
-                        SSM.instance().c_modelAttrib.selected,
-                        SSM.instance().c_yearAttrib.selected);
+                        SSM.c_manufactureAttrib.selected,
+                        SSM.c_makeAttrib.selected,
+                        SSM.c_modelAttrib.selected,
+                        SSM.c_yearAttrib.selected);
                  
                } else {
                   value = CacheManager.instance().getOcc(idx, comp.id, 
-                        SSM.instance().manufactureAttrib.selected, 
-                        SSM.instance().makeAttrib.selected, 
-                        SSM.instance().modelAttrib.selected,
-                        SSM.instance().yearAttrib.selected);
+                        SSM.manufactureAttrib.selected, 
+                        SSM.makeAttrib.selected, 
+                        SSM.modelAttrib.selected,
+                        SSM.yearAttrib.selected);
                   
                   value2 = CacheManager.instance().getOcc(idx, comp.id, 
-                        SSM.instance().c_manufactureAttrib.selected, 
-                        SSM.instance().c_makeAttrib.selected, 
-                        SSM.instance().c_modelAttrib.selected,
-                        SSM.instance().c_yearAttrib.selected);
+                        SSM.c_manufactureAttrib.selected, 
+                        SSM.c_makeAttrib.selected, 
+                        SSM.c_modelAttrib.selected,
+                        SSM.c_yearAttrib.selected);
                }
             } else {
                if (SSM.selectedGroup.size() > 0 && SSM.instance().useLocalFocus == true) {
@@ -872,31 +865,31 @@ public abstract class BaseModelRenderer implements RenderTask {
                         idx, 
                         HierarchyTable.instance().getAgg(comp.id), 
                         selectedGroup,
-                        SSM.instance().manufactureAttrib.selected,
-                        SSM.instance().makeAttrib.selected,
-                        SSM.instance().modelAttrib.selected,
-                        SSM.instance().yearAttrib.selected);
+                        SSM.manufactureAttrib.selected,
+                        SSM.makeAttrib.selected,
+                        SSM.modelAttrib.selected,
+                        SSM.yearAttrib.selected);
                   
                   value2 = CacheManager.instance().getCoOccurringAgg(
                         idx, 
                         HierarchyTable.instance().getAgg(comp.id), 
                         selectedGroup,
-                        SSM.instance().c_manufactureAttrib.selected,
-                        SSM.instance().c_makeAttrib.selected,
-                        SSM.instance().c_modelAttrib.selected,
-                        SSM.instance().c_yearAttrib.selected);
+                        SSM.c_manufactureAttrib.selected,
+                        SSM.c_makeAttrib.selected,
+                        SSM.c_modelAttrib.selected,
+                        SSM.c_yearAttrib.selected);
                } else {
                   value = CacheManager.instance().getOccAgg(idx, comp.id, 
-                        SSM.instance().manufactureAttrib.selected, 
-                        SSM.instance().makeAttrib.selected, 
-                        SSM.instance().modelAttrib.selected,
-                        SSM.instance().yearAttrib.selected);              
+                        SSM.manufactureAttrib.selected, 
+                        SSM.makeAttrib.selected, 
+                        SSM.modelAttrib.selected,
+                        SSM.yearAttrib.selected);              
                   
                   value2 = CacheManager.instance().getOccAgg(idx, comp.id, 
-                        SSM.instance().c_manufactureAttrib.selected, 
-                        SSM.instance().c_makeAttrib.selected, 
-                        SSM.instance().c_modelAttrib.selected,
-                        SSM.instance().c_yearAttrib.selected);              
+                        SSM.c_manufactureAttrib.selected, 
+                        SSM.c_makeAttrib.selected, 
+                        SSM.c_modelAttrib.selected,
+                        SSM.c_yearAttrib.selected);              
                }
             }
             
@@ -907,8 +900,8 @@ public abstract class BaseModelRenderer implements RenderTask {
             int y = Integer.parseInt(CacheManager.instance().getTimeByIndex(idx).substring(0, 4));
             int m = Integer.parseInt(CacheManager.instance().getTimeByIndex(idx).substring(4, 6))-1;
             
-            if (y >= SSM.instance().startYear && y <= SSM.instance().endYear) {
-               if (m >= SSM.instance().startMonth && m <= SSM.instance().endMonth) {
+            if (y >= SSM.startYear && y <= SSM.endYear) {
+               if (m >= SSM.startMonth && m <= SSM.endMonth) {
                   h[idx-chartStartIdx] = 1;
                } else {
                   h[idx-chartStartIdx] = 0;

@@ -119,10 +119,10 @@ public class TUIOTest implements TuioListener {
                      if (Event.checkDocumentPanel(sx, sy) == SSM.ELEMENT_NONE &&
                          Event.checkLens(sx, sy) == SSM.ELEMENT_NONE &&
                          Event.checkSlider(sx, sy) == SSM.ELEMENT_NONE &&
-                         Event.checkScrollPanels(sx, sy, SSM.instance().manufactureAttrib, SSM.ELEMENT_MANUFACTURE_SCROLL) == SSM.ELEMENT_NONE &&
-                         Event.checkScrollPanels(sx, sy, SSM.instance().makeAttrib, SSM.ELEMENT_MAKE_SCROLL) == SSM.ELEMENT_NONE &&
-                         Event.checkScrollPanels(sx, sy, SSM.instance().modelAttrib, SSM.ELEMENT_MODEL_SCROLL) == SSM.ELEMENT_NONE &&
-                         Event.checkScrollPanels(sx, sy, SSM.instance().yearAttrib, SSM.ELEMENT_YEAR_SCROLL) == SSM.ELEMENT_NONE) {
+                         Event.checkScrollPanels(sx, sy, SSM.manufactureAttrib, SSM.ELEMENT_MANUFACTURE_SCROLL) == SSM.ELEMENT_NONE &&
+                         Event.checkScrollPanels(sx, sy, SSM.makeAttrib, SSM.ELEMENT_MAKE_SCROLL) == SSM.ELEMENT_NONE &&
+                         Event.checkScrollPanels(sx, sy, SSM.modelAttrib, SSM.ELEMENT_MODEL_SCROLL) == SSM.ELEMENT_NONE &&
+                         Event.checkScrollPanels(sx, sy, SSM.yearAttrib, SSM.ELEMENT_YEAR_SCROLL) == SSM.ELEMENT_NONE) {
                         System.out.println("Trying to create lens");
                         Event.createLens(sx, sy);
                      } else if (Event.checkLens(sx, sy) == SSM.ELEMENT_LENS) {
@@ -164,21 +164,21 @@ public class TUIOTest implements TuioListener {
          w = new WCursor(SSM.ELEMENT_DOCUMENT, o);
       } else if (Event.checkSlider(posX, posY) != SSM.ELEMENT_NONE) {
          w = new WCursor(SSM.ELEMENT_FILTER, o);
-      } else if (Event.checkScrollPanels(posX, posY, SSM.instance().manufactureAttrib, SSM.ELEMENT_MANUFACTURE_SCROLL) == SSM.ELEMENT_MANUFACTURE_SCROLL) {
+      } else if (Event.checkScrollPanels(posX, posY, SSM.manufactureAttrib, SSM.ELEMENT_MANUFACTURE_SCROLL) == SSM.ELEMENT_MANUFACTURE_SCROLL) {
          w = new WCursor(SSM.ELEMENT_MANUFACTURE_SCROLL, o);
-      } else if (Event.checkScrollPanels(posX, posY, SSM.instance().makeAttrib, SSM.ELEMENT_MAKE_SCROLL) == SSM.ELEMENT_MAKE_SCROLL) {
+      } else if (Event.checkScrollPanels(posX, posY, SSM.makeAttrib, SSM.ELEMENT_MAKE_SCROLL) == SSM.ELEMENT_MAKE_SCROLL) {
          w = new WCursor(SSM.ELEMENT_MAKE_SCROLL, o);
-      } else if (Event.checkScrollPanels(posX, posY, SSM.instance().modelAttrib, SSM.ELEMENT_MODEL_SCROLL) == SSM.ELEMENT_MODEL_SCROLL) {
+      } else if (Event.checkScrollPanels(posX, posY, SSM.modelAttrib, SSM.ELEMENT_MODEL_SCROLL) == SSM.ELEMENT_MODEL_SCROLL) {
          w = new WCursor(SSM.ELEMENT_MODEL_SCROLL, o);
-      } else if (Event.checkScrollPanels(posX, posY, SSM.instance().yearAttrib, SSM.ELEMENT_YEAR_SCROLL) == SSM.ELEMENT_YEAR_SCROLL) {
+      } else if (Event.checkScrollPanels(posX, posY, SSM.yearAttrib, SSM.ELEMENT_YEAR_SCROLL) == SSM.ELEMENT_YEAR_SCROLL) {
          w = new WCursor(SSM.ELEMENT_YEAR_SCROLL, o);
-      } else if (Event.checkScrollPanels(posX, posY, SSM.instance().c_manufactureAttrib, SSM.ELEMENT_CMANUFACTURE_SCROLL) == SSM.ELEMENT_CMANUFACTURE_SCROLL) {
+      } else if (Event.checkScrollPanels(posX, posY, SSM.c_manufactureAttrib, SSM.ELEMENT_CMANUFACTURE_SCROLL) == SSM.ELEMENT_CMANUFACTURE_SCROLL) {
          w = new WCursor(SSM.ELEMENT_CMANUFACTURE_SCROLL, o);
-      } else if (Event.checkScrollPanels(posX, posY, SSM.instance().c_makeAttrib, SSM.ELEMENT_CMAKE_SCROLL) == SSM.ELEMENT_CMAKE_SCROLL) {
+      } else if (Event.checkScrollPanels(posX, posY, SSM.c_makeAttrib, SSM.ELEMENT_CMAKE_SCROLL) == SSM.ELEMENT_CMAKE_SCROLL) {
          w = new WCursor(SSM.ELEMENT_CMAKE_SCROLL, o);
-      } else if (Event.checkScrollPanels(posX, posY, SSM.instance().c_modelAttrib, SSM.ELEMENT_CMODEL_SCROLL) == SSM.ELEMENT_CMODEL_SCROLL) {
+      } else if (Event.checkScrollPanels(posX, posY, SSM.c_modelAttrib, SSM.ELEMENT_CMODEL_SCROLL) == SSM.ELEMENT_CMODEL_SCROLL) {
          w = new WCursor(SSM.ELEMENT_CMODEL_SCROLL, o);
-      } else if (Event.checkScrollPanels(posX, posY, SSM.instance().c_yearAttrib, SSM.ELEMENT_CYEAR_SCROLL) == SSM.ELEMENT_CYEAR_SCROLL) {
+      } else if (Event.checkScrollPanels(posX, posY, SSM.c_yearAttrib, SSM.ELEMENT_CYEAR_SCROLL) == SSM.ELEMENT_CYEAR_SCROLL) {
          w = new WCursor(SSM.ELEMENT_CYEAR_SCROLL, o);
       } else {
          w = new WCursor(SSM.ELEMENT_NONE, o);
