@@ -103,16 +103,16 @@ public class Event {
                   double totalD = DCCamera.instance().eye.sub(new DCTriple(0,0,0)).mag();
                   double remainD = totalD - la.nearPlane;
                   double advD    = Math.max(0.3f, remainD*0.05);
-                  
                   if (la.nearPlane + advD < totalD)
                      la.nearPlane += advD;
+System.out.println(">Near plane: " + la.nearPlane);                  
                } else {
                   double totalD = DCCamera.instance().eye.sub(new DCTriple(0,0,0)).mag();
                   double remainD = totalD - la.nearPlane;
                   double advD    = Math.max(0.3f, remainD*0.05);
-                  
                   if (la.nearPlane - advD > 0) 
                      la.nearPlane -= advD;               
+System.out.println("<Near plane: " + la.nearPlane);                  
                }
                SSM.instance().refreshMagicLens = true;
             }            

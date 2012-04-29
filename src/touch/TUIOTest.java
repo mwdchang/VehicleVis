@@ -89,13 +89,16 @@ public class TUIOTest implements TuioListener {
    // not itself
    // TODO: Probably want distance as well
    ////////////////////////////////////////////////////////////////////////////////
-   public WCursor findSimilarCursor(WCursor w) {
+   public Vector<WCursor> findSimilarCursor(WCursor w) {
+      Vector<WCursor> result = new Vector<WCursor>();
       for (WCursor k : eventTable.values()) {
          if (k.sessionID == w.sessionID) continue;   
-         if (k.element == w.element && distance(k, w) < NEAR_THRESHOLD) return k;
+         if (k.element == w.element && distance(k, w) < NEAR_THRESHOLD) result.add(k);
       }
-      return null;
+      return result;
    }
+   
+   
    
    
    
@@ -118,7 +121,7 @@ public class TUIOTest implements TuioListener {
                   // Send a click event
                   if (ta.numTap == 1) {
                      SSM.pickPoints.add(new DCTriple(sx, sy, 0));
-                     SSM.instance().l_mouseClicked = true;
+                     SSM.l_mouseClicked = true;
                   }
                   if (ta.numTap == 2) {
                      if (Event.checkDocumentPanel(sx, sy) == SSM.ELEMENT_NONE &&
@@ -209,7 +212,7 @@ public class TUIOTest implements TuioListener {
       WCursor w = eventTable.get(o.getSessionID());
       
       SSM.dragPoints.remove(o.getSessionID());
-      SSM.instance().checkDragEvent = true;
+      SSM.checkDragEvent = true;
       
       // Check if this is a swipe event
       if (w.points.size() > 1 && w.state == WCursor.STATE_SWIPE) {
@@ -231,8 +234,8 @@ public class TUIOTest implements TuioListener {
             }
             if (sameDirection == true) {
                System.out.println("Horizontal Swipe detected...");   
-               SSM.instance().colouringMethod++;
-               SSM.instance().colouringMethod %= 5;
+               SSM.colouringMethod++;
+               SSM.colouringMethod %= 5;
             }
          } else {
             // Are they all in the same direction (more or less)?   
@@ -252,10 +255,9 @@ public class TUIOTest implements TuioListener {
             }
             if (sameDirection == true) {
                System.out.println("Vertical Swipe detected...");   
-               SSM.instance().colouringMethod++;
-               SSM.instance().colouringMethod %= 5;
+               SSM.colouringMethod++;
+               SSM.colouringMethod %= 5;
             }
-           
          }
       // Check if this is a tap event (approximate)
       } else if (w.points.size() < 2) {
@@ -313,12 +315,28 @@ public class TUIOTest implements TuioListener {
       //SSM.dragPoints.add(new DCTriple(ox*SSM.windowWidth, ox*SSM.windowHeight, 0));
           
       
+      // There are 2 other points
+      if (findSimilarCursor(wcursor).size() == 2) {
+         Vector<WCursor> simCursor = findSimilarCursor(wcursor);
+         TuioPoint point     = wcursor.points.lastElement();
+         TuioPoint oldPoint  = wcursor.points.elementAt( wcursor.points.size()-2);         
+         
+         // They are all LENs
+         System.out.println("Detected 3 on same element");
+         if (wcursor.element == SSM.ELEMENT_LENS) {
+            System.out.println("Changing lens depth");
+            float direction = -(point.getY() - oldPoint.getY());
+            Event.scrollLens( (int)(point.getX()*SSM.windowWidth), (int)(point.getY()*SSM.windowHeight), direction > 0 ? 1 : -1);
+            return;
+         }
+      }
       
       // There is another touch/gesture over the
       // same element
-      if (findSimilarCursor(wcursor) != null) {
+      //if (findSimilarCursor(wcursor) != null) {
+      if (findSimilarCursor(wcursor).size() == 1) {
          // Check for pinch and spread events
-         WCursor simCursor = findSimilarCursor(wcursor);
+         WCursor simCursor   = findSimilarCursor(wcursor).elementAt(0);
          TuioPoint point     = wcursor.points.lastElement();
          TuioPoint oldPoint  = wcursor.points.elementAt( wcursor.points.size()-2);
          
@@ -351,7 +369,6 @@ public class TUIOTest implements TuioListener {
             }
             return;
          }
-             
       }
 
       

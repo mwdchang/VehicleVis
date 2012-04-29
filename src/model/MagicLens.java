@@ -1,20 +1,12 @@
 package model;
 
-import java.awt.Font;
-import java.awt.Rectangle;
-import java.awt.geom.Rectangle2D;
 import java.nio.FloatBuffer;
 
 import javax.media.opengl.GL;
 import javax.media.opengl.GL2;
-import javax.media.opengl.GLAutoDrawable;
 import javax.media.opengl.glu.GLU;
 
 import com.jogamp.opengl.util.GLBuffers;
-import com.jogamp.opengl.util.awt.TextRenderer;
-
-import util.FontRenderer;
-import util.GLSLUtil;
 import util.GraphicUtil;
 import util.ShaderObj;
 
