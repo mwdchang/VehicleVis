@@ -127,7 +127,7 @@ public class TextureFont {
          gl2.glBlendFunc(GL2.GL_SRC_ALPHA, GL2.GL_ONE_MINUS_SRC_ALPHA);            
       }
       
-      gl2.glColor4d(1.0, 1.0, 1.0, 1.0);
+      gl2.glColor4d(1.0, 1.0, 1.0, opacity);
       gl2.glEnable(GL2.GL_TEXTURE_2D);
       gl2.glBegin(GL2.GL_QUADS);
          gl2.glTexCoord2f(0, 1);
@@ -158,7 +158,7 @@ public class TextureFont {
    public float width;
    public float anchorX = 0;
    public float anchorY = 0;
-   
+   public double opacity = 1.0f;
    
    
    public Vector<Mark> marks = new Vector<Mark>();

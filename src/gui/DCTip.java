@@ -6,6 +6,8 @@ import java.util.Hashtable;
 
 import javax.media.opengl.GL2;
 
+import org.jdesktop.animation.timing.Animator;
+
 import datastore.SSM;
 
 import util.DCUtil;
@@ -36,11 +38,15 @@ public class DCTip {
          return; 
       }
       
+      
+      // Well..duh ...
+      if (opacity <= 0) visible = false;   
+      
       //tf.renderBorder(gl2);
       
       
       // Render the box
-      gl2.glColor4d(0.8, 0.8, 0.8, 0.7);
+      gl2.glColor4d(0.8, 0.8, 0.8, opacity);
       gl2.glBegin(GL2.GL_QUADS);
          gl2.glVertex2d(tf.anchorX, tf.anchorY);
          gl2.glVertex2d(tf.anchorX+tf.width, tf.anchorY);
@@ -115,7 +121,7 @@ public class DCTip {
    
    public static Hashtable<String, String> translateTable = DCUtil.getMonthTranslationTable();
    
-   public TextureFont tf;
+   public TextureFont tf = null;
    public Font f  = new Font( "Arial", Font.BOLD, 16);    
    public Color c = Color.BLACK;
    public float tipX;
@@ -126,4 +132,12 @@ public class DCTip {
    
    public int xIndex = -1;
    public int yIndex = -1;
+   
+   
+   public float getOpacity() { return opacity; }
+   public void setOpacity(float o) { opacity = o; }
+   
+   public float opacity = 0.7f;
+   public long lastUpdateTime = 0;
+   public Animator opacityAnimator;
 }

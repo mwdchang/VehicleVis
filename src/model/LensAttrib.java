@@ -1,5 +1,6 @@
 package model;
 
+import gui.DCTip;
 import util.TextureFont;
 import datastore.SSM;
 
@@ -71,6 +72,8 @@ public class LensAttrib {
    public int l_bottom;
    
    public int displayList;
+   
+   public DCTip tip = new DCTip(); // Show interactive information
    
    
    // Types

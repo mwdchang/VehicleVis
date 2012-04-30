@@ -1,5 +1,7 @@
 package exec;
 
+import org.jdesktop.animation.timing.interpolation.PropertySetter;
+
 import model.DCTriple;
 import model.LensAttrib;
 import model.PaneAttrib;
@@ -7,6 +9,8 @@ import util.DCCamera;
 import util.DCUtil;
 import util.MatrixUtil;
 import Jama.Matrix;
+import TimingFrameExt.DCColourEval;
+import TimingFrameExt.FloatEval;
 import datastore.CacheManager;
 import datastore.SSM;
 
@@ -21,8 +25,8 @@ public class Event {
    public static void createLens(int posX, int posY) {
       LensAttrib la = new LensAttrib( posX, posY, 200.0f, 0);      
       la.magicLensType = LensAttrib.LENS_DEPTH;
-      SSM.instance().lensList.add( la );
-      SSM.instance().refreshMagicLens = true;
+      SSM.lensList.add( la );
+      SSM.refreshMagicLens = true;
    }
    
    ////////////////////////////////////////////////////////////////////////////////
@@ -30,13 +34,13 @@ public class Event {
    ////////////////////////////////////////////////////////////////////////////////
    public static void removeLens(int posX, int posY) {
       // TODO: This is a bit buggy due to the removal while still iterating the list
-      for (int i=0; i < SSM.instance().lensList.size(); i++) {
-         float x = (float)posX - (float)SSM.instance().lensList.elementAt(i).magicLensX;
-         float y = (float)posY - (float)SSM.instance().lensList.elementAt(i).magicLensY;
-         float r = (float)SSM.instance().lensList.elementAt(i).magicLensRadius;
+      for (int i=0; i < SSM.lensList.size(); i++) {
+         float x = (float)posX - (float)SSM.lensList.elementAt(i).magicLensX;
+         float y = (float)posY - (float)SSM.lensList.elementAt(i).magicLensY;
+         float r = (float)SSM.lensList.elementAt(i).magicLensRadius;
          float d = (float)Math.sqrt(x*x + y*y);            
          if (d < r) {
-            SSM.instance().lensList.remove(i);   
+            SSM.lensList.remove(i);   
          }
       }
    }
@@ -45,25 +49,25 @@ public class Event {
    // Move lens by delta
    ////////////////////////////////////////////////////////////////////////////////
    public static void moveLens(int posX, int posY, int oldPosX, int oldPosY) {
-      for (int i=0; i < SSM.instance().lensList.size(); i++) {
-         if (SSM.instance().lensList.elementAt(i).magicLensSelected == 1) {
-            SSM.instance().lensList.elementAt(i).magicLensX += (posX - oldPosX);   
-            SSM.instance().lensList.elementAt(i).magicLensY += (posY - oldPosY);   
-            SSM.instance().lensList.elementAt(i).start = 0;
+      for (int i=0; i < SSM.lensList.size(); i++) {
+         if (SSM.lensList.elementAt(i).magicLensSelected == 1) {
+            SSM.lensList.elementAt(i).magicLensX += (posX - oldPosX);   
+            SSM.lensList.elementAt(i).magicLensY += (posY - oldPosY);   
+            SSM.lensList.elementAt(i).start = 0;
          }
       }      
    }
    
    public static void moveLensTUIO(int posX, int posY, int oldPosX, int oldPosY) {
-      for (int i=0; i < SSM.instance().lensList.size(); i++) {
-         float x = (float)posX - (float)SSM.instance().lensList.elementAt(i).magicLensX;
-         float y = (float)posY - (float)SSM.instance().lensList.elementAt(i).magicLensY;
-         float r = (float)SSM.instance().lensList.elementAt(i).magicLensRadius;
+      for (int i=0; i < SSM.lensList.size(); i++) {
+         float x = (float)posX - (float)SSM.lensList.elementAt(i).magicLensX;
+         float y = (float)posY - (float)SSM.lensList.elementAt(i).magicLensY;
+         float r = (float)SSM.lensList.elementAt(i).magicLensRadius;
          float d = (float)Math.sqrt(x*x + y*y);            
          if (d < r) {
-            SSM.instance().lensList.elementAt(i).magicLensX += posX - oldPosX;   
-            SSM.instance().lensList.elementAt(i).magicLensY += posY - oldPosY;   
-            SSM.instance().lensList.elementAt(i).start = 0;
+            SSM.lensList.elementAt(i).magicLensX += posX - oldPosX;   
+            SSM.lensList.elementAt(i).magicLensY += posY - oldPosY;   
+            SSM.lensList.elementAt(i).start = 0;
          }
       }      
    }
@@ -72,12 +76,12 @@ public class Event {
    // Resize lens by delta
    ////////////////////////////////////////////////////////////////////////////////
    public static void resizeLens(int posX, int posY, int oldPosX, int oldPosY) {
-      for (int i=0; i < SSM.instance().lensList.size(); i++) {
-         if (SSM.instance().lensList.elementAt(i).magicLensSelected == 1) {
-            float x = (float)posX - (float)SSM.instance().lensList.elementAt(i).magicLensX;
-            float y = (float)posY - (float)SSM.instance().lensList.elementAt(i).magicLensY;
+      for (int i=0; i < SSM.lensList.size(); i++) {
+         if (SSM.lensList.elementAt(i).magicLensSelected == 1) {
+            float x = (float)posX - (float)SSM.lensList.elementAt(i).magicLensX;
+            float y = (float)posY - (float)SSM.lensList.elementAt(i).magicLensY;
             float d = (float)Math.sqrt(x*x + y*y);         
-            SSM.instance().lensList.elementAt(i).magicLensRadius = d;  
+            SSM.lensList.elementAt(i).magicLensRadius = d;  
          }
       }
    }
@@ -88,15 +92,29 @@ public class Event {
    ////////////////////////////////////////////////////////////////////////////////
    public static int scrollLens(int posX, int posY, int unit) {
       int flag = 0;
-      for (int i=0; i < SSM.instance().lensList.size(); i++) {
-         float x = (float)posX - (float)SSM.instance().lensList.elementAt(i).magicLensX;
-         float y = (float)posY - (float)SSM.instance().lensList.elementAt(i).magicLensY;
-         float r = (float)SSM.instance().lensList.elementAt(i).magicLensRadius;
+      long systemTime = System.currentTimeMillis();
+      for (int i=0; i < SSM.lensList.size(); i++) {
+         float x = (float)posX - (float)SSM.lensList.elementAt(i).magicLensX;
+         float y = (float)posY - (float)SSM.lensList.elementAt(i).magicLensY;
+         float r = (float)SSM.lensList.elementAt(i).magicLensRadius;
          float d = (float)Math.sqrt(x*x + y*y);
          
          if ( d <= r ) {
             flag = 1;
-            LensAttrib la = SSM.instance().lensList.elementAt(i);
+            LensAttrib la = SSM.lensList.elementAt(i);
+            
+            // Reset/update the tool-tip
+            if (la.tip.opacityAnimator != null) {
+               if (la.tip.opacityAnimator.isRunning()) la.tip.opacityAnimator.stop();   
+            }
+            la.tip.lastUpdateTime = systemTime;
+            la.tip.visible = true;
+            la.tip.opacity = 0.7f; 
+            la.tip.opacityAnimator = PropertySetter.createAnimator(SSM.FADE_DURATION, la.tip , "opacity", new FloatEval(), la.tip.opacity, 0.0f);
+            la.tip.opacityAnimator.start();
+            //la.tip.clear();
+            //la.tip.addText( la.nearPlane +"");
+            
             
             if (la != null ) {
                if (unit < 0) {
@@ -114,7 +132,7 @@ System.out.println(">Near plane: " + la.nearPlane);
                      la.nearPlane -= advD;               
 System.out.println("<Near plane: " + la.nearPlane);                  
                }
-               SSM.instance().refreshMagicLens = true;
+               SSM.refreshMagicLens = true;
             }            
          }
       }        
@@ -137,7 +155,7 @@ System.out.println("<Near plane: " + la.nearPlane);
 
       if ( oldPosX != posX ) {
          float factor; 
-         if (SSM.instance().useDualDepthPeeling) {
+         if (SSM.useDualDepthPeeling) {
             factor= oldPosX > posX ? -3.0f : 3.0f; 
          } else {
             factor= oldPosX > posX ? -1.0f : 1.0f; 
@@ -152,12 +170,12 @@ System.out.println("<Near plane: " + la.nearPlane);
          DCCamera.instance().right = DCCamera.instance().look.cross(DCCamera.instance().up);
          DCCamera.instance().right.normalize();
          
-         SSM.instance().refreshOITTexture = true;
+         SSM.refreshOITTexture = true;
       }
       
       if ( oldPosY != posY) {
          float factor;
-         if (SSM.instance().useDualDepthPeeling) {
+         if (SSM.useDualDepthPeeling) {
             factor = oldPosY > posY ? -3.0f : 3.0f; 
          } else {
             factor = oldPosY > posY ? -1.0f : 1.0f; 
@@ -172,7 +190,7 @@ System.out.println("<Near plane: " + la.nearPlane);
          DCCamera.instance().up = DCCamera.instance().look.cross(DCCamera.instance().right).mult(-1.0f);
          DCCamera.instance().up.normalize();
          
-         SSM.instance().refreshOITTexture = true;
+         SSM.refreshOITTexture = true;
       }      
    }
    
@@ -193,34 +211,34 @@ System.out.println("<Near plane: " + la.nearPlane);
    ////////////////////////////////////////////////////////////////////////////////
    public static void checkGUIDrag(int posX, int posY, int oldPosX, int oldPosY) {
       // Check the top level UI elements
-      if (SSM.instance().topElement == SSM.ELEMENT_DOCUMENT) {
+      if (SSM.topElement == SSM.ELEMENT_DOCUMENT) {
          SSM.docAnchorX += (posX - oldPosX);   
          SSM.docAnchorY -= (posY - oldPosY);   
       // For default filter   
-      } else if (SSM.instance().topElement == SSM.ELEMENT_MANUFACTURE_SCROLL) {
+      } else if (SSM.topElement == SSM.ELEMENT_MANUFACTURE_SCROLL) {
          setScrollPanelOffset(SSM.manufactureAttrib, posY, oldPosY);
-      } else if (SSM.instance().topElement == SSM.ELEMENT_MAKE_SCROLL) {
+      } else if (SSM.topElement == SSM.ELEMENT_MAKE_SCROLL) {
          setScrollPanelOffset(SSM.makeAttrib, posY, oldPosY);
-      } else if (SSM.instance().topElement == SSM.ELEMENT_MODEL_SCROLL)  {
+      } else if (SSM.topElement == SSM.ELEMENT_MODEL_SCROLL)  {
          setScrollPanelOffset(SSM.modelAttrib, posY, oldPosY);
-      } else if (SSM.instance().topElement == SSM.ELEMENT_YEAR_SCROLL)  {
+      } else if (SSM.topElement == SSM.ELEMENT_YEAR_SCROLL)  {
          setScrollPanelOffset(SSM.yearAttrib, posY, oldPosY);
       // For comparisons   
-      } else if (SSM.instance().topElement == SSM.ELEMENT_CMANUFACTURE_SCROLL) {
+      } else if (SSM.topElement == SSM.ELEMENT_CMANUFACTURE_SCROLL) {
          setScrollPanelOffset(SSM.c_manufactureAttrib, posY, oldPosY);
-      } else if (SSM.instance().topElement == SSM.ELEMENT_CMAKE_SCROLL) {
+      } else if (SSM.topElement == SSM.ELEMENT_CMAKE_SCROLL) {
          setScrollPanelOffset(SSM.c_makeAttrib, posY, oldPosY);
-      } else if (SSM.instance().topElement == SSM.ELEMENT_CMODEL_SCROLL)  {
+      } else if (SSM.topElement == SSM.ELEMENT_CMODEL_SCROLL)  {
          setScrollPanelOffset(SSM.c_modelAttrib, posY, oldPosY);
-      } else if (SSM.instance().topElement == SSM.ELEMENT_CYEAR_SCROLL)  {
+      } else if (SSM.topElement == SSM.ELEMENT_CYEAR_SCROLL)  {
          setScrollPanelOffset(SSM.c_yearAttrib, posY, oldPosY);
       // Save and load stuff         
-      } else if (SSM.instance().topElement == SSM.ELEMENT_SAVELOAD_SCROLL) {
-         SSM.instance().saveLoadYOffset -= (SSM.mouseY - SSM.oldMouseY);   
-         if (SSM.instance().saveLoadYOffset < SSM.instance().saveLoadHeight)
-            SSM.instance().saveLoadYOffset = SSM.instance().saveLoadHeight;
-         if (SSM.instance().saveLoadYOffset > SSM.instance().saveLoadTexHeight)
-            SSM.instance().saveLoadYOffset = SSM.instance().saveLoadTexHeight;
+      } else if (SSM.topElement == SSM.ELEMENT_SAVELOAD_SCROLL) {
+         SSM.saveLoadYOffset -= (SSM.mouseY - SSM.oldMouseY);   
+         if (SSM.saveLoadYOffset < SSM.saveLoadHeight)
+            SSM.saveLoadYOffset = SSM.saveLoadHeight;
+         if (SSM.saveLoadYOffset > SSM.saveLoadTexHeight)
+            SSM.saveLoadYOffset = SSM.saveLoadTexHeight;
       }      
    }
    
@@ -238,28 +256,28 @@ System.out.println("<Near plane: " + la.nearPlane);
          // Prevent underflow
          if (SSM.yoffset <= SSM.docHeight) return;
          
-         if (SSM.yoffset <= SSM.instance().t1Height && SSM.instance().t1Start > 0 ) {
-            SSM.instance().t1Start = Math.max(0, SSM.instance().t1Start - SSM.instance().globalFetchSize);
-            SSM.instance().t2Start = Math.max(SSM.instance().globalFetchSize, SSM.instance().t2Start - SSM.instance().globalFetchSize);
-            SSM.instance().docAction = 1;   
+         if (SSM.yoffset <= SSM.t1Height && SSM.t1Start > 0 ) {
+            SSM.t1Start = Math.max(0, SSM.t1Start - SSM.globalFetchSize);
+            SSM.t2Start = Math.max(SSM.globalFetchSize, SSM.t2Start - SSM.globalFetchSize);
+            SSM.docAction = 1;   
             SSM.dirtyGL = 1;
          } else {
             SSM.yoffset += unit*5;
          }            
       } else {
-         if (SSM.yoffset > SSM.instance().t1Height && SSM.instance().t2Height <= 0) return;
+         if (SSM.yoffset > SSM.t1Height && SSM.t2Height <= 0) return;
          
          // Check to see if we have run off the number allocated for the period
-         if (SSM.instance().t2Start + SSM.instance().globalFetchSize > SSM.instance().docMaxSize) {
-            if (SSM.yoffset >= SSM.instance().t1Height + SSM.instance().t2Height)
+         if (SSM.t2Start + SSM.globalFetchSize > SSM.docMaxSize) {
+            if (SSM.yoffset >= SSM.t1Height + SSM.t2Height)
                return;
          }
          
-         if (SSM.yoffset - SSM.docHeight > SSM.instance().t1Height) {
-            SSM.yoffset -= SSM.instance().t1Height;
-            SSM.instance().t1Start += SSM.instance().globalFetchSize;
-            SSM.instance().t2Start += SSM.instance().globalFetchSize;
-            SSM.instance().docAction = 2;   
+         if (SSM.yoffset - SSM.docHeight > SSM.t1Height) {
+            SSM.yoffset -= SSM.t1Height;
+            SSM.t1Start += SSM.globalFetchSize;
+            SSM.t2Start += SSM.globalFetchSize;
+            SSM.docAction = 2;   
             SSM.dirtyGL = 1;
          } else {
             SSM.yoffset += unit*5;
@@ -272,7 +290,7 @@ System.out.println("<Near plane: " + la.nearPlane);
    // the text is drawn
    ////////////////////////////////////////////////////////////////////////////////
    public static boolean inDocContext(int posX, int posY) {
-      if ( ! SSM.instance().docActive ) return false;
+      if ( ! SSM.docActive ) return false;
       float mX = posX;
       float mY = SSM.windowHeight - posY;
       if (DCUtil.between( mX, SSM.docAnchorX, SSM.docAnchorX+SSM.docWidth)) {
@@ -292,15 +310,15 @@ System.out.println("<Near plane: " + la.nearPlane);
       float anchorX = attrib.anchorX;
       float anchorY = attrib.anchorY;
       
-      if (DCUtil.between(mx, anchorX, anchorX+SSM.instance().scrollWidth)) {
+      if (DCUtil.between(mx, anchorX, anchorX+SSM.scrollWidth)) {
          if (attrib.direction == 1) {
             if (DCUtil.between(my, anchorY-20, anchorY+attrib.height)) {
-               if (attrib.active) SSM.instance().topElement = id;
+               if (attrib.active) SSM.topElement = id;
                return id;
             }
          } else {
             if (DCUtil.between(my, anchorY-20-attrib.height, anchorY)) {
-               if (attrib.active) SSM.instance().topElement = id;
+               if (attrib.active) SSM.topElement = id;
                return id;
             }
          }
@@ -311,7 +329,7 @@ System.out.println("<Near plane: " + la.nearPlane);
    public static int checkDocumentPanel(int posX, int posY) {
      // Detecting the document text area
      if (Event.inDocContext(posX, posY)) {
-        SSM.instance().topElement = SSM.ELEMENT_DOCUMENT;   
+        SSM.topElement = SSM.ELEMENT_DOCUMENT;   
         return SSM.ELEMENT_DOCUMENT;
      }
      float mx = posX;
@@ -324,13 +342,13 @@ System.out.println("<Near plane: " + la.nearPlane);
      // Detecting the document borders
      if (DCUtil.between(mx, anchorX-padding, anchorX) || DCUtil.between(mx, anchorX+docWidth, anchorX+docWidth+padding)) {
         if (DCUtil.between(my, anchorY-padding, anchorY+docHeight+padding)) {
-           SSM.instance().topElement = SSM.ELEMENT_DOCUMENT;   
+           SSM.topElement = SSM.ELEMENT_DOCUMENT;   
            return SSM.ELEMENT_DOCUMENT;
         }
      }
      if (DCUtil.between(my, anchorY-padding, anchorY) || DCUtil.between(my, anchorY+docHeight, anchorY+docHeight+padding)) {
         if (DCUtil.between(mx, anchorX-padding, anchorX+docWidth+padding)) {
-           SSM.instance().topElement = SSM.ELEMENT_DOCUMENT;   
+           SSM.topElement = SSM.ELEMENT_DOCUMENT;   
            return SSM.ELEMENT_DOCUMENT;
         }
      }     
@@ -343,15 +361,15 @@ System.out.println("<Near plane: " + la.nearPlane);
       float my = posY;
       
       
-      for (int i=0; i < SSM.instance().lensList.size(); i++) {
-         float x = (float)mx - (float)SSM.instance().lensList.elementAt(i).magicLensX;
-         float y = (float)my - (float)SSM.instance().lensList.elementAt(i).magicLensY;
-         float r = (float)SSM.instance().lensList.elementAt(i).magicLensRadius;
+      for (int i=0; i < SSM.lensList.size(); i++) {
+         float x = (float)mx - (float)SSM.lensList.elementAt(i).magicLensX;
+         float y = (float)my - (float)SSM.lensList.elementAt(i).magicLensY;
+         float r = (float)SSM.lensList.elementAt(i).magicLensRadius;
          float d = (float)Math.sqrt(x*x + y*y);
          
          if (d <= r) {
-            SSM.instance().lensList.elementAt(i).magicLensSelected = 1;
-            SSM.instance().topElement = SSM.ELEMENT_LENS;
+            SSM.lensList.elementAt(i).magicLensSelected = 1;
+            SSM.topElement = SSM.ELEMENT_LENS;
 System.out.println("=============================================> Found Lens");            
             return SSM.ELEMENT_LENS;
          }
@@ -367,7 +385,7 @@ System.out.println("=============================================> Found Lens");
       float yf_anchorY = SSM.instance().getYearAnchorY();
       if (DCUtil.between(mx, yf_anchorX, yf_anchorX + (CacheManager.instance().timeLineSize/12)*SSM.instance().rangeFilterWidth)) {
          if (DCUtil.between(my, yf_anchorY-15, yf_anchorY+SSM.instance().rangeFilterHeight)) {
-            SSM.instance().topElement = SSM.ELEMENT_FILTER;
+            SSM.topElement = SSM.ELEMENT_FILTER;
             return SSM.ELEMENT_FILTER;
          }
       }
@@ -377,7 +395,7 @@ System.out.println("=============================================> Found Lens");
       // Always 12 month
       if (DCUtil.between(mx, mf_anchorX, mf_anchorX + 12*SSM.instance().rangeFilterWidth)) {
          if (DCUtil.between(my, mf_anchorY-15, mf_anchorY+SSM.instance().rangeFilterHeight)) {
-            SSM.instance().topElement = SSM.ELEMENT_FILTER;
+            SSM.topElement = SSM.ELEMENT_FILTER;
             return SSM.ELEMENT_FILTER;
          }
       }      

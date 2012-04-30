@@ -336,6 +336,16 @@ public class ModelRenderer extends BaseModelRenderer {
               la.mlen.renderLens( gl2, la );
               // TODO: This is probably not very efficient, can we get away with just a single render for the entire render cycle at the end ???
               //this.renderComparison(gl2);
+              if (la.tip.tf == null) la.tip.init(gl2);
+              la.tip.clear();
+              la.tip.addText(la.nearPlane+"");
+              la.tip.setTip( 400, 400, SSM.windowWidth, SSM.windowHeight);                
+              /*
+              la.tip.setTip( la.magicLensX,
+                    SSM.windowHeight-la.magicLensY,
+                    SSM.windowWidth, SSM.windowHeight);                
+                    */
+              la.tip.render(gl2);
             }
          }
       }
@@ -374,12 +384,12 @@ public class ModelRenderer extends BaseModelRenderer {
       // Render any 2D components
       ////////////////////////////////////////////////////////////////////////////////
       if (SSM.showLabels == true) {
-         for (int i=0; i < SSM.instance().lensList.size(); i++) {
+         for (int i=0; i < SSM.lensList.size(); i++) {
             setOrthonormalView(gl2, 0, SSM.windowWidth, 0, SSM.windowHeight); {
                if (SSM.useCircularLabel == true) {
-                  renderLabelCircular(gl2, SSM.instance().lensList.elementAt(i));
+                  renderLabelCircular(gl2, SSM.lensList.elementAt(i));
                } else {
-                  renderLabelBalanced(gl2, SSM.instance().lensList.elementAt(i));
+                  renderLabelBalanced(gl2, SSM.lensList.elementAt(i));
                }
             }
          }
@@ -446,7 +456,23 @@ public class ModelRenderer extends BaseModelRenderer {
          for (DCTip tip: SSM.tooltips.values()) {
             tip.render(gl2);
          }
-      }
+         
+         // Render lens tip
+         for (int i=0; i < SSM.lensList.size(); i++) {
+            LensAttrib la = SSM.lensList.elementAt(i);         
+            if (la.mlen != null) {
+               if (la.tip.tf == null) la.tip.init(gl2);
+               la.tip.clear();
+               la.tip.addText(la.nearPlane+"");
+               la.tip.tf.opacity = la.tip.opacity;
+               //la.tip.setTip( 400, 400, SSM.windowWidth, SSM.windowHeight);                
+               la.tip.setTip( la.magicLensX,
+                     SSM.windowHeight-la.magicLensY,
+                     SSM.windowWidth, SSM.windowHeight);                
+               la.tip.render(gl2);               
+            }
+         }
+      } // end setOrtho
             
    }   
    

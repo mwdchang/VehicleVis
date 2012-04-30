@@ -390,6 +390,7 @@ public class SSM {
    public static int SCROLL_DURATION = 500;
    public static int PART_CHANGE_DURATION = 1000;
    public static int TIME_CHANGE_DURATION = 1000;
+   public static int FADE_DURATION = 2500;
    
    
    
