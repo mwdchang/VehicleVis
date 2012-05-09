@@ -302,7 +302,9 @@ System.out.println("<Near plane: " + la.nearPlane);
    }  
    
    
+   ////////////////////////////////////////////////////////////////////////////////
    // Set the top element to id if mouse is clicked over the panel
+   ////////////////////////////////////////////////////////////////////////////////
    public static int checkScrollPanels(int posX, int posY, PaneAttrib attrib, int id) {
       float mx = posX;
       float my = SSM.windowHeight - posY;
@@ -326,6 +328,9 @@ System.out.println("<Near plane: " + la.nearPlane);
       return SSM.ELEMENT_NONE;
    }
    
+   ////////////////////////////////////////////////////////////////////////////////
+   // Check to see if the point (posX, posY) is in the document panel
+   ////////////////////////////////////////////////////////////////////////////////
    public static int checkDocumentPanel(int posX, int posY) {
      // Detecting the document text area
      if (Event.inDocContext(posX, posY)) {
@@ -356,6 +361,9 @@ System.out.println("<Near plane: " + la.nearPlane);
    }
    
    
+   ////////////////////////////////////////////////////////////////////////////////
+   // Check to see if the point (posX, posY) is in any of the magic lens
+   ////////////////////////////////////////////////////////////////////////////////
    public static int checkLens(int posX, int posY) {
       float mx = posX;
       float my = posY;
@@ -377,6 +385,10 @@ System.out.println("=============================================> Found Lens");
       return SSM.ELEMENT_NONE; 
    }
    
+   
+   ////////////////////////////////////////////////////////////////////////////////
+   //
+   ////////////////////////////////////////////////////////////////////////////////
    public static int checkSlider(int posX, int posY) {
       float mx = posX;
       float my = SSM.windowHeight - posY;      
@@ -411,6 +423,70 @@ System.out.println("=============================================> Found Lens");
       
       
       return SSM.ELEMENT_NONE; 
+   }
+   
+   
+   ////////////////////////////////////////////////////////////////////////////////
+   // Selection semantic with the mouse
+   ////////////////////////////////////////////////////////////////////////////////
+   public static void handleMouseSelect(Integer obj) {
+      
+      if (SSM.selectedGroup.size() > 0 ) {
+         // If control key is not held down, clear
+         if ( ! SSM.shiftKey) {
+            SSM.selectedGroup.clear();   
+         }
+         
+         if (SSM.selectedGroup.contains(obj)) {
+            SSM.selectedGroup.remove(obj);
+         } else {
+            SSM.selectedGroup.put(obj, obj);
+         }
+         
+         SSM.dirty = 1;
+         SSM.dirtyGL = 1; // for the text panel
+         SSM.t1Start = 0;
+         SSM.t2Start = SSM.globalFetchSize;
+         SSM.yoffset = SSM.docHeight;
+         SSM.docMaxSize = 0;
+         for (Integer key : SSM.selectedGroup.keySet()) {
+            SSM.docMaxSize += CacheManager.instance().groupOccurrence.get( key );
+         }
+      } else {
+         SSM.selectedGroup.put(obj,obj);
+         SSM.dirty = 1;
+         SSM.dirtyGL = 1; // for the text panel
+         SSM.t1Start = 0;
+         SSM.t2Start = SSM.globalFetchSize;
+         SSM.yoffset = SSM.docHeight;
+         SSM.docMaxSize = 0;
+         for (Integer key : SSM.selectedGroup.keySet()) {
+            SSM.docMaxSize += CacheManager.instance().groupOccurrence.get( key );
+         }
+     }
+      
+   }
+   
+   ////////////////////////////////////////////////////////////////////////////////
+   // Selection semantic with TUIO protocol 
+   // Toggle, selections are either on or off
+   ////////////////////////////////////////////////////////////////////////////////
+   public static void handleTUIOSelect(Integer obj) {
+      if (SSM.selectedGroup.contains(obj)) {
+         SSM.selectedGroup.remove(obj);
+      } else {
+         SSM.selectedGroup.put(obj, obj);
+      }
+      
+      SSM.dirty = 1;
+      SSM.dirtyGL = 1; // for the text panel
+      SSM.t1Start = 0;
+      SSM.t2Start = SSM.globalFetchSize;
+      SSM.yoffset = SSM.docHeight;
+      SSM.docMaxSize = 0;
+      for (Integer key : SSM.selectedGroup.keySet()) {
+         SSM.docMaxSize += CacheManager.instance().groupOccurrence.get( key );
+      }      
    }
    
    

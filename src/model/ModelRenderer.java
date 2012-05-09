@@ -25,6 +25,7 @@ import datastore.HierarchyTable;
 import datastore.MM;
 import datastore.SSM;
 import datastore.SchemeManager;
+import exec.Event;
 import gui.DCTip;
 import gui.StatusWindow;
 
@@ -717,29 +718,25 @@ public class ModelRenderer extends BaseModelRenderer {
       }
       
       
-      //if (SSM.instance().location == SSM.ELEMENT_LENS) {
-          for (int i=0; i < SSM.lensList.size(); i++) {
-            Integer obj = picking2DBalanced(gl2, SSM.lensList.elementAt(i), px, py);
-            // Speical
-            if (obj!= null && (obj == 9999 || obj == 8888)) {
-               LensAttrib la = SSM.lensList.elementAt(i);
-               System.out.println("Clicked either up or down lens");
-               
-               if (obj == 8888)
-                  la.start += la.numToDisplay;
-               else if (obj == 9999)
-                  la.start -= la.numToDisplay;
-               
-               System.out.println("Lens attrib : " + la.start + " " + la.numToDisplay);
-               return;
-            }
-            if (obj != null) break;
+      for (int i=0; i < SSM.lensList.size(); i++) {
+         Integer obj = picking2DBalanced(gl2, SSM.lensList.elementAt(i), px, py);
+         // Speical
+         if (obj!= null && (obj == 9999 || obj == 8888)) {
+            LensAttrib la = SSM.lensList.elementAt(i);
+            System.out.println("Clicked either up or down lens");
+            
+            if (obj == 8888)
+               la.start += la.numToDisplay;
+            else if (obj == 9999)
+               la.start -= la.numToDisplay;
+            
+            System.out.println("Lens attrib : " + la.start + " " + la.numToDisplay);
+            return;
          }
-      //   return;
-      //}
+         if (obj != null) break;
+      }
       
       
-      //if (SSM.instance().location != SSM.ELEMENT_NONE) return; 
       
       Integer obj = null;
       if (SSM.use3DModel == true) {
@@ -748,22 +745,6 @@ public class ModelRenderer extends BaseModelRenderer {
          if (obj == null) {
             for (int i=0; i < SSM.lensList.size(); i++) {
                obj = picking2DBalanced(gl2, SSM.lensList.elementAt(i), px, py);
-               
-               // Speical
-               /*
-               if (obj!= null && (obj == 9999 || obj == 8888)) {
-                  LensAttrib la = SSM.instance().lensList.elementAt(i);
-                  System.out.println("Clicked either up or down lens");
-                  
-                  if (obj == 8888)
-                     la.start += la.numToDisplay;
-                  else if (obj == 9999)
-                     la.start -= la.numToDisplay;
-                  
-                  System.out.println("Lens attrib : " + la.start + " " + la.numToDisplay);
-                  return;
-               }
-               */
                if (obj != null) break;
             }
          }
@@ -772,7 +753,6 @@ public class ModelRenderer extends BaseModelRenderer {
       }
       
       
-      // We have hit something
       // This can be a select or a de-select
       /*
       if (obj == null) {
@@ -787,53 +767,22 @@ public class ModelRenderer extends BaseModelRenderer {
       }
       */
       
+      
       if (obj != null) {
-         
          // Disable any action if in local focus mode and 
          // the part clicked is not related nor selected
          if (SSM.useLocalFocus == true) {
-            if (SSM.selectedGroup.size() > 0 &&  !SSM.relatedList.contains(obj)) 
-               return;
+            if (SSM.selectedGroup.size() > 0 &&  !SSM.relatedList.contains(obj)) return;
          }
          
-         
-         if (SSM.selectedGroup.size() > 0 ) {
-            // If control key is not held down, clear
-            if ( ! SSM.shiftKey) {
-               SSM.selectedGroup.clear();   
-            }
-            
-            //if ( SSM.selectedGroup.intValue() == obj.intValue()) {
-            if (SSM.selectedGroup.contains(obj)) {
-               SSM.selectedGroup.remove(obj);
-            } else {
-               SSM.selectedGroup.put(obj, obj);
-            }
-            
-            SSM.dirty = 1;
-            SSM.dirtyGL = 1; // for the text panel
-            SSM.t1Start = 0;
-            SSM.t2Start = SSM.globalFetchSize;
-            SSM.yoffset = SSM.docHeight;
-            SSM.docMaxSize = 0;
-            for (Integer key : SSM.selectedGroup.keySet()) {
-               SSM.docMaxSize += CacheManager.instance().groupOccurrence.get( key );
-            }
-            //SSM.instance().docMaxSize = CacheManager.instance().groupOccurrence.get( SSM.selectedGroup );
-            
+         // If TUIO messages are present, then use toggle mode. 
+         // Otherwise we have the mouse, and utilize the keyboard shift key modes
+         if (SSM.useTUIO == true) {
+            Event.handleTUIOSelect(obj);
          } else {
-            SSM.selectedGroup.put(obj,obj);
-            SSM.dirty = 1;
-            SSM.dirtyGL = 1; // for the text panel
-            SSM.t1Start = 0;
-            SSM.t2Start = SSM.globalFetchSize;
-            SSM.yoffset = SSM.docHeight;
-            //SSM.instance().docMaxSize = CacheManager.instance().groupOccurrence.get( SSM.selectedGroup );
-            SSM.docMaxSize = 0;
-            for (Integer key : SSM.selectedGroup.keySet()) {
-               SSM.docMaxSize += CacheManager.instance().groupOccurrence.get( key );
-            }
-        }
+            Event.handleMouseSelect(obj);
+         }
+         
       } else {
          SSM.selectedGroup.clear();
          SSM.dirty = 1;
