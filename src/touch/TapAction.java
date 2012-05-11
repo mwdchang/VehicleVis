@@ -13,6 +13,14 @@ public class TapAction {
      this.y = y;
    }
    
+   public TapAction(float x, float y, int element) {
+     this.x = x;
+     this.y = y;
+     this.element = element;
+   }
+   
    public float x, y;
    public int numTap = 1;
+   
+   public int element;
 }

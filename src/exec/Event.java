@@ -81,6 +81,12 @@ public class Event {
             float x = (float)posX - (float)SSM.lensList.elementAt(i).magicLensX;
             float y = (float)posY - (float)SSM.lensList.elementAt(i).magicLensY;
             float d = (float)Math.sqrt(x*x + y*y);         
+            
+            // Test
+            if (d < 50) {
+               SSM.lensList.remove(i);
+               break;
+            }
             SSM.lensList.elementAt(i).magicLensRadius = d;  
          }
       }
@@ -423,6 +429,19 @@ System.out.println("=============================================> Found Lens");
       
       
       return SSM.ELEMENT_NONE; 
+   }
+   
+   public static boolean isEmptySpace(int sx, int sy) {
+      if (Event.checkDocumentPanel(sx, sy) == SSM.ELEMENT_NONE &&
+            Event.checkLens(sx, sy) == SSM.ELEMENT_NONE &&
+            Event.checkSlider(sx, sy) == SSM.ELEMENT_NONE &&
+            Event.checkScrollPanels(sx, sy, SSM.manufactureAttrib, SSM.ELEMENT_MANUFACTURE_SCROLL) == SSM.ELEMENT_NONE &&
+            Event.checkScrollPanels(sx, sy, SSM.makeAttrib, SSM.ELEMENT_MAKE_SCROLL) == SSM.ELEMENT_NONE &&
+            Event.checkScrollPanels(sx, sy, SSM.modelAttrib, SSM.ELEMENT_MODEL_SCROLL) == SSM.ELEMENT_NONE &&
+            Event.checkScrollPanels(sx, sy, SSM.yearAttrib, SSM.ELEMENT_YEAR_SCROLL) == SSM.ELEMENT_NONE) {      
+         return true;
+      }
+      return false;
    }
    
    

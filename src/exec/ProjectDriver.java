@@ -11,7 +11,9 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 import TUIO.TuioClient;
+import TUIO.TuioListener;
 
+import touch.TUIOListener;
 import touch.TUIOTest;
 import util.ALogger;
 import datastore.CacheManager;
@@ -85,7 +87,7 @@ public class ProjectDriver {
       // Register event listeners
       if (SSM.useTUIO == true) {
          TuioClient client = new TuioClient();
-         client.addTuioListener(new TUIOTest());
+         client.addTuioListener(new TUIOListener());
          client.connect();
       } else {
          canvas.addMouseListener(eventManager);
