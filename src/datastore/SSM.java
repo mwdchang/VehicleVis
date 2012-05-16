@@ -51,7 +51,7 @@ public class SSM {
       
       
       // Parse runtime parameters
-      useTUIO         = Boolean.parseBoolean(System.getProperty("UseTUIO", "true"));
+      useTUIO         = Boolean.parseBoolean(System.getProperty("UseTUIO", "false"));
       useFullScreen   = Boolean.parseBoolean(System.getProperty("UseFullScreen", "false"));
       refreshRate     = Long.parseLong(System.getProperty("RefreshRate", "800"));
       nearThreshold   = Float.parseFloat(System.getProperty("NearThreshold", "0.2f")); 
@@ -92,6 +92,9 @@ public class SSM {
       refreshMagicLens = true;
       refreshOITBuffers = true;
       
+      
+      // Clear out panel
+      docActive = false;
       
       
       manufactureAttrib.selected = null;

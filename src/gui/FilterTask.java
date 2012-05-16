@@ -155,28 +155,46 @@ public class FilterTask implements RenderTask {
    // Reset the year slider
    ////////////////////////////////////////////////////////////////////////////////
    public void setYearData() {
-      // Get all 
-      //Vector<DCPair> yV = CacheManager.instance().getFilterYearlyStat(null, null, null);
-      Vector<DCPair> yV = CacheManager.instance().getFilterYearlyStat(
+      
+      Vector<DCPair> yearVolume = CacheManager.instance().getFilterYearlyStat(
             SSM.manufactureAttrib.selected, 
             SSM.makeAttrib.selected, 
             SSM.modelAttrib.selected,
             SSM.yearAttrib.selected);
       
-      Vector<DCPair> cyV = CacheManager.instance().getFilterYearlyStat(
+      Vector<DCPair> c_yearVolume = CacheManager.instance().getFilterYearlyStat(
             SSM.c_manufactureAttrib.selected, 
             SSM.c_makeAttrib.selected, 
             SSM.c_modelAttrib.selected,
             SSM.c_yearAttrib.selected);
       
-      
-      yearData = new DCPair[ yV.size()];
-      double max = 0;
-      for (int i=0; i < yV.size(); i++) {
-         //yearData[i] = new DCPair( yV.elementAt(i).key, yV.elementAt(i).value-cyV.elementAt(i).value);         
-         yearData[i] = new DCPair( yV.elementAt(i).key, yV.elementAt(i).value);
-         if (max < yV.elementAt(i).value) max = yV.elementAt(i).value;
+      // Sanity check, the year time lines should always have the same size
+      // regardless of selection criterion
+      if (yearVolume.size() != c_yearVolume.size()) {
+         System.err.println("Failed regular_year vs compare_year sanity check");
+         System.exit(0);
       }
+      
+      
+      yearData = new DCPair[ yearVolume.size()];
+      double max = 0;
+      
+      // When in comparison mode, sum up the regular year volume and the comparison year volume
+      // otherwise just use the regular year volume
+      if (SSM.useComparisonMode == false) {
+         for (int i=0; i < yearVolume.size(); i++) {
+            double volume = yearVolume.elementAt(i).value;
+            yearData[i] = new DCPair( yearVolume.elementAt(i).key, volume);
+            if (max < volume) max = volume;
+         }
+      } else {
+         for (int i=0; i < yearVolume.size(); i++) {
+            double volume = yearVolume.elementAt(i).value + c_yearVolume.elementAt(i).value;
+            yearData[i] = new DCPair( yearVolume.elementAt(i).key, volume);
+            if (max < volume) max = volume;
+         }
+      }
+      
       yearSlider.tempMaxValue = max;
       yearSlider.tempData = yearData;
       
@@ -197,26 +215,33 @@ public class FilterTask implements RenderTask {
    // Reset the month slider
    ////////////////////////////////////////////////////////////////////////////////
    public void setMonthData() {
-      int max = 0;
-      int[] mdata = CacheManager.instance().getFilterMonthlyStat(SSM.startTimeFrame, SSM.endTimeFrame, 
+      double max = 0;
+      int[] monthVolume = CacheManager.instance().getFilterMonthlyStat(SSM.startTimeFrame, SSM.endTimeFrame, 
             SSM.manufactureAttrib.selected,
             SSM.makeAttrib.selected,
             SSM.modelAttrib.selected,
             SSM.yearAttrib.selected); 
       
-      int[] cmdata = CacheManager.instance().getFilterMonthlyStat(SSM.startTimeFrame, SSM.endTimeFrame, 
+      int[] c_monthVolume = CacheManager.instance().getFilterMonthlyStat(SSM.startTimeFrame, SSM.endTimeFrame, 
             SSM.c_manufactureAttrib.selected,
             SSM.c_makeAttrib.selected,
             SSM.c_modelAttrib.selected,
             SSM.c_yearAttrib.selected); 
      
-      monthData = new DCPair[mdata.length];
-      for (int i=0; i < mdata.length; i++) {
-         //monthData[i] = new DCPair((i+1)+"", mdata[i]-cmdata[i]);   
-         monthData[i] = new DCPair((i+1)+"", mdata[i]);   
-         if (max < mdata[i]) max = mdata[i];
-      }
+      monthData = new DCPair[monthVolume.length];
       
+      if (SSM.useComparisonMode == false) { 
+         for (int i=0; i < monthVolume.length; i++) {
+            monthData[i] = new DCPair((i+1)+"", monthVolume[i]);   
+            if (max < monthVolume[i]) max = monthVolume[i];
+         }
+      } else {
+         for (int i=0; i < monthVolume.length; i++) {
+            double volume = monthVolume[i] + c_monthVolume[i];   
+            monthData[i] = new DCPair((i+1)+"", volume);
+            if (max < volume) max = volume;
+         }
+      }
       monthSlider.tempMaxValue = max;
       monthSlider.tempData = monthData;
       
@@ -229,7 +254,6 @@ public class FilterTask implements RenderTask {
          monthSlider.data = monthData;
          monthSlider.maxValue = max;
       }
-      
       
    }
    

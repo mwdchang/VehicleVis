@@ -153,49 +153,60 @@ public class DCModel extends DCObj {
       maxx = Float.MIN_VALUE;
       minx = Float.MAX_VALUE;
       
+      maxy = Float.MIN_VALUE;
+      miny = Float.MAX_VALUE;
+      
       float coord[];
       
       // "lower"
       coord = GraphicUtil.getProject(gl2, mbox.minx, mbox.miny, mbox.minz);
       if (coord[0] > maxx) maxx = coord[0];
       if (coord[0] < minx) minx = coord[0];
-//      System.out.println("\t\t" + coord[0]);
+      if (coord[1] > maxy) maxy = coord[1];
+      if (coord[1] < miny) miny = coord[1];
       
       coord = GraphicUtil.getProject(gl2, mbox.minx, mbox.miny, mbox.maxz);
       if (coord[0] > maxx) maxx = coord[0];
       if (coord[0] < minx) minx = coord[0];
-//      System.out.println("\t\t" + coord[0]);
+      if (coord[1] > maxy) maxy = coord[1];
+      if (coord[1] < miny) miny = coord[1];
       
       coord = GraphicUtil.getProject(gl2, mbox.maxx, mbox.miny, mbox.maxz);
       if (coord[0] > maxx) maxx = coord[0];
       if (coord[0] < minx) minx = coord[0];
-//      System.out.println("\t\t" + coord[0]);
+      if (coord[1] > maxy) maxy = coord[1];
+      if (coord[1] < miny) miny = coord[1];
       
       coord = GraphicUtil.getProject(gl2, mbox.maxx, mbox.miny, mbox.minz);
       if (coord[0] > maxx) maxx = coord[0];
       if (coord[0] < minx) minx = coord[0];
-//      System.out.println("\t\t" + coord[0]);
+      if (coord[1] > maxy) maxy = coord[1];
+      if (coord[1] < miny) miny = coord[1];
       
       // "upper"
       coord = GraphicUtil.getProject(gl2, mbox.minx, mbox.maxy, mbox.minz);
       if (coord[0] > maxx) maxx = coord[0];
       if (coord[0] < minx) minx = coord[0];
-//      System.out.println("\t\t" + coord[0]);
+      if (coord[1] > maxy) maxy = coord[1];
+      if (coord[1] < miny) miny = coord[1];
       
       coord = GraphicUtil.getProject(gl2, mbox.minx, mbox.maxy, mbox.maxz);
       if (coord[0] > maxx) maxx = coord[0];
       if (coord[0] < minx) minx = coord[0];
-//      System.out.println("\t\t" + coord[0]);
+      if (coord[1] > maxy) maxy = coord[1];
+      if (coord[1] < miny) miny = coord[1];
       
       coord = GraphicUtil.getProject(gl2, mbox.maxx, mbox.maxy, mbox.maxz);
       if (coord[0] > maxx) maxx = coord[0];
       if (coord[0] < minx) minx = coord[0];
-//      System.out.println("\t\t" + coord[0]);
+      if (coord[1] > maxy) maxy = coord[1];
+      if (coord[1] < miny) miny = coord[1];
       
       coord = GraphicUtil.getProject(gl2, mbox.maxx, mbox.maxy, mbox.minz);
       if (coord[0] > maxx) maxx = coord[0];
       if (coord[0] < minx) minx = coord[0];
-//      System.out.println("\t\t" + coord[0]);
+      if (coord[1] > maxy) maxy = coord[1];
+      if (coord[1] < miny) miny = coord[1];
       
       return new float[]{maxx, minx};
    }
@@ -344,4 +355,6 @@ public class DCModel extends DCObj {
    // Projection variables
    public float maxx = 0;
    public float minx = 0;
+   public float maxy = 0;
+   public float miny = 0;
 }

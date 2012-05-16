@@ -243,7 +243,6 @@ public class TUIOListener implements TuioListener {
       } // end if
       */
       
-      
    }
    
    
@@ -266,21 +265,35 @@ public class TUIOListener implements TuioListener {
       // they are over the same type of element then create a document panel
       if (w.state != WCursor.STATE_SWIPE && w.state != WCursor.STATE_MOVE && w.element == SSM.ELEMENT_NONE) {
          
-         Vector<WCursor> doc = this.findSimilarCursor(w, 0.03f, 0.1f);
+         Vector<WCursor> doc = this.findSimilarCursor(w, 0.02f, 0.05f);
          if (doc.size() > 0) {
             if (doc.size() == 1 && SSM.docActive == false) {
                System.out.print("activate document panel");   
                SSM.docActive = true;
+               SSM.docAnchorX = w.x * SSM.windowWidth;
+               SSM.docAnchorY = SSM.windowHeight - (w.y * SSM.windowHeight);
                SSM.resizePanel = 1;
             } 
             eventTable.remove(o.getSessionID());
             return; 
          }
-         Vector<WCursor> len = this.findSimilarCursor(w, 0.2f, 0.4f);
+         Vector<WCursor> len = this.findSimilarCursor(w, 0.06f, 0.25f);
          if (len.size() > 0) {
             if (len.size() == 1) {
+               // Adjust the lens coordinate such that the 2 points are on the circumference of the lens
                System.out.print("activate lens");   
-               Event.createLens( (int)(w.x*SSM.windowWidth), (int)(w.y*SSM.windowHeight));
+               float xx = w.x*SSM.windowWidth;
+               float yy = w.y*SSM.windowHeight;
+               
+               float xx2 = len.elementAt(0).x * SSM.windowWidth;
+               float yy2 = len.elementAt(0).y * SSM.windowHeight;
+               
+               float r = (float)Math.sqrt((xx-xx2)*(xx-xx2)+(yy-yy2)*(yy-yy2))/2.0f;
+               float cx = (xx+xx2)/2;
+               float cy = (yy+yy2)/2;
+               
+               //Event.createLens( (int)(w.x*SSM.windowWidth), (int)(w.y*SSM.windowHeight));
+               Event.createLens( (int)cx, (int)cy, r);
             } 
             eventTable.remove(o.getSessionID());
             return; 
@@ -289,7 +302,7 @@ public class TUIOListener implements TuioListener {
       
       // Check to see if we are de-activating the lens
       if (w.state != WCursor.STATE_SWIPE && w.state != WCursor.STATE_MOVE && w.element == SSM.ELEMENT_DOCUMENT) {
-         Vector<WCursor> doc = this.findSimilarCursor(w, 0.03f, 0.1f);
+         Vector<WCursor> doc = this.findSimilarCursor(w, 0.02f, 0.05f);
          if (doc.size() == 1) {
             System.out.print("Removing document panel");
             SSM.docActive = false;

@@ -29,6 +29,13 @@ public class Event {
       SSM.refreshMagicLens = true;
    }
    
+   public static void createLens(int posX, int posY, float r) {
+      LensAttrib la = new LensAttrib( posX, posY, r, 0);      
+      la.magicLensType = LensAttrib.LENS_DEPTH;
+      SSM.lensList.add( la );
+      SSM.refreshMagicLens = true;
+   }
+   
    ////////////////////////////////////////////////////////////////////////////////
    // Remove a lens at (posX, posY)
    ////////////////////////////////////////////////////////////////////////////////

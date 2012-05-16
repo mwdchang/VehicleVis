@@ -433,6 +433,18 @@ public class ModelRenderer extends BaseModelRenderer {
             StatusWindow.tf.anchorX = SSM.windowWidth - StatusWindow.tf.width;
             StatusWindow.tf.anchorY = 10; //StatusWindow.tf.height;
             StatusWindow.render(gl2);
+            
+            // Lets render the model bounding box in screen space
+            gl2.glPolygonMode(GL2.GL_FRONT_AND_BACK, GL2.GL_LINE);
+            gl2.glColor4d(0, 0, 0, 1);
+            gl2.glBegin(GL2.GL_QUADS);
+               gl2.glVertex2d(MM.currentModel.minx, MM.currentModel.miny);
+               gl2.glVertex2d(MM.currentModel.maxx, MM.currentModel.miny);
+               gl2.glVertex2d(MM.currentModel.maxx, MM.currentModel.maxy);
+               gl2.glVertex2d(MM.currentModel.minx, MM.currentModel.maxy);
+            gl2.glEnd();
+            gl2.glPolygonMode(GL2.GL_FRONT_AND_BACK, GL2.GL_FILL);
+            
          }
          
       }         

@@ -187,6 +187,7 @@ public class EventManager implements KeyListener, MouseListener, MouseMotionList
          SSM.dirty = 1;
          SSM.dirtyGL = 1;
          SSM.refreshMagicLens = true;
+         SSM.dirtyDateFilter = 1;
       }
       if (e.getKeyChar() == 'a') {
          SSM.useAggregate = ! SSM.useAggregate;
