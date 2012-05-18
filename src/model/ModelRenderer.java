@@ -311,14 +311,17 @@ public class ModelRenderer extends BaseModelRenderer {
          gl2.glEnable(GL2.GL_BLEND);
          
          if (SSM.useDualDepthPeeling) {
+            
+            // 1) Default, use dual peeling and render in colour ramp mode
             if (SSM.refreshOITTexture) {
                this.ProcessDualPeeling(gl2, this.g_quadDisplayList);
-               // weeee
                this.RenderDualPeeling(gl2, this.g_quadDisplayList);
-               //SSM.instance().refreshOITTexture = false;
             } else {
                this.RenderOITTexture(gl2);   
             }
+            
+            // 2) Some funny stuff to try out...lets do face normals
+            //this.renderFNormal(gl2);
          } else {
             renderColourRamp(gl2, null);
          }
@@ -1375,6 +1378,8 @@ public class ModelRenderer extends BaseModelRenderer {
          }
          
          gl2.glLineWidth(2.0f);
+         gl2.glLineStipple(2, SSM.stipplePattern);
+         if (SSM.useStipple) gl2.glEnable(GL2.GL_LINE_STIPPLE);
          gl2.glBegin(GL2.GL_LINES);
             gl2.glVertex2d( comp.projCenter.x, comp.projCenter.y);
             gl2.glVertex2d( lensX + edgeX, comp.projCenter.y);
@@ -1396,6 +1401,7 @@ public class ModelRenderer extends BaseModelRenderer {
             */
          gl2.glEnd();
          gl2.glLineWidth(1.0f);
+         gl2.glDisable(GL2.GL_LINE_STIPPLE);
       }
       
       
@@ -1510,6 +1516,8 @@ public class ModelRenderer extends BaseModelRenderer {
          }         
          
          
+         gl2.glLineStipple(2, SSM.stipplePattern);
+         if (SSM.useStipple) gl2.glEnable(GL2.GL_LINE_STIPPLE);
          gl2.glLineWidth(2.0f);
          gl2.glBegin(GL2.GL_LINES);
             gl2.glVertex2d( comp.projCenter.x, comp.projCenter.y);
@@ -1531,6 +1539,7 @@ public class ModelRenderer extends BaseModelRenderer {
             */
          gl2.glEnd();
          gl2.glLineWidth(1.0f);
+         gl2.glDisable(GL2.GL_LINE_STIPPLE);
       }
       
       
@@ -1707,7 +1716,7 @@ public class ModelRenderer extends BaseModelRenderer {
             */
          	if (comp.id < 0) continue;
             
-            float scale = 1.0f + (float)CacheManager.instance().groupOccurrence.get(comp.id)/(float)SSM.maxOccurrence;
+            float scale = 1.0f; // + (float)CacheManager.instance().groupOccurrence.get(comp.id)/(float)SSM.maxOccurrence;
             textRenderer.setColor( 0.0f, 0.5f, 2.0f, 1.0f);
             this.renderTextPolar(gl2, la, (float)angle, scale, comp, comp.cname+"(" + CacheManager.instance().groupOccurrence.get(comp.id) + ")");
          }

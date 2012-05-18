@@ -33,10 +33,11 @@ public class WCursor {
    public int element;         // The element associated with the touch point
    public TuioCursor cursor; 
    
-   public int state = 0;
+   public int state = STATE_NOTHING;
    
    public int numUpdate = 0;
    
+   public static int STATE_NOTHING = 0;
    public static int STATE_MOVE = 10;
    public static int STATE_SWIPE = 11;
    public Vector<TuioPoint> points = new Vector<TuioPoint>();

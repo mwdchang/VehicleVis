@@ -145,10 +145,12 @@ public class GLRenderer implements GLEventListener {
          SSM.stopPicking = 0;
          SSM.pickPoints.clear();
       }
+      synchronized(SSM.dragPoints){
       if (SSM.dragPoints.size() > 0) {
          for (DCTriple p : SSM.dragPoints.values())  {  
             filter_task.picking(gl2, p.x, p.y);
          }
+      }
       }
       /*
       if (SSM.instance().l_mousePressed) {

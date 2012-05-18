@@ -51,7 +51,7 @@ public class SSM {
       
       
       // Parse runtime parameters
-      useTUIO         = Boolean.parseBoolean(System.getProperty("UseTUIO", "false"));
+      useTUIO         = Boolean.parseBoolean(System.getProperty("UseTUIO", "true"));
       useFullScreen   = Boolean.parseBoolean(System.getProperty("UseFullScreen", "false"));
       refreshRate     = Long.parseLong(System.getProperty("RefreshRate", "800"));
       nearThreshold   = Float.parseFloat(System.getProperty("NearThreshold", "0.2f")); 
@@ -183,6 +183,8 @@ public class SSM {
    ///////////////////////////////////////////////////////////////////////////////// 
    public static int g_numPasses = 4;
    public static int g_numGeoPasses = 0;
+   
+   public static short stipplePattern = (short)0xF0FA;
 
    
    ///////////////////////////////////////////////////////////////////////////////// 
@@ -232,6 +234,7 @@ public class SSM {
    public static boolean useLocalFocus = true;       // Whether to nor to render based on current selected components 
    public static boolean use3DModel = true;          // Whether to use integrated 3D view 
    public static boolean useFlag = true;             // Just a temporary flag to trigger adhoc tests and stuff, not used for real data
+   public static boolean useStipple = false;         // Whether to use stippling for the labels
    
    public static boolean checkDragEvent = false; 
    

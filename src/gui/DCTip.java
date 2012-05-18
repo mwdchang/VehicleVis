@@ -6,6 +6,8 @@ import java.util.Hashtable;
 
 import javax.media.opengl.GL2;
 
+import model.DCColour;
+
 import org.jdesktop.animation.timing.Animator;
 
 import datastore.SSM;
@@ -116,6 +118,9 @@ public class DCTip {
    }
    public void addText(String txt) {
       tf.addMark( txt, c, f, 5, tf.height-20-tf.marks.size()*buffer);
+   }
+   public void addText(String txt, DCColour c) {
+      tf.addMark( txt, c.awtRGBA(), f, 5, tf.height-20-tf.marks.size()*buffer);   
    }
    
    

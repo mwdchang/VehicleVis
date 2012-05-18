@@ -1457,7 +1457,9 @@ public abstract class BaseModelRenderer implements RenderTask {
         for (DCComponent comp : MM.currentModel.componentTable.values()) {
            //comp.renderBufferAdj(gl, DCColour.fromInt(100, 100, 100, 150));
            if (!comp.hasContext || !comp.active) {
-              comp.renderBufferAdj(gl, DCColour.fromInt(160, 160, 160, 50));
+              //comp.renderBufferAdj(gl, DCColour.fromInt(160, 160, 160, 50));
+              comp.renderBufferAdj(gl, SchemeManager.silhouette_default);
+              //comp.renderBuffer(gl, SchemeManager.comp_1);
            } else {
               //gl.glLineWidth(5.0f);
               //comp.renderBufferAdj(gl, comp.colour);

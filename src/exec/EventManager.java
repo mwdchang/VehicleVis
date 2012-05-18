@@ -168,40 +168,66 @@ public class EventManager implements KeyListener, MouseListener, MouseMotionList
       }
       
       
-      if (e.getKeyChar() == '1') {
-         SSM.chartMode = SSM.CHART_MODE_BY_MONTH_MAX;
+      // Regular key presses 
+      if (SSM.controlKey == false)  {
+         if (e.getKeyChar() == '1') {
+            SSM.chartMode = SSM.CHART_MODE_BY_MONTH_MAX;
+         }
+         if (e.getKeyChar() == '2') {
+            SSM.chartMode = SSM.CHART_MODE_BY_COMPONENT_MAX;
+         }
+         if (e.getKeyChar() == '3') {
+            SSM.chartMode = SSM.CHART_MODE_BY_GLOBAL_MAX;
+         }
+         if (e.getKeyChar() == 'd') {
+            SSM.use3DModel = ! SSM.use3DModel;   
+            SSM.dirty = 1;
+            SSM.dirtyGL = 1;
+         }
+         if (e.getKeyChar() == 's') {
+            SSM.useComparisonMode =! SSM.useComparisonMode;   
+            SSM.dirty = 1;
+            SSM.dirtyGL = 1;
+            SSM.refreshMagicLens = true;
+            SSM.dirtyDateFilter = 1;
+         }
+         if (e.getKeyChar() == 'a') {
+            SSM.useAggregate = ! SSM.useAggregate;
+            SSM.dirty = 1;
+            SSM.dirtyGL = 1;
+            SSM.refreshMagicLens = true;
+         }
       }
-      if (e.getKeyChar() == '2') {
-         SSM.chartMode = SSM.CHART_MODE_BY_COMPONENT_MAX;
-      }
-      if (e.getKeyChar() == '3') {
-         SSM.chartMode = SSM.CHART_MODE_BY_GLOBAL_MAX;
-      }
-      if (e.getKeyChar() == 'd') {
-         SSM.use3DModel = ! SSM.use3DModel;   
-         SSM.dirty = 1;
-         SSM.dirtyGL = 1;
-      }
-      if (e.getKeyChar() == 's') {
-         SSM.useComparisonMode =! SSM.useComparisonMode;   
-         SSM.dirty = 1;
-         SSM.dirtyGL = 1;
-         SSM.refreshMagicLens = true;
-         SSM.dirtyDateFilter = 1;
-      }
-      if (e.getKeyChar() == 'a') {
-         SSM.useAggregate = ! SSM.useAggregate;
-         SSM.dirty = 1;
-         SSM.dirtyGL = 1;
-         SSM.refreshMagicLens = true;
-      }
+       
      
       
       
       ////////////////////////////////////////////////////////////////////////////////
       // Don't really need the stuff below. Most are either debugging or
-      // experimental functions
+      // experimental functions. Note we use the control modifier key
+      // 1 => Stippling
+      // 2 => Lighting 
+      // 3 => Depth Peeling
+      // 4 => Heatmap Widgets
       ////////////////////////////////////////////////////////////////////////////////
+      if (SSM.controlKey) {
+         if (e.getKeyCode() == '1') {
+            SSM.useStipple = ! SSM.useStipple;   
+         }
+         if (e.getKeyChar() == '2') {
+            SSM.useLight = ! SSM.useLight;   
+         }
+         if (e.getKeyChar() == '3') {
+            SSM.useDualDepthPeeling = ! SSM.useDualDepthPeeling;
+         }
+         if (e.getKeyChar() == '4') {
+            SSM.showLabels = ! SSM.showLabels;   
+         }
+      }
+      
+      if (e.getKeyChar() == 'w') {
+         SSM.useGlow = ! SSM.useGlow;   
+      }
       if (e.getKeyCode() == KeyEvent.VK_UP) {
          System.out.println("Up Arrow");
          SSM.g_numPasses ++;   
@@ -216,15 +242,6 @@ public class EventManager implements KeyListener, MouseListener, MouseMotionList
       }
       if (e.getKeyChar() == '-') {
          ProjectDriver.frame.setBounds(0, 0, 900, 900);
-      }
-      if (e.getKeyChar() == '4') {
-         SSM.useLight = ! SSM.useLight;   
-      }
-      if (e.getKeyChar() == 'w') {
-         SSM.useGlow = ! SSM.useGlow;   
-      }
-      if (e.getKeyChar() == 'o') {
-         SSM.useDualDepthPeeling = ! SSM.useDualDepthPeeling;
       }
       if (e.getKeyChar() == '9')  {
          SSM.useConstantAlpha = ! SSM.useConstantAlpha;   
@@ -279,17 +296,13 @@ public class EventManager implements KeyListener, MouseListener, MouseMotionList
          System.out.println("Decreasing occ level");
          SSM.occlusionLevel --; 
       }
-      if (e.getKeyChar() == 'l') {
-         SSM.showLabels = ! SSM.showLabels;   
-      }
       if (e.getKeyChar() == '?') {
          SSM.instance().timeFrameStatistics();   
       }
-      
-      // Turn on/off guides
       if (e.getKeyChar() == 'g') {
          SSM.useGuide = ! SSM.useGuide;      
       }
+      
       // Show colour editor
       if (e.getKeyChar() == 'x') {
          CEditor.instance().setVisible( !CEditor.instance().isVisible() );   

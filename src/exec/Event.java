@@ -7,6 +7,7 @@ import model.LensAttrib;
 import model.PaneAttrib;
 import util.DCCamera;
 import util.DCUtil;
+import util.DWin;
 import util.MatrixUtil;
 import Jama.Matrix;
 import TimingFrameExt.DCColourEval;
@@ -30,10 +31,17 @@ public class Event {
    }
    
    public static void createLens(int posX, int posY, float r) {
+      // Hackhack: limit the amount of lens to 3 for now
+      if (SSM.lensList.size() >= 2) return;
+      
       LensAttrib la = new LensAttrib( posX, posY, r, 0);      
       la.magicLensType = LensAttrib.LENS_DEPTH;
       SSM.lensList.add( la );
       SSM.refreshMagicLens = true;
+      
+      
+      // Debug
+      DWin.instance().msg("Lens : " + posX + " " + posY + " " + r);
    }
    
    ////////////////////////////////////////////////////////////////////////////////
@@ -184,6 +192,7 @@ System.out.println("<Near plane: " + la.nearPlane);
          DCCamera.instance().right.normalize();
          
          SSM.refreshOITTexture = true;
+         SSM.refreshMagicLens = true;
       }
       
       if ( oldPosY != posY) {
@@ -204,6 +213,7 @@ System.out.println("<Near plane: " + la.nearPlane);
          DCCamera.instance().up.normalize();
          
          SSM.refreshOITTexture = true;
+         SSM.refreshMagicLens = true;
       }      
    }
    

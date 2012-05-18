@@ -151,8 +151,8 @@ public class Heatmap extends ComponentChart {
                      int cMonth = (int)((1+tmpX) + SSM.startMonth);
                      tip.addText("Time:" + DCTip.translateTable.get(cMonth+"") + "-" + cYear); 
                      if (SSM.useComparisonMode == true) {
-                        tip.addText("Value:" + (int)(v));
-                        tip.addText("Value:" + (int)(c_v));
+                        tip.addText("Value:" + (int)(c_v), SchemeManager.comp_2);
+                        tip.addText("Value:" + (int)(v), SchemeManager.comp_1);
                      } else {
                         tip.addText("Value:" + (int)v);
                      }

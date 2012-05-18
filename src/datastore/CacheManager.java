@@ -632,7 +632,8 @@ System.out.println("Debugging");
          int m = Integer.parseInt(dateStr.substring(4,6)) - 1;
          
          if (m < fromMonth || m > toMonth) continue; // if month out of range skip
-         
+System.out.println("Debug getPartOccurrence...");         
+         synchronized(queryTable) {
          Enumeration<Integer> partEnum = queryTable.elementAt(i).keys();
          while (partEnum.hasMoreElements()) {
             int partID= partEnum.nextElement();
@@ -641,6 +642,7 @@ System.out.println("Debugging");
                value += result.get(partID);   
             } 
             result.put(partID, value);
+         }
          }
       }
       return result;
@@ -658,6 +660,8 @@ System.out.println("Debugging");
          
          if (m < fromMonth || m > toMonth) continue; // if month out of range skip
          
+System.out.println("Debug getPartOccurrenceFilterAgg");         
+         synchronized(queryTable) {
          Enumeration<Integer> partEnum = queryTable.elementAt(i).keys();
          while (partEnum.hasMoreElements()) {
             int partID= partEnum.nextElement();
@@ -666,6 +670,7 @@ System.out.println("Debugging");
                value += result.get(partID);   
             } 
             result.put(partID, value);
+         }
          }
       }
       return result;
