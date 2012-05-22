@@ -47,12 +47,16 @@ public class DomainFilterTask implements RenderTask {
    public DCScrollPane c_modelScroll;
    public DCScrollPane c_yearScroll;   
    
+   public DCSwitch aggSwitch;
+   
    public static Font labelFont = DCUtil.loadFont(Const.FONT_PATH+"din1451m.ttf", Font.PLAIN, 12f);
+   
 
    @Override
    public void render(GL2 gl2) {
       checkComparisonMode();
       renderScrollFilter(gl2);
+      renderSwitch(gl2);
    }
 
    @Override
@@ -159,18 +163,22 @@ public class DomainFilterTask implements RenderTask {
       c_modelScroll.texPanelWidth = SSM.c_modelAttrib.width;
       c_yearScroll.width = SSM.c_yearAttrib.width;
       c_yearScroll.texPanelWidth = SSM.c_yearAttrib.width;  
+      
+      
+      aggSwitch = new DCSwitch();
+      aggSwitch.setLabel("Aggregation");
    }
    
 
    @Override
    public void picking(GL2 gl2, float px, float py) {
-      if (SSM.instance().l_mouseClicked == false) return;
+      if (SSM.l_mouseClicked == false) return;
       
       float mx = px;
       float my = SSM.windowHeight - py;
       
       // Check if any one of the master scrollpane buttons are pressed
-      if (SSM.instance().useComparisonMode == true) {
+      if (SSM.useComparisonMode == true) {
          if (DCUtil.between(mx, filterTexture.anchorX, filterTexture.anchorX+filterTexture.width))  {
             if (DCUtil.between(my, filterTexture.anchorY, filterTexture.anchorY+filterTexture.height)) {
                System.err.println("Clicked on master control");   
@@ -301,6 +309,18 @@ public class DomainFilterTask implements RenderTask {
       scrollPaneTransition(mx, my, c_yearScroll, SSM.c_yearAttrib);      
       
       
+      
+      // Now test the switch intersection
+      if (DCUtil.between(mx, SSM.aggregationAnchorX+aggSwitch.width, SSM.aggregationAnchorX+aggSwitch.width+aggSwitch.buttonWidth)) {
+         if (DCUtil.between(my, SSM.aggregationAnchorY, SSM.aggregationAnchorY+aggSwitch.height)) {
+            System.out.println("Hit a switch...");
+            aggSwitch.state = ! aggSwitch.state;
+            if (aggSwitch.state == true) { SSM.useAggregate = true; }
+            else { SSM.useAggregate = false; }
+         }
+      }
+      
+      
    }
    
    
@@ -315,8 +335,8 @@ public class DomainFilterTask implements RenderTask {
       c_modelScroll.tagList.clear();
       c_yearScroll.tagList.clear();      
       
-      int startIdx = SSM.instance().startIdx;
-      int endIdx   = SSM.instance().endIdx;
+      int startIdx = SSM.startIdx;
+      int endIdx   = SSM.endIdx;
       
       // Set up default 
       Hashtable<String, Integer> manufactureHash = this.getHierFilter(startIdx, endIdx);
@@ -400,7 +420,7 @@ public class DomainFilterTask implements RenderTask {
       }
       widget.texPanelHeight = widget.tagList.lastElement().y;
       attrib.textureHeight = widget.texPanelHeight;
-      attrib.height = Math.min(attrib.textureHeight, SSM.instance().defaultScrollHeight);
+      attrib.height = Math.min(attrib.textureHeight, SSM.defaultScrollHeight);
       
       if (widget.height > 0) widget.height = attrib.height;
       widget.dirty = true;       
@@ -481,7 +501,7 @@ public class DomainFilterTask implements RenderTask {
    // if comparisonMode == false then hide the comparison mode
    ////////////////////////////////////////////////////////////////////////////////
    public void checkComparisonMode() {
-      if (SSM.instance().useComparisonMode == false) {
+      if (SSM.useComparisonMode == false) {
          SSM.manufactureAttrib.anchorY = 50;
          SSM.makeAttrib.anchorY = 50;
          SSM.modelAttrib.anchorY = 50;
@@ -527,7 +547,7 @@ public class DomainFilterTask implements RenderTask {
    // in the hierarchical search filter
    ////////////////////////////////////////////////////////////////////////////////
    public void scrollPaneTransition(float mx, float my, DCScrollPane widget, PaneAttrib attrib ) {
-      if (DCUtil.between(mx, widget.anchorX, widget.anchorX+SSM.instance().scrollWidth)) {
+      if (DCUtil.between(mx, widget.anchorX, widget.anchorX+SSM.scrollWidth)) {
          if (DCUtil.between(my, widget.anchorY-20, widget.anchorY)) {
             attrib.active = ! attrib.active;
             SSM.stopPicking = 1;
@@ -548,7 +568,7 @@ public class DomainFilterTask implements RenderTask {
    // Handles select action for hierarchical scrolling panel filters
    ////////////////////////////////////////////////////////////////////////////////
    public int pickingScrollPane(float mx, float my, DCScrollPane widget, PaneAttrib attrib, Object ...childrenPair) {
-      if (DCUtil.between(mx, attrib.anchorX, attrib.anchorX+SSM.instance().scrollWidth)) {
+      if (DCUtil.between(mx, attrib.anchorX, attrib.anchorX+SSM.scrollWidth)) {
          //if (DCUtil.between(my, attrib.anchorY, attrib.anchorY+attrib.height)) {
          boolean yCheck = false;
          if (widget.direction == DCScrollPane.UP ) {
@@ -584,7 +604,7 @@ public class DomainFilterTask implements RenderTask {
                   
                   SSM.dirty = 1;
                   SSM.dirtyGL = 1;
-                  SSM.instance().refreshMagicLens = true;
+                  SSM.refreshMagicLens = true;
                   attrib.selected = i==0? null:t.val; 
                   
                   // Clear the children
@@ -602,11 +622,21 @@ public class DomainFilterTask implements RenderTask {
       return 0;
    }
    
+   
+   
+   public void renderSwitch(GL2 gl2) {
+      aggSwitch.anchorX = SSM.aggregationAnchorX;
+      aggSwitch.anchorY = SSM.aggregationAnchorY;
+      
+      aggSwitch.render(gl2);
+   }
+   
+   
    public void renderScrollFilter(GL2 gl2) {
       ////////////////////////////////////////////////////////////////////////////////
       // Rener the combo boxes
       ////////////////////////////////////////////////////////////////////////////////
-      GraphicUtil.setOrthonormalView(gl2, 0, SSM.instance().windowWidth, 0, SSM.instance().windowHeight, -10, 10); {
+      GraphicUtil.setOrthonormalView(gl2, 0, SSM.windowWidth, 0, SSM.windowHeight, -10, 10); {
       //setOrthonormalView(gl2, 0, SSM.instance().windowWidth, 0, SSM.instance().windowHeight); {
          // Update the yoffset before rendering
          gl2.glEnable(GL2.GL_DEPTH_TEST);
@@ -636,7 +666,7 @@ public class DomainFilterTask implements RenderTask {
          float ay;
          
          gl2.glEnable(GL2.GL_BLEND);
-         if (SSM.instance().useComparisonMode == true) {
+         if (SSM.useComparisonMode == true) {
             GraphicUtil.drawRoundedRect(gl2, SSM.filterControlAnchorX+30, manufactureScroll.anchorY - 10, 0, 
                   60, 10, 8, 6,
                   DCColour.fromDouble(0.68, 0.68, 0.68, 0.65).toArray(), 
@@ -683,7 +713,7 @@ public class DomainFilterTask implements RenderTask {
          
          // Draw in indicator so the users will known which colour is associated with 
          // which selection
-         if (SSM.instance().useComparisonMode == true) {
+         if (SSM.useComparisonMode == true) {
             ax = SSM.filterControlAnchorX-20;
             ay = manufactureScroll.anchorY-20;
             gl2.glColor4fv(SchemeManager.comp_1.toArray(), 0);

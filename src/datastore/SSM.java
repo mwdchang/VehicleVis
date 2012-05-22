@@ -51,7 +51,7 @@ public class SSM {
       
       
       // Parse runtime parameters
-      useTUIO         = Boolean.parseBoolean(System.getProperty("UseTUIO", "true"));
+      useTUIO         = Boolean.parseBoolean(System.getProperty("UseTUIO", "false"));
       useFullScreen   = Boolean.parseBoolean(System.getProperty("UseFullScreen", "false"));
       refreshRate     = Long.parseLong(System.getProperty("RefreshRate", "800"));
       nearThreshold   = Float.parseFloat(System.getProperty("NearThreshold", "0.2f")); 
@@ -263,6 +263,14 @@ public class SSM {
    // Things that may or may not be useful but seems interesting to do (to me)
    ////////////////////////////////////////////////////////////////////////////////
    public static boolean colourRampReverseAlpha = false; // Whether to inverse the alpha in the colour scale 
+   
+   
+   
+   ////////////////////////////////////////////////////////////////////////////////
+   // Switch Buttons Management 
+   ////////////////////////////////////////////////////////////////////////////////
+   public static float aggregationAnchorX = 100f;
+   public static float aggregationAnchorY = 100f;
    
    
    ////////////////////////////////////////////////////////////////////////////////
