@@ -51,7 +51,7 @@ public class SSM {
       
       
       // Parse runtime parameters
-      useTUIO         = Boolean.parseBoolean(System.getProperty("UseTUIO", "false"));
+      useTUIO         = Boolean.parseBoolean(System.getProperty("UseTUIO", "true"));
       useFullScreen   = Boolean.parseBoolean(System.getProperty("UseFullScreen", "false"));
       refreshRate     = Long.parseLong(System.getProperty("RefreshRate", "800"));
       nearThreshold   = Float.parseFloat(System.getProperty("NearThreshold", "0.2f")); 
@@ -393,7 +393,7 @@ public class SSM {
    public float getMonthAnchorX() { return 30.0f; }
    public float getYearAnchorY() { return windowHeight - 80; }
    public float getMonthAnchorY() { return windowHeight - 170; }
-   public float rangeFilterHeight = 40;
+   public float rangeFilterHeight = 50;
    public float rangeFilterWidth  = 40;
    
    

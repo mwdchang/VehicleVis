@@ -50,8 +50,7 @@ public class TUIOListener implements TuioListener {
    public static long  REFRESH_INTERVAL = SSM.refreshRate;
    public static int   DOWNSAMPLE_RATE  = SSM.downsampleRate;
    public static float NEAR_THRESHOLD   = SSM.nearThreshold;
-   public static float TOO_CLOSE        = 0.008f;
-   
+
    public Hashtable<Long, WCursor> eventTable = new Hashtable<Long, WCursor>();
    public Vector<TapAction> tapActionList = new Vector<TapAction>();
    
@@ -93,6 +92,17 @@ public class TUIOListener implements TuioListener {
    // not itself
    // TODO: Probably want distance as well
    ////////////////////////////////////////////////////////////////////////////////
+   public Vector<WCursor> findSimilarCursorPixel(WCursor w, int state, int pixelLow, int pixelHigh) {
+      Vector<WCursor> result = new Vector<WCursor>();
+      for (WCursor k : eventTable.values()) {
+         if (k.sessionID == w.sessionID) continue;   
+         if (k.element == w.element && k.state == state) {
+            if (distancePixel(w, k) <= pixelHigh && distancePixel(w, k) >= pixelLow) result.add(k);
+         }
+      }
+      return result;
+   }
+   
    public Vector<WCursor> findSimilarCursor(WCursor w) {
       Vector<WCursor> result = new Vector<WCursor>();
       for (WCursor k : eventTable.values()) {
@@ -231,12 +241,20 @@ public class TUIOListener implements TuioListener {
       }
       
       
-      // Damping...if there are any points that are too close together, 
-      // throw them out because they will screw up the touch point calculations
-      // Vector<WCursor> nearCursor = this.findSimilarCursor(w, 0, TOO_CLOSE);
-      Vector<WCursor> nearCursor = this.findSimilarCursorPixel(w, 0, 30);
+      // If there are any too close together, throw them out because they are
+      // likely to be inaccurate
+      
+      // 1) Touch points that are too close together in the absolute sense
+      Vector<WCursor> nearCursor = this.findSimilarCursorPixel(w, 0, 10);
       if (nearCursor.size() > 0) {
-         System.out.println("Ignoring too close events.....");
+         System.out.println("Ignoring absolute close.....");
+         return;
+      }
+      // 2) Touch points that are relatively close together, and one is in a
+      // moving state ==> probably detected knuckles
+      Vector<WCursor> nearCursor2 = this.findSimilarCursorPixel(w, WCursor.STATE_MOVE, 0, 250);
+      if (nearCursor2.size() > 0) {
+         System.out.println("Ignoring moving close.....");
          return;
       }
       
@@ -278,7 +296,13 @@ public class TUIOListener implements TuioListener {
       WCursor w = eventTable.get(o.getSessionID());
       if (w == null) return;
       
-      System.out.println("=== Removing TUIO Cursor " + o.getPath().size());
+      // If the cursor did not last, it is probably an n touch, ignore
+      long elapsed = o.getTuioTime().getTotalMilliseconds() - w.timestamp;
+      if ( elapsed < 150) {
+         System.out.println("Accidental brush detected..." + elapsed);
+      }
+      
+      System.err.println("=== Removing TUIO Cursor " + o.getPath().size());
       
       SSM.dragPoints.remove(o.getSessionID());
       SSM.checkDragEvent = true;
@@ -286,7 +310,7 @@ public class TUIOListener implements TuioListener {
       
       // Are there too many fingers down ? We only support 2 touch gestures, so if
       // there are too many lets just remove them all
-      Vector<WCursor> sim = this.findSimilarCursorPixel(w, 0, 250);
+      Vector<WCursor> sim = this.findSimilarCursorPixel(w, 0, 400);
       if (sim.size() > 1) {
          System.out.println("Killing extra touch points");
          for (int i=0; i < sim.size(); i++) {
@@ -297,6 +321,7 @@ public class TUIOListener implements TuioListener {
       }
       
       
+      System.out.println("In remove >>>>>>>>>>>>>>>>>>>> " + eventTable.size());
       
       // Check to see if we are activating lens or the document panel
       // If there are exactly 2 points currently, and they are sufficiently close to each other, and 
@@ -304,7 +329,7 @@ public class TUIOListener implements TuioListener {
       //if (w.state != WCursor.STATE_SWIPE && w.state != WCursor.STATE_MOVE && w.element == SSM.ELEMENT_NONE) {
       if (w.state == WCursor.STATE_NOTHING && w.element == SSM.ELEMENT_NONE) {
          
-         Vector<WCursor> doc = this.findSimilarCursor(w, 0.02f, 0.05f);
+         Vector<WCursor> doc = this.findSimilarCursorPixel(w, 0, 60);
          if (doc.size() > 0) {
             if (doc.size() == 1 && doc.elementAt(0).state == WCursor.STATE_NOTHING && SSM.docActive == false) {
                System.out.print("activate document panel");   
@@ -316,7 +341,7 @@ public class TUIOListener implements TuioListener {
             eventTable.remove(o.getSessionID());
             return; 
          }
-         Vector<WCursor> len = this.findSimilarCursor(w, 0.06f, 0.25f);
+         Vector<WCursor> len = this.findSimilarCursorPixel(w, 80, 500);
          if (len.size() > 0) {
             if (len.size() == 1 && len.elementAt(0).state == WCursor.STATE_NOTHING) {
                // Adjust the lens coordinate such that the 2 points are on the circumference of the lens
@@ -339,9 +364,10 @@ public class TUIOListener implements TuioListener {
          }
       }
       
-      // Check to see if we are de-activating the lens
+      
+      // Check to see if we are de-activating document
       if (w.state != WCursor.STATE_SWIPE && w.state != WCursor.STATE_MOVE && w.element == SSM.ELEMENT_DOCUMENT) {
-         Vector<WCursor> doc = this.findSimilarCursor(w, 0.02f, 0.05f);
+         Vector<WCursor> doc = this.findSimilarCursorPixel(w, 0, 60);
          if (doc.size() == 1) {
             System.out.print("Removing document panel");
             SSM.docActive = false;
@@ -350,6 +376,7 @@ public class TUIOListener implements TuioListener {
             return;
          }
       }
+      
       
       /*
       if (w.state != WCursor.STATE_SWIPE && w.state != WCursor.STATE_MOVE && w.element == SSM.ELEMENT_LENS) {
@@ -415,7 +442,11 @@ public class TUIOListener implements TuioListener {
             */
          }
       // Check if this is a tap event (approximate)
-      } else if (w.points.size() < 2) {
+      } else if (w.points.size() < 5) {
+         SSM.pickPoints.add(new DCTriple(w.x*SSM.windowWidth, w.y*SSM.windowHeight, 0));
+         SSM.l_mouseClicked = true;
+         
+        /* Comment out this for now, we are not using double taps currently
         synchronized(tapActionList) {
            boolean found = false;
             for (int i=0; i < tapActionList.size(); i++) {
@@ -432,6 +463,7 @@ public class TUIOListener implements TuioListener {
                tapActionList.add(new TapAction(w.x, w.y, w.element));   
             }
          }
+         */
       }
       eventTable.remove(o.getSessionID());
    }
@@ -458,7 +490,8 @@ public class TUIOListener implements TuioListener {
       if (wcursor == null) return;
       
       // Wait for the cursor to stablize before allowing update
-      if (o.getTuioTime().getTotalMilliseconds() - wcursor.timestamp < 100) {
+      
+      if (o.getTuioTime().getTotalMilliseconds() - wcursor.timestamp < 200) {
          System.out.println("Enforcing stablization delay");   
          return;
       }
@@ -477,14 +510,10 @@ public class TUIOListener implements TuioListener {
       int xx2 = (int)(wcursor.x*SSM.windowWidth);
       int yy2 = (int)(wcursor.y*SSM.windowHeight);
       
-      if (DCUtil.dist( (xx1-xx2), (yy1-yy2)) < 10) {
-         //System.out.println("Ignoring update too close");      
+      if (DCUtil.dist( (xx1-xx2), (yy1-yy2)) < 5) {
+         System.out.println("Ignoring update too close");      
          return;
       }
-      
-      
-      // Additional down-sampling
-      //if (wcursor.numUpdate % DOWNSAMPLE_RATE != 0) return;
       
       
       
@@ -513,9 +542,9 @@ public class TUIOListener implements TuioListener {
       // There is another touch/gesture over the
       // same element
       //if (findSimilarCursor(wcursor) != null) {
-      if (findSimilarCursor(wcursor).size() == 1) {
+      if (findSimilarCursorPixel(wcursor, 0, 500).size() == 1) {
          // Check for pinch and spread events
-         WCursor simCursor   = findSimilarCursor(wcursor).elementAt(0);
+         WCursor simCursor   = findSimilarCursorPixel(wcursor, 0, 500).elementAt(0);
          TuioPoint point     = wcursor.points.lastElement();
          TuioPoint oldPoint  = wcursor.points.elementAt( wcursor.points.size()-2);
          
@@ -533,7 +562,8 @@ public class TUIOListener implements TuioListener {
          // Check others
          if (distance > oldDistance) {
             if (wcursor.element == SSM.ELEMENT_LENS) {
-               Event.resizeLens( (int)(point.getX()*SSM.windowWidth), (int)(point.getY()*SSM.windowHeight), (int)(oldPoint.getX()*SSM.windowWidth), (int)(oldPoint.getY()*SSM.windowHeight));
+               //Event.resizeLens( (int)(point.getX()*SSM.windowWidth), (int)(point.getY()*SSM.windowHeight), (int)(oldPoint.getX()*SSM.windowWidth), (int)(oldPoint.getY()*SSM.windowHeight));
+               Event.resizeLens( (int)(point.getX()*SSM.windowWidth), (int)(point.getY()*SSM.windowHeight), (int)(2));
             } else if (wcursor.element == SSM.ELEMENT_FILTER){     
             } else {
                DCCamera.instance().move(1.5f);
@@ -541,7 +571,8 @@ public class TUIOListener implements TuioListener {
             return;            
          } else {
             if (wcursor.element == SSM.ELEMENT_LENS) {
-               Event.resizeLens( (int)(point.getX()*SSM.windowWidth), (int)(point.getY()*SSM.windowHeight), (int)(oldPoint.getX()*SSM.windowWidth), (int)(oldPoint.getY()*SSM.windowHeight));
+               //Event.resizeLens( (int)(point.getX()*SSM.windowWidth), (int)(point.getY()*SSM.windowHeight), (int)(oldPoint.getX()*SSM.windowWidth), (int)(oldPoint.getY()*SSM.windowHeight));
+               Event.resizeLens( (int)(point.getX()*SSM.windowWidth), (int)(point.getY()*SSM.windowHeight), (int)(-2));
             } else if (wcursor.element == SSM.ELEMENT_FILTER){     
             } else {
                DCCamera.instance().move(-1.5f);
@@ -556,13 +587,13 @@ public class TUIOListener implements TuioListener {
       // Log possible swipe, just save it, we will process at the remove stage
       // The swipe event will be executed when the cursor is removed
       ////////////////////////////////////////////////////////////////////////////////
-      if (DCUtil.dist( (wcursor.x - o.getX()), (wcursor.y - o.getY())) >  0.03 && wcursor.state != WCursor.STATE_MOVE) {
-         System.out.println("Possible Swipe");
-         wcursor.state = WCursor.STATE_SWIPE;
-         wcursor.x = o.getX();
-         wcursor.y = o.getY();
-         return;   
-      }      
+//      if (DCUtil.dist( (wcursor.x - o.getX()), (wcursor.y - o.getY())) >  0.03 && wcursor.state != WCursor.STATE_MOVE) {
+//         System.out.println("Possible Swipe");
+//         wcursor.state = WCursor.STATE_SWIPE;
+//         wcursor.x = o.getX();
+//         wcursor.y = o.getY();
+//         return;   
+//      }      
       
       ////////////////////////////////////////////////////////////////////////////////
       // Execute any move event

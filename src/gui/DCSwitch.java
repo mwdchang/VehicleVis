@@ -99,9 +99,9 @@ public class DCSwitch {
    public float anchorX;
    public float anchorY;
    
-   public float buttonWidth = 60;
-   public float switchWidth = 40;
+   public float buttonWidth = 60; // Width of container
+   public float switchWidth = 40; // Width of on and off
    
    public float height = 16;
-   public float width  = 80;
+   public float width  = 80; // Width of text label
 }

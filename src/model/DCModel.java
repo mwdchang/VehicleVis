@@ -9,15 +9,7 @@ import util.GraphicUtil;
 
 public class DCModel extends DCObj {
    
-//   public static void main(String args[]) {
-//      try {
-//         DCModel model = WaveFrontLoader.loadWaveFrontObj(Const.MODEL_FILE);   
-//         model.init();
-//      } catch (Exception e) {
-//         e.printStackTrace(); 
-//      }
-//   }
-//   
+
         
    ////////////////////////////////////////////////////////////////////////////////
    // Default DCModel

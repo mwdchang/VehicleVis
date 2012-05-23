@@ -107,6 +107,19 @@ public class Event {
       }
    }
    
+   public static void resizeLens(int posX, int posY, int d) {
+      for (int i=0; i < SSM.lensList.size(); i++) {
+         if (SSM.lensList.elementAt(i).magicLensSelected == 1) {
+            // Test
+            if ( SSM.lensList.elementAt(i).magicLensRadius + d < 50) {
+               SSM.lensList.remove(i);
+               break;
+            }
+            SSM.lensList.elementAt(i).magicLensRadius += d;  
+         }
+      }
+   }
+   
    
    ////////////////////////////////////////////////////////////////////////////////
    // Change lens cutting plane
