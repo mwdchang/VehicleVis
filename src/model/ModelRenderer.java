@@ -313,17 +313,15 @@ public class ModelRenderer extends BaseModelRenderer {
          if (SSM.useDualDepthPeeling) {
             
             // 1) Default, use dual peeling and render in colour ramp mode
-            /*
             if (SSM.refreshOITTexture) {
                this.ProcessDualPeeling(gl2, this.g_quadDisplayList);
                this.RenderDualPeeling(gl2, this.g_quadDisplayList);
             } else {
                this.RenderOITTexture(gl2);   
             }
-            */
             
             // 2) Some funny stuff to try out...lets do face normals
-            this.renderFNormal(gl2);
+            //this.renderFNormal(gl2);
          } else {
             renderColourRamp(gl2, null);
          }

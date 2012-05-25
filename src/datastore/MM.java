@@ -24,9 +24,9 @@ public class MM {
 //   static String[] models = { "Foobar.obj", "demoModel.obj" };
 //   static String[] models = { "Foobar.obj", "newBMW.obj" };
 //   static String[] models = { "newBMW.obj", "bunny.ply"};
-//   static String[] models = { "final1.obj" };
+   static String[] models = { "final1.obj" };
 //  static String[] models = { "Debug.obj" };
-  static String[] models = { "bunny.ply" };
+//  static String[] models = { "bunny.ply" };
    
    
    ////////////////////////////////////////////////////////////////////////////////

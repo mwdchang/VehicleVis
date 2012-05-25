@@ -22,6 +22,7 @@ public class WCursor {
       x = c.getX();
       y = c.getY();
       timestamp = c.getTuioTime().getTotalMilliseconds();
+      sessionID = c.getSessionID();
    }
    
    
