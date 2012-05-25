@@ -143,7 +143,6 @@ public class TUIOListener implements TuioListener {
       int posX = (int)(o.getX()*(float)SSM.windowWidth);
       int posY = (int)(o.getY()*(float)SSM.windowHeight);
       
-      SSM.dragPoints.put(o.getSessionID(), new DCTriple(posX, posY, 0));
       
       WCursor w;
       if (Event.checkLens(posX, posY) == SSM.ELEMENT_LENS) {
@@ -196,6 +195,7 @@ public class TUIOListener implements TuioListener {
                }
             }
          }
+         SSM.dragPoints.put(o.getSessionID(), new DCTriple(posX, posY, 0));
          eventTable.put(o.getSessionID(), w);
       }      
       
@@ -210,6 +210,8 @@ public class TUIOListener implements TuioListener {
    ////////////////////////////////////////////////////////////////////////////////
    @Override
    public void removeTuioCursor(TuioCursor o) {
+      SSM.dragPoints.remove(o.getSessionID());
+      
       WCursor w = eventTable.get(o.getSessionID());
       if (w == null) return;
       
@@ -217,7 +219,6 @@ public class TUIOListener implements TuioListener {
       System.err.println("=== Removing TUIO Cursor " + o.getPath().size());
       
       
-      SSM.dragPoints.remove(o.getSessionID());
       SSM.checkDragEvent = true;
       
       

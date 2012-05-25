@@ -394,7 +394,7 @@ public class SSM {
    public float getYearAnchorY() { return windowHeight - 80; }
    public float getMonthAnchorY() { return windowHeight - 170; }
    public float rangeFilterHeight = 50;
-   public float rangeFilterWidth  = 40;
+   public float rangeFilterWidth  = 45;
    
    
    ////////////////////////////////////////////////////////////////////////////////

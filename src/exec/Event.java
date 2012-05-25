@@ -423,7 +423,29 @@ System.out.println("=============================================> Found Lens");
    
    
    ////////////////////////////////////////////////////////////////////////////////
-   //
+   // Check the slider zone for TUIO
+   ////////////////////////////////////////////////////////////////////////////////
+   /*
+   public static int checkSliderTUIO(int posX, int posY) {
+      float mx = posX;
+      float my = SSM.windowHeight - posY;      
+      
+      
+      float yf_anchorX = SSM.instance().getYearAnchorX();
+      float yf_anchorY = SSM.instance().getYearAnchorY();
+      float mf_anchorX = SSM.instance().getMonthAnchorX();
+      float mf_anchorY = SSM.instance().getMonthAnchorY();
+      
+      float ymaxx = yf_anchorX + (CacheManager.instance().timeLineSize/12)*SSM.instance().rangeFilterWidth;
+      float mmaxx = mf_anchorX + 12*SSM.instance().rangeFilterWidth;
+      
+      
+      return SSM.ELEMENT_NONE;
+   }
+   */
+   
+   ////////////////////////////////////////////////////////////////////////////////
+   // Check that the point is inside the range sliders zone
    ////////////////////////////////////////////////////////////////////////////////
    public static int checkSlider(int posX, int posY) {
       float mx = posX;

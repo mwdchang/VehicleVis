@@ -200,7 +200,7 @@ System.out.println("Debugging");
    protected CacheManager() {
       if (DEBUG == true) {
          timeLineStartYear = 1995;         
-         timeLineEndYear   = 1995;         
+         timeLineEndYear   = 1997;         
       }
    }
    
@@ -632,7 +632,7 @@ System.out.println("Debugging");
          int m = Integer.parseInt(dateStr.substring(4,6)) - 1;
          
          if (m < fromMonth || m > toMonth) continue; // if month out of range skip
-System.out.println("Debug getPartOccurrence...");         
+//System.out.println("Debug getPartOccurrence...");         
          synchronized(queryTable) {
          Enumeration<Integer> partEnum = queryTable.elementAt(i).keys();
          while (partEnum.hasMoreElements()) {
@@ -660,7 +660,7 @@ System.out.println("Debug getPartOccurrence...");
          
          if (m < fromMonth || m > toMonth) continue; // if month out of range skip
          
-System.out.println("Debug getPartOccurrenceFilterAgg");         
+//System.out.println("Debug getPartOccurrenceFilterAgg");         
          synchronized(queryTable) {
          Enumeration<Integer> partEnum = queryTable.elementAt(i).keys();
          while (partEnum.hasMoreElements()) {

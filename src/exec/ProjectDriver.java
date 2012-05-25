@@ -1,6 +1,8 @@
 package exec;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.Toolkit;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
@@ -113,6 +115,16 @@ public class ProjectDriver {
          frame.setUndecorated(true);
          frame.setExtendedState( frame.getExtendedState() | JFrame.MAXIMIZED_BOTH );
       }
+      
+      
+      // Hack test
+      Toolkit tk = Toolkit.getDefaultToolkit();
+      Dimension sc = tk.getScreenSize();
+      frame.setLocation((int)sc.getWidth()+1, 0);
+      frame.setUndecorated(true);
+      frame.setExtendedState( frame.getExtendedState() | JFrame.MAXIMIZED_BOTH );
+      // End Hack test
+      
       
       frame.setVisible(true);
       //frame.requestFocus();
