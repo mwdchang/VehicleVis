@@ -1,5 +1,7 @@
 package test;
 
+import java.awt.Dimension;
+import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -58,8 +60,21 @@ public abstract class JOGLBase implements GLEventListener {
       frame.getContentPane().add( canvas );
       frame.setSize( frame.getContentPane().getPreferredSize());
       frame.setUndecorated(this.unDecorated);
-      frame.setVisible(true);
       
+      
+      Toolkit tk = Toolkit.getDefaultToolkit();
+      Dimension sc = tk.getScreenSize();
+      if (this.sendToNextScreen == true) {
+         frame.setLocation((int)sc.getWidth()+1, 0); // Just to the next screen
+      }
+      
+      if (this.isMaximized == true) {
+         frame.setExtendedState( frame.getExtendedState() | JFrame.MAXIMIZED_BOTH );
+      } else {
+         frame.setExtendedState( JFrame.NORMAL );
+      }
+      frame.setVisible(true);
+     
       
       frame.addWindowListener(new WindowAdapter() {
          public void windowClosing(WindowEvent e) {
@@ -193,4 +208,5 @@ public abstract class JOGLBase implements GLEventListener {
    public String title = "";
    public boolean isMaximized = false;
    public boolean unDecorated = true;
+   public boolean sendToNextScreen = false; 
 }

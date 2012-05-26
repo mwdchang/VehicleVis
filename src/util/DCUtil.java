@@ -64,6 +64,42 @@ public class DCUtil {
    
    
    ////////////////////////////////////////////////////////////////////////////////
+   //
+   // Check 2D line segment intersection (P1, P2) and (P3, P4)
+   // Return the intersection point, or null of not intersecting or parallel (incidental)
+   //
+   //    P3    P2
+   //      \  /
+   //       \/
+   //       /\
+   //      /  \
+   //    P1    P4
+   //
+   ////////////////////////////////////////////////////////////////////////////////
+   public static DCTriple intersectLine2D(DCTriple p1, DCTriple p2, DCTriple p3, DCTriple p4) {
+      
+      float UA_numerator = ((p4.x - p3.x)*(p1.y - p3.y) - (p4.y - p3.y)*(p1.x - p3.x));
+      float UB_numerator = ((p2.x - p1.x)*(p1.y - p3.y) - (p2.y - p1.y)*(p1.x - p3.x));
+      float denominator  = ((p4.y - p3.y)*(p2.x - p1.x) - (p4.x - p3.x)*(p2.y - p1.y)); 
+      
+      // Incidental or parallel
+      if ( Math.abs(denominator) <= 0.00001 ) return null;
+      
+      float UA = UA_numerator / denominator;
+      float UB = UB_numerator / denominator;
+      
+      if (UA >= 0 && UA <= 1 && UB >=0 && UB <= 1) {
+         float newX = p1.x + UA*(p2.x - p1.x);
+         float newY = p1.y + UA*(p2.y - p1.y);
+         
+         return new DCTriple(newX, newY, 0);
+      }
+      
+      return null;   
+   }
+   
+   
+   ////////////////////////////////////////////////////////////////////////////////
    // Check if a point P is in triangle abc using barycentric coordinates
    ////////////////////////////////////////////////////////////////////////////////
    public static boolean pointInTriangle(DCTriple point, DCTriple a, DCTriple b, DCTriple c) {

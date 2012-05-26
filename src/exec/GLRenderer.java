@@ -237,6 +237,10 @@ public class GLRenderer implements GLEventListener {
       filter_task.init(gl2);
       legend_task.init(gl2);
       domain_task.init(gl2);
+      
+      
+      // Attemp to free some memory after all initializations
+      System.gc();
    }
    
 

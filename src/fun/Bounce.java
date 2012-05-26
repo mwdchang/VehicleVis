@@ -2,11 +2,14 @@ package fun;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.nio.ByteBuffer;
 import java.util.Hashtable;
 import java.util.Vector;
 
 import javax.media.opengl.GL2;
 import javax.media.opengl.GLAutoDrawable;
+
+import com.jogamp.opengl.util.GLBuffers;
 
 import datastore.SSM;
 
@@ -14,6 +17,7 @@ import model.DCTriple;
 
 import test.JOGLBase;
 import touch.WCursor;
+import util.DCUtil;
 import util.GraphicUtil;
 
 import TUIO.TuioClient;
@@ -22,6 +26,9 @@ import TUIO.TuioListener;
 import TUIO.TuioObject;
 import TUIO.TuioTime;
 
+////////////////////////////////////////////////////////////////////////////////
+// Pong game for TUIO based multi touch systems
+////////////////////////////////////////////////////////////////////////////////
 public class Bounce extends JOGLBase implements TuioListener, KeyListener {
 
    public static void main(String[] args) {
@@ -30,13 +37,20 @@ public class Bounce extends JOGLBase implements TuioListener, KeyListener {
       tc.addTuioListener(tune);
       tc.connect();
       
-      tune.unDecorated = false;
+      
+      tune.unDecorated = true;
+      tune.isMaximized = true;
+      tune.sendToNextScreen = true;
       tune.run("TUNE TUIO", 800, 800);
    }
    
    public Bounce() {
-      Thread t1 = new Thread(clearDeadzone);
+      Thread t1 = new Thread(update);
       t1.start();         
+   }
+   
+   public double dist(double x1, double y1, double x2, double y2, double w, double h) {
+      return Math.sqrt((x1-x2)*(x1-x2)*w*w + (y1-y2)*(y1-y2)*h*h);    
    }
    
    
@@ -53,10 +67,11 @@ public class Bounce extends JOGLBase implements TuioListener, KeyListener {
          pAdded = 0;
          pUpdated = 0;
          pRemoved = 0;
-         synchronized(points){ points.clear(); }
-         synchronized(trail) { trail.clear();  }
-         synchronized(start) { start.clear();  }
-         synchronized(end) { end.clear(); }
+         ball.position = new DCTriple( width/2, height/2, 0);
+         ball.direction = new DCTriple( 1, 0, 0);
+      }
+      if (e.getKeyChar() == 'p') {
+         doScreenCapture = true;
       }
    }
    
@@ -72,57 +87,170 @@ public class Bounce extends JOGLBase implements TuioListener, KeyListener {
       GraphicUtil.setOrthonormalView(gl2, 0, width, 0, height, -10, 10);
       gl2.glLoadIdentity();
       
+      
+      
       gl2.glEnable(GL2.GL_BLEND);
       gl2.glDisable(GL2.GL_DEPTH_TEST);
+      gl2.glDisable(GL2.GL_TEXTURE_2D);
       
-      gl2.glColor4d(0, 0, 1, 1);
-      gl2.glPointSize(7.5f);
-      gl2.glBegin(GL2.GL_POINTS);
-      for (WCursor wc : points.values()) {
+      
+      // Draw the play zone
+      gl2.glColor4d(1, 0, 0, 1);
+      gl2.glBegin(GL2.GL_LINES);
+         gl2.glVertex2d(playZoneWidth, 0);
+         gl2.glVertex2d(playZoneWidth, height);
+         
+         gl2.glVertex2d(width-playZoneWidth, 0);
+         gl2.glVertex2d(width-playZoneWidth, height);
+      gl2.glEnd();
+      
+      // Draw the touch markers
+      for (WCursor wc : pointsPlayer1.values()) {
          float x = wc.x * width; 
          float y = wc.y * height; 
-         gl2.glVertex2d( x, (height-y) );
+         
+         gl2.glColor4d(0, 0.1, 0.2, 0.5);
+         for (int i=0; i < 15; i++) {
+            GraphicUtil.drawPie(gl2, x, (height-y), 0, (i+1)*2, 0, 360, 36);  
+         }
       }
-      gl2.glEnd();
+      for (WCursor wc : pointsPlayer2.values()) {
+         float x = wc.x * width; 
+         float y = wc.y * height; 
+         gl2.glColor4d(0, 0.2, 0.1, 0.5);
+         for (int i=0; i < 15; i++) {
+            GraphicUtil.drawPie(gl2, x, (height-y), 0, (i+1)*2, 0, 360, 36);  
+         }         
+      }
       
-      gl2.glColor4d(0, 1, 1.0, 1);
-      gl2.glPointSize(2.0f);
-      gl2.glBegin(GL2.GL_POINTS);
-      for (int i=0; i < trail.size(); i++) {
-         gl2.glVertex3dv( trail.elementAt(i).toArray3d(), 0 );
-      }
-      gl2.glEnd();
       
-      gl2.glColor4d(0, 1, 0, 1);
-      gl2.glPointSize(5.5f);
-      gl2.glBegin(GL2.GL_POINTS);
-      for (int i=0; i < start.size(); i++) {
-         gl2.glVertex3dv( start.elementAt(i).toArray3d(), 0 );
+      // Draw the paddles
+      if (player1 != null) {
+         synchronized(player1) {
+            for (int j=0; j < 2; j++) {
+               DCTriple s[] = new DCTriple[num_segment];
+               for (int i=0; i < num_segment; i++) {
+                  s[i] = new DCTriple(player1.segment[i]);
+               }
+               for (int i=1; i < (num_segment-1); i++) {
+                  s[i].x += (float)(Math.random()*14 - 7);   
+                  s[i].y += (float)(Math.random()*14 - 7);   
+               }
+               
+               gl2.glLineWidth(3.0f);
+               gl2.glBegin(GL2.GL_LINES);
+               gl2.glColor4d(0, 0.4, 0.8, 0.8);
+               for (int i=0; i < (num_segment-1); i++) {
+                  gl2.glVertex2d( s[i].x, s[i].y);
+                  gl2.glVertex2d( s[i+1].x, s[i+1].y);
+               }
+               gl2.glEnd();
+               gl2.glLineWidth(1.0f);
+            }
+            
+            
+            
+            // Check the normals
+            gl2.glBegin(GL2.GL_LINES);
+               gl2.glColor4d(1, 0, 1, 1);
+               gl2.glVertex2d( player1.centre.x, player1.centre.y);
+               gl2.glVertex2d( player1.centre.x + 40*player1.normal.x, player1.centre.y + 40*player1.normal.y);
+            gl2.glEnd();
+         }
       }
-      gl2.glEnd();
+      if (player2 != null) {
+         synchronized(player2) {
+            for (int j=0; j < 2; j++) {
+               DCTriple s[] = new DCTriple[num_segment];
+               for (int i=0; i < num_segment; i++) {
+                  s[i] = new DCTriple(player2.segment[i]);
+               }
+               for (int i=1; i < (num_segment-1); i++) {
+                  s[i].x += (float)(Math.random()*14 - 7);   
+                  s[i].y += (float)(Math.random()*14 - 7);   
+               }
+               
+               gl2.glLineWidth(3.0f);
+               gl2.glBegin(GL2.GL_LINES);
+               gl2.glColor4d(0, 0.8, 0.4, 0.8);
+               for (int i=0; i < (num_segment-1); i++) {
+                  gl2.glVertex2d( s[i].x, s[i].y);
+                  gl2.glVertex2d( s[i+1].x, s[i+1].y);
+               }
+               gl2.glEnd();
+               gl2.glLineWidth(1.0f);
+            }
+            
+            // Check the normals
+            gl2.glBegin(GL2.GL_LINES);
+               gl2.glColor4d(1, 0, 1, 1);
+               gl2.glVertex2d( player2.centre.x, player2.centre.y);
+               gl2.glVertex2d( player2.centre.x + 40*player2.normal.x, player2.centre.y + 40*player2.normal.y);
+            gl2.glEnd();
+         }
+      }
       
-      gl2.glColor4d(1, 0, 0, 1);
-      gl2.glPointSize(5.5f);
-      gl2.glBegin(GL2.GL_POINTS);
-      for (int i=0; i < end.size(); i++) {
-         gl2.glVertex3dv( end.elementAt(i).toArray3d(), 0 );
+      
+      // Draw the ball
+      gl2.glColor4d(0, 1, 1, 1);
+      GraphicUtil.drawPie(gl2, ball.position.x, ball.position.y, 0, 10, 0, 360, 12); 
+      
+      gl2.glEnable(GL2.GL_TEXTURE_2D);
+      this.drawFragment(gl2, 0.8, 1, 0.2, 0.5);
+      
+      
+      if (doScreenCapture) { 
+         GraphicUtil.screenCap(gl2, "Bounce Capture.png");
+         doScreenCapture = false;
       }
-      gl2.glEnd();
-     
-      /*
-      gl2.glColor4d(1, 1, 0, 1);
-      gl2.glBegin(GL2.GL_TRIANGLES);
-         gl2.glVertex3d(0, 0, 0);
-         gl2.glVertex3d(200, 0, 0);
-         gl2.glVertex3d(200, 200, 0);
-      gl2.glEnd();
-      */
    }
 
    @Override 
    public void init(GLAutoDrawable a) {
       super.init(a);
       this.canvas.addKeyListener(this);
+      
+      width = a.getWidth();
+      height = a.getHeight();
+      
+      GL2 gl2 = a.getGL().getGL2();
+      gl2.glEnable(GL2.GL_BLEND);
+      gl2.glBlendFunc(GL2.GL_SRC_ALPHA, GL2.GL_ONE);
+      gl2.glDisable(GL2.GL_DEPTH_TEST);
+      
+      ball.position = new DCTriple(400, 400, 0);
+      blurTexture(gl2);
+      initFragment();
+      
+      // Dummy data
+      /*
+      player1 = new Paddle();
+      player1.p1 = new DCTriple(60, 500, 0);
+      player1.p2 = new DCTriple(150, 600, 0);
+      player1.calc();
+      WCursor p1cursor1 = new WCursor(0);
+      WCursor p1cursor2 = new WCursor(0);
+      p1cursor1.x = (float)player1.p1.x / (float)width; 
+      p1cursor1.y = (float)(height-player1.p1.y) / (float)height; 
+      p1cursor2.x = (float)player1.p2.x / (float)width; 
+      p1cursor2.y = (float)(height-player1.p2.y) / (float)height; 
+      pointsPlayer1.put(1L, p1cursor1);
+      pointsPlayer1.put(2L, p1cursor2);
+      
+      player2 = new Paddle();
+      player2.p1 = new DCTriple(1500, 200, 0);
+      player2.p2 = new DCTriple(1600, 630, 0);
+      player2.calc();
+      WCursor p2cursor1 = new WCursor(0);
+      WCursor p2cursor2 = new WCursor(0);
+      p2cursor1.x = (float)player2.p1.x / (float)width; 
+      p2cursor1.y = (float)(height-player2.p1.y) / (float)height; 
+      p2cursor2.x = (float)player2.p2.x / (float)width; 
+      p2cursor2.y = (float)(height-player2.p2.y) / (float)height; 
+      pointsPlayer2.put(1L, p2cursor1);
+      pointsPlayer2.put(2L, p2cursor2);
+      */
+     
    }
    
    
@@ -131,92 +259,77 @@ public class Bounce extends JOGLBase implements TuioListener, KeyListener {
       DCTriple p = new DCTriple( t.getX()*width, (1.0f-t.getY())*height, 0 );
       WCursor w = new WCursor(SSM.ELEMENT_NONE, t);;
       
-      synchronized(points) {
-         for (WCursor wc : points.values()) {
-            // 2) Remove new touch points that are way too close in terms of time and distance
-            if (dist(wc.x, wc.y, w.x, w.y, width, height) < 30) {
-               if (Math.abs( wc.timestamp-w.timestamp) < 100) {
-                  System.err.println("H2 " + points.size());
-                  return;   
+      int p1ZoneCounter = 0;
+      int p2ZoneCounter = 0;
+      
+      if (w.x * width > playZoneWidth && w.x * width < (width - playZoneWidth)) return;
+      
+      if (w.x * width <= playZoneWidth) {
+         synchronized(pointsPlayer1) {
+            for (WCursor wc : pointsPlayer1.values()) {
+               // 2) Remove new touch points that are way too close in terms of time and distance
+               if (dist(wc.x, wc.y, w.x, w.y, width, height) < 30) {
+                  if (Math.abs( wc.timestamp-w.timestamp) < 100) return;   
                }
+               
+               // Enforce max touch points per zone
+               p1ZoneCounter++;
             }
-            
-            // 3) Remove new touch points if there are move points in the vicinity
-            if (dist(wc.x, wc.y, w.x, w.y, width, height) < 500 &&
-                dist(wc.x, wc.y, w.x, w.y, width, height) > 20) {
-               if (wc.state == WCursor.STATE_MOVE) {
-                  System.err.println("H3 " + points.size());
-                  return;   
-               }
-            }
-            
-            // 4) Remove any deadzone points
-            for (int i=0; i < deadzone.size(); i++) {
-               float x = w.x*width;
-               float y = (1.0f-w.y)*height;
-               DCTriple zone = deadzone.elementAt(i);
-               if (dist(x,y, zone.x, zone.y, 1, 1) < 50) {
-                  System.err.println("H4 " + points.size());      
-                  return;
-               }
-            }
+            if (p1ZoneCounter >= 2) return;
+            pointsPlayer1.put(t.getSessionID(), w);
          }
-         
-         System.out.println("Path length : " + t.getPath().size());
-         
-         points.put(t.getSessionID(), w);
-         pAdded ++;
+      } else if (w.x * width >= (width-playZoneWidth)) {
+         synchronized(pointsPlayer2) {
+            for (WCursor wc : pointsPlayer2.values()) {
+               // 2) Remove new touch points that are way too close in terms of time and distance
+               if (dist(wc.x, wc.y, w.x, w.y, width, height) < 30) {
+                  if (Math.abs( wc.timestamp-w.timestamp) < 100) return;   
+               }
+               
+               // Enforce max touch points per zone
+               p2ZoneCounter++;
+            }
+            if (p2ZoneCounter >= 2) return;
+            pointsPlayer2.put(t.getSessionID(), w);
+         }
       }
-      synchronized(trail) { trail.add(p); start.add(p);}
+      
    }
    
    
-   public double dist(double x1, double y1, double x2, double y2, double w, double h) {
-      return Math.sqrt((x1-x2)*(x1-x2)*w*w + (y1-y2)*(y1-y2)*h*h);    
-   }
+   
    
    @Override
    public void updateTuioCursor(TuioCursor t) {
       DCTriple p = new DCTriple( t.getX()*width, (1.0f-t.getY())*height, 0 );
-      WCursor w = points.get(t.getSessionID());
+      WCursor w = pointsPlayer1.get(t.getSessionID());
+      if (w == null) w = pointsPlayer2.get(t.getSessionID());
       if (w == null) return;
       
       
       // 1) Remove touch point jitters
       //if ( t.getTuioTime().getTotalMilliseconds() - w.timestamp < 300)  {
-      if (dist(w.x, w.y, t.getX(), t.getY(), width, height) < 3) {
-            System.err.println("H1 " + points.size());
-            return;   
+      if (dist(w.x, w.y, t.getX(), t.getY(), width, height) < 25) {
+         System.err.println("H1 ");
+         return;   
+      } 
+      
+      synchronized(pointsPlayer1) {
+         pointsPlayer1.remove(t.getSessionID());
+         if (pointsPlayer1.size() < 2) player1 = null;
       }
-      //}
-      
-      // 4) Reinforce intention to actually move
-      if (w.numUpdate < 1) {
-         if ( t.getTuioTime().getTotalMilliseconds() - w.timestamp < 600)  {
-         if (dist(w.x, w.y, t.getX(), t.getY(), width, height) < 20) {
-            System.err.println("H4 " + points.size());
-            return;   
-         }
-         }
+      synchronized(pointsPlayer2) {
+         pointsPlayer2.remove(t.getSessionID());
+         if (pointsPlayer2.size() < 2) player2 = null;
       }
-      
-      
-      
-      w.x = t.getX();
-      w.y = t.getY();
-      w.numUpdate ++;
-      w.state = WCursor.STATE_MOVE;
-      
-      synchronized(points) {
-         //points.put(t.getSessionID(), p);
-         pUpdated ++;
-      }
-      synchronized(trail) { trail.add(p); }
+         
    }
+   
 
    @Override
    public void removeTuioCursor(TuioCursor t) {
-      WCursor wc = points.get(t.getSessionID());
+      WCursor wc = pointsPlayer1.get(t.getSessionID());
+      if (wc == null) wc = pointsPlayer2.get(t.getSessionID());
       if (wc == null) return;
       
       System.out.println("Removing TUIO Cursor " + wc.numUpdate);
@@ -226,17 +339,20 @@ public class Bounce extends JOGLBase implements TuioListener, KeyListener {
       } else {
          p = new DCTriple( wc.x*width, (1.0f-wc.y)*height, 0 );
       }
-      synchronized(points) {
-         points.remove( t.getSessionID() );
-         deadzone.add( p );
-         end.add(p);
-         pRemoved ++;
+      
+      synchronized(pointsPlayer1) {
+         pointsPlayer1.remove(t.getSessionID());
+         if (pointsPlayer1.size() < 2) player1 = null;
       }
+      synchronized(pointsPlayer2) {
+         pointsPlayer2.remove(t.getSessionID());
+         if (pointsPlayer2.size() < 2) player2 = null;
+      }
+     
    }
-   
-
 
    
+   // Not used
    public void keyTyped(KeyEvent arg0) {}
    public void keyReleased(KeyEvent arg0) {}
    public void updateTuioObject(TuioObject arg0) {}
@@ -244,33 +360,269 @@ public class Bounce extends JOGLBase implements TuioListener, KeyListener {
    public void addTuioObject(TuioObject arg0) {}
    public void refresh(TuioTime arg0) {}
    
-   public int height, width;
-   
    public int pAdded = 0;
    public int pUpdated = 0;
    public int pRemoved = 0;
    
-   public Hashtable<Long, WCursor> points = new Hashtable<Long, WCursor>();
-   public Vector<DCTriple> trail = new Vector<DCTriple>();
-   public Vector<DCTriple> start = new Vector<DCTriple>();
-   public Vector<DCTriple> end   = new Vector<DCTriple>();
+   //public Hashtable<Long, WCursor> points = new Hashtable<Long, WCursor>();
+   public Hashtable<Long, WCursor> pointsPlayer1 = new Hashtable<Long, WCursor>();
+   public Hashtable<Long, WCursor> pointsPlayer2 = new Hashtable<Long, WCursor>();
    
    
-   // A deadzone is an area that cannot be used for a certain time
-   // period, we use this for to prevent add event from triggering
-   // when a remove event is fired (due to jitter from finger)
-   public Vector<DCTriple> deadzone = new Vector<DCTriple>();
-   public Runnable clearDeadzone = new Runnable() {
+   ////////////////////////////////////////////////////////////////////////////////
+   // Update thread, this is the meat of the main game logic
+   ////////////////////////////////////////////////////////////////////////////////
+   public Runnable update = new Runnable() {
       public void run() {
          try {
             while(true) {
-               Thread.sleep(100);   
-               synchronized(clearDeadzone) { deadzone.clear(); }
+               // Check if player1 paddle is there
+               if (player1 == null && pointsPlayer1.size() == 2) {
+                  player1 = new Paddle();   
+                  synchronized(player1) {
+                     Vector<WCursor> v = new Vector<WCursor>();
+                     v.addAll(pointsPlayer1.values());
+                     player1.p1 = new DCTriple( v.elementAt(0).x * width, (1.0-v.elementAt(0).y)*height, 0);
+                     player1.p2 = new DCTriple( v.elementAt(1).x * width, (1.0-v.elementAt(1).y)*height, 0);
+                     player1.calc();
+                  }
+               }
+               if (player2 == null && pointsPlayer2.size() == 2) {
+                  player2 = new Paddle();   
+                  synchronized(player2) {
+                     Vector<WCursor> v = new Vector<WCursor>();
+                     v.addAll(pointsPlayer2.values());
+                     player2.p1 = new DCTriple( v.elementAt(0).x * width, (1.0-v.elementAt(0).y)*height, 0);
+                     player2.p2 = new DCTriple( v.elementAt(1).x * width, (1.0-v.elementAt(1).y)*height, 0);
+                     player2.calc();
+                  }
+               }
+               
+               
+               // Update the ball position
+               ball.position = ball.position.add( ball.direction.mult(ball.velocity) );
+               
+               // Check for collision
+               // check against player 1
+               DCTriple start = ball.position;
+               DCTriple end   = ball.position.add(ball.direction.mult(ball.velocity));
+               
+               if (player1 != null) {
+                  synchronized(player1) {
+                     DCTriple hitP1 = DCUtil.intersectLine2D(start, end, player1.p1, player1.p2); 
+                     if (hitP1 != null)  { 
+                        float dot = ball.direction.dot(player1.normal);
+                        ball.direction = (player1.normal.mult(-2*dot)).add(ball.direction);
+                        ball.direction.normalize();
+                     }
+                  }
+               }
+               if (player2 != null) {
+                  synchronized(player2) {
+                     DCTriple hitP2 = DCUtil.intersectLine2D(start, end, player2.p1, player2.p2); 
+                     if (hitP2 != null) {
+                        float dot = ball.direction.dot(player2.normal);
+                        ball.direction = (player2.normal.mult(-2*dot)).add(ball.direction);
+                        ball.direction.normalize();
+                     }
+                  }
+               }
+               
+               
+               // Check against top and bottom
+               if (ball.position.y < padding) ball.direction.y *= -1;
+               if (ball.position.y > (height-padding)) ball.direction.y *= -1;
+               
+               
+               Thread.sleep(10);   
             }
          } catch (Exception e) {}
       }
    };
    
    
+   
+   ////////////////////////////////////////////////////////////////////////////////
+   // Create a fuzzy ball gradient texture
+   ////////////////////////////////////////////////////////////////////////////////
+   public void blurTexture(GL2 gl2) {
+      int h = 256;
+      int w = 256;
+      int h2 = 128;
+      int w2 = 128;
+      int channel = 4;
+      ByteBuffer b = GLBuffers.newDirectByteBuffer(h*w*channel);
+      
+      for (int x=0; x < w; x++) {
+         for (int y=0; y < h; y++) {
+            int d = (int)Math.sqrt(  (x-w2)*(x-w2) + (y-h2)*(y-h2) );   
+            int c = 255-(d*2);
+            if (c < 0) c = 0;
+            b.put((byte)c);
+            b.put((byte)c);
+            b.put((byte)c);
+            b.put((byte)c);
+         }
+      }
+      b.flip();
+      
+      gl2.glTexParameteri(GL2.GL_TEXTURE_2D, GL2.GL_TEXTURE_MAG_FILTER, GL2.GL_LINEAR);
+      gl2.glTexParameteri(GL2.GL_TEXTURE_2D, GL2.GL_TEXTURE_MIN_FILTER, GL2.GL_LINEAR);
+      gl2.glTexImage2D(GL2.GL_TEXTURE_2D, 0, 3, w, h, 0, GL2.GL_RGBA, GL2.GL_UNSIGNED_BYTE, b);
+   }   
+   
+   
+   
+   
+   public void drawFragment(GL2 gl2, double r, double g, double b, double a) {
+      double size; // = 0.05f;
+      double slowX = 0.99f;
+      double slowY = 0.99f;
+      double slowZ = 0.99f;
 
+      for (int i=0; i < fragmentSize; i++) {
+         size = f[i].life / 2.5;
+         gl2.glBegin(GL2.GL_TRIANGLE_STRIP);
+            gl2.glColor4d(r, g-f[i].life, b, a);
+            gl2.glTexCoord2f(1,1); gl2.glVertex3d(f[i].x + size, f[i].y + size, 0);
+            gl2.glTexCoord2f(0,1); gl2.glVertex3d(f[i].x - size, f[i].y + size, 0);
+            gl2.glTexCoord2f(1,0); gl2.glVertex3d(f[i].x + size, f[i].y - size, 0);
+            gl2.glTexCoord2f(0,0); gl2.glVertex3d(f[i].x - size, f[i].y - size, 0);
+         gl2.glEnd();
+
+         f[i].x += f[i].dx/18;
+         f[i].y += f[i].dy/18;
+
+         f[i].dx *= slowX;
+         f[i].dy *= slowY;
+         f[i].life -= f[i].fadespeed;
+
+
+         if (f[i].life < 0.05f) {       
+            double velocity = Math.random()*5 + 0.001;            
+            double angle    = Math.random()*360 * Math.PI / 180.0;
+            
+            f[i] = new Fragment();
+            f[i].x = ball.position.x;
+            f[i].y = ball.position.y;
+            f[i].z = 0;
+            
+            f[i].dx = Math.cos(angle)*velocity;
+            f[i].dy = Math.sin(angle)*velocity;
+            f[i].dz = 0;
+            
+            f[i].life = 50.0;
+            f[i].fadespeed = Math.random()/2.0;
+         }
+      }
+   }   
+   
+   ////////////////////////////////////////////////////////////////////////////////
+   // Initialize particles
+   ////////////////////////////////////////////////////////////////////////////////
+   public void initFragment() {
+      for (int i=0; i < fragmentSize; i++) {
+         double velocity = Math.random()*5 + 0.001;            
+         double angle    = Math.random()*360 * Math.PI / 180.0;
+         
+         f[i] = new Fragment();
+         f[i].x = ball.position.x;
+         f[i].y = ball.position.y;
+         f[i].z = 0;
+         
+         f[i].dx = Math.cos(angle)*velocity;
+         f[i].dy = Math.sin(angle)*velocity;
+         f[i].dz = Math.random();
+         
+         f[i].life = 0.0;
+         f[i].fadespeed = Math.random()/6.0;
+      }
+   }   
+   
+   
+   
+   ////////////////////////////////////////////////////////////////////////////////
+   // A placeholder to represent paddle
+   ////////////////////////////////////////////////////////////////////////////////
+   public class Paddle {
+      public Paddle() {
+         p1 = new DCTriple();
+         p2 = new DCTriple();
+      }
+      
+      public synchronized void calc() {
+         DCTriple direction = (p2.sub(p1));
+         centre = p1.add( direction.mult(0.5f) );
+         
+         // Explicit knowledge that nomal's x should be positive
+         normal = new DCTriple(-direction.y, direction.x, 0);
+         normal.normalize();
+         if (p1.x <= playZoneWidth && normal.x < 0) {
+            normal = normal.mult(-1.0f);
+         }
+         if (p1.x >= (width - playZoneWidth) && normal.x > 0) {
+            normal = normal.mult(-1.0f); 
+         }
+         
+         DCTriple dir = p2.sub(p1);
+         for (int i=0; i < num_segment; i++) {
+            segment[i] = p1.add( dir.mult( (float)i / (float)(num_segment-1)));
+         }
+         
+      }
+      
+      public DCTriple centre;
+      public DCTriple normal;
+      public DCTriple p1;
+      public DCTriple p2;
+      public DCTriple segment[] = new DCTriple[num_segment];
+   }
+   
+   
+   ////////////////////////////////////////////////////////////////////////////////
+   // Place holder for the ball centre
+   ////////////////////////////////////////////////////////////////////////////////
+   public class Ball {
+      public Ball() {
+         position = new DCTriple();
+         direction = new DCTriple(1, 0, 0);
+         velocity = 3.0f;
+      }
+      public DCTriple position;
+      public DCTriple direction;
+      public float velocity = 1.0f;
+   }
+   
+   
+   ////////////////////////////////////////////////////////////////////////////////
+   // Ball fragment particles 
+   ////////////////////////////////////////////////////////////////////////////////
+   public class Fragment {
+      double x;
+      double y;
+      double z;
+      
+      double dx;
+      double dy;
+      double dz;
+      
+      double life;
+      double fadespeed;
+   }   
+   
+   
+   // Game object declarations
+   public Paddle player1 = null; 
+   public Paddle player2 = null;
+   public Ball ball = new Ball();
+   public Fragment f[] = new Fragment[fragmentSize];   
+   
+   // Environment
+   public static int playZoneWidth = 300;
+   public static int padding = 10;
+   public static int fragmentSize = 100;
+   public static int height, width;
+   public static int num_segment = 15;
+   
+   public static boolean doScreenCapture = false;
 }
