@@ -243,7 +243,7 @@ public class TUIOListener implements TuioListener {
       //if (w.state != WCursor.STATE_SWIPE && w.state != WCursor.STATE_MOVE && w.element == SSM.ELEMENT_NONE) {
       if (w.state == WCursor.STATE_NOTHING && w.element == SSM.ELEMENT_NONE) {
          
-         Vector<WCursor> doc = this.findSimilarCursorPixel(w, 0, 50);
+         Vector<WCursor> doc = this.findSimilarCursorPixel(w, 0, 60);
          if (doc.size() > 0) {
             if (doc.size() == 1 && doc.elementAt(0).state == WCursor.STATE_NOTHING && SSM.docActive == false) {
                System.out.print("activate document panel");   
@@ -255,7 +255,7 @@ public class TUIOListener implements TuioListener {
             eventTable.remove(o.getSessionID());
             return; 
          }
-         Vector<WCursor> len = this.findSimilarCursorPixel(w, 80, 500);
+         Vector<WCursor> len = this.findSimilarCursorPixel(w, 100, 500);
          if (len.size() > 0) {
             if (len.size() == 1 && len.elementAt(0).state == WCursor.STATE_NOTHING) {
                // Adjust the lens coordinate such that the 2 points are on the circumference of the lens
@@ -350,6 +350,13 @@ public class TUIOListener implements TuioListener {
          
       }
       eventTable.remove(o.getSessionID());
+      
+      
+      // Programmably reset the lens selected stata based on remaining points
+      SSM.clearLens();
+      
+      
+      
    }
 
 
@@ -367,20 +374,28 @@ public class TUIOListener implements TuioListener {
       // 1) Remove touch point jitters
       //if ( t.getTuioTime().getTotalMilliseconds() - w.timestamp < 300)  {
       if (dist(wcursor.x, wcursor.y, o.getX(), o.getY(), width, height) < 3) {
-            System.err.println("H1 " + eventTable.size());
-            return;   
+         System.err.println("H1 " + eventTable.size());
+         return;   
       }
       //}
       
       // 4) Reinforce intention to actually move
-      if (wcursor.numUpdate < 1) {
+      if (wcursor.numUpdate < 1 && wcursor.element != SSM.ELEMENT_LENS) {
          if ( o.getTuioTime().getTotalMilliseconds() - wcursor.timestamp < 600)  {
-         if (dist(wcursor.x, wcursor.y, o.getX(), o.getY(), width, height) < 20) {
-            System.err.println("H4 " + eventTable.size());
-            return;   
-         }
+            if (dist(wcursor.x, wcursor.y, o.getX(), o.getY(), width, height) < 20) {
+               System.err.println("H4 " + eventTable.size());
+               return;   
+            }
          }
       } 
+      // 4.1) Reinforce intention to acutally move for lens
+      if (wcursor.numUpdate < 1 && wcursor.element == SSM.ELEMENT_LENS) {
+         if ( o.getTuioTime().getTotalMilliseconds() - wcursor.timestamp < 400)  {
+            System.err.println("H4.1 " + eventTable.size());
+            return;
+         }
+      }
+      
       
       float ox = o.getX();
       float oy = o.getY();
@@ -435,14 +450,14 @@ public class TUIOListener implements TuioListener {
             System.out.println("Spread detected");    
             if (wcursor.element == SSM.ELEMENT_LENS) {
                Event.resizeLens( x1, y1, (int)(2));
-            } else {
+            } else if (wcursor.element == SSM.ELEMENT_NONE) {
                DCCamera.instance().move(1.5f);
             }
          } else if (oldDistance > newDistance) {
             System.out.println("Pinch detected");
             if (wcursor.element == SSM.ELEMENT_LENS) {
                Event.resizeLens( x1, y1, (int)(-2));
-            } else {
+            } else if (wcursor.element == SSM.ELEMENT_NONE) {
                DCCamera.instance().move(-1.5f);
             }
          }
@@ -507,12 +522,10 @@ public class TUIOListener implements TuioListener {
       } else if (wcursor.element == SSM.ELEMENT_DOCUMENT) {
          Event.dragDocumentPanel(x1, y1, x2, y2);
       }
-      
    }
-   
-   
-   public void addTuioObject(TuioObject o) {}
-   public void updateTuioObject(TuioObject o) {}
-   public void removeTuioObject(TuioObject o) {}
-   public void refresh(TuioTime o) {}
+
+   public void addTuioObject(TuioObject arg0) {}
+   public void refresh(TuioTime arg0) {}
+   public void removeTuioObject(TuioObject arg0) {}
+   public void updateTuioObject(TuioObject arg0) {}   
 }

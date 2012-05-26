@@ -92,31 +92,60 @@ public class Event {
    ////////////////////////////////////////////////////////////////////////////////
    public static void resizeLens(int posX, int posY, int oldPosX, int oldPosY) {
       for (int i=0; i < SSM.lensList.size(); i++) {
+         float x = (float)posX - (float)SSM.lensList.elementAt(i).magicLensX;
+         float y = (float)posY - (float)SSM.lensList.elementAt(i).magicLensY;
+         float r = (float)SSM.lensList.elementAt(i).magicLensRadius;
+         float d = (float)Math.sqrt(x*x + y*y);            
+         if (d < r) {
+            if (d < 90) {
+               SSM.lensList.remove(i);
+               return;
+            }
+            SSM.lensList.elementAt(i).magicLensRadius = d;  
+         }
+         
+         /*
          if (SSM.lensList.elementAt(i).magicLensSelected == 1) {
             float x = (float)posX - (float)SSM.lensList.elementAt(i).magicLensX;
             float y = (float)posY - (float)SSM.lensList.elementAt(i).magicLensY;
             float d = (float)Math.sqrt(x*x + y*y);         
             
             // Test
-            if (d < 50) {
+            if (d < 90) {
                SSM.lensList.remove(i);
                break;
             }
             SSM.lensList.elementAt(i).magicLensRadius = d;  
          }
+         */
       }
    }
    
-   public static void resizeLens(int posX, int posY, int d) {
+   public static void resizeLens(int posX, int posY, int delta) {
       for (int i=0; i < SSM.lensList.size(); i++) {
+         float x = (float)posX - (float)SSM.lensList.elementAt(i).magicLensX;
+         float y = (float)posY - (float)SSM.lensList.elementAt(i).magicLensY;
+         float r = (float)SSM.lensList.elementAt(i).magicLensRadius;
+         float d = (float)Math.sqrt(x*x + y*y);            
+         
+         if (d < r) {
+            SSM.lensList.elementAt(i).magicLensRadius += delta;
+            if (SSM.lensList.elementAt(i).magicLensRadius < 90) {
+               SSM.lensList.remove(i);
+               return;
+            }
+         }
+         
+         /*
          if (SSM.lensList.elementAt(i).magicLensSelected == 1) {
             // Test
-            if ( SSM.lensList.elementAt(i).magicLensRadius + d < 50) {
+            if ( SSM.lensList.elementAt(i).magicLensRadius + d < 90) {
                SSM.lensList.remove(i);
                break;
             }
             SSM.lensList.elementAt(i).magicLensRadius += d;  
          }
+         */
       }
    }
    
