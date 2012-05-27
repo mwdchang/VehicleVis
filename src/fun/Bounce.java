@@ -13,6 +13,7 @@ import com.jogamp.opengl.util.GLBuffers;
 
 import datastore.SSM;
 
+import model.DCColour;
 import model.DCTriple;
 
 import test.JOGLBase;
@@ -44,11 +45,17 @@ public class Bounce extends JOGLBase implements TuioListener, KeyListener {
       tune.run("TUNE TUIO", 800, 800);
    }
    
+   
    public Bounce() {
       Thread t1 = new Thread(update);
       t1.start();         
    }
    
+   
+   ////////////////////////////////////////////////////////////////////////////////
+   // Calculate the distance between (x1, y1) and (x2, y2) with w and h as weight
+   // modifiers
+   ////////////////////////////////////////////////////////////////////////////////
    public double dist(double x1, double y1, double x2, double y2, double w, double h) {
       return Math.sqrt((x1-x2)*(x1-x2)*w*w + (y1-y2)*(y1-y2)*h*h);    
    }
@@ -76,6 +83,61 @@ public class Bounce extends JOGLBase implements TuioListener, KeyListener {
    }
    
    
+   public void renderPaddle(GL2 gl2, Paddle paddle, DCColour c) {
+      if (paddle != null) {
+         synchronized(paddle) {
+            if (paddle.connected == true) {
+               for (int j=0; j < 2; j++) {
+                  DCTriple s[] = new DCTriple[num_segment];
+                  for (int i=0; i < num_segment; i++) {
+                     s[i] = new DCTriple(paddle.segment[i]);
+                  }
+                  for (int i=1; i < (num_segment-1); i++) {
+                     s[i].x += (float)(Math.random()*14 - 7);   
+                     s[i].y += (float)(Math.random()*14 - 7);   
+                  }
+                  
+                  gl2.glLineWidth(3.0f);
+                  gl2.glBegin(GL2.GL_LINES);
+                  gl2.glColor4fv(c.toArray(), 0);
+                  //gl2.glColor4d(0, 0.4, 0.8, 0.8);
+                  for (int i=0; i < (num_segment-1); i++) {
+                     gl2.glVertex2d( s[i].x, s[i].y);
+                     gl2.glVertex2d( s[i+1].x, s[i+1].y);
+                  }
+                  gl2.glEnd();
+                  gl2.glLineWidth(1.0f);
+               }
+            } else {
+               DCTriple dir = (paddle.p2.sub(paddle.p1));
+               dir.normalize();
+               DCTriple endPoint = paddle.p1.add(dir.mult((float)paddle.connectedCounter));
+               gl2.glLineWidth(3.0f);
+               gl2.glColor4fv(c.toArray(), 0);
+               gl2.glBegin(GL2.GL_LINES);
+                  gl2.glVertex2d( paddle.p1.x, paddle.p1.y);
+                  gl2.glVertex2d( endPoint.x, endPoint.y);
+               gl2.glEnd();
+               gl2.glLineWidth(1.0f);
+               if (endPoint.sub(paddle.p1).mag2() > paddle.p2.sub(paddle.p1).mag2()) {
+                  paddle.connected = true;   
+               }
+            }
+            
+            // Check the normals
+            gl2.glBegin(GL2.GL_LINES);
+               gl2.glColor4d(1, 0, 1, 1);
+               gl2.glVertex2d( paddle.centre.x, paddle.centre.y);
+               gl2.glVertex2d( paddle.centre.x + 40*paddle.normal.x, paddle.centre.y + 40*paddle.normal.y);
+            gl2.glEnd();
+         }
+      }
+   }
+   
+   
+   ////////////////////////////////////////////////////////////////////////////////
+   // Render loop
+   ////////////////////////////////////////////////////////////////////////////////
    @Override
    public void display(GLAutoDrawable a) {
       GL2 gl2 = a.getGL().getGL2();
@@ -86,15 +148,14 @@ public class Bounce extends JOGLBase implements TuioListener, KeyListener {
       this.basicClear(gl2);
       GraphicUtil.setOrthonormalView(gl2, 0, width, 0, height, -10, 10);
       gl2.glLoadIdentity();
-      
-      
-      
       gl2.glEnable(GL2.GL_BLEND);
       gl2.glDisable(GL2.GL_DEPTH_TEST);
       gl2.glDisable(GL2.GL_TEXTURE_2D);
       
       
+      ////////////////////////////////////////////////////////////////////////////////
       // Draw the play zone
+      ////////////////////////////////////////////////////////////////////////////////
       gl2.glColor4d(1, 0, 0, 1);
       gl2.glBegin(GL2.GL_LINES);
          gl2.glVertex2d(playZoneWidth, 0);
@@ -104,7 +165,10 @@ public class Bounce extends JOGLBase implements TuioListener, KeyListener {
          gl2.glVertex2d(width-playZoneWidth, height);
       gl2.glEnd();
       
-      // Draw the touch markers
+      
+      ////////////////////////////////////////////////////////////////////////////////
+      // Draw the touch markers, each marker is drawn as concentric ellipses
+      ////////////////////////////////////////////////////////////////////////////////
       for (WCursor wc : pointsPlayer1.values()) {
          float x = wc.x * width; 
          float y = wc.y * height; 
@@ -124,74 +188,16 @@ public class Bounce extends JOGLBase implements TuioListener, KeyListener {
       }
       
       
+      ////////////////////////////////////////////////////////////////////////////////
       // Draw the paddles
-      if (player1 != null) {
-         synchronized(player1) {
-            for (int j=0; j < 2; j++) {
-               DCTriple s[] = new DCTriple[num_segment];
-               for (int i=0; i < num_segment; i++) {
-                  s[i] = new DCTriple(player1.segment[i]);
-               }
-               for (int i=1; i < (num_segment-1); i++) {
-                  s[i].x += (float)(Math.random()*14 - 7);   
-                  s[i].y += (float)(Math.random()*14 - 7);   
-               }
-               
-               gl2.glLineWidth(3.0f);
-               gl2.glBegin(GL2.GL_LINES);
-               gl2.glColor4d(0, 0.4, 0.8, 0.8);
-               for (int i=0; i < (num_segment-1); i++) {
-                  gl2.glVertex2d( s[i].x, s[i].y);
-                  gl2.glVertex2d( s[i+1].x, s[i+1].y);
-               }
-               gl2.glEnd();
-               gl2.glLineWidth(1.0f);
-            }
-            
-            
-            
-            // Check the normals
-            gl2.glBegin(GL2.GL_LINES);
-               gl2.glColor4d(1, 0, 1, 1);
-               gl2.glVertex2d( player1.centre.x, player1.centre.y);
-               gl2.glVertex2d( player1.centre.x + 40*player1.normal.x, player1.centre.y + 40*player1.normal.y);
-            gl2.glEnd();
-         }
-      }
-      if (player2 != null) {
-         synchronized(player2) {
-            for (int j=0; j < 2; j++) {
-               DCTriple s[] = new DCTriple[num_segment];
-               for (int i=0; i < num_segment; i++) {
-                  s[i] = new DCTriple(player2.segment[i]);
-               }
-               for (int i=1; i < (num_segment-1); i++) {
-                  s[i].x += (float)(Math.random()*14 - 7);   
-                  s[i].y += (float)(Math.random()*14 - 7);   
-               }
-               
-               gl2.glLineWidth(3.0f);
-               gl2.glBegin(GL2.GL_LINES);
-               gl2.glColor4d(0, 0.8, 0.4, 0.8);
-               for (int i=0; i < (num_segment-1); i++) {
-                  gl2.glVertex2d( s[i].x, s[i].y);
-                  gl2.glVertex2d( s[i+1].x, s[i+1].y);
-               }
-               gl2.glEnd();
-               gl2.glLineWidth(1.0f);
-            }
-            
-            // Check the normals
-            gl2.glBegin(GL2.GL_LINES);
-               gl2.glColor4d(1, 0, 1, 1);
-               gl2.glVertex2d( player2.centre.x, player2.centre.y);
-               gl2.glVertex2d( player2.centre.x + 40*player2.normal.x, player2.centre.y + 40*player2.normal.y);
-            gl2.glEnd();
-         }
-      }
+      ////////////////////////////////////////////////////////////////////////////////
+      this.renderPaddle(gl2, player1, DCColour.fromFloat(0.0f, 0.4f, 0.8f, 0.8f));
+      this.renderPaddle(gl2, player2, DCColour.fromFloat(0.0f, 0.8f, 0.4f, 0.8f));
+     
       
-      
+      ////////////////////////////////////////////////////////////////////////////////
       // Draw the ball
+      ////////////////////////////////////////////////////////////////////////////////
       gl2.glColor4d(0, 1, 1, 1);
       GraphicUtil.drawPie(gl2, ball.position.x, ball.position.y, 0, 10, 0, 360, 12); 
       
@@ -199,6 +205,7 @@ public class Bounce extends JOGLBase implements TuioListener, KeyListener {
       this.drawFragment(gl2, 0.8, 1, 0.2, 0.5);
       
       
+      // Check if screen capture is requested
       if (doScreenCapture) { 
          GraphicUtil.screenCap(gl2, "Bounce Capture.png");
          doScreenCapture = false;
@@ -407,7 +414,10 @@ public class Bounce extends JOGLBase implements TuioListener, KeyListener {
                DCTriple start = ball.position;
                DCTriple end   = ball.position.add(ball.direction.mult(ball.velocity));
                
-               if (player1 != null) {
+               if (player1 != null && player1.connected == false) player1.connectedCounter++;
+               if (player2 != null && player2.connected == false) player2.connectedCounter++;
+               
+               if (player1 != null && player1.connected) {
                   synchronized(player1) {
                      DCTriple hitP1 = DCUtil.intersectLine2D(start, end, player1.p1, player1.p2); 
                      if (hitP1 != null)  { 
@@ -417,7 +427,7 @@ public class Bounce extends JOGLBase implements TuioListener, KeyListener {
                      }
                   }
                }
-               if (player2 != null) {
+               if (player2 != null && player2.connected) {
                   synchronized(player2) {
                      DCTriple hitP2 = DCUtil.intersectLine2D(start, end, player2.p1, player2.p2); 
                      if (hitP2 != null) {
@@ -473,7 +483,9 @@ public class Bounce extends JOGLBase implements TuioListener, KeyListener {
    
    
    
-   
+   ////////////////////////////////////////////////////////////////////////////////
+   // Draw the particle effects
+   ////////////////////////////////////////////////////////////////////////////////
    public void drawFragment(GL2 gl2, double r, double g, double b, double a) {
       double size; // = 0.05f;
       double slowX = 0.99f;
@@ -551,6 +563,8 @@ public class Bounce extends JOGLBase implements TuioListener, KeyListener {
       }
       
       public synchronized void calc() {
+         connected = false;
+         connectedCounter = 0;
          DCTriple direction = (p2.sub(p1));
          centre = p1.add( direction.mult(0.5f) );
          
@@ -576,6 +590,9 @@ public class Bounce extends JOGLBase implements TuioListener, KeyListener {
       public DCTriple p1;
       public DCTriple p2;
       public DCTriple segment[] = new DCTriple[num_segment];
+      
+      public boolean connected = false;
+      public int     connectedCounter = 0;
    }
    
    
@@ -620,9 +637,10 @@ public class Bounce extends JOGLBase implements TuioListener, KeyListener {
    // Environment
    public static int playZoneWidth = 300;
    public static int padding = 10;
-   public static int fragmentSize = 100;
+   public static int fragmentSize = 200;
    public static int height, width;
    public static int num_segment = 15;
    
    public static boolean doScreenCapture = false;
+   public static float connectSpeed = 8.0f;
 }
