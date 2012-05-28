@@ -189,7 +189,8 @@ public class TUIOListener implements TuioListener {
             // 3) Remove new touch points if there are move points in the vicinity
             if (dist(wc.x, wc.y, w.x, w.y, width, height) < 500 &&
                 dist(wc.x, wc.y, w.x, w.y, width, height) > 20) {
-               if (wc.state == WCursor.STATE_MOVE) {
+               //if (wc.state == WCursor.STATE_MOVE) {
+               if (wc.state == WCursor.STATE_MOVE && wc.element != SSM.ELEMENT_DOCUMENT && wc.element != SSM.ELEMENT_LENS) {
                   System.err.println("H3 " + eventTable.size());
                   return;   
                }
@@ -197,6 +198,9 @@ public class TUIOListener implements TuioListener {
          }
          SSM.dragPoints.put(o.getSessionID(), new DCTriple(posX, posY, 0));
          eventTable.put(o.getSessionID(), w);
+         
+         // Register a touch point
+         synchronized(SSM.touchPoint) { SSM.touchPoint.put(o.getSessionID(), new DCTriple(posX, height-posY, 0)); }
       }      
       
       
@@ -211,6 +215,11 @@ public class TUIOListener implements TuioListener {
    @Override
    public void removeTuioCursor(TuioCursor o) {
       SSM.dragPoints.remove(o.getSessionID());
+      
+      // Remove a touch point - since removal of nothing is nothing, we will just
+      // remove at the top for simplicity sake rather than removal at every single 
+      // conditions that we have
+      synchronized(SSM.touchPoint) { SSM.touchPoint.remove(o.getSessionID()); }
       
       WCursor w = eventTable.get(o.getSessionID());
       if (w == null) return;
@@ -344,9 +353,12 @@ public class TUIOListener implements TuioListener {
          }
       // Check if this is a tap event (approximate)
       } else if (w.points.size() < 3) {
-         System.out.println("\tSending out tap event");
-         SSM.pickPoints.add(new DCTriple(w.x*SSM.windowWidth, w.y*SSM.windowHeight, 0));
-         SSM.l_mouseClicked = true;
+         // Only clickable elements can send a tap event
+         if (w.element == SSM.ELEMENT_NONE || w.element == SSM.ELEMENT_LENS) {
+            System.out.println("\tSending out tap event");
+            SSM.pickPoints.add(new DCTriple(w.x*SSM.windowWidth, w.y*SSM.windowHeight, 0));
+            SSM.l_mouseClicked = true;
+         }
          
       }
       eventTable.remove(o.getSessionID());
@@ -379,6 +391,7 @@ public class TUIOListener implements TuioListener {
       }
       //}
       
+      
       // 4) Reinforce intention to actually move
       if (wcursor.numUpdate < 1 && wcursor.element != SSM.ELEMENT_LENS) {
          if ( o.getTuioTime().getTotalMilliseconds() - wcursor.timestamp < 600)  {
@@ -388,13 +401,24 @@ public class TUIOListener implements TuioListener {
             }
          }
       } 
-      // 4.1) Reinforce intention to acutally move for lens
+      // 4.1) Lens Update: Reinforce intention to actually move for lens
       if (wcursor.numUpdate < 1 && wcursor.element == SSM.ELEMENT_LENS) {
          if ( o.getTuioTime().getTotalMilliseconds() - wcursor.timestamp < 400)  {
             System.err.println("H4.1 " + eventTable.size());
             return;
          }
       }
+      
+      // 4.2) Document Update: check if intention is to scroll the document, or move the panel
+      /*
+      if (wcursor.numUpdate < 1 && wcursor.element == SSM.ELEMENT_DOCUMENT) {
+         if ( o.getTuioTime().getTotalMilliseconds() - wcursor.timestamp < 200)  {
+            wcursor.intention = WCursor.SCROLL_ELEMENT;
+         } else {
+            wcursor.intention = WCursor.MOVE_ELEMENT;
+         }
+      }
+      */
       
       
       float ox = o.getX();
@@ -411,9 +435,14 @@ public class TUIOListener implements TuioListener {
       wcursor.points.add( o.getPosition() );
       wcursor.state = WCursor.STATE_MOVE;
       wcursor.numUpdate++;
+      
+      wcursor.oldX = wcursor.x;
+      wcursor.oldY = wcursor.y;
       wcursor.x = o.getX();
       wcursor.y = o.getY();
          
+      // Register a touch point
+      synchronized(SSM.touchPoint) { SSM.touchPoint.put(o.getSessionID(), new DCTriple(x1, height-y1, 0)); }
       
       // There are 2 other points
       /*
@@ -439,6 +468,7 @@ public class TUIOListener implements TuioListener {
       //System.out.println("Similar cursors = " + findSimilarCursorPixel(wcursor, 0, 500));
       Vector<WCursor> simCursor = findSimilarCursorPixel(wcursor, 0, 500);
       if (simCursor.size() == 1) {
+System.out.println("Checking 2 finger gestures...");         
          WCursor sim = simCursor.elementAt(0);   
          int simX = (int)(sim.x * width);
          int simY = (int)(sim.y * height);
@@ -446,21 +476,50 @@ public class TUIOListener implements TuioListener {
          double oldDistance = dist(simX, simY, x2, y2, 1, 1);
          double newDistance = dist(simX, simY, x1, y1, 1, 1);
          
+         double vDir1 = (wcursor.y - wcursor.oldY)*height;
+         double vDir2 = (sim.y - sim.oldY)*height;         
+         
+         // Check if there is a two-finger drag going on,
+         // To check for two finger drag, we check that the 
+         // two touch points are sufficiently close, are both in move state, and are moving in
+         // the same direction
+         //if (newDistance <= 150 && wcursor.element == SSM.ELEMENT_DOCUMENT) {               // 1) Sufficiently close
+         if ( newDistance <= 150 ) {
+System.out.println("Checking 50");
+            if (wcursor.state == WCursor.STATE_MOVE && sim.state == WCursor.STATE_MOVE) {  // 2) Same state 
+System.out.println("Checking 2 finger drag : " + vDir1 + " " + vDir2);
+               if ( vDir1 * vDir2 > 0 ) {                                                  // 3) Same direction of movement ( ++ | -- )
+System.out.println("2 Finger Drag");   
+                  if (wcursor.element == SSM.ELEMENT_DOCUMENT) {
+                     Event.checkDocumentScroll(x1, y1, (y2-y1));
+                  } else if (wcursor.element == SSM.ELEMENT_LENS) {
+                     int direction = (y2 > y1)? 1 : -1;
+                     Event.scrollLens(x1, y1, direction);
+                  }
+                  return;
+               }
+            }
+         }         
+         
+         
          if (oldDistance < newDistance) {
-            System.out.println("Spread detected");    
+System.out.println("Spread detected");    
             if (wcursor.element == SSM.ELEMENT_LENS) {
                Event.resizeLens( x1, y1, (int)(2));
             } else if (wcursor.element == SSM.ELEMENT_NONE) {
                DCCamera.instance().move(1.5f);
             }
          } else if (oldDistance > newDistance) {
-            System.out.println("Pinch detected");
+System.out.println("Pinch detected");
             if (wcursor.element == SSM.ELEMENT_LENS) {
                Event.resizeLens( x1, y1, (int)(-2));
             } else if (wcursor.element == SSM.ELEMENT_NONE) {
                DCCamera.instance().move(-1.5f);
             }
          }
+         
+
+         
          return;
       }
       
@@ -521,6 +580,28 @@ public class TUIOListener implements TuioListener {
          Event.moveLensTUIO(x1, y1, x2, y2);
       } else if (wcursor.element == SSM.ELEMENT_DOCUMENT) {
          Event.dragDocumentPanel(x1, y1, x2, y2);
+         /*
+         if (wcursor.intention == WCursor.MOVE_ELEMENT)
+            Event.dragDocumentPanel(x1, y1, x2, y2);
+         else if (wcursor.intention == WCursor.SCROLL_ELEMENT)
+            Event.checkDocumentScroll(x1, y1, (y2-y1));
+         */
+      } else if (wcursor.element == SSM.ELEMENT_MANUFACTURE_SCROLL) {
+         Event.checkGUIDrag(x1, y1, x2, y2);
+      } else if (wcursor.element == SSM.ELEMENT_CMANUFACTURE_SCROLL) {
+         Event.checkGUIDrag(x1, y1, x2, y2);
+      } else if (wcursor.element == SSM.ELEMENT_MAKE_SCROLL) {
+         Event.checkGUIDrag(x1, y1, x2, y2);
+      } else if (wcursor.element == SSM.ELEMENT_CMAKE_SCROLL) {
+         Event.checkGUIDrag(x1, y1, x2, y2);
+      } else if (wcursor.element == SSM.ELEMENT_MODEL_SCROLL) {
+         Event.checkGUIDrag(x1, y1, x2, y2);
+      } else if (wcursor.element == SSM.ELEMENT_CMODEL_SCROLL) {
+         Event.checkGUIDrag(x1, y1, x2, y2);
+      } else if (wcursor.element == SSM.ELEMENT_YEAR_SCROLL) {
+         Event.checkGUIDrag(x1, y1, x2, y2);
+      } else if (wcursor.element == SSM.ELEMENT_YEAR_SCROLL) {
+         Event.checkGUIDrag(x1, y1, x2, y2);
       }
    }
 

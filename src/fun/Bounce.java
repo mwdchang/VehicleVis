@@ -156,14 +156,22 @@ public class Bounce extends JOGLBase implements TuioListener, KeyListener {
       ////////////////////////////////////////////////////////////////////////////////
       // Draw the play zone
       ////////////////////////////////////////////////////////////////////////////////
-      gl2.glColor4d(1, 0, 0, 1);
+      
+      gl2.glColor4d(0.5, 0.5, 0.5, 0.8);
       gl2.glBegin(GL2.GL_LINES);
          gl2.glVertex2d(playZoneWidth, 0);
          gl2.glVertex2d(playZoneWidth, height);
          
+         gl2.glVertex2d(playZoneWidth+3, 0);
+         gl2.glVertex2d(playZoneWidth+3, height);
+         
          gl2.glVertex2d(width-playZoneWidth, 0);
          gl2.glVertex2d(width-playZoneWidth, height);
+         
+         gl2.glVertex2d(width-playZoneWidth-3, 0);
+         gl2.glVertex2d(width-playZoneWidth-3, height);
       gl2.glEnd();
+      
       
       
       ////////////////////////////////////////////////////////////////////////////////
@@ -198,8 +206,8 @@ public class Bounce extends JOGLBase implements TuioListener, KeyListener {
       ////////////////////////////////////////////////////////////////////////////////
       // Draw the ball
       ////////////////////////////////////////////////////////////////////////////////
-      gl2.glColor4d(0, 1, 1, 1);
-      GraphicUtil.drawPie(gl2, ball.position.x, ball.position.y, 0, 10, 0, 360, 12); 
+      //gl2.glColor4d(0, 1, 1, 1);
+      //GraphicUtil.drawPie(gl2, ball.position.x, ball.position.y, 0, 10, 0, 360, 12); 
       
       gl2.glEnable(GL2.GL_TEXTURE_2D);
       this.drawFragment(gl2, 0.8, 1, 0.2, 0.5);
@@ -263,7 +271,6 @@ public class Bounce extends JOGLBase implements TuioListener, KeyListener {
    
    @Override
    public void addTuioCursor(TuioCursor t) {
-      DCTriple p = new DCTriple( t.getX()*width, (1.0f-t.getY())*height, 0 );
       WCursor w = new WCursor(SSM.ELEMENT_NONE, t);;
       
       int p1ZoneCounter = 0;
@@ -308,7 +315,6 @@ public class Bounce extends JOGLBase implements TuioListener, KeyListener {
    
    @Override
    public void updateTuioCursor(TuioCursor t) {
-      DCTriple p = new DCTriple( t.getX()*width, (1.0f-t.getY())*height, 0 );
       WCursor w = pointsPlayer1.get(t.getSessionID());
       if (w == null) w = pointsPlayer2.get(t.getSessionID());
       if (w == null) return;
@@ -340,12 +346,6 @@ public class Bounce extends JOGLBase implements TuioListener, KeyListener {
       if (wc == null) return;
       
       System.out.println("Removing TUIO Cursor " + wc.numUpdate);
-      DCTriple p; 
-      if (wc.numUpdate > 0) {
-         p = new DCTriple( t.getX()*width, (1.0f-t.getY())*height, 0 );
-      } else {
-         p = new DCTriple( wc.x*width, (1.0f-wc.y)*height, 0 );
-      }
       
       synchronized(pointsPlayer1) {
          pointsPlayer1.remove(t.getSessionID());
@@ -493,9 +493,10 @@ public class Bounce extends JOGLBase implements TuioListener, KeyListener {
       double slowZ = 0.99f;
 
       for (int i=0; i < fragmentSize; i++) {
-         size = f[i].life / 2.5;
+         size = f[i].life * 30;
          gl2.glBegin(GL2.GL_TRIANGLE_STRIP);
-            gl2.glColor4d(r, g-f[i].life, b, a);
+            //gl2.glColor4d(r, g-f[i].life, b, a);
+            gl2.glColor4d(r-f[i].life, g-f[i].life, b-f[i].life, a);
             gl2.glTexCoord2f(1,1); gl2.glVertex3d(f[i].x + size, f[i].y + size, 0);
             gl2.glTexCoord2f(0,1); gl2.glVertex3d(f[i].x - size, f[i].y + size, 0);
             gl2.glTexCoord2f(1,0); gl2.glVertex3d(f[i].x + size, f[i].y - size, 0);
@@ -523,8 +524,8 @@ public class Bounce extends JOGLBase implements TuioListener, KeyListener {
             f[i].dy = Math.sin(angle)*velocity;
             f[i].dz = 0;
             
-            f[i].life = 50.0;
-            f[i].fadespeed = Math.random()/2.0;
+            f[i].life = 1.0;
+            f[i].fadespeed = Math.random()/50.5;
          }
       }
    }   
@@ -628,6 +629,19 @@ public class Bounce extends JOGLBase implements TuioListener, KeyListener {
    }   
    
    
+   ////////////////////////////////////////////////////////////////////////////////
+   // Power
+   ////////////////////////////////////////////////////////////////////////////////
+   public class Power {
+      public PType ptype;
+   }
+   
+   
+   public enum PType {
+      CHANGE_DIRECTION, SPEED_UP, SLOW_DOWN, BREAK_PADDLE
+   };
+   
+   
    // Game object declarations
    public Paddle player1 = null; 
    public Paddle player2 = null;
@@ -642,5 +656,5 @@ public class Bounce extends JOGLBase implements TuioListener, KeyListener {
    public static int num_segment = 15;
    
    public static boolean doScreenCapture = false;
-   public static float connectSpeed = 8.0f;
+   public static float connectSpeed = 16.0f;
 }

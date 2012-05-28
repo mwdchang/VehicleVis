@@ -441,7 +441,18 @@ public class ModelRenderer extends BaseModelRenderer {
             gl2.glPolygonMode(GL2.GL_FRONT_AND_BACK, GL2.GL_LINE);
             gl2.glColor4d(0, 0, 0, 1);
             gl2.glBegin(GL2.GL_QUADS);
-               gl2.glVertex2d(MM.currentModel.minx, MM.currentModel.miny);
+               gl2.glVertex2d(MM.currentModel.minx, MM
+      
+      ////////////////////////////////////////////////////////////////////////////////
+      // Render just the charts
+      ////////////////////////////////////////////////////////////////////////////////
+      /*
+      setOrthonormalView(gl2, 0, SSM.instance().windowWidth, 0, SSM.instance().windowHeight); {
+         renderChartsOnly(gl2);
+      }
+      */
+      
+      .currentModel.miny);
                gl2.glVertex2d(MM.currentModel.maxx, MM.currentModel.miny);
                gl2.glVertex2d(MM.currentModel.maxx, MM.currentModel.maxy);
                gl2.glVertex2d(MM.currentModel.minx, MM.currentModel.maxy);
@@ -453,17 +464,6 @@ public class ModelRenderer extends BaseModelRenderer {
       }         
       
      
-      
-      ////////////////////////////////////////////////////////////////////////////////
-      // Render just the charts
-      ////////////////////////////////////////////////////////////////////////////////
-      /*
-      setOrthonormalView(gl2, 0, SSM.instance().windowWidth, 0, SSM.instance().windowHeight); {
-         renderChartsOnly(gl2);
-      }
-      */
-      
-      
       ////////////////////////////////////////////////////////////////////////////////
       // Renders a tool tip
       ////////////////////////////////////////////////////////////////////////////////
@@ -489,6 +489,25 @@ public class ModelRenderer extends BaseModelRenderer {
             }
          }
       } // end setOrtho
+      
+      
+      ////////////////////////////////////////////////////////////////////////////////
+      // Draw any active touch points
+      ////////////////////////////////////////////////////////////////////////////////
+      if (SSM.useTUIO == true) {
+         gl2.glDisable(GL2.GL_TEXTURE_2D);
+         gl2.glEnable(GL2.GL_BLEND);
+         setOrthonormalView(gl2, 0, SSM.windowWidth, 0, SSM.windowHeight); {
+            synchronized(SSM.touchPoint) {
+               gl2.glColor4d(0, 0.35, 0.45, 0.20);
+               for (DCTriple p : SSM.touchPoint.values()) {
+                  for (int i = 0; i < 10; i++) {
+                     GraphicUtil.drawPie(gl2, p.x, p.y, 0, (i+1)*2, 0, 360, 36);   
+                  }
+               }
+            }
+         }
+      }
             
    }   
    

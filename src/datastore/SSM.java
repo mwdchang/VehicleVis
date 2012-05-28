@@ -514,4 +514,9 @@ public class SSM {
    
    
    public float segmentMax = 0;
+   
+   // To store the touch points - as a visual aid, it does not have any logic in itself
+   // Store this in OpenGL coordinate system ( bottom left is 0,0 )
+   public static Hashtable<Long, DCTriple> touchPoint = new Hashtable<Long, DCTriple> ();
+   
 }
