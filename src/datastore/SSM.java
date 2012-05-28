@@ -8,6 +8,7 @@ import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Vector;
 
+import touch.WCursor;
 import util.DWin;
 import model.DCTriple;
 import model.LensAttrib;
@@ -517,6 +518,6 @@ public class SSM {
    
    // To store the touch points - as a visual aid, it does not have any logic in itself
    // Store this in OpenGL coordinate system ( bottom left is 0,0 )
-   public static Hashtable<Long, DCTriple> touchPoint = new Hashtable<Long, DCTriple> ();
+   public static Hashtable<Long, WCursor> touchPoint = new Hashtable<Long, WCursor> ();
    
 }

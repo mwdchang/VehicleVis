@@ -12,6 +12,7 @@ import javax.media.opengl.glu.GLU;
 
 import org.jdesktop.animation.timing.interpolation.PropertySetter;
 
+import touch.WCursor;
 import util.DCCamera;
 import util.GraphicUtil;
 import util.TextureFont;
@@ -500,14 +501,26 @@ public class ModelRenderer extends BaseModelRenderer {
          setOrthonormalView(gl2, 0, SSM.windowWidth, 0, SSM.windowHeight); {
             synchronized(SSM.touchPoint) {
                gl2.glColor4d(0, 0.35, 0.45, 0.20);
-               for (DCTriple p : SSM.touchPoint.values()) {
+               
+               for (WCursor p : SSM.touchPoint.values()) {
                   for (int i = 0; i < 10; i++) {
-                     GraphicUtil.drawPie(gl2, p.x, p.y, 0, (i+1)*2, 0, 360, 36);   
+                     GraphicUtil.drawPie(gl2, p.x*SSM.windowWidth, (1.0-p.y)*SSM.windowHeight, 0, (i+1)*2, 0, 360, 36);   
+                  }
+                  
+                  // Trail
+                  int c = 0;
+                  for (int idx=(p.points.size()-1); idx > 0; idx -=2) {
+System.out.println("Idx : " + idx);                     
+                     c++;   
+                     if (c > 10) break;
+                     if (idx < 0) break;
+                     GraphicUtil.drawPie(gl2, p.points.elementAt(idx).getX()*SSM.windowWidth, (1.0-p.points.elementAt(idx).getY())*SSM.windowHeight, 0, 5, 0, 360, 10);   
                   }
                }
-            }
-         }
-      }
+               
+            } // end synchronize
+         } // end set ortho
+      } // end if useTUIO
             
    }   
    

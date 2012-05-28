@@ -200,7 +200,7 @@ public class TUIOListener implements TuioListener {
          eventTable.put(o.getSessionID(), w);
          
          // Register a touch point
-         synchronized(SSM.touchPoint) { SSM.touchPoint.put(o.getSessionID(), new DCTriple(posX, height-posY, 0)); }
+         synchronized(SSM.touchPoint) { SSM.touchPoint.put(o.getSessionID(), w); }
       }      
       
       
@@ -354,7 +354,11 @@ public class TUIOListener implements TuioListener {
       // Check if this is a tap event (approximate)
       } else if (w.points.size() < 3) {
          // Only clickable elements can send a tap event
-         if (w.element == SSM.ELEMENT_NONE || w.element == SSM.ELEMENT_LENS) {
+         if (w.element == SSM.ELEMENT_NONE || w.element == SSM.ELEMENT_LENS || 
+             w.element == SSM.ELEMENT_MANUFACTURE_SCROLL|| w.element == SSM.ELEMENT_CMANUFACTURE_SCROLL || 
+             w.element == SSM.ELEMENT_MAKE_SCROLL || w.element == SSM.ELEMENT_CMAKE_SCROLL ||
+             w.element == SSM.ELEMENT_MODEL_SCROLL || w.element == SSM.ELEMENT_CMODEL_SCROLL ||
+             w.element == SSM.ELEMENT_YEAR_SCROLL || w.element == SSM.ELEMENT_CYEAR_SCROLL ) {
             System.out.println("\tSending out tap event");
             SSM.pickPoints.add(new DCTriple(w.x*SSM.windowWidth, w.y*SSM.windowHeight, 0));
             SSM.l_mouseClicked = true;
@@ -385,7 +389,7 @@ public class TUIOListener implements TuioListener {
       float height = SSM.windowHeight;
       // 1) Remove touch point jitters
       //if ( t.getTuioTime().getTotalMilliseconds() - w.timestamp < 300)  {
-      if (dist(wcursor.x, wcursor.y, o.getX(), o.getY(), width, height) < 3) {
+      if (dist(wcursor.x, wcursor.y, o.getX(), o.getY(), width, height) < 2) {
          System.err.println("H1 " + eventTable.size());
          return;   
       }
@@ -442,7 +446,7 @@ public class TUIOListener implements TuioListener {
       wcursor.y = o.getY();
          
       // Register a touch point
-      synchronized(SSM.touchPoint) { SSM.touchPoint.put(o.getSessionID(), new DCTriple(x1, height-y1, 0)); }
+      synchronized(SSM.touchPoint) { SSM.touchPoint.put(o.getSessionID(), wcursor);}
       
       // There are 2 other points
       /*
