@@ -49,6 +49,8 @@ public class WCursor {
    public static int STATE_SWIPE = 11;
    public Vector<TuioPoint> points = new Vector<TuioPoint>();
    
+   public int swipeCount = 0;
+   
    
    public static int NOTHING = 0;
    public static int MOVE_ELEMENT = 1;

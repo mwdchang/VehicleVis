@@ -249,7 +249,6 @@ public class TUIOListener implements TuioListener {
       // Check to see if we are activating lens or the document panel
       // If there are exactly 2 points currently, and they are sufficiently close to each other, and 
       // they are over the same type of element then create a document panel
-      //if (w.state != WCursor.STATE_SWIPE && w.state != WCursor.STATE_MOVE && w.element == SSM.ELEMENT_NONE) {
       if (w.state == WCursor.STATE_NOTHING && w.element == SSM.ELEMENT_NONE) {
          
          Vector<WCursor> doc = this.findSimilarCursorPixel(w, 0, 60);
@@ -289,7 +288,7 @@ public class TUIOListener implements TuioListener {
       
       
       // Check to see if we are de-activating document
-      if (w.state != WCursor.STATE_SWIPE && w.state != WCursor.STATE_MOVE && w.element == SSM.ELEMENT_DOCUMENT) {
+      if (w.swipeCount == 0 && w.state != WCursor.STATE_MOVE && w.element == SSM.ELEMENT_DOCUMENT) {
          Vector<WCursor> doc = this.findSimilarCursorPixel(w, 0, 50);
          if (doc.size() == 1) {
             System.out.print("Removing document panel");
@@ -303,54 +302,45 @@ public class TUIOListener implements TuioListener {
       
       
       // Check if this is a swipe event
-      if (w.points.size() > 1 && w.state == WCursor.STATE_SWIPE) {
-         if (Math.abs(w.x - w.points.elementAt(0).getX()) > Math.abs(w.y - w.points.elementAt(0).getY())) {
-            // Are they all in the same direction (more or less)?   
-            float x1 = w.points.elementAt(0).getX();
-            float x2 = w.points.elementAt(1).getX();
-            float sign1 = x1-x2;
-            float sign2;
-            boolean sameDirection = true;
-            for (int i=2; i < w.points.size(); i++) {
-               x1 = x2;
-               x2 = w.points.elementAt(i).getX();
-               sign2 = x1-x2;
-               if (sign2*sign1 < 0) { 
-                  sameDirection = false; 
-                  break; 
-               }
-            }
-            /*
-            if (sameDirection == true) {
-               System.out.println("Horizontal Swipe detected...");   
-               SSM.colouringMethod++;
-               SSM.colouringMethod %= 5;
-            }
-            */
-         } else {
-            // Are they all in the same direction (more or less)?   
-            float y1 = w.points.elementAt(0).getY();
-            float y2 = w.points.elementAt(1).getY();
-            float sign1 = y1-y2;
-            float sign2;
-            boolean sameDirection = true;
-            for (int i=2; i < w.points.size(); i++) {
-               y1 = y2;
-               y2 = w.points.elementAt(i).getY();
-               sign2 = y1-y2;
-               if (sign2*sign1 < 0) { 
-                  sameDirection = false; 
-                  break; 
-               }
-            }
-            /*
-            if (sameDirection == true) {
-               System.out.println("Vertical Swipe detected...");   
-               SSM.colouringMethod++;
-               SSM.colouringMethod %= 5;
-            }
-            */
-         }
+//      if (w.points.size() > 1 && w.state == WCursor.STATE_SWIPE) {
+      if (w.swipeCount > 1) {
+         SSM.chartMode ++;
+         if (SSM.chartMode > 3) SSM.chartMode = 1;
+         
+         
+//         if (Math.abs(w.x - w.points.elementAt(0).getX()) > Math.abs(w.y - w.points.elementAt(0).getY())) {
+//            // Are they all in the same direction (more or less)?   
+//            float x1 = w.points.elementAt(0).getX();
+//            float x2 = w.points.elementAt(1).getX();
+//            float sign1 = x1-x2;
+//            float sign2;
+//            boolean sameDirection = true;
+//            for (int i=2; i < w.points.size(); i++) {
+//               x1 = x2;
+//               x2 = w.points.elementAt(i).getX();
+//               sign2 = x1-x2;
+//               if (sign2*sign1 < 0) { 
+//                  sameDirection = false; 
+//                  break; 
+//               }
+//            }
+//         } else {
+//            // Are they all in the same direction (more or less)?   
+//            float y1 = w.points.elementAt(0).getY();
+//            float y2 = w.points.elementAt(1).getY();
+//            float sign1 = y1-y2;
+//            float sign2;
+//            boolean sameDirection = true;
+//            for (int i=2; i < w.points.size(); i++) {
+//               y1 = y2;
+//               y2 = w.points.elementAt(i).getY();
+//               sign2 = y1-y2;
+//               if (sign2*sign1 < 0) { 
+//                  sameDirection = false; 
+//                  break; 
+//               }
+//            }
+//         }
       // Check if this is a tap event (approximate)
       } else if (w.points.size() < 3) {
          // Only clickable elements can send a tap event
@@ -437,16 +427,32 @@ public class TUIOListener implements TuioListener {
       
       System.err.println("=== Updating TUIO Cursor");
       wcursor.points.add( o.getPosition() );
-      wcursor.state = WCursor.STATE_MOVE;
       wcursor.numUpdate++;
       
       wcursor.oldX = wcursor.x;
       wcursor.oldY = wcursor.y;
       wcursor.x = o.getX();
       wcursor.y = o.getY();
+      
+      
+      // Before setting the state to state move, check to see if this might be a
+      // swipe event
+      if ( dist(x1, y1, x2, y2, 1, 1) > 15 && wcursor.state != WCursor.STATE_MOVE) {
+         wcursor.swipeCount ++;
+         return;
+      } else {
+         wcursor.swipeCount = 0;
+      }
+      
+      
+      
+      wcursor.state = WCursor.STATE_MOVE;
          
       // Register a touch point
       synchronized(SSM.touchPoint) { SSM.touchPoint.put(o.getSessionID(), wcursor);}
+      
+      
+      
       
       // There are 2 other points
       /*

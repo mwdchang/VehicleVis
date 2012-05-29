@@ -500,7 +500,7 @@ public class ModelRenderer extends BaseModelRenderer {
          gl2.glEnable(GL2.GL_BLEND);
          setOrthonormalView(gl2, 0, SSM.windowWidth, 0, SSM.windowHeight); {
             synchronized(SSM.touchPoint) {
-               gl2.glColor4d(0, 0.35, 0.45, 0.20);
+               gl2.glColor4d(0, 0.35, 0.45, 0.12);
                
                for (WCursor p : SSM.touchPoint.values()) {
                   for (int i = 0; i < 10; i++) {
