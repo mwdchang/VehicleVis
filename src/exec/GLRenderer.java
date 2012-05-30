@@ -3,6 +3,7 @@ package exec;
 import gui.DomainFilterTask;
 import gui.FilterTask;
 import gui.LegendTask;
+import gui.QuestionTask;
 import gui.SaveLoadTask;
 
 import java.util.Vector;
@@ -41,6 +42,7 @@ public class GLRenderer implements GLEventListener {
    LegendTask legend_task = new LegendTask();
    SaveLoadTask save_task = new SaveLoadTask();
    DomainFilterTask domain_task = new DomainFilterTask();
+   QuestionTask question_task = new QuestionTask();
    
    
    // Renders a test scene for sanity check
@@ -119,6 +121,7 @@ public class GLRenderer implements GLEventListener {
       filter_task.render(gl2);
       legend_task.render(gl2);
       domain_task.render(gl2);
+      question_task.render(gl2);
       
       //for (int i=0; i < renderTaskList.size(); i++) {
       //      renderTaskList.elementAt(i).render(gl2);
@@ -237,6 +240,7 @@ public class GLRenderer implements GLEventListener {
       filter_task.init(gl2);
       legend_task.init(gl2);
       domain_task.init(gl2);
+      question_task.init(gl2);
       
       
       // Attemp to free some memory after all initializations

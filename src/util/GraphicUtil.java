@@ -119,6 +119,9 @@ public class GraphicUtil {
    //    offset        - the amount reserved for the arc
    //    argSeg        - number of triangles for approximate an arc
    ////////////////////////////////////////////////////////////////////////////////
+   public static void drawRoundedRect(GL2 gl2, int x, int y, int z, int width, int height, int offset, int arcSeg, float c1[], float c2[]) {
+      drawRoundedRect(gl2, (double)x, (double)y, (double)z, (double)width, (double)height, (double)offset, arcSeg, c1, c2);   
+   }
    public static void drawRoundedRect(GL2 gl2, double x, double y, double z, double width, double height, double offset, int arcSeg) {
       //drawRoundedRect(gl2, x, y, z, width, height, offset, arcSeg, new float[]{0.5f, 0.6f, 0.7f, 0.5f}, new float[] {0.4f, 0.6f, 0.8f, 0.8f}); 
       drawRoundedRect(gl2, x, y, z, width, height, offset, arcSeg, new float[]{1.0f, 0.0f, 0.0f, 0.8f}, new float[] {0.0f, 0.0f, 1.0f, 0.8f}); 

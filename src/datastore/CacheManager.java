@@ -39,11 +39,11 @@ public class CacheManager {
    public static boolean DEBUG = true;
 //   public static boolean DEBUG = false;
    
-   public static void main(String argsp[]) {
-      //CacheManager.DEBUG = false;
-      CacheManager.instance();
-      CacheManager.instance().initSystem();
-   }
+//   public static void main(String argsp[]) {
+//      //CacheManager.DEBUG = false;
+//      CacheManager.instance();
+//      CacheManager.instance().initSystem();
+//   }
    
    
    public static String mfrFilter = null;
@@ -200,7 +200,7 @@ System.out.println("Debugging");
    protected CacheManager() {
       if (DEBUG == true) {
          timeLineStartYear = 1995;         
-         timeLineEndYear   = 1996;         
+         timeLineEndYear   = 1998;         
       }
    }
    

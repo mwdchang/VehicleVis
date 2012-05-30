@@ -585,7 +585,8 @@ System.out.println("Pinch detected");
       // Execute any move event
       ////////////////////////////////////////////////////////////////////////////////
       if (wcursor.element == SSM.ELEMENT_NONE){
-         Event.setCamera(x1, y1, x2, y2);
+         Event.setCameraTUIO(x1, y1, x2, y2);
+         //Event.setCamera(x1, y1, x2, y2);
       } else if (wcursor.element == SSM.ELEMENT_LENS){
          Event.moveLensTUIO(x1, y1, x2, y2);
       } else if (wcursor.element == SSM.ELEMENT_DOCUMENT) {

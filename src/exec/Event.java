@@ -206,6 +206,18 @@ System.out.println("<Near plane: " + la.nearPlane);
    ////////////////////////////////////////////////////////////////////////////////
    // Change camera position
    ////////////////////////////////////////////////////////////////////////////////
+   public static void setCameraTUIO(int posX, int posY, int oldPosX, int oldPosY) {
+      // Just a hack here
+      float valx = (float)(posX - oldPosX);
+      SSM.rotateY += valx;
+      float valy = (float)(posY - oldPosY);
+      SSM.rotateX += valy;
+      // End just a hack here
+   }
+   
+   ////////////////////////////////////////////////////////////////////////////////
+   // Change camera position
+   ////////////////////////////////////////////////////////////////////////////////
    public static void setCamera(int posX, int posY, int oldPosX, int oldPosY) {
       double basis[][] = {
             { DCCamera.instance().right.x, DCCamera.instance().right.y, DCCamera.instance().right.z, 0 },      
@@ -215,6 +227,9 @@ System.out.println("<Near plane: " + la.nearPlane);
          };
       Matrix m_basis      = new Matrix(basis);
       Matrix m_basisT     = m_basis.inverse();         
+      
+      
+      
 
       if ( oldPosX != posX ) {
          float factor; 
