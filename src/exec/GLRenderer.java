@@ -143,6 +143,7 @@ public class GLRenderer implements GLEventListener {
             legend_task.picking(gl2, point.x, point.y);
             domain_task.picking(gl2, point.x, point.y);
             model_task.picking(gl2, point.x, point.y);
+            question_task.picking(gl2, point.x, point.y);
          }
          SSM.l_mouseClicked = false;
          SSM.stopPicking = 0;

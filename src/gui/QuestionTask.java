@@ -8,6 +8,7 @@ import model.DCColour;
 
 import datastore.SSM;
 
+import util.DCUtil;
 import util.GraphicUtil;
 import util.TextureFont;
 
@@ -18,7 +19,7 @@ public class QuestionTask implements RenderTask {
    @Override
    public void render(GL2 gl2) {
       
-      if (q[0].answered()) {
+      if (q[qIdx].answered()) {
          GraphicUtil.drawRoundedRect(gl2, (SSM.windowWidth - 150), (SSM.windowHeight - 100 + 20), 0,
                50, 25, 5, 5, 
                DCColour.fromDouble(0.0, 0.0, 0.8, 0.8).toArray(), 
@@ -56,7 +57,8 @@ public class QuestionTask implements RenderTask {
       q_tf = new TextureFont();
       q_tf.width  = 600;
       q_tf.height = 40;
-      q_tf.addMark(q[0].txt, Color.BLACK, GraphicUtil.font, 2, 2);
+      q_tf.addMark("Task : " + qIdx, Color.BLACK, GraphicUtil.font, 5, 20);
+      q_tf.addMark(q[qIdx].txt, Color.BLACK, GraphicUtil.font, 5, 5);
       q_tf.renderToTexture(null);
       
    }
@@ -64,7 +66,20 @@ public class QuestionTask implements RenderTask {
    
    @Override
    public void picking(GL2 gl2, float px, float py) {
-      // TODO Auto-generated method stub
+      float realX = px;
+      float realY = SSM.windowHeight - py;
+      
+      if (DCUtil.between(realX, SSM.windowWidth-200, SSM.windowWidth-100)) {
+         if (DCUtil.between(realY, SSM.windowHeight-100, SSM.windowWidth-60)) {
+            if (q[qIdx].answered() && qIdx < q.length) {
+               qIdx ++;   
+               q_tf.clearMark();
+               q_tf.addMark("Task : " + qIdx, Color.BLACK, GraphicUtil.font, 2, 14);
+               q_tf.addMark(q[qIdx].txt, Color.BLACK, GraphicUtil.font, 2, 2);
+               q_tf.renderToTexture(null);
+            }
+         }
+      }
    }
    
    
@@ -78,6 +93,7 @@ public class QuestionTask implements RenderTask {
    }
    
    public Question[] q = new Question[2];
+   public int qIdx = 0;
    
    
    public QuestionTask() {
@@ -88,6 +104,13 @@ public class QuestionTask implements RenderTask {
       };
       q[0].txt = "Select between year 1995 and 1996";
       
+      
+      q[1] = new Question() {
+         public boolean answered() {
+            return SSM.selectedGroup.size() > 1;
+         }
+      };
+      q[1].txt = "Select something";
       
    }
 
