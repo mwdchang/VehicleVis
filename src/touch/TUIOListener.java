@@ -167,6 +167,8 @@ public class TUIOListener implements TuioListener {
          w = new WCursor(SSM.ELEMENT_CMODEL_SCROLL, o);
       } else if (Event.checkScrollPanels(posX, posY, SSM.c_yearAttrib, SSM.ELEMENT_CYEAR_SCROLL) == SSM.ELEMENT_CYEAR_SCROLL) {
          w = new WCursor(SSM.ELEMENT_CYEAR_SCROLL, o);
+      } else if (Event.checkScenario(posX, posY) == SSM.ELEMENT_SCENARIO) {
+         w = new WCursor(SSM.ELEMENT_SCENARIO, o);
       } else {
          w = new WCursor(SSM.ELEMENT_NONE, o);
       }
@@ -345,6 +347,7 @@ public class TUIOListener implements TuioListener {
       } else if (w.points.size() < 3) {
          // Only clickable elements can send a tap event
          if (w.element == SSM.ELEMENT_NONE || w.element == SSM.ELEMENT_LENS || 
+             w.element == SSM.ELEMENT_SCENARIO ||
              w.element == SSM.ELEMENT_MANUFACTURE_SCROLL|| w.element == SSM.ELEMENT_CMANUFACTURE_SCROLL || 
              w.element == SSM.ELEMENT_MAKE_SCROLL || w.element == SSM.ELEMENT_CMAKE_SCROLL ||
              w.element == SSM.ELEMENT_MODEL_SCROLL || w.element == SSM.ELEMENT_CMODEL_SCROLL ||

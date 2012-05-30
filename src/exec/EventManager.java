@@ -83,6 +83,9 @@ public class EventManager implements KeyListener, MouseListener, MouseMotionList
          // Check the ranged slider
          Event.checkSlider(e.getX(), e.getY());
          
+         // Comment this out if not using scenarios
+         Event.checkScenario(e.getX(), e.getY());
+         
          
 //         float sl_anchorX = SSM.instance().saveLoadAnchorX;
 //         float sl_anchorY = SSM.instance().saveLoadAnchorY;

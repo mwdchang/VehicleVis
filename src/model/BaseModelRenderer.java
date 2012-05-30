@@ -664,9 +664,9 @@ public abstract class BaseModelRenderer implements RenderTask {
       
       
       // Log the changes
-      ALogger.instance().log("Selected Year :" + SSM.startYear + "-" + SSM.endYear);
-      ALogger.instance().log("Selected Month:" + SSM.startMonth + "-" + SSM.endMonth);
-      ALogger.instance().log("Selected Group:" + SSM.selectedGroup);
+//      ALogger.instance().log("Selected Year :" + SSM.startYear + "-" + SSM.endYear);
+//      ALogger.instance().log("Selected Month:" + SSM.startMonth + "-" + SSM.endMonth);
+//      ALogger.instance().log("Selected Group:" + SSM.selectedGroup);
       
    }   
    

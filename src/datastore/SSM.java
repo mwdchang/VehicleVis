@@ -424,6 +424,7 @@ public class SSM {
    public static int ELEMENT_YEAR_SCROLL = 6;
    public static int ELEMENT_SAVELOAD_SCROLL = 7;
    public static int ELEMENT_FILTER = 8;
+   public static int ELEMENT_SCENARIO = 9;
    
    public static int ELEMENT_CMANUFACTURE_SCROLL = 13;
    public static int ELEMENT_CMAKE_SCROLL = 14;

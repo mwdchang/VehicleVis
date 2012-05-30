@@ -22,7 +22,7 @@ public class ALogger {
    }
    
    
-   public static boolean active = false;
+   public static boolean active = true;
    
    
    // Only call this at program end
@@ -47,7 +47,7 @@ public class ALogger {
             writer.write(time + "\t" + s);    
             writer.newLine();
             writer.flush();
-         } catch (Exception e) {}
+         } catch (Exception e) { e.printStackTrace(); }
       }
    }
    

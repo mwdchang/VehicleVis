@@ -131,7 +131,7 @@ public class GLRenderer implements GLEventListener {
       ////////////////////////////////////////////////////////////////////////////////
       // There are certain checks that would require the openGL context, we need to do
       // these here as we cannot grab the context in another thread (as far as I know)
-      // 1) Click / Picking
+      // 1) Click / Picking -> order matters
       ////////////////////////////////////////////////////////////////////////////////
       if ( SSM.l_mouseClicked) {
          //for (int i=0; i < renderTaskList.size(); i++) {
@@ -142,8 +142,8 @@ public class GLRenderer implements GLEventListener {
             filter_task.picking(gl2, point.x, point.y);
             legend_task.picking(gl2, point.x, point.y);
             domain_task.picking(gl2, point.x, point.y);
-            model_task.picking(gl2, point.x, point.y);
             question_task.picking(gl2, point.x, point.y);
+            model_task.picking(gl2, point.x, point.y);
          }
          SSM.l_mouseClicked = false;
          SSM.stopPicking = 0;

@@ -825,6 +825,7 @@ public class GraphicUtil {
    public static Graphics2D g2d = texture.createGraphics();
    public static FontMetrics fm = g2d.getFontMetrics();
    public static Font font = new Font("Arial", Font.PLAIN, 12);
+   public static Font fontLarge = new Font("Arial", Font.PLAIN, 16);
   
    
 }
