@@ -384,6 +384,7 @@ public class EventManager implements KeyListener, MouseListener, MouseMotionList
       d.x = e.getX();
       d.y = e.getY();
       
+      // Is this really necessary ???
       if (SSM.hoverPoints.get(999L) == null) {
          SSM.hoverPoints.put(999L, new DCTriple());
       }

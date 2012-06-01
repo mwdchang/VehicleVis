@@ -53,6 +53,8 @@ public class TUIOListener implements TuioListener {
       sensitivity = Float.valueOf(System.getProperty("TUIOSensitivity", "0.002")); 
       System.out.println("TUIO Sensitivity : " + sensitivity);
       System.out.println("Starting timer thread");
+      Thread t1 = new Thread(update);
+      t1.start();
    }
    
    
@@ -198,7 +200,13 @@ public class TUIOListener implements TuioListener {
                }
             }
          }
+         
+         // Register a point for the filter widget dragging
          SSM.dragPoints.put(o.getSessionID(), new DCTriple(posX, posY, 0));
+         
+         // Register a point for hover effects
+         // synchronized(SSM.hoverPoints) { SSM.hoverPoints.put(o.getSessionID(), new DCTriple(posX, posY, 0)); }
+         
          eventTable.put(o.getSessionID(), w);
          
          // Register a touch point
@@ -207,6 +215,7 @@ public class TUIOListener implements TuioListener {
       
       
    }
+   
    
    
    
@@ -221,7 +230,9 @@ public class TUIOListener implements TuioListener {
       // Remove a touch point - since removal of nothing is nothing, we will just
       // remove at the top for simplicity sake rather than removal at every single 
       // conditions that we have
-      synchronized(SSM.touchPoint) { SSM.touchPoint.remove(o.getSessionID()); }
+      synchronized(SSM.touchPoint)  { SSM.touchPoint.remove(o.getSessionID()); }
+      synchronized(SSM.hoverPoints) { SSM.hoverPoints.remove(o.getSessionID()); }
+      synchronized(SSM.tooltips) { SSM.tooltips.remove(o.getSessionID()); }
       
       WCursor w = eventTable.get(o.getSessionID());
       if (w == null) return;
@@ -246,7 +257,6 @@ public class TUIOListener implements TuioListener {
       }
       
       
-      System.out.println("In remove >>>>>>>>>>>>>>>>>>>> " + eventTable.size());
       
       // Check to see if we are activating lens or the document panel
       // If there are exactly 2 points currently, and they are sufficiently close to each other, and 
@@ -352,9 +362,14 @@ public class TUIOListener implements TuioListener {
              w.element == SSM.ELEMENT_MAKE_SCROLL || w.element == SSM.ELEMENT_CMAKE_SCROLL ||
              w.element == SSM.ELEMENT_MODEL_SCROLL || w.element == SSM.ELEMENT_CMODEL_SCROLL ||
              w.element == SSM.ELEMENT_YEAR_SCROLL || w.element == SSM.ELEMENT_CYEAR_SCROLL ) {
-            System.out.println("\tSending out tap event");
-            SSM.pickPoints.add(new DCTriple(w.x*SSM.windowWidth, w.y*SSM.windowHeight, 0));
-            SSM.l_mouseClicked = true;
+            
+            // Only set a tap if the touch point is "fresh", that is, the touch points are
+            // within certain time limits
+            if (o.getTuioTime().getTotalMilliseconds() - w.timestamp < 1000) {
+               System.out.println("\tSending out tap event");
+               SSM.pickPoints.add(new DCTriple(w.x*SSM.windowWidth, w.y*SSM.windowHeight, 0));
+               SSM.l_mouseClicked = true;
+            }
          }
          
       }
@@ -363,7 +378,6 @@ public class TUIOListener implements TuioListener {
       
       // Programmably reset the lens selected stata based on remaining points
       SSM.clearLens();
-      
       
       
    }
@@ -412,7 +426,7 @@ public class TUIOListener implements TuioListener {
          if ( o.getTuioTime().getTotalMilliseconds() - wcursor.timestamp < 200)  {
             wcursor.intention = WCursor.SCROLL_ELEMENT;
          } else {
-            wcursor.intention = WCursor.MOVE_ELEMENT;
+            wcursor.intention = WCursor.MOVE_ELEMENTu
          }
       }
       */
@@ -428,7 +442,7 @@ public class TUIOListener implements TuioListener {
       int y2 = (int)(wcursor.y*SSM.windowHeight);
       
       
-      System.err.println("=== Updating TUIO Cursor");
+      System.err.println("=== Updating TUIO Cursor : " + dist(x1, y1, x2, y2, 1, 1));
       wcursor.points.add( o.getPosition() );
       wcursor.numUpdate++;
       
@@ -437,6 +451,7 @@ public class TUIOListener implements TuioListener {
       wcursor.x = o.getX();
       wcursor.y = o.getY();
       
+      if (wcursor.state == WCursor.STATE_HOLD) return; 
       
       // Before setting the state to state move, check to see if this might be a
       // swipe event
@@ -618,6 +633,30 @@ System.out.println("Pinch detected");
          Event.checkGUIDrag(x1, y1, x2, y2);
       }
    }
+   
+   
+   public Runnable update = new Runnable() {
+      public void run() {
+         while(true) {
+            try {
+               synchronized(eventTable) {
+                  for (WCursor w : eventTable.values()) {
+System.out.println("checking " + Math.abs(w.timestamp - w.cursor.getTuioTime().getTotalMilliseconds()));                        
+                     if ( Math.abs(w.timestamp - w.cursor.getTuioTime().getTotalMilliseconds()) > 400 && w.state == WCursor.STATE_NOTHING) {
+System.out.println("Changing to state hold " + Math.abs(w.timestamp - w.cursor.getTuioTime().getTotalMilliseconds()));                        
+                        w.state = WCursor.STATE_HOLD;   
+                        SSM.hoverPoints.put(w.sessionID, new DCTriple(w.x*SSM.windowWidth, w.y*SSM.windowHeight, 0));
+                     } else if (w.state == WCursor.STATE_HOLD){
+                        SSM.hoverPoints.put(w.sessionID, new DCTriple(w.x*SSM.windowWidth, w.y*SSM.windowHeight, 0));
+                     }
+                  }
+               }
+               Thread.sleep(20);
+            } catch (Exception e) {}
+         }
+      }
+   };
+   
 
    public void addTuioObject(TuioObject arg0) {}
    public void refresh(TuioTime arg0) {}

@@ -204,7 +204,7 @@ System.out.println("<Near plane: " + la.nearPlane);
    
    
    ////////////////////////////////////////////////////////////////////////////////
-   // Change camera position
+   // Change camera position - axis aligned rotation
    ////////////////////////////////////////////////////////////////////////////////
    public static void setCameraTUIO(int posX, int posY, int oldPosX, int oldPosY) {
       // Just a hack here
@@ -212,6 +212,9 @@ System.out.println("<Near plane: " + la.nearPlane);
       SSM.rotateY += valx;
       float valy = (float)(posY - oldPosY);
       SSM.rotateX += valy;
+      
+      SSM.refreshOITTexture = true;
+      SSM.refreshMagicLens = true;
       // End just a hack here
    }
    
