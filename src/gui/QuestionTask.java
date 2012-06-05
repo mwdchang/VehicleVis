@@ -24,6 +24,8 @@ public class QuestionTask implements RenderTask {
    @Override
    public void render(GL2 gl2) {
       
+      if (SSM.useScenario == false) return;
+      
       if (q[qIdx].answered()) {
          GraphicUtil.drawRoundedRect(gl2, (SSM.windowWidth - 150), (SSM.windowHeight - 100 + 20), 0,
                50, 25, 5, 5, 

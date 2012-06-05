@@ -14,6 +14,8 @@ import model.DCTriple;
 import model.LensAttrib;
 import model.PaneAttrib;
 
+
+
 /////////////////////////////////////////////////////////////////////////////////
 // SSM (System State Manager)
 // Stores the system states that may be shared across different modules 
@@ -52,7 +54,7 @@ public class SSM {
       
       
       // Parse runtime parameters
-      useTUIO         = Boolean.parseBoolean(System.getProperty("UseTUIO", "true"));
+      useTUIO         = Boolean.parseBoolean(System.getProperty("UseTUIO", "false"));
       useFullScreen   = Boolean.parseBoolean(System.getProperty("UseFullScreen", "false"));
       refreshRate     = Long.parseLong(System.getProperty("RefreshRate", "800"));
       nearThreshold   = Float.parseFloat(System.getProperty("NearThreshold", "0.2f")); 
@@ -69,6 +71,8 @@ public class SSM {
    
    
    // Runtime parameters
+   public static boolean useScenario = false;
+   
    public static boolean useTUIO = false;
    public static boolean useFullScreen = false;
    public static long refreshRate = 800L;

@@ -40,7 +40,7 @@ public class ModelRenderer extends BaseModelRenderer {
    
    public static GLU glu = new GLU();
    
-   public float vpadding = 30.0f;
+   public float vpadding = 15.0f;
    public float rpadding = 30.0f;
    public float lpadding = 30.0f;
    public float spadding = 10.0f;
@@ -951,7 +951,8 @@ System.out.println("Idx : " + idx);
             tmp.put(comp.baseName, comp.baseName);
             
             if (laCnt >= la.start && laCnt < la.start+la.numToDisplay) {
-               this.alternateSideLayout(comp, la, rightList, leftList, i);
+               this.dualSideLayout(comp, la, rightList, leftList, new float[]{rpadding, lpadding});
+               //this.alternateSideLayout(comp, la, rightList, leftList, i);
                //this.singleSideLayout(comp, la, rightList, leftList, new float[]{rpadding, lpadding});
             }
             laCnt ++;
@@ -1268,7 +1269,8 @@ System.out.println("Idx : " + idx);
             tmp.put(comp.baseName, comp.baseName);
             
             if (laCnt >= la.start && laCnt < (la.start+la.numToDisplay)) {
-               this.alternateSideLayout(comp, la, rightList, leftList, i);
+               this.dualSideLayout(comp, la, rightList, leftList, new float[]{rpadding, lpadding});
+               //this.alternateSideLayout(comp, la, rightList, leftList, i);
                //this.singleSideLayout(comp, la, rightList, leftList, new float[]{rpadding, lpadding});
             }
             laCnt ++;

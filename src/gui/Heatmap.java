@@ -53,25 +53,11 @@ public class Heatmap extends ComponentChart {
    }
    
    
+   
+   
    public void renderSelected(GL2 gl2) {
       // Hack slow
       calcMaxMin();
-      
-      // Draw a shaded grey as the back drop
-      /*
-      gl2.glPolygonMode(GL2.GL_FRONT_AND_BACK, GL2.GL_FILL);
-      if (active) {
-         //gl2.glDisable(GL2.GL_BLEND);
-         gl2.glEnable(GL2.GL_BLEND);
-         gl2.glBlendFunc(GL2.GL_SRC_ALPHA, GL2.GL_ONE_MINUS_SRC_ALPHA);
-         renderBorder(gl2, DCColour.fromDouble(0.9, 0.9, 0.9, 0.5), GL2.GL_FILL);
-         //renderBorder(gl2, DCColour.fromDouble(0.0, 0.8, 0.0, 0.2), GL2.GL_FILL);
-      } else {
-         gl2.glEnable(GL2.GL_BLEND);
-         gl2.glBlendFunc(GL2.GL_SRC_ALPHA, GL2.GL_ONE_MINUS_SRC_ALPHA);
-         renderBorder(gl2, DCColour.fromDouble(0.4, 0.4, 0.4, 0.6), GL2.GL_FILL);
-      }
-      */
       
       gl2.glEnable(GL2.GL_BLEND);
       gl2.glBlendFunc(GL2.GL_SRC_ALPHA, GL2.GL_ONE_MINUS_SRC_ALPHA);
@@ -166,55 +152,31 @@ public class Heatmap extends ComponentChart {
             } // end while
             
             
-            // Tool Tip !
-            /*
-            if ( DCUtil.between(SSM.mouseX, anchorX+tmpX*blockWidth, anchorX+(1+tmpX)*blockWidth)) {
-               if (DCUtil.between(SSM.windowHeight - SSM.mouseY, anchorY+height-(1+tmpY)*blockHeight-labelBuffer, anchorY+height-tmpY*blockHeight-labelBuffer)) {
-                  DCTip.visible = true;
-                  DCTip.clear();
-                  int cYear  = (int)((tmpY) + SSM.instance().startYear); 
-                  int cMonth = (int)((1+tmpX) + SSM.instance().startMonth);
-                  
-                  DCTip.addText("Time:" + DCTip.translateTable.get(cMonth+"") + "-" + cYear); 
-                  if (SSM.instance().useComparisonMode == true) {
-                     DCTip.addText("Value:" + (int)(v));
-                     DCTip.addText("Value:" + (int)(c_v));
-                  } else {
-                     DCTip.addText("Value:" + (int)v);
-                  }
-                  DCTip.setTip( SSM.instance().mouseX, 
-                        (SSM.windowHeight-SSM.instance().mouseY), 
-                        SSM.windowWidth, SSM.instance().windowHeight);   
-                  
-                  SSM.instance().selectedX = i;
-                  SSM.instance().selectedY = j;
-               }
-            }
-            */
-            
             
             // Render an out line to separate the grids
             gl2.glPolygonMode(GL2.GL_FRONT_AND_BACK, GL2.GL_LINE);
             gl2.glBegin(GL2.GL_QUADS);
+               gl2.glLineWidth(1.0f);
+               
+               if (SSM.useComparisonMode == true) {
+                  if (v > c_v) {
+                     gl2.glColor4fv(SchemeManager.comp_1.toArray(), 0);
+                  } else if (v < c_v) {
+                     gl2.glColor4fv(SchemeManager.comp_2.toArray(), 0);
+                  } else {
+                     gl2.glColor4fv(SchemeManager.silhouette_default.adjustAlpha(0.5f).toArray(), 0);
+                  }
+               } else {
+                  gl2.glColor4fv(SchemeManager.silhouette_default.adjustAlpha(0.5f).toArray(), 0);
+               }
+               
                for (DCTip tip : SSM.tooltips.values()) {
                   if (tip.visible == true && i==tip.xIndex && j==tip.yIndex){
-                     gl2.glLineWidth(2.0f);
                      gl2.glColor4fv(SchemeManager.selected.toArray(), 0);
-                  } else {
-                     gl2.glLineWidth(1.0f);
-                     if (SSM.useComparisonMode == true) {
-                        if (v > c_v) {
-                           gl2.glColor4fv(SchemeManager.comp_1.toArray(), 0);
-                        } else if (v < c_v) {
-                           gl2.glColor4fv(SchemeManager.comp_2.toArray(), 0);
-                        } else {
-                           gl2.glColor4fv(SchemeManager.silhouette_default.adjustAlpha(0.5f).toArray(), 0);
-                        }
-                     } else {
-                        gl2.glColor4fv(SchemeManager.silhouette_default.adjustAlpha(0.5f).toArray(), 0);
-                     }
-                  } // end if tip visible
-               }
+                     break;
+                  }
+               } // end for
+              
                gl2.glVertex2i((int)(anchorX + tmpX*blockWidth),     (int)(anchorY+height-tmpY*blockHeight-labelBuffer));
                gl2.glVertex2i((int)(anchorX + (1+tmpX)*blockWidth), (int)(anchorY+height-tmpY*blockHeight-labelBuffer));
                gl2.glVertex2i((int)(anchorX + (1+tmpX)*blockWidth), (int)(anchorY+height-(1+tmpY)*blockHeight-labelBuffer));

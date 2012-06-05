@@ -30,6 +30,9 @@ public class Event {
       SSM.refreshMagicLens = true;
    }
    
+   ////////////////////////////////////////////////////////////////////////////////
+   // Create a lens with the given radius r at (x, y)
+   ////////////////////////////////////////////////////////////////////////////////
    public static void createLens(int posX, int posY, float r) {
       // Hackhack: limit the amount of lens to 3 for now
       if (SSM.lensList.size() >= 2) return;
@@ -73,6 +76,9 @@ public class Event {
       }      
    }
    
+   ////////////////////////////////////////////////////////////////////////////////
+   // Moving the lens with TUIO messages - additional sanity check required
+   ////////////////////////////////////////////////////////////////////////////////
    public static void moveLensTUIO(int posX, int posY, int oldPosX, int oldPosY) {
       for (int i=0; i < SSM.lensList.size(); i++) {
          float x = (float)posX - (float)SSM.lensList.elementAt(i).magicLensX;
@@ -96,13 +102,13 @@ public class Event {
          float y = (float)posY - (float)SSM.lensList.elementAt(i).magicLensY;
          float r = (float)SSM.lensList.elementAt(i).magicLensRadius;
          float d = (float)Math.sqrt(x*x + y*y);            
-         if (d < r) {
+         //if (d < r) {
             if (d < 90) {
                SSM.lensList.remove(i);
                return;
             }
             SSM.lensList.elementAt(i).magicLensRadius = d;  
-         }
+         //}
          
          /*
          if (SSM.lensList.elementAt(i).magicLensSelected == 1) {
@@ -121,6 +127,10 @@ public class Event {
       }
    }
    
+   
+   ////////////////////////////////////////////////////////////////////////////////
+   // Resize the lens by delta
+   ////////////////////////////////////////////////////////////////////////////////
    public static void resizeLens(int posX, int posY, int delta) {
       for (int i=0; i < SSM.lensList.size(); i++) {
          float x = (float)posX - (float)SSM.lensList.elementAt(i).magicLensX;
@@ -389,6 +399,7 @@ System.out.println("<Near plane: " + la.nearPlane);
    // Check if the mouse is in the scenario task
    ////////////////////////////////////////////////////////////////////////////////
    public static int checkScenario(int posX, int posY) {
+      if (SSM.useScenario == false) return SSM.ELEMENT_NONE;
       float mx = posX;
       float my = SSM.windowHeight - posY;
       
