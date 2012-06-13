@@ -102,13 +102,13 @@ public class Event {
          float y = (float)posY - (float)SSM.lensList.elementAt(i).magicLensY;
          float r = (float)SSM.lensList.elementAt(i).magicLensRadius;
          float d = (float)Math.sqrt(x*x + y*y);            
-         //if (d < r) {
+         if (d <= r) {
             if (d < 90) {
                SSM.lensList.remove(i);
                return;
             }
             SSM.lensList.elementAt(i).magicLensRadius = d;  
-         //}
+         }
          
          /*
          if (SSM.lensList.elementAt(i).magicLensSelected == 1) {

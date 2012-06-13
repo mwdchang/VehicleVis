@@ -71,23 +71,40 @@ void main(void) {
    // Check if the normals are facing the same direction
    // check 021
    if ( dot(normal_042, normal_021) < 0.0) {
+     // original
      gl_Position = gl_in[0].gl_Position; EmitVertex();
      gl_Position = gl_in[2].gl_Position; EmitVertex();
+
+     // modified to extrude normal a bit
+     //gl_Position = gl_in[0].gl_Position + 0.2*vec4(normal_042, 0); EmitVertex();
+     //gl_Position = gl_in[2].gl_Position + 0.2*vec4(normal_042, 0); EmitVertex();
      EndPrimitive();
    }
 
    // check 243
    if ( dot(normal_042, normal_243) < 0.0) {
+     // original
      gl_Position = gl_in[2].gl_Position; EmitVertex();
      gl_Position = gl_in[4].gl_Position; EmitVertex();
+
+     // modified to extrude normal a bit
+     //gl_Position = gl_in[2].gl_Position + 0.2*vec4(normal_042, 0); EmitVertex();
+     //gl_Position = gl_in[4].gl_Position + 0.2*vec4(normal_042, 0); EmitVertex();
+
      EndPrimitive();
    }
    
 
    // check 405
    if ( dot(normal_042, normal_405) < 0.0) {
+     // original  
      gl_Position = gl_in[4].gl_Position; EmitVertex();
      gl_Position = gl_in[0].gl_Position; EmitVertex();
+
+     // modified to extrude normal a bit
+     //gl_Position = gl_in[4].gl_Position + 0.2*vec4(normal_042, 0); EmitVertex();
+     //gl_Position = gl_in[0].gl_Position + 0.2*vec4(normal_042, 0); EmitVertex();
+
      EndPrimitive();
    }
 

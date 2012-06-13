@@ -552,6 +552,14 @@ public class DCComponent extends DCObj {
    ////////////////////////////////////////////////////////////////////////////////
    // Render vertex array object
    ////////////////////////////////////////////////////////////////////////////////
+   public static final int GOOCH_SHADING = 5;
+   public static final int TOON_SHADING = 4;
+   public static final int VARIABLE_LIGHT_SHADING = 3;
+   public static final int SOLID_SHADING = 2;
+   public static final int FIXED_LIGHT_SHADING = 1;
+   public static final int GREY_COLOUR_SHADING = 0;
+   
+   
    public void renderBuffer(GL2 gl2, DCColour colour) {
       renderBuffer(gl2, colour, 1);
    }
