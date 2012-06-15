@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
+import java.util.Vector;
 
 import datastore.Const;
 
@@ -30,7 +31,10 @@ public class Normalizer {
       
       //System.out.println(s);
       
-      n.parse( Const.DATA_FILE, 0 );
+      Vector<String> whiteList = new Vector<String>();
+      whiteList.add("GENERAL MOTORS CORP.");
+      
+      n.parse( Const.DATA_FILE, 0, whiteList);
       
       /*
       String s = "THE QUICK BROWN    FOX JUMPS OVER THE LAZY BLUE COW. Blah blah blah is said to I to be very blah, so blah off";
@@ -49,7 +53,7 @@ public class Normalizer {
    //   filename - name of the text file
    //   num      - number of records to look (for debugging)
    ////////////////////////////////////////////////////////////////////////////////
-   public int parse(String filename, int num) {
+   public int parse(String filename, int num, Vector<String> whiteList) {
       String segments[] = null;
       String line;
       BufferedReader reader = null;
@@ -73,13 +77,22 @@ public class Normalizer {
             line = line.replaceAll("\t", "\t ");
             segments = line.split("\t");   
             
+            // Only take in complaints relating to vehicles
             String prod_type = segments[Const.PROD_TYPE_IDX].trim();;
             if (prod_type.equalsIgnoreCase("C") || prod_type.equalsIgnoreCase("T") || prod_type.equalsIgnoreCase("E"))
                continue;
             
+            
+            
             for (int i=0; i < segments.length; i++) 
                segments[i] = segments[i].trim();
             
+            
+            // Only take in white listed vehicles if a list is provided
+            if (whiteList != null) {
+               //System.out.println("MRF ? : " + segments[Const.MFR_IDX] );
+               if ( ! whiteList.contains( segments[Const.MFR_IDX] )) continue;
+            }
             
             
             // Normalize descriptions

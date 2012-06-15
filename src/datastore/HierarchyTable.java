@@ -62,7 +62,7 @@ public class HierarchyTable {
          ResultSet rs = null;
          
          // Get the group hierarchy
-         sqlStr = "select groupId, parentId from projectv3.grp_hier";
+         sqlStr = "select groupId, parentId from " + SSM.database + ".grp_hier";
          rs = dbh.execute(sqlStr);
          while(rs != null && rs.next()) {
             Integer key = rs.getInt("groupId");
@@ -80,7 +80,7 @@ public class HierarchyTable {
          rs.close();
          
          // Get the group part names
-         sqlStr = "select groupId, name from projectv3.grp order by groupId asc";
+         sqlStr = "select groupId, name from " + SSM.database + ".grp order by groupId asc";
          rs = dbh.execute(sqlStr);
          while(rs != null && rs.next()) {
             Integer key = rs.getInt("groupId");

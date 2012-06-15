@@ -51,10 +51,10 @@ public class Const {
    ////////////////////////////////////////////////////////////////////////////
    // Database parameters (MySQL)
    ////////////////////////////////////////////////////////////////////////////
-   public static final String DB_URL  = "jdbc:mysql://localhost/projectv3";
-   public static final String DB_USER = "root";
-   public static final String DB_PASS = "root";
-   public static final String DB_DRVR = "com.mysql.jdbc.Driver";
+   //public static final String DB_URL  = "jdbc:mysql://localhost/projectv3";
+   //public static final String DB_USER = "root";
+   //public static final String DB_PASS = "root";
+   //public static final String DB_DRVR = "com.mysql.jdbc.Driver";
    
    
    

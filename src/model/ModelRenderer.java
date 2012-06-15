@@ -504,6 +504,7 @@ public class ModelRenderer extends BaseModelRenderer {
       // Draw any active touch points
       ////////////////////////////////////////////////////////////////////////////////
       if (SSM.useTUIO == true) {
+         gl2.glDisable(GL2.GL_LIGHTING);
          gl2.glDisable(GL2.GL_TEXTURE_2D);
          gl2.glEnable(GL2.GL_BLEND);
          setOrthonormalView(gl2, 0, SSM.windowWidth, 0, SSM.windowHeight); {
@@ -512,13 +513,12 @@ public class ModelRenderer extends BaseModelRenderer {
                
                for (WCursor p : SSM.touchPoint.values()) {
                   for (int i = 0; i < 10; i++) {
-                     GraphicUtil.drawPie(gl2, p.x*SSM.windowWidth, (1.0-p.y)*SSM.windowHeight, 0, (i+1)*2, 0, 360, 36);   
+                     GraphicUtil.drawPie(gl2, p.x*SSM.windowWidth, (1.0-p.y)*SSM.windowHeight, 0, (i+1)*1.9, 0, 360, 36);   
                   }
                   
                   // Trail
                   int c = 0;
                   for (int idx=(p.points.size()-1); idx > 0; idx -=2) {
-System.out.println("Idx : " + idx);                     
                      c++;   
                      if (c > 10) break;
                      if (idx < 0) break;

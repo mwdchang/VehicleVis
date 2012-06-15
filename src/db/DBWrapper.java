@@ -4,6 +4,8 @@ import java.sql.*;
 import java.util.HashMap;
 import java.util.Vector;
 
+import datastore.SSM;
+
 
 /* Wrapper for handling data base connection, assumes a single database */
 public class DBWrapper {
@@ -117,7 +119,8 @@ public class DBWrapper {
    }
    
    public Connection getConnection() throws Exception {
-      return getConnection("jdbc:mysql://localhost/projectv3", "root", "root"); 
+      //return getConnection("jdbc:mysql://localhost/projectv3", "root", "root"); 
+      return getConnection("jdbc:mysql://localhost/"+SSM.database, "root", "root"); 
    }
    
    

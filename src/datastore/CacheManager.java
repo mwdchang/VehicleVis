@@ -243,8 +243,8 @@ System.out.println("Debugging");
          
          String sql = 
          "SELECT b.datea, a.groupid, b.mfr_txt, b.make_txt, b.model_txt, b.year_txt, b.cmplid " + 
-         "FROM projectv3.cmp_x_grp_clean a " + 
-         ",    projectv3.cmp_clean b " + 
+         "FROM cmp_x_grp_clean a " + 
+         ",    cmp_clean b " + 
          "WHERE a.cmplid = b.cmplid "  
          ;         
          if (mfrFilter != null) {
@@ -355,8 +355,8 @@ System.out.println("Debugging");
       DBWrapper dbh = new DBWrapper();
       try {
          long numTags = 0;
-//         String sql =  "call projectv3.get_document_tag(" +  "\"" + from + "\", \"" + to + "\")";   
-         String sql = "select cmplid, groupId, start, end from projectv3.cmp_x_grp";
+//         String sql =  "call get_document_tag(" +  "\"" + from + "\", \"" + to + "\")";   
+         String sql = "select cmplid, groupId, start, end from cmp_x_grp";
          ResultSet rs = dbh.execute( sql, true );
          
          
@@ -402,7 +402,7 @@ System.out.println("Debugging");
    public void initRelatedTable() {
       DBWrapper dbh = new DBWrapper(); 
       try {
-         String sql = "select cmplid, groupId from projectv3.cmp_x_grp_clean";
+         String sql = "select cmplid, groupId from cmp_x_grp_clean";
          ResultSet rs = dbh.execute(sql, true);
          while (rs.next()) {
             int cmplid = rs.getInt(1);
@@ -434,7 +434,7 @@ System.out.println("Debugging");
          // Static clause
          //String sql = "SELECT a.cmplid, a.cdescr  " +   
          String sql = "SELECT a.cmplid, a.datea, a.mfr_txt, a.make_txt, a.model_txt, a.year_txt, a.cdescr " +
-                      "FROM projectv3.cmp_clean a " +
+                      "FROM cmp_clean a " +
                       "WHERE a.datea >= '" + DCUtil.formatDateStr(from) + "' " +
                       "AND   a.datea <= '" + DCUtil.formatDateStr(to) + "' " +
                       "AND   MONTH(a.datea) >= " + (fromMonth+1) + " " +
@@ -487,13 +487,13 @@ System.out.println("Debugging");
          // Work around to get dimensionalized view
          if (groupIds.size() == 0) {
              sql += "AND EXISTS ( " + 
-                      "SELECT 1 FROM projectv3.cmp_x_grp_clean b " + 
+                      "SELECT 1 FROM cmp_x_grp_clean b " + 
                       "WHERE a.cmplid = b.cmplid " +
                    ") ";
          } else {
             for (int i=0; i < groupIds.size(); i++) {
                sql += "AND EXISTS ( " + 
-                         "SELECT 1 FROM projectv3.cmp_x_grp_clean b " + 
+                         "SELECT 1 FROM cmp_x_grp_clean b " + 
                          "WHERE a.cmplid = b.cmplid " +
                          "AND b.groupId in " + DCUtil.makeInClause(HierarchyTable.instance().getAgg(groupIds.elementAt(i))) + " " +
                       ") ";
@@ -530,7 +530,7 @@ System.out.println("Debugging");
          // Static clause
          //String sql = "SELECT a.cmplid, a.cdescr  " +   
          String sql = "SELECT a.cmplid, a.datea, a.mfr_txt, a.make_txt, a.model_txt, a.year_txt, a.cdescr " +
-                      "FROM projectv3.cmp_clean a " +
+                      "FROM cmp_clean a " +
                       "WHERE a.datea >= '" + DCUtil.formatDateStr(from) + "' " +
                       "AND   a.datea <= '" + DCUtil.formatDateStr(to) + "' " +
                       "AND   MONTH(a.datea) >= " + (fromMonth+1) + " " +
@@ -583,13 +583,13 @@ System.out.println("Debugging");
          // Work around to get dimensionalized view
          if (groupIds.size() == 0) {
              sql += "AND EXISTS ( " + 
-                      "SELECT 1 FROM projectv3.cmp_x_grp_clean b " + 
+                      "SELECT 1 FROM cmp_x_grp_clean b " + 
                       "WHERE a.cmplid = b.cmplid " +
                    ") ";
          } else {
             for (int i=0; i < groupIds.size(); i++) {
                sql += "AND EXISTS ( " + 
-                         "SELECT 1 FROM projectv3.cmp_x_grp_clean b " + 
+                         "SELECT 1 FROM cmp_x_grp_clean b " + 
                          "WHERE a.cmplid = b.cmplid " +
                          "AND b.groupId = " + groupIds.elementAt(i) + 
                       ") ";

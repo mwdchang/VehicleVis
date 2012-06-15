@@ -16,6 +16,7 @@ import org.tartarus.snowball.ext.porterStemmer;
 import util.DCUtil;
 import util.DWin;
 
+import datastore.SSM;
 import db.DBWrapper;
 
 public class KeywordParser {
@@ -72,7 +73,7 @@ public class KeywordParser {
       
       try {
         DBWrapper dbh = new DBWrapper();   
-        ResultSet rs = dbh.execute( "select name, groupId from projectv3.grp order by char_length(name) desc" );
+        ResultSet rs = dbh.execute( "select name, groupId from " + SSM.database + ".grp order by char_length(name) desc" );
         while (rs.next()) {
            String word = rs.getString(1);
            word = word.trim();
@@ -97,7 +98,7 @@ public class KeywordParser {
    
    public void parseKeyword() throws Exception {
       DBWrapper dbh = new DBWrapper();   
-      String sql = "select cmplid, cdescr from projectv3.cmp_clean";
+      String sql = "select cmplid, cdescr from " + SSM.database + ".cmp_clean";
       ResultSet rs = dbh.execute( sql ); 
       
       BufferedWriter writer  = DCUtil.openWriter("new_cmp_x_grp.txt");
