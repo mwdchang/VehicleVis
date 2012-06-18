@@ -82,7 +82,7 @@ public class InitDB {
       try {
          System.out.println("\n\nStarting phase 2");
          //normalizer.parse(Const.DATA_FILE, 0, null);   
-         normalizer.parse(Const.DATA_FILE, 0, whiteList);   
+         normalizer.parse(Const.DATA_FILE, 0, whiteList, true);   
          
          System.out.println("\nStarting database load...");
          rc = TableLoader.loadData2Table(fileDir + "cmp_clean.txt", InitDB.getTable("cmp_clean"), true);  

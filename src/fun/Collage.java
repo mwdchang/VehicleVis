@@ -24,10 +24,12 @@ public class Collage extends JOGLBase implements KeyListener {
    public static void main(String args[]) {
       Collage collage = new Collage();
       collage.isMaximized = true;
-      collage.run("Test", 1400, 900, 30000);
+      collage.run("Test", 1400, 900);
    }
    
    public Pic result;
+   
+   public long time = System.currentTimeMillis();
    
    @Override
    public void display(GLAutoDrawable a) {
@@ -36,7 +38,10 @@ public class Collage extends JOGLBase implements KeyListener {
       
       GraphicUtil.setOrthonormalView(gl2, 0, this.winWidth, 0, this.winHeight, -10, 10);
       
-      this.splitPic();
+      if (System.currentTimeMillis() - time > 5000) {
+         this.splitPic();
+         time = System.currentTimeMillis();
+      }
       
       /*
       gl2.glColor4d(1, 1, 1, 1);
@@ -57,7 +62,7 @@ public class Collage extends JOGLBase implements KeyListener {
       
       winWidth  = a.getWidth();
       winHeight = a.getHeight();
-      //splitPic();
+      splitPic();
    }
    
    
@@ -76,7 +81,8 @@ public class Collage extends JOGLBase implements KeyListener {
       if (p.children.size() == 0) {
          if (p.texture == null) {
             //File dir = new File("C:\\Users\\Daniel\\Pictures");
-            File dir = new File("C:\\Users\\Daniel\\temporary");
+            //File dir = new File("C:\\Users\\Daniel\\temporary");
+            File dir = new File("C:\\Users\\Daniel\\Dropbox\\DCShare\\Canoe_June_16");
             String s[] = dir.list( new FilenameFilter() {
                public boolean accept(File dir, String name) {
                   String l = name.toLowerCase();
@@ -89,7 +95,8 @@ public class Collage extends JOGLBase implements KeyListener {
             p.texture = this.loadTexture(gl2, dir+"\\"+s[index]);
          }
 
-         gl2.glColor4fv(p.colour.toArray(), 0);
+         //gl2.glColor4fv(p.colour.toArray(), 0);
+         gl2.glColor4d(0.5, 0.5, 0.5, 1.0);
          
          gl2.glBegin(GL2.GL_QUADS);
             gl2.glVertex2d(p.x1+2, p.y1+2);
@@ -100,7 +107,7 @@ public class Collage extends JOGLBase implements KeyListener {
          
          p.texture.enable(gl2);
          p.texture.bind(gl2);
-         gl2.glColor4f(1, 1, 1, 1);
+         gl2.glColor4f(1, 1, 1, (float)Math.random());
          gl2.glBegin(GL2.GL_QUADS);
             gl2.glTexCoord2f(0, 1); gl2.glVertex2d(p.x1+4, p.y1+4);
             gl2.glTexCoord2f(1, 1); gl2.glVertex2d(p.x2-4, p.y1+4);
@@ -116,20 +123,22 @@ public class Collage extends JOGLBase implements KeyListener {
       }
    }
    
-   // Make sure the aspect ratio is not ridiculous
+   // Make sure the aspect ratio is not ridiculously skewed
    public void fix(Pic p) {
       if (p.children.size() > 0) {
          for (Pic c : p.children) {
-            split(c);
+            fix(c);
          }
       } else {
          if ( (p.x2-p.x1) > 1.5*(p.y2-p.y1) ) {
+System.err.println("Fixing x");            
             double mx = (p.x1 + p.x2)/2.0;
             p.children.add(new Pic(p.x1, p.y1, mx, p.y2));
             p.children.add(new Pic(mx, p.y1, p.x2, p.y2));
             return;   
          }
          if ( (p.y2-p.y1) > 1.5*(p.x2-p.x1) ) {
+System.err.println("Fixing y");            
             double my = (p.y1 + p.y2)/2.0;
             p.children.add(new Pic(p.x1, p.y1, p.x2, my));
             p.children.add(new Pic(p.x1, my, p.x2, p.y2));
@@ -147,12 +156,14 @@ public class Collage extends JOGLBase implements KeyListener {
          double seed = Math.random();
          if ( (p.x2-p.x1) > 1.5*(p.y2-p.y1) ) {
          //if (seed > 0.5) {
-            double mx = (p.x1 + p.x2)/(1.3+Math.random());    
+            double mx = (p.x2 - p.x1)*(0.25 + Math.random()*0.25) + p.x1;
+            //double mx = (p.x1 + p.x2)/(2+Math.random());    
             //double mx = (p.x1 + p.x2)/2.0;
             p.children.add(new Pic(p.x1, p.y1, mx, p.y2));
             p.children.add(new Pic(mx, p.y1, p.x2, p.y2));
          } else {
-            double my = (p.y1 + p.y2)/(1.3+Math.random());    
+            double my = (p.y2 - p.y1)*(0.25 + Math.random()*0.25) + p.y1; 
+            //double my = (p.y1 + p.y2)/(2+Math.random());    
             //double my = (p.y1 + p.y2)/2.0;
             p.children.add(new Pic(p.x1, p.y1, p.x2, my));
             p.children.add(new Pic(p.x1, my, p.x2, p.y2));

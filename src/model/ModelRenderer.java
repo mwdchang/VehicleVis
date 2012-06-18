@@ -314,23 +314,23 @@ public class ModelRenderer extends BaseModelRenderer {
          if (SSM.useDualDepthPeeling) {
             
             // 1) Default, use dual peeling and render in colour ramp mode
-            /*
             if (SSM.refreshOITTexture) {
                this.ProcessDualPeeling(gl2, this.g_quadDisplayList);
                this.RenderDualPeeling(gl2, this.g_quadDisplayList);
             } else {
                this.RenderOITTexture(gl2);   
             }
-            */
             
             // 2) Some funny stuff to try out...lets do face normals
             //this.renderFNormal(gl2);
+            /*
             for (DCComponent comp: MM.currentModel.componentTable.values()) {
                comp.renderBuffer(gl2, DCColour.fromInt(200, 0, 0), DCComponent.GOOCH_SHADING);   
                gl2.glLineWidth(1.5f);
                comp.renderBufferAdj(gl2, DCColour.fromInt(0, 0, 0));
                gl2.glLineWidth(1.0f);
             }
+            */
          } else {
             renderColourRamp(gl2, null);
          }
@@ -835,7 +835,8 @@ public class ModelRenderer extends BaseModelRenderer {
          if (SSM.useTUIO == true) {
             Event.handleTUIOSelect(obj);
          } else {
-            Event.handleMouseSelect(obj);
+            Event.handleTUIOSelect(obj);
+            //Event.handleMouseSelect(obj);
          }
          
       } else {

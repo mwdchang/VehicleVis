@@ -13,8 +13,6 @@ public class TableLoader {
 //      SimpleDateFormat abc = new SimpleDateFormat("yyyymmdd");
 //      SimpleDateFormat def = new SimpleDateFormat("yyyy/mm/dd");
 //      System.out.println( def.format(abc.parse("20010109")));
-//      TableLoader.loadData2Table("C:\\Users\\\\Daniel\\\\workspace\\\\projectv3\\\\cmp_clean.txt", "projectv3.cmp_clean", true);  
-//      TableLoader.loadData2Table("C:\\Users\\Daniel\\workspace\\projectv3\\opt.txt", "projectv3.cmp_x_grp_clean", true);  
    }
    
    

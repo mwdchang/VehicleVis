@@ -100,9 +100,14 @@ public class Event {
       for (int i=0; i < SSM.lensList.size(); i++) {
          float x = (float)posX - (float)SSM.lensList.elementAt(i).magicLensX;
          float y = (float)posY - (float)SSM.lensList.elementAt(i).magicLensY;
+         
+         float oldx = (float)oldPosX - (float)SSM.lensList.elementAt(i).magicLensX;
+         float oldy = (float)oldPosY - (float)SSM.lensList.elementAt(i).magicLensY;
+         
          float r = (float)SSM.lensList.elementAt(i).magicLensRadius;
          float d = (float)Math.sqrt(x*x + y*y);            
-         if (d <= r) {
+         float oldd = (float)Math.sqrt(oldx*oldx + oldy*oldy);            
+         if (oldd <= r) {
             if (d < 90) {
                SSM.lensList.remove(i);
                return;
