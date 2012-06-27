@@ -171,6 +171,8 @@ public class TUIOListener implements TuioListener {
          w = new WCursor(SSM.ELEMENT_CYEAR_SCROLL, o);
       } else if (Event.checkScenario(posX, posY) == SSM.ELEMENT_SCENARIO) {
          w = new WCursor(SSM.ELEMENT_SCENARIO, o);
+      } else if (Event.checkScrollPanels(posX, posY, SSM.perspectiveAttrib, SSM.ELEMENT_PERSPECTIVE_SCROLL) == SSM.ELEMENT_PERSPECTIVE_SCROLL) {    
+         w = new WCursor(SSM.ELEMENT_PERSPECTIVE_SCROLL, o);
       } else {
          w = new WCursor(SSM.ELEMENT_NONE, o);
       }
@@ -361,7 +363,8 @@ public class TUIOListener implements TuioListener {
              w.element == SSM.ELEMENT_MANUFACTURE_SCROLL|| w.element == SSM.ELEMENT_CMANUFACTURE_SCROLL || 
              w.element == SSM.ELEMENT_MAKE_SCROLL || w.element == SSM.ELEMENT_CMAKE_SCROLL ||
              w.element == SSM.ELEMENT_MODEL_SCROLL || w.element == SSM.ELEMENT_CMODEL_SCROLL ||
-             w.element == SSM.ELEMENT_YEAR_SCROLL || w.element == SSM.ELEMENT_CYEAR_SCROLL ) {
+             w.element == SSM.ELEMENT_YEAR_SCROLL || w.element == SSM.ELEMENT_CYEAR_SCROLL  ||
+             w.element == SSM.ELEMENT_PERSPECTIVE_SCROLL) {
             
             // Only set a tap if the touch point is "fresh", that is, the touch points are
             // within certain time limits

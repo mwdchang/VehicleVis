@@ -196,9 +196,11 @@ public class MagicLens {
          shaderObj.setUniform1i(gl2, "smouseX", la.magicLensX);
          shaderObj.setUniform1i(gl2, "smouseY", SSM.windowHeight - la.magicLensY);
          
-         //shaderObj.setUniform1i(gl2, "areaHeight", SSM.instance().windowHeight);
-         //shaderObj.setUniform1i(gl2, "areaWidth", SSM.instance().windowWidth);
+         shaderObj.setUniform1i(gl2, "areaHeight", SSM.windowHeight);
+         shaderObj.setUniform1i(gl2, "areaWidth", SSM.windowWidth);
+         
          shaderObj.setUniformf(gl2, "magicLensRadius", la.magicLensRadius);
+         shaderObj.setUniformf(gl2, "zoomFactor", la.zoomFactor);
          //shaderObj.setUniform1i(gl2, "magicLensSelected", la.magicLensSelected);
          
          if (la.magicLensSelected == 1) {

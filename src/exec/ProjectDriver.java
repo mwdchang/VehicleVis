@@ -122,7 +122,7 @@ public class ProjectDriver {
       Toolkit tk = Toolkit.getDefaultToolkit();
       Dimension sc = tk.getScreenSize();
       frame.setLocation((int)sc.getWidth()+1, 0); // Just to the next screen
-      frame.setUndecorated(true);
+      //frame.setUndecorated(true);
       frame.setExtendedState( frame.getExtendedState() | JFrame.MAXIMIZED_BOTH );
       /////////////////////////////////////////////////////////////////////////
       // End Hack test

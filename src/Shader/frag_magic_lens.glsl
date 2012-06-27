@@ -21,6 +21,7 @@ uniform float magicLensRadius;
 uniform int magicLensSelected;
 uniform int useTexture;
 uniform vec4 lensColour;
+uniform float zoomFactor;
 
 
 in vec4 pass_colour;
@@ -34,6 +35,11 @@ out vec4 outColour;
 void main() {
 
    if (useTexture > 0) {
+      // Test zoom
+      //vec2 test = vec2( float(smouseX)/float(areaWidth), float(smouseY)/float(areaHeight));
+      //outColour = texture2D( tex, (test - (test-pass_texcoord.xy)/zoomFactor)).rgba;
+
+      // Original Unaltered
       outColour = texture2D( tex, pass_texcoord.xy).rgba;
       outColour.a = 1.0f;
    } else {

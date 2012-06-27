@@ -450,23 +450,15 @@ public class ModelRenderer extends BaseModelRenderer {
             gl2.glPolygonMode(GL2.GL_FRONT_AND_BACK, GL2.GL_LINE);
             gl2.glColor4d(0, 0, 0, 1);
             gl2.glBegin(GL2.GL_QUADS);
-               gl2.glVertex2d(MM.currentModel.minx, MM
-      
-      ////////////////////////////////////////////////////////////////////////////////
-      // Render just the charts
-      ////////////////////////////////////////////////////////////////////////////////
-      /*
-      setOrthonormalView(gl2, 0, SSM.instance().windowWidth, 0, SSM.instance().windowHeight); {
-         renderChartsOnly(gl2);
-      }
-      */
-      
-      .currentModel.miny);
+               gl2.glVertex2d(MM.currentModel.minx, MM.currentModel.miny);
                gl2.glVertex2d(MM.currentModel.maxx, MM.currentModel.miny);
                gl2.glVertex2d(MM.currentModel.maxx, MM.currentModel.maxy);
                gl2.glVertex2d(MM.currentModel.minx, MM.currentModel.maxy);
             gl2.glEnd();
             gl2.glPolygonMode(GL2.GL_FRONT_AND_BACK, GL2.GL_FILL);
+            
+            // Lets render a grid for aligning thingys
+            GraphicUtil.drawGrid(gl2, 0, 0, SSM.windowWidth, SSM.windowHeight, 50);
             
          }
          
@@ -949,8 +941,11 @@ public class ModelRenderer extends BaseModelRenderer {
          if (skip == true) continue;
          
          
-         float xx = comp.projCenter.x - lensX;
-         float yy = comp.projCenter.y - (SSM.windowHeight - lensY);
+         //float xx = comp.projCenter.x - lensX;
+         //float yy = comp.projCenter.y - (SSM.windowHeight - lensY);
+         float xx = la.zoomFactor*(comp.projCenter.x - lensX);
+         float yy = la.zoomFactor*(comp.projCenter.y - (SSM.windowHeight - lensY));
+         
          float c = (float)Math.sqrt(xx*xx + yy*yy);
          
          if ( c <= lensRadius ) {
@@ -1267,8 +1262,11 @@ public class ModelRenderer extends BaseModelRenderer {
              
          
          
-         float xx = comp.projCenter.x - lensX;
-         float yy = comp.projCenter.y - (SSM.windowHeight - lensY);
+         //float xx = comp.projCenter.x - lensX;
+         //float yy = comp.projCenter.y - (SSM.windowHeight - lensY);
+         float xx = la.zoomFactor*(comp.projCenter.x - lensX);
+         float yy = la.zoomFactor*(comp.projCenter.y - (SSM.windowHeight - lensY));
+         
          float c = (float)Math.sqrt(xx*xx + yy*yy);
          
          if ( c <= lensRadius ) {
@@ -1424,8 +1422,16 @@ public class ModelRenderer extends BaseModelRenderer {
          gl2.glLineStipple(2, SSM.stipplePattern);
          if (SSM.useStipple) gl2.glEnable(GL2.GL_LINE_STIPPLE);
          gl2.glBegin(GL2.GL_LINES);
-            gl2.glVertex2d( comp.projCenter.x, comp.projCenter.y);
+            float tx = lensX  - (lensX  - comp.projCenter.x)*la.zoomFactor;
+            float ty = (SSM.windowHeight-lensY)  - ((SSM.windowHeight-lensY) - comp.projCenter.y)*la.zoomFactor;
+            
+                        
+            gl2.glVertex2d( tx, ty);
             gl2.glVertex2d( lensX + edgeX, comp.projCenter.y);
+            
+            // Original
+            //gl2.glVertex2d( comp.projCenter.x, comp.projCenter.y);
+            //gl2.glVertex2d( lensX + edgeX, comp.projCenter.y);
             
             gl2.glVertex2d( lensX + edgeX, comp.projCenter.y);
             gl2.glVertex2d(lensX+lensRadius + rpadding, rightHeight + 0.5*comp.cchart.height);
@@ -1563,8 +1569,15 @@ public class ModelRenderer extends BaseModelRenderer {
          if (SSM.useStipple) gl2.glEnable(GL2.GL_LINE_STIPPLE);
          gl2.glLineWidth(2.0f);
          gl2.glBegin(GL2.GL_LINES);
-            gl2.glVertex2d( comp.projCenter.x, comp.projCenter.y);
+            float tx = lensX  - (lensX  - comp.projCenter.x)*la.zoomFactor;
+            float ty = (SSM.windowHeight-lensY)  - ((SSM.windowHeight-lensY) - comp.projCenter.y)*la.zoomFactor;
+            
+            gl2.glVertex2d( tx, ty );
             gl2.glVertex2d( lensX - edgeX, comp.projCenter.y);
+            
+            // Original
+            //gl2.glVertex2d( comp.projCenter.x, comp.projCenter.y);
+            //gl2.glVertex2d( lensX - edgeX, comp.projCenter.y);
             
             gl2.glVertex2d( lensX - edgeX, comp.projCenter.y);
             gl2.glVertex2d( lensX-lensRadius - lpadding, leftHeight + 0.5*comp.cchart.height);

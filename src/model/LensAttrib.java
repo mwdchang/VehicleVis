@@ -56,7 +56,7 @@ public class LensAttrib {
    // a circular dependency...but works for now
    public MagicLens mlen;
    
-   
+   public float zoomFactor = 1.0f;
    public float nearPlane = SSM.nearPlane;
    public float farPlane  = SSM.farPlane;
    

@@ -63,6 +63,7 @@ public class SSM {
       refreshRate     = Long.parseLong(System.getProperty("RefreshRate", "800"));
       nearThreshold   = Float.parseFloat(System.getProperty("NearThreshold", "0.2f")); 
       downsampleRate  = Integer.parseInt(System.getProperty("DownsampleRate", "3"));
+      useScenario     = Boolean.parseBoolean(System.getProperty("UseScenario", "true"));
       
       
    }
@@ -297,6 +298,9 @@ public class SSM {
    public static PaneAttrib c_modelAttrib       = new PaneAttrib(730, 120, 220, 200, 1);
    public static PaneAttrib c_yearAttrib        = new PaneAttrib(980, 120, 220, 200, 1);
    
+   
+   public static PaneAttrib perspectiveAttrib   = new PaneAttrib(400, 400, 200, 100, 1);
+   
    public static float offset_labelX = 130;
    public static float offset_labelY = 30;
    public static float offset_markerX = 160;
@@ -438,6 +442,9 @@ public class SSM {
    public static int ELEMENT_CMAKE_SCROLL = 14;
    public static int ELEMENT_CMODEL_SCROLL = 15;
    public static int ELEMENT_CYEAR_SCROLL = 16;
+   
+   
+   public static int ELEMENT_PERSPECTIVE_SCROLL = 17;
    
    public static int topElement = ELEMENT_NONE;
    //public int location   = ELEMENT_NONE; // Horrible hack

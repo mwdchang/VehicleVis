@@ -22,6 +22,8 @@ import com.jogamp.opengl.util.awt.TextureRenderer;
 import com.jogamp.opengl.util.texture.Texture;
 import com.jogamp.opengl.util.texture.awt.AWTTextureIO;
 
+import datastore.Const;
+
 
 
 /////////////////////////////////////////////////////////////////////////////////
@@ -31,6 +33,24 @@ import com.jogamp.opengl.util.texture.awt.AWTTextureIO;
 /////////////////////////////////////////////////////////////////////////////////
 public class GraphicUtil {
    
+   ////////////////////////////////////////////////////////////////////////////////
+   // Draws a grid
+   ////////////////////////////////////////////////////////////////////////////////
+   public static void drawGrid(GL2 gl2, double x1, double y1, double x2, double y2, double padding) {
+      gl2.glColor4d(1, 0, 0, 1.0); 
+      for (double idx = x1; idx <= x2; idx += padding) {
+      gl2.glBegin(GL2.GL_LINES);
+         gl2.glVertex2d(idx, y1);
+         gl2.glVertex2d(idx, y2);
+      gl2.glEnd();
+      }
+      for (double idx = y1; idx <= y2; idx += padding) {
+      gl2.glBegin(GL2.GL_LINES);
+         gl2.glVertex2d(x1, idx);
+         gl2.glVertex2d(x2, idx);
+      gl2.glEnd();
+      }
+   }
    
    ////////////////////////////////////////////////////////////////////////////////
    // Mostly taken from http://www.felixgers.de/teaching/jogl/imagingProg.html
@@ -827,6 +847,7 @@ public class GraphicUtil {
    public static Font font = new Font("Arial", Font.PLAIN, 12);
    public static Font fontLarge = new Font("Arial", Font.PLAIN, 16);
   
+   public static Font labelFont = DCUtil.loadFont(Const.FONT_PATH+"din1451m.ttf", Font.PLAIN, 20f);
    
 }
  

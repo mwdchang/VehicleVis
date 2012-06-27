@@ -44,9 +44,11 @@ public class QuestionTask implements RenderTask {
       tf.render(gl2);
       //tf.renderBorder(gl2);
       
-      q_tf.anchorX = SSM.windowWidth - 800;
+      q_tf.anchorX = SSM.windowWidth - 600;
       q_tf.anchorY = SSM.windowHeight - 100;
       q_tf.render(gl2);
+      q_tf.renderBorder(gl2);
+      
       
       //gl2.glPolygonMode(GL2.GL_FRONT_AND_BACK, GL2.GL_LINE);
       //gl2.glPolygonMode(GL2.GL_FRONT_AND_BACK, GL2.GL_FILL);
@@ -57,13 +59,13 @@ public class QuestionTask implements RenderTask {
    public void init(GL2 gl2) {
       tf = new TextureFont();
       tf.width = 100;
-      tf.height = 40;
-      tf.addMark("Proceed", Color.LIGHT_GRAY, GraphicUtil.fontLarge, 20, 20);
+      tf.height = 50;
+      tf.addMark("Proceed", Color.LIGHT_GRAY, GraphicUtil.labelFont, 20, 10);
       tf.renderToTexture(null);
       
       q_tf = new TextureFont();
-      q_tf.width  = 600;
-      q_tf.height = 40;
+      q_tf.width  = 400;
+      q_tf.height = 50;
       q_tf.addMark("Task : " + qIdx, Color.BLACK, GraphicUtil.font, 5, 20);
       q_tf.addMark(q[qIdx].txt, Color.BLACK, GraphicUtil.font, 5, 5);
       q_tf.renderToTexture(null);

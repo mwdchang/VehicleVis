@@ -80,6 +80,8 @@ public class EventManager implements KeyListener, MouseListener, MouseMotionList
          Event.checkScrollPanels(e.getX(), e.getY(), SSM.c_modelAttrib, SSM.ELEMENT_CMODEL_SCROLL);
          Event.checkScrollPanels(e.getX(), e.getY(), SSM.c_yearAttrib, SSM.ELEMENT_CYEAR_SCROLL);
          
+         Event.checkScrollPanels(e.getX(), e.getY(), SSM.perspectiveAttrib, SSM.ELEMENT_PERSPECTIVE_SCROLL);
+         
          // Check the ranged slider
          Event.checkSlider(e.getX(), e.getY());
          

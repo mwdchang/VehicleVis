@@ -47,7 +47,12 @@ public class DomainFilterTask implements RenderTask {
    public DCScrollPane c_modelScroll;
    public DCScrollPane c_yearScroll;   
    
+   // Aggregation switch
    public DCSwitch aggSwitch;
+   
+   // For perspective
+   public TextureFont  perspectiveLabel;
+   public DCScrollPane perspectiveScroll;
    
    public static Font labelFont = DCUtil.loadFont(Const.FONT_PATH+"din1451m.ttf", Font.PLAIN, 12f);
    
@@ -61,6 +66,19 @@ public class DomainFilterTask implements RenderTask {
 
    @Override
    public void init(GL2 gl2) {
+      
+      perspectiveScroll = new DCScrollPane("Perspective");
+      perspectiveScroll.anchorX = SSM.perspectiveAttrib.anchorX;
+      perspectiveScroll.anchorY = SSM.perspectiveAttrib.anchorY;
+      perspectiveScroll.depth = 0.5f;
+      perspectiveScroll.calculate();
+      perspectiveScroll.renderToTexture(null);
+      perspectiveScroll.width =  SSM.perspectiveAttrib.width;
+      perspectiveScroll.texPanelWidth = SSM.perspectiveAttrib.width;
+      SSM.perspectiveAttrib.selected = "Month";
+      
+      
+      
       label = new TextureFont();
       label.height = 45;
       label.width = 120;
@@ -256,6 +274,18 @@ public class DomainFilterTask implements RenderTask {
       // first
       ////////////////////////////////////////////////////////////////////////////////
       
+      // Handle perspective
+      SSM.stopPicking = pickingScrollPane(mx, my,perspectiveScroll, SSM.perspectiveAttrib); 
+      if (SSM.perspectiveAttrib.selected.equalsIgnoreCase("Month")) {
+         SSM.chartMode = SSM.CHART_MODE_BY_MONTH_MAX;
+      } else if (SSM.perspectiveAttrib.selected.equalsIgnoreCase("Component")) {
+         SSM.chartMode = SSM.CHART_MODE_BY_COMPONENT_MAX;
+      } else if (SSM.perspectiveAttrib.selected.equalsIgnoreCase("Global")) {
+         SSM.chartMode = SSM.CHART_MODE_BY_GLOBAL_MAX;
+      }
+      if (SSM.stopPicking != 0) return;
+      
+      
       
       // Handle vehicle manufacturers
       SSM.stopPicking = pickingScrollPane(mx, my, manufactureScroll, SSM.manufactureAttrib, 
@@ -308,6 +338,8 @@ public class DomainFilterTask implements RenderTask {
       scrollPaneTransition(mx, my, c_modelScroll, SSM.c_modelAttrib);
       scrollPaneTransition(mx, my, c_yearScroll, SSM.c_yearAttrib);      
       
+      scrollPaneTransition(mx, my, perspectiveScroll, SSM.perspectiveAttrib);
+      
       
       
       // Now test the switch intersection
@@ -335,12 +367,22 @@ public class DomainFilterTask implements RenderTask {
       c_modelScroll.tagList.clear();
       c_yearScroll.tagList.clear();      
       
+      perspectiveScroll.tagList.clear();
+      
       int startIdx = SSM.startIdx;
       int endIdx   = SSM.endIdx;
       
+      // Set up the text for perspective
+      Hashtable<String, Integer> perspectiveHash = new Hashtable<String, Integer>(); //blah
+      perspectiveHash.put("Month", 0);
+      perspectiveHash.put("Component", 0);
+      perspectiveHash.put("Global", 0);
+      this.resetPane(perspectiveHash, perspectiveScroll, SSM.perspectiveAttrib, false);
+      
+      
       // Set up default 
       Hashtable<String, Integer> manufactureHash = this.getHierFilter(startIdx, endIdx);
-      DCUtil.removeLowerBound(manufactureHash, 100);
+      //DCUtil.removeLowerBound(manufactureHash, 100);
       this.resetPane(manufactureHash, manufactureScroll, SSM.manufactureAttrib);
       
       Hashtable<String, Integer> makeHash = this.getHierFilter(startIdx, endIdx, manufactureScroll);
@@ -359,7 +401,7 @@ public class DomainFilterTask implements RenderTask {
       
       // Set up the comparisons
       Hashtable<String, Integer> c_manufactureHash = this.getHierFilter(startIdx, endIdx);
-      DCUtil.removeLowerBound(c_manufactureHash, 100);
+      //DCUtil.removeLowerBound(c_manufactureHash, 100);
       this.resetPane(c_manufactureHash, c_manufactureScroll, SSM.c_manufactureAttrib);
       
       Hashtable<String, Integer> c_makeHash = this.getHierFilter(startIdx, endIdx, c_manufactureScroll);
@@ -377,14 +419,21 @@ public class DomainFilterTask implements RenderTask {
       
    }
    
+   
    ////////////////////////////////////////////////////////////////////////////////
    // Reset a scroll-able panel
    ////////////////////////////////////////////////////////////////////////////////
    public void resetPane(Hashtable<String, Integer> table, DCScrollPane widget, PaneAttrib attrib) {
+      resetPane(table, widget, attrib, true);
+   }
+   public void resetPane(Hashtable<String, Integer> table, DCScrollPane widget, PaneAttrib attrib, boolean defaultSelection) {
       int counter = 0;
-      int prevManufacture = -1;
-      widget.tagList.add( new GTag(10.0f, (counter+1)*DCScrollPane.spacing, counter*DCScrollPane.spacing, "--- ALL ---", "--- ALL ---", -1));
-      counter++;
+      int prev= -1;
+      if (defaultSelection == true) {
+         widget.tagList.add( new GTag(10.0f, (counter+1)*DCScrollPane.spacing, counter*DCScrollPane.spacing, "--- ALL ---", "--- ALL ---", -1));
+         counter++;
+      }
+      
       
       Vector<String> list = new Vector<String>();
       
@@ -412,7 +461,7 @@ public class DomainFilterTask implements RenderTask {
          
          GTag t = new GTag(10.0f, (counter+1)*DCScrollPane.spacing, counter*DCScrollPane.spacing, txt, s, table.get(s));
          if (t.val.equals(attrib.selected)) {
-            prevManufacture = i;
+            prev= i;
             widget.currentStr = t.val;
          }
          widget.tagList.add( t );
@@ -424,7 +473,7 @@ public class DomainFilterTask implements RenderTask {
       
       if (widget.height > 0) widget.height = attrib.height;
       widget.dirty = true;       
-      if (prevManufacture < 0) {
+      if (prev< 0) {
          widget.current = 0;   
          widget.currentStr = widget.tagList.elementAt(0).val;
          attrib.selected = null;
@@ -432,9 +481,13 @@ public class DomainFilterTask implements RenderTask {
       }
       
       // Final adjustment
-      if (prevManufacture >= 0) {
+      //if (prev>= 0 && defaultSelection == true) {
+      if (prev>= 0 ) {
          float tempY = 0;
-         tempY = widget.tagList.elementAt(prevManufacture).y + DCScrollPane.spacing;
+         if (defaultSelection == true)
+            tempY = widget.tagList.elementAt(prev).y + DCScrollPane.spacing;
+         else
+            tempY = widget.tagList.elementAt(prev).y;
          attrib.yOffset = Math.max( tempY, attrib.height);
       }
       
@@ -660,6 +713,12 @@ public class DomainFilterTask implements RenderTask {
          c_makeScroll.render(gl2);
          c_modelScroll.render(gl2);
          c_yearScroll.render(gl2);
+         
+         
+         perspectiveScroll.masterVisible = true;
+         perspectiveScroll.visible = true;
+         perspectiveScroll.yoffset = SSM.perspectiveAttrib.yOffset;
+         perspectiveScroll.render(gl2);
          gl2.glDisable(GL2.GL_DEPTH_TEST);
          
          float ax;
