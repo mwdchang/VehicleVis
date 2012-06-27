@@ -299,7 +299,7 @@ public class SSM {
    public static PaneAttrib c_yearAttrib        = new PaneAttrib(980, 120, 220, 200, 1);
    
    
-   public static PaneAttrib perspectiveAttrib   = new PaneAttrib(400, 400, 200, 100, 1);
+   public static PaneAttrib perspectiveAttrib   = new PaneAttrib(180, 150, 200, 100, 1);
    
    public static float offset_labelX = 130;
    public static float offset_labelY = 30;

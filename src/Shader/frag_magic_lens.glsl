@@ -36,11 +36,11 @@ void main() {
 
    if (useTexture > 0) {
       // Test zoom
-      //vec2 test = vec2( float(smouseX)/float(areaWidth), float(smouseY)/float(areaHeight));
-      //outColour = texture2D( tex, (test - (test-pass_texcoord.xy)/zoomFactor)).rgba;
+      vec2 test = vec2( float(smouseX)/float(areaWidth), float(smouseY)/float(areaHeight));
+      outColour = texture2D( tex, (test - (test-pass_texcoord.xy)/zoomFactor)).rgba;
 
       // Original Unaltered
-      outColour = texture2D( tex, pass_texcoord.xy).rgba;
+      //outColour = texture2D( tex, pass_texcoord.xy).rgba;
       outColour.a = 1.0f;
    } else {
       outColour = vec4(0,0,0,0);

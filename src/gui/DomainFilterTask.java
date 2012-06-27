@@ -76,7 +76,14 @@ public class DomainFilterTask implements RenderTask {
       perspectiveScroll.width =  SSM.perspectiveAttrib.width;
       perspectiveScroll.texPanelWidth = SSM.perspectiveAttrib.width;
       SSM.perspectiveAttrib.selected = "Month";
+      SSM.perspectiveAttrib.hasAllSelection = false;
       
+      perspectiveLabel = new TextureFont();
+      perspectiveLabel.height = 20;
+      perspectiveLabel.width = 100;
+      perspectiveLabel.addMark("Perspective", Color.black, labelFont, 20, 10);
+      perspectiveLabel.renderToTexture(null);
+
       
       
       label = new TextureFont();
@@ -276,12 +283,17 @@ public class DomainFilterTask implements RenderTask {
       
       // Handle perspective
       SSM.stopPicking = pickingScrollPane(mx, my,perspectiveScroll, SSM.perspectiveAttrib); 
-      if (SSM.perspectiveAttrib.selected.equalsIgnoreCase("Month")) {
-         SSM.chartMode = SSM.CHART_MODE_BY_MONTH_MAX;
-      } else if (SSM.perspectiveAttrib.selected.equalsIgnoreCase("Component")) {
-         SSM.chartMode = SSM.CHART_MODE_BY_COMPONENT_MAX;
-      } else if (SSM.perspectiveAttrib.selected.equalsIgnoreCase("Global")) {
-         SSM.chartMode = SSM.CHART_MODE_BY_GLOBAL_MAX;
+      if (SSM.perspectiveAttrib.selected != null) {
+         if (SSM.perspectiveAttrib.selected.equalsIgnoreCase("Month")) {
+            SSM.chartMode = SSM.CHART_MODE_BY_MONTH_MAX;
+            System.out.println("Switching to month");
+         } else if (SSM.perspectiveAttrib.selected.equalsIgnoreCase("Component")) {
+            SSM.chartMode = SSM.CHART_MODE_BY_COMPONENT_MAX;
+            System.out.println("Switching to component");
+         } else if (SSM.perspectiveAttrib.selected.equalsIgnoreCase("Global")) {
+            SSM.chartMode = SSM.CHART_MODE_BY_GLOBAL_MAX;
+            System.out.println("Switching to global");
+         }
       }
       if (SSM.stopPicking != 0) return;
       
@@ -377,7 +389,7 @@ public class DomainFilterTask implements RenderTask {
       perspectiveHash.put("Month", 0);
       perspectiveHash.put("Component", 0);
       perspectiveHash.put("Global", 0);
-      this.resetPane(perspectiveHash, perspectiveScroll, SSM.perspectiveAttrib, false);
+      this.resetPane(perspectiveHash, perspectiveScroll, SSM.perspectiveAttrib);
       
       
       // Set up default 
@@ -424,12 +436,9 @@ public class DomainFilterTask implements RenderTask {
    // Reset a scroll-able panel
    ////////////////////////////////////////////////////////////////////////////////
    public void resetPane(Hashtable<String, Integer> table, DCScrollPane widget, PaneAttrib attrib) {
-      resetPane(table, widget, attrib, true);
-   }
-   public void resetPane(Hashtable<String, Integer> table, DCScrollPane widget, PaneAttrib attrib, boolean defaultSelection) {
       int counter = 0;
       int prev= -1;
-      if (defaultSelection == true) {
+      if (attrib.hasAllSelection == true) {
          widget.tagList.add( new GTag(10.0f, (counter+1)*DCScrollPane.spacing, counter*DCScrollPane.spacing, "--- ALL ---", "--- ALL ---", -1));
          counter++;
       }
@@ -473,7 +482,7 @@ public class DomainFilterTask implements RenderTask {
       
       if (widget.height > 0) widget.height = attrib.height;
       widget.dirty = true;       
-      if (prev< 0) {
+      if (prev < 0) {
          widget.current = 0;   
          widget.currentStr = widget.tagList.elementAt(0).val;
          attrib.selected = null;
@@ -484,7 +493,7 @@ public class DomainFilterTask implements RenderTask {
       //if (prev>= 0 && defaultSelection == true) {
       if (prev>= 0 ) {
          float tempY = 0;
-         if (defaultSelection == true)
+         if (attrib.hasAllSelection == true)
             tempY = widget.tagList.elementAt(prev).y + DCScrollPane.spacing;
          else
             tempY = widget.tagList.elementAt(prev).y;
@@ -658,7 +667,14 @@ public class DomainFilterTask implements RenderTask {
                   SSM.dirty = 1;
                   SSM.dirtyGL = 1;
                   SSM.refreshMagicLens = true;
-                  attrib.selected = i==0? null:t.val; 
+                  
+                  if (attrib.hasAllSelection == false) {
+                     attrib.selected = t.val; 
+                  } else {
+                     attrib.selected = i==0? null:t.val; 
+                  }
+                  
+System.out.println(">>>>>>>>>>>>>>>> " + i + " " + t.val);                  
                   
                   // Clear the children
                   for (int j=0; j < childrenPair.length; j+=2) {
@@ -719,6 +735,14 @@ public class DomainFilterTask implements RenderTask {
          perspectiveScroll.visible = true;
          perspectiveScroll.yoffset = SSM.perspectiveAttrib.yOffset;
          perspectiveScroll.render(gl2);
+         
+         perspectiveLabel.anchorX = SSM.perspectiveAttrib.anchorX - perspectiveLabel.width;
+         perspectiveLabel.anchorY = SSM.perspectiveAttrib.anchorY - 20;
+         perspectiveLabel.render(gl2);
+         
+         
+         
+         
          gl2.glDisable(GL2.GL_DEPTH_TEST);
          
          float ax;

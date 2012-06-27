@@ -41,5 +41,7 @@ public class PaneAttrib {
    
    public int direction = 0;
    
+   public boolean hasAllSelection = true; //All is treated special
+   
 
 }

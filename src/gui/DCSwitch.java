@@ -29,7 +29,7 @@ public class DCSwitch {
       state = false;
       tf.height = height;
       tf.width = width;
-      tf.addMark("TEST", Color.GRAY, font, 1, 1);
+      tf.addMark("TEST", Color.BLACK, font, 1, 1);
       tf.renderToTexture(null);
       
       tf_on.height = height;
@@ -44,7 +44,7 @@ public class DCSwitch {
    public void setLabel(String s) {
       label = s;
       tf.clearMark();
-      tf.addMark(s, Color.GRAY, font, 1, 5);
+      tf.addMark(s, Color.BLACK, font, 1, 5);
    }
    
    
@@ -86,7 +86,7 @@ public class DCSwitch {
    }
    
    
-   public static Font font = DCUtil.loadFont(Const.FONT_PATH+"din1451m.ttf", Font.PLAIN, 14f);
+   public static Font font = DCUtil.loadFont(Const.FONT_PATH+"din1451m.ttf", Font.PLAIN, 12f);
    public TextureFont tf = new TextureFont();    
    
    // Texture for on and off button, these do not need to be refreshed
