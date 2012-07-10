@@ -34,8 +34,14 @@ public class TextPane {
       // graphics context, which we will use to get the fontmetrics
       texture = new TextureRenderer((int)textPaneWidth, (int)textPaneHeight, true, true);
       g2d = texture.createGraphics();
-      g2d.setFont(fontArial);
+      g2d.setFont(font);
       fm = g2d.getFontMetrics();
+   }
+   
+   
+   public float getHardFontHeight(Font f) {
+      float size = f.getSize();
+      return size * 1.02f;
    }
    
    
@@ -44,7 +50,8 @@ public class TextPane {
    // Split each document into tokens and calculate the position
    ////////////////////////////////////////////////////////////////////////////////
    public void calculate() {
-      float tokenHeight = fontHeight; // just testing
+      //float tokenHeight = fontHeight; // just testing
+      float tokenHeight = getHardFontHeight( font );
       float ycursor = 0;
       float xcursor = 0;
       
@@ -74,7 +81,7 @@ public class TextPane {
          
          float tmp0 = fm.stringWidth(idstr);
          Tag tag = new Tag(xcursor, ycursor, tokenHeight, idstr);
-         tag.fn = fontArialBold;
+         tag.fn = fontBold;
          
          // Text colour with accordance to comparison mode ?
          if (SSM.instance().useComparisonMode == true) {
@@ -172,16 +179,16 @@ public class TextPane {
          if (t.fn != null) {
             g2d.setFont(t.fn);
          } else {
-            g2d.setFont(fontArial); 
+            g2d.setFont(font); 
          }
          g2d.setColor(t.c.awtRGBA());
          
          if (t.isKey) {
-            g2d.fillRect((int)t.x, (int)(t.y-t.yPrime+4), (int)t.width-4, (int)(t.yPrime-2));
+            g2d.fillRect((int)t.x-2, (int)(t.y-t.yPrime+2), (int)t.width, (int)(t.yPrime+2));
             g2d.setColor(Color.white);
             g2d.drawString(t.s, t.x, t.y);
          } else if (t.isRelated) {
-            g2d.fillRect((int)t.x, (int)(t.y-t.yPrime+4), (int)t.width-4, (int)(t.yPrime-2));
+            g2d.fillRect((int)t.x-2, (int)(t.y-t.yPrime+2), (int)t.width, (int)(t.yPrime+2));
             g2d.setColor(Color.LIGHT_GRAY);
             g2d.drawString(t.s, t.x, t.y);
          } else {
@@ -204,8 +211,8 @@ public class TextPane {
    public Graphics2D g2d;
    //public static Font fontArial = new Font( "Consolas", Font.PLAIN, 14);   
    //public static Font fontArialBold = new Font( "Consolas", Font.BOLD, 14);
-   public static Font fontArial = DCUtil.loadFont(Const.FONT_PATH+"din1451m.ttf", Font.PLAIN, 14f);
-   public static Font fontArialBold = DCUtil.loadFont(Const.FONT_PATH+"din1451m.ttf", Font.BOLD, 14f);
+   public static Font font = DCUtil.loadFont(Const.FONT_PATH+"din1451m.ttf", Font.PLAIN, 15f);
+   public static Font fontBold = DCUtil.loadFont(Const.FONT_PATH+"din1451m.ttf", Font.BOLD, 15f);
    public FontMetrics fm;
    
    // documentList holds the original document, tag list hods the actual rendering components
