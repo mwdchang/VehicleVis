@@ -931,11 +931,17 @@ public abstract class BaseModelRenderer implements RenderTask {
          comp.cchart.c_data = c_data;
          
          comp.cchart.setMaxValue(localMax);
+         
+         /*
          if (SSM.selectedGroup.size() > 0 && SSM.selectedGroup.contains(comp.id)) {
-            comp.cchart.resize(SSM.sparkLineWidth, 10*range+Heatmap.labelBuffer);
+            comp.cchart.resize(SSM.sparkLineWidth, 10*range+comp.cchart.labelBuffer);
          } else {
-            comp.cchart.resize(SSM.sparkLineWidth, 10*range+Heatmap.labelBuffer);
+            comp.cchart.resize(SSM.sparkLineWidth, 10*range+comp.cchart.labelBuffer);
          }
+         */
+         //comp.cchart.resize(SSM.sparkLineWidth, 15*range+comp.cchart.labelBuffer);
+         comp.cchart.resize(SSM.sparkLineWidth, SSM.heatmapCellHeight*range+comp.cchart.labelBuffer);
+         
          comp.cchart.createSegment( segSize ); // needs to go after setData and setHeight
          
          // Set it to the same colour as the component

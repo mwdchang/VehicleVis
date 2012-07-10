@@ -204,6 +204,7 @@ public class SSM {
    public static float sparkLineWidth   = 200.0f;
    public static int   sparkLineSegment = 50; 
    
+   public static float heatmapCellHeight = 12;
    
    
    ///////////////////////////////////////////////////////////////////////////////// 

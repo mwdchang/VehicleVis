@@ -60,7 +60,7 @@ public class TextPane {
       
       
       Vector<Integer> keyList = new Vector<Integer>();
-      if (SSM.instance().useAggregate == true) {
+      if (SSM.useAggregate == true) {
          keyList = HierarchyTable.instance().getAgg(SSM.selectedGroup);
       } else {
          //keyList.add( SSM.instance().selectedGroup );   
@@ -75,7 +75,7 @@ public class TextPane {
          xcursor = 0;
          DCDoc d = documentList.elementAt(i);       
          
-         String idstr = "[" + DCUtil.formatDateYYYYMMDD(d.datea) + "] " + d.mfr + " -" + d.make + " -" + d.model + " -" + d.year ;
+         String idstr = "[" + DCUtil.formatDateYYYYMMDD(d.datea) + "] " + d.mfr + " - " + d.make + " - " + d.model + " - " + d.year ;
          //String idstr = "[" + d.docId + " >" + d.mfr + " >" + d.make + " >" + d.model + " >" + d.year +  "] ";
          
          
@@ -84,7 +84,7 @@ public class TextPane {
          tag.fn = fontBold;
          
          // Text colour with accordance to comparison mode ?
-         if (SSM.instance().useComparisonMode == true) {
+         if (SSM.useComparisonMode == true) {
             String s = SSM.manufactureAttrib.selected == null? "" : SSM.manufactureAttrib.selected;  
             s += SSM.makeAttrib.selected  == null? "" : SSM.makeAttrib.selected;
             s += SSM.modelAttrib.selected == null? "" : SSM.modelAttrib.selected;
@@ -123,14 +123,9 @@ public class TextPane {
                if (tlist.elementAt(x).contains(j)) {
                   //if (tlist.elementAt(x).groupId == SSM.instance().selectedGroup) {
                   if (keyList.contains(tlist.elementAt(x).groupId)) {
-                     //t.c = SchemeManager.textPane_selected;
                      t.c = SchemeManager.selected;
                      t.isKey = true;
-                     //t.fn = this.fontArialBold;
                   } else {
-                     //t.c = SchemeManager.selected;
-                     //t.c = SchemeManager.related;
-                     //t.fn = fontArialBold;
                      t.isRelated = true;
                   }
                   //t.fn = fontArialBold;
@@ -195,7 +190,6 @@ public class TextPane {
             g2d.setColor(Color.black);
             g2d.drawString(t.s, t.x, t.y);
          }
-//            g2d.drawRect((int)t.x, (int)(t.y-t.yPrime+4), (int)t.width, (int)(t.yPrime));
          
       }
    }
@@ -209,8 +203,6 @@ public class TextPane {
 
    public TextureRenderer texture; 
    public Graphics2D g2d;
-   //public static Font fontArial = new Font( "Consolas", Font.PLAIN, 14);   
-   //public static Font fontArialBold = new Font( "Consolas", Font.BOLD, 14);
    public static Font font = DCUtil.loadFont(Const.FONT_PATH+"din1451m.ttf", Font.PLAIN, 15f);
    public static Font fontBold = DCUtil.loadFont(Const.FONT_PATH+"din1451m.ttf", Font.BOLD, 15f);
    public FontMetrics fm;

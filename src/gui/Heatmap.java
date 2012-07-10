@@ -26,7 +26,16 @@ public class Heatmap extends ComponentChart {
       data = _data;
       width = _w;
       height = _h;
+      
+      this.labelBuffer = getHardFontHeight( smallFont );
    }
+   
+   
+   // hack
+   public float getHardFontHeight(Font f) {
+      float size = f.getSize();
+      return size * 1.02f;
+   }   
    
    
    public void render(GL2 gl2) {
@@ -276,9 +285,9 @@ public class Heatmap extends ComponentChart {
          tf.clearMark();
          //tf.addMark(label, labelColour, new Font("Consolas", Font.PLAIN, 11), 1, height-labelBuffer+5);
          if (active) 
-            tf.addMark(label, labelColour, smallFont, 1, height-labelBuffer+5);
+            tf.addMark(label, labelColour, smallFont, 1, height-labelBuffer+1);
          else 
-            tf.addMark(label, labelColourInactive, smallFont, 1, height-labelBuffer+5);
+            tf.addMark(label, labelColourInactive, smallFont, 1, height-labelBuffer+1);
       }
    }   
    
@@ -305,11 +314,11 @@ public class Heatmap extends ComponentChart {
    public void renderImmediate(GL2 gl2) {}
    
    
-   public static Font  smallFont  = DCUtil.loadFont(Const.FONT_PATH+"din1451m.ttf", Font.PLAIN, 14);
+   public static Font  smallFont  = DCUtil.loadFont(Const.FONT_PATH+"din1451m.ttf", Font.PLAIN, 16);
    public float blockHeight = 3;
    public float blockWidth  = 8;
  
-   public static float labelBuffer = 20.0f;
+
    
    
 
