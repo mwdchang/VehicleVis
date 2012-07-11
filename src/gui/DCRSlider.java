@@ -190,11 +190,17 @@ public class DCRSlider {
          highIdx += (newAnchor-anchor)/interval;   
          if (highIdx >= data.length-1) highIdx = data.length-1;
          if (highIdx <= lowIdx) highIdx = lowIdx;
+         
+         // sanity check condition
+         if (highIdx < 0) highIdx = 0;
       } 
       if (sitem == 1) {
          lowIdx += (newAnchor-anchor)/interval;   
          if (lowIdx <= 0) lowIdx = 0;
          if (lowIdx >= highIdx) lowIdx = highIdx;
+         
+         // sanity check condition
+         if (lowIdx >= data.length-1) lowIdx = data.length-1;
       } 
       
       //System.out.println(oldH + " " + (int)highIdx);

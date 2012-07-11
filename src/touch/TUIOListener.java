@@ -240,7 +240,8 @@ public class TUIOListener implements TuioListener {
       if (w == null) return;
       
       
-      System.err.println("=== Removing TUIO Cursor " + o.getPath().size());
+      //System.err.println("=== Removing TUIO Cursor " + o.getPath().size());
+      System.err.println("=== Removing TUIO Cursor " + w.points.size());
       
       
       SSM.checkDragEvent = true;

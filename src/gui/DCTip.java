@@ -10,6 +10,7 @@ import model.DCColour;
 
 import org.jdesktop.animation.timing.Animator;
 
+import datastore.Const;
 import datastore.SSM;
 
 import util.DCUtil;
@@ -127,7 +128,9 @@ public class DCTip {
    public static Hashtable<String, String> translateTable = DCUtil.getMonthTranslationTable();
    
    public TextureFont tf = null;
-   public Font f  = new Font( "Arial", Font.BOLD, 16);    
+   //public Font f  = new Font( "Arial", Font.BOLD, 16);    
+   public Font f = DCUtil.loadFont(Const.FONT_PATH+"din1451m.ttf", Font.PLAIN, 15f);
+   
    public Color c = Color.BLACK;
    public float tipX;
    public float tipY;

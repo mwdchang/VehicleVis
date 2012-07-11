@@ -1604,9 +1604,19 @@ public abstract class BaseModelRenderer implements RenderTask {
            
            
            // Try to send in other special effects
+           // Get the percentage differential between any two components
            if (SSM.useComparisonMode == true) {
+              float v1max = 0, v2max = 0; 
+              for (Integer v : CacheManager.instance().groupOccurrence.values()) v1max += v;
+              for (Integer v : CacheManager.instance().c_groupOccurrence.values()) v2max += v;
+              
               float v1 = CacheManager.instance().groupOccurrence.get(comp.id);
               float v2 = CacheManager.instance().c_groupOccurrence.get(comp.id);                  
+              
+              
+              // Hack
+              v1 /= v1max;
+              v2 /= v2max;
               
               g_shaderDualPeel.setUniform1i(gl2, "useLight", 0);
               if (v1 > v2) {                   

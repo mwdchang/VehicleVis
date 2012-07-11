@@ -168,6 +168,14 @@ public class Heatmap extends ComponentChart {
                gl2.glLineWidth(1.0f);
                
                if (SSM.useComparisonMode == true) {
+                  // Hack
+                  float v1max = 0, v2max = 0; 
+                  for (Integer val : CacheManager.instance().groupOccurrence.values()) v1max += val;
+                  for (Integer val : CacheManager.instance().c_groupOccurrence.values()) v2max += val;                  
+                  v /= v1max;
+                  c_v /= v2max;
+                  
+                  
                   if (v > c_v) {
                      gl2.glColor4fv(SchemeManager.comp_1.toArray(), 0);
                   } else if (v < c_v) {

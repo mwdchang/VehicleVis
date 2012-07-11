@@ -147,6 +147,8 @@ public class DomainFilterTask implements RenderTask {
       c_manufactureScroll.anchorY = SSM.c_manufactureAttrib.anchorY;
       c_manufactureScroll.calculate();
       c_manufactureScroll.renderToTexture(null);
+      SSM.c_manufactureAttrib.selected = "None";
+      SSM.c_manufactureAttrib.hasNoneSelection = true;
       
       c_makeScroll = new DCScrollPane("MAKE");
       c_makeScroll.direction = DCScrollPane.UP;
@@ -203,7 +205,7 @@ public class DomainFilterTask implements RenderTask {
       float my = SSM.windowHeight - py;
       
       // Check if any one of the master scrollpane buttons are pressed
-      if (SSM.useComparisonMode == true) {
+//      if (SSM.useComparisonMode == true) {
          if (DCUtil.between(mx, filterTexture.anchorX, filterTexture.anchorX+filterTexture.width))  {
             if (DCUtil.between(my, filterTexture.anchorY, filterTexture.anchorY+filterTexture.height)) {
                System.err.println("Clicked on master control");   
@@ -249,30 +251,30 @@ public class DomainFilterTask implements RenderTask {
                return;
             }
          }
-      } else {
-         if (DCUtil.between(mx, filterTexture.anchorX, filterTexture.anchorX+filterTexture.width))  {
-            if (DCUtil.between(my, filterTexture.anchorY, filterTexture.anchorY+filterTexture.height)) {
-               System.err.println("Clicked on master control");   
-               this.manufactureScroll.masterVisible = ! this.manufactureScroll.masterVisible;
-               this.makeScroll.masterVisible = ! this.makeScroll.masterVisible;
-               this.modelScroll.masterVisible = ! this.modelScroll.masterVisible;
-               this.yearScroll.masterVisible = ! this.yearScroll.masterVisible;
-                              
-               if (this.manufactureScroll.masterVisible) {
-                  this.filterTexture.clearMark();
-                  this.filterTexture.addMark("Filter 1 <<", Color.BLACK, labelFont, 1, 1);
-                  this.filterTexture.renderToTexture(null);
-               } else {
-                  this.filterTexture.clearMark();
-                  this.filterTexture.addMark("Filter 1 >>", Color.BLACK, labelFont, 1, 1);
-                  this.filterTexture.renderToTexture(null);
-               }
-               
-               SSM.stopPicking = 1;
-               return;
-            }
-         }
-      }
+//      } else {
+//         if (DCUtil.between(mx, filterTexture.anchorX, filterTexture.anchorX+filterTexture.width))  {
+//            if (DCUtil.between(my, filterTexture.anchorY, filterTexture.anchorY+filterTexture.height)) {
+//               System.err.println("Clicked on master control");   
+//               this.manufactureScroll.masterVisible = ! this.manufactureScroll.masterVisible;
+//               this.makeScroll.masterVisible = ! this.makeScroll.masterVisible;
+//               this.modelScroll.masterVisible = ! this.modelScroll.masterVisible;
+//               this.yearScroll.masterVisible = ! this.yearScroll.masterVisible;
+//                              
+//               if (this.manufactureScroll.masterVisible) {
+//                  this.filterTexture.clearMark();
+//                  this.filterTexture.addMark("Filter 1 <<", Color.BLACK, labelFont, 1, 1);
+//                  this.filterTexture.renderToTexture(null);
+//               } else {
+//                  this.filterTexture.clearMark();
+//                  this.filterTexture.addMark("Filter 1 >>", Color.BLACK, labelFont, 1, 1);
+//                  this.filterTexture.renderToTexture(null);
+//               }
+//               
+//               SSM.stopPicking = 1;
+//               return;
+//            }
+//         }
+//      }
       // end check      
       
       ////////////////////////////////////////////////////////////////////////////////
@@ -309,7 +311,13 @@ public class DomainFilterTask implements RenderTask {
             c_makeScroll, SSM.c_makeAttrib,     // level 1
             c_modelScroll, SSM.c_modelAttrib,   // level 2
             c_yearScroll,  SSM.c_yearAttrib     // level 3
-      );if (SSM.stopPicking != 0) return;
+      );
+      if (SSM.c_manufactureAttrib.selected != null && SSM.c_manufactureAttrib.selected.equals("None")) {
+         SSM.useComparisonMode = false;
+      } else {
+         SSM.useComparisonMode = true;
+      }
+      if (SSM.stopPicking != 0) return;
       
       
       // Handling vehicle make
@@ -438,8 +446,14 @@ public class DomainFilterTask implements RenderTask {
    public void resetPane(Hashtable<String, Integer> table, DCScrollPane widget, PaneAttrib attrib) {
       int counter = 0;
       int prev= -1;
+      
+      // Order matters : None = 0, All = 1;
+      if (attrib.hasNoneSelection == true) {
+         widget.tagList.add( new GTag(10.0f, (counter+1)*DCScrollPane.spacing, counter*DCScrollPane.spacing, "None", "None", -1));
+         counter++;
+      }
       if (attrib.hasAllSelection == true) {
-         widget.tagList.add( new GTag(10.0f, (counter+1)*DCScrollPane.spacing, counter*DCScrollPane.spacing, "--- ALL ---", "--- ALL ---", -1));
+         widget.tagList.add( new GTag(10.0f, (counter+1)*DCScrollPane.spacing, counter*DCScrollPane.spacing, "All", "All", -1));
          counter++;
       }
       
@@ -483,27 +497,48 @@ public class DomainFilterTask implements RenderTask {
       if (widget.height > 0) widget.height = attrib.height;
       widget.dirty = true;       
       if (prev < 0) {
-         widget.current = 0;   
-         widget.currentStr = widget.tagList.elementAt(0).val;
-         attrib.selected = null;
-         attrib.yOffset = attrib.height;
+         
+         // If has None option
+         if (attrib.hasNoneSelection == true && attrib.hasAllSelection == true) {
+System.out.println("blah blah blah >> " + attrib.selected);            
+            // All
+            if (attrib.selected == null) {
+               widget.current = 1;   
+               widget.currentStr = widget.tagList.elementAt(1).val;
+               attrib.selected = null;
+               attrib.yOffset = attrib.height;
+            } else {
+               widget.current = 0;   
+               widget.currentStr = widget.tagList.elementAt(0).val;
+               attrib.yOffset = attrib.height;
+            }
+         } else {
+            widget.current = 0;   
+            widget.currentStr = widget.tagList.elementAt(0).val;
+            attrib.selected = null;
+            attrib.yOffset = attrib.height;
+         }
       }
       
       // Final adjustment
       //if (prev>= 0 && defaultSelection == true) {
       if (prev>= 0 ) {
          float tempY = 0;
-         if (attrib.hasAllSelection == true)
-            tempY = widget.tagList.elementAt(prev).y + DCScrollPane.spacing;
-         else
-            tempY = widget.tagList.elementAt(prev).y;
+         float additionalSpacing = 0;
+         if (attrib.hasAllSelection == true) additionalSpacing += DCScrollPane.spacing;
+         tempY = widget.tagList.elementAt(prev).y + additionalSpacing ;
+         
+         //   tempY = widget.tagList.elementAt(prev).y + DCScrollPane.spacing;
+         //else
+         //   tempY = widget.tagList.elementAt(prev).y;
          attrib.yOffset = Math.max( tempY, attrib.height);
       }
       
       // If the list only contains one element ==> IE: "ALL", then that means we did not select an item
       // in the upper hierarchy somewhere. So this means that we might as well hide it. 
       // We will still do the calculations above, just so everything is synchronized
-      if (widget.tagList.size() == 1 ) {
+      //if (widget.tagList.size() == 1 ) {
+      if (list.size() == 0 ) {
          widget.visible = false;   
          widget.height = 0.0f;
          attrib.height = 0.0f;
@@ -563,6 +598,7 @@ public class DomainFilterTask implements RenderTask {
    // if comparisonMode == false then hide the comparison mode
    ////////////////////////////////////////////////////////////////////////////////
    public void checkComparisonMode() {
+      /*
       if (SSM.useComparisonMode == false) {
          SSM.manufactureAttrib.anchorY = 50;
          SSM.makeAttrib.anchorY = 50;
@@ -582,6 +618,7 @@ public class DomainFilterTask implements RenderTask {
          c_modelScroll.anchorY = SSM.c_modelAttrib.anchorY;
          c_yearScroll.anchorY = SSM.c_yearAttrib.anchorY;
       } else {
+      */
          SSM.c_manufactureAttrib.anchorY = 80;
          SSM.c_makeAttrib.anchorY = 80;
          SSM.c_modelAttrib.anchorY = 80;
@@ -600,7 +637,7 @@ public class DomainFilterTask implements RenderTask {
          c_makeScroll.anchorY = SSM.c_makeAttrib.anchorY;
          c_modelScroll.anchorY = SSM.c_modelAttrib.anchorY;
          c_yearScroll.anchorY = SSM.c_yearAttrib.anchorY;
-     }
+     //}
    }    
    
    
@@ -668,10 +705,17 @@ public class DomainFilterTask implements RenderTask {
                   SSM.dirtyGL = 1;
                   SSM.refreshMagicLens = true;
                   
+                  /*
                   if (attrib.hasAllSelection == false) {
                      attrib.selected = t.val; 
                   } else {
                      attrib.selected = i==0? null:t.val; 
+                  }
+                  */
+                  if (t.val.equals("All")) {
+                     attrib.selected = null;
+                  } else {
+                     attrib.selected = t.val;
                   }
                   
 System.out.println(">>>>>>>>>>>>>>>> " + i + " " + t.val);                  
@@ -749,74 +793,46 @@ System.out.println(">>>>>>>>>>>>>>>> " + i + " " + t.val);
          float ay;
          
          gl2.glEnable(GL2.GL_BLEND);
-         if (SSM.useComparisonMode == true) {
-            GraphicUtil.drawRoundedRect(gl2, SSM.filterControlAnchorX+30, manufactureScroll.anchorY - 10, 0, 
-                  60, 10, 8, 6,
-                  DCColour.fromDouble(0.68, 0.68, 0.68, 0.65).toArray(), 
-                  DCColour.fromDouble(0.77, 0.77, 0.77, 0.65).toArray());
-            
-            /*
-            label.anchorX = manufactureScroll.anchorX - SSM.offset_labelX;   
-            label.anchorY = manufactureScroll.anchorY - SSM.offset_labelY;
-            label.render(gl2);
-            */
-            filterTexture.anchorX = SSM.filterControlAnchorX;
-            filterTexture.anchorY = manufactureScroll.anchorY - 15;
-            filterTexture.render(gl2);
-            
-            GraphicUtil.drawRoundedRect(gl2, SSM.c_filterControlAnchorX+30, c_manufactureScroll.anchorY - 10, 0, 
-                  60, 10, 8, 6,
-                  DCColour.fromDouble(0.68, 0.68, 0.68, 0.65).toArray(), 
-                  DCColour.fromDouble(0.77, 0.77, 0.77, 0.65).toArray());
-                  
-            /*
-            c_label.anchorX = c_manufactureScroll.anchorX - SSM.offset_labelX;   
-            c_label.anchorY = c_manufactureScroll.anchorY - SSM.offset_labelY;
-            c_label.render(gl2);
-            */
-            c_filterTexture.anchorX = SSM.c_filterControlAnchorX;
-            c_filterTexture.anchorY = c_manufactureScroll.anchorY - 15;
-            c_filterTexture.render(gl2);
-         } else {
-            GraphicUtil.drawRoundedRect(gl2, SSM.filterControlAnchorX+30, manufactureScroll.anchorY - 10, 0, 
-                  60, 10, 8, 6,
-                  DCColour.fromDouble(0.68, 0.68, 0.68, 0.65).toArray(), 
-                  DCColour.fromDouble(0.77, 0.77, 0.77, 0.65).toArray());
-                  
-            /*
-            label.anchorX = manufactureScroll.anchorX - SSM.offset_labelX;   
-            label.anchorY = manufactureScroll.anchorY - SSM.offset_labelY;
-            label.render(gl2);
-            */
-            filterTexture.anchorX = SSM.filterControlAnchorX;
-            filterTexture.anchorY = manufactureScroll.anchorY - 15;
-            filterTexture.render(gl2);
-         }
+         GraphicUtil.drawRoundedRect(gl2, SSM.filterControlAnchorX+30, manufactureScroll.anchorY - 10, 0, 
+               60, 10, 8, 6,
+               DCColour.fromDouble(0.68, 0.68, 0.68, 0.65).toArray(), 
+               DCColour.fromDouble(0.77, 0.77, 0.77, 0.65).toArray());
+         
+         filterTexture.anchorX = SSM.filterControlAnchorX;
+         filterTexture.anchorY = manufactureScroll.anchorY - 15;
+         filterTexture.render(gl2);
+         
+         GraphicUtil.drawRoundedRect(gl2, SSM.c_filterControlAnchorX+30, c_manufactureScroll.anchorY - 10, 0, 
+               60, 10, 8, 6,
+               DCColour.fromDouble(0.68, 0.68, 0.68, 0.65).toArray(), 
+               DCColour.fromDouble(0.77, 0.77, 0.77, 0.65).toArray());
+               
+         c_filterTexture.anchorX = SSM.c_filterControlAnchorX;
+         c_filterTexture.anchorY = c_manufactureScroll.anchorY - 15;
+         c_filterTexture.render(gl2);
          
          
          // Draw in indicator so the users will known which colour is associated with 
          // which selection
-         if (SSM.useComparisonMode == true) {
-            ax = SSM.filterControlAnchorX-20;
-            ay = manufactureScroll.anchorY-20;
-            gl2.glColor4fv(SchemeManager.comp_1.toArray(), 0);
-            gl2.glBegin(GL2.GL_QUADS);    
-               gl2.glVertex2f(ax, ay+3);
-               gl2.glVertex2f(ax+15, ay+3);
-               gl2.glVertex2f(ax+15, ay+20-3);
-               gl2.glVertex2f(ax, ay+20-3);
-            gl2.glEnd();
-            
-            ax = SSM.c_filterControlAnchorX-20;
-            ay = c_manufactureScroll.anchorY-20;
-            gl2.glColor4fv(SchemeManager.comp_2.toArray(), 0);
-            gl2.glBegin(GL2.GL_QUADS);
-               gl2.glVertex2f(ax, ay+3);
-               gl2.glVertex2f(ax+15, ay+3);
-               gl2.glVertex2f(ax+15, ay+20-3);
-               gl2.glVertex2f(ax, ay+20-3);
-            gl2.glEnd();
-         }
+         ax = SSM.filterControlAnchorX-20;
+         ay = manufactureScroll.anchorY-20;
+         gl2.glColor4fv(SchemeManager.comp_1.toArray(), 0);
+         gl2.glBegin(GL2.GL_QUADS);    
+            gl2.glVertex2f(ax, ay+3);
+            gl2.glVertex2f(ax+15, ay+3);
+            gl2.glVertex2f(ax+15, ay+20-3);
+            gl2.glVertex2f(ax, ay+20-3);
+         gl2.glEnd();
+         
+         ax = SSM.c_filterControlAnchorX-20;
+         ay = c_manufactureScroll.anchorY-20;
+         gl2.glColor4fv(SchemeManager.comp_2.toArray(), 0);
+         gl2.glBegin(GL2.GL_QUADS);
+            gl2.glVertex2f(ax, ay+3);
+            gl2.glVertex2f(ax+15, ay+3);
+            gl2.glVertex2f(ax+15, ay+20-3);
+            gl2.glVertex2f(ax, ay+20-3);
+         gl2.glEnd();
       }      
    }   
    
