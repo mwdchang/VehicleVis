@@ -1,5 +1,10 @@
 package model;
 
+import org.jdesktop.animation.timing.Animator;
+import org.jdesktop.animation.timing.interpolation.PropertySetter;
+
+import TimingFrameExt.FloatEval;
+
 import gui.DCTip;
 import util.TextureFont;
 import datastore.SSM;
@@ -72,9 +77,22 @@ public class LensAttrib {
    public int l_bottom;
    
    public int displayList;
+   public float borderSize = 2;
+   public float borderSizeNormal   = 2;
+   public float borderSizeSelected = 5;
+   
+   public float getBorderSize() { return borderSize; }
+   
+   public void setBorderSize( float v ) { borderSize = v; }
+   
    
    public DCTip tip = new DCTip(); // Show interactive information
    
+   //public Animator selectAnimator = PropertySetter.createAnimator(300, this, "borderSize", new FloatEval(), borderSizeSelected);
+   //public Animator deSelectAnimator = PropertySetter.createAnimator(300, this, "borderSize", new FloatEval(), borderSizeNormal);
+   
+   public Animator selectAnimator   = null;
+   public Animator deSelectAnimator = null;
    
    // Types
    public static int LENS_NORMAL = 0;

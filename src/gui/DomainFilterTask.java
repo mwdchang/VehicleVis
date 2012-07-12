@@ -500,7 +500,7 @@ public class DomainFilterTask implements RenderTask {
          
          // If has None option
          if (attrib.hasNoneSelection == true && attrib.hasAllSelection == true) {
-System.out.println("blah blah blah >> " + attrib.selected);            
+//System.out.println("blah blah blah >> " + attrib.selected);            
             // All
             if (attrib.selected == null) {
                widget.current = 1;   

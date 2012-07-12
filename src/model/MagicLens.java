@@ -192,6 +192,7 @@ public class MagicLens {
          //buffer = new float[]{0.0f, 1.0f, 1.0f, 1.0f};
          //shaderObj.setUniformf(gl2, "inColour", buffer);
          
+         shaderObj.setUniformf(gl2, "borderSize", la.borderSize);
          
          shaderObj.setUniform1i(gl2, "smouseX", la.magicLensX);
          shaderObj.setUniform1i(gl2, "smouseY", SSM.windowHeight - la.magicLensY);

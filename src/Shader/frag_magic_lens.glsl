@@ -22,6 +22,7 @@ uniform int magicLensSelected;
 uniform int useTexture;
 uniform vec4 lensColour;
 uniform float zoomFactor;
+uniform float borderSize;
 
 
 in vec4 pass_colour;
@@ -83,10 +84,12 @@ void main() {
    vec2 c = vec2( gl_FragCoord.s, gl_FragCoord.t);
    float hypo = sqrt((c.x-smouseX)*(c.x-smouseX) + (c.y-smouseY)*(c.y-smouseY));
 
-   if (  hypo > magicLensRadius) {
+   //if (  hypo > magicLensRadius) {
+   if (  hypo > (magicLensRadius + borderSize)) {
       //outColour = vec4(1,0,0,1);
       outColour = vec4(0,0,0,0);
-   } else if ( hypo > magicLensRadius-5 && hypo <= magicLensRadius) {
+   //} else if ( hypo > magicLensRadius-borderSize && hypo <= magicLensRadius) {
+   } else if ( hypo > magicLensRadius && hypo <= (magicLensRadius + borderSize)) {
       outColour.rgba = lensColour;
       /*
       if (magicLensSelected == 1)

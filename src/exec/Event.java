@@ -493,7 +493,11 @@ System.out.println("<Near plane: " + la.nearPlane);
          if (d <= r) {
             SSM.lensList.elementAt(i).magicLensSelected = 1;
             SSM.topElement = SSM.ELEMENT_LENS;
-System.out.println("=============================================> Found Lens");            
+//System.out.println("=============================================> Found Lens");            
+            if ( SSM.lensList.elementAt(i).borderSize < SSM.lensList.elementAt(i).borderSizeSelected ) {
+               SSM.lensList.elementAt(i).selectAnimator = PropertySetter.createAnimator(200, SSM.lensList.elementAt(i), "borderSize", new FloatEval(), SSM.lensList.elementAt(i).borderSizeSelected);
+               SSM.lensList.elementAt(i).selectAnimator.start();
+            }
             return SSM.ELEMENT_LENS;
          }
       }      

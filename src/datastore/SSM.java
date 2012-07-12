@@ -8,6 +8,10 @@ import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Vector;
 
+import org.jdesktop.animation.timing.interpolation.PropertySetter;
+
+import TimingFrameExt.FloatEval;
+
 import touch.WCursor;
 import util.DWin;
 import model.DCTriple;
@@ -58,8 +62,8 @@ public class SSM {
       
       
       // Parse runtime parameters
-      useTUIO         = Boolean.parseBoolean(System.getProperty("UseTUIO", "true"));
-      useFullScreen   = Boolean.parseBoolean(System.getProperty("UseFullScreen", "true"));
+      useTUIO         = Boolean.parseBoolean(System.getProperty("UseTUIO", "false"));
+      useFullScreen   = Boolean.parseBoolean(System.getProperty("UseFullScreen", "false"));
       refreshRate     = Long.parseLong(System.getProperty("RefreshRate", "800"));
       nearThreshold   = Float.parseFloat(System.getProperty("NearThreshold", "0.2f")); 
       downsampleRate  = Integer.parseInt(System.getProperty("DownsampleRate", "3"));
@@ -166,6 +170,8 @@ public class SSM {
    public static void clearLens() {
       for (int i=0; i < lensList.size(); i++) {
          lensList.elementAt(i).magicLensSelected = 0;
+         lensList.elementAt(i).deSelectAnimator = PropertySetter.createAnimator(200, lensList.elementAt(i), "borderSize", new FloatEval(), lensList.elementAt(i).borderSizeNormal);
+         lensList.elementAt(i).deSelectAnimator.start();
       }
    }
    

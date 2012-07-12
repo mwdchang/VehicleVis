@@ -1633,8 +1633,17 @@ public class ModelRenderer extends BaseModelRenderer {
          //System.out.println(".....debugging...." + x + " " + y + " " + r + " " + d);
          if ( d <= r ) {
             la.magicLensSelected = 1;
+            if ( la.borderSize < la.borderSizeSelected ) {
+               la.selectAnimator = PropertySetter.createAnimator(200, la, "borderSize", new FloatEval(), la.borderSizeSelected);
+               la.selectAnimator.start();
+            }            
+            
          } else {
             la.magicLensSelected = 0;
+            if (la.borderSize > la.borderSizeNormal) {
+               la.deSelectAnimator = PropertySetter.createAnimator(200, la, "borderSize", new FloatEval(), la.borderSizeNormal);
+               la.deSelectAnimator.start();
+            }
          }
          if (obj != null) {
             la.magicLensSelected = 1;
