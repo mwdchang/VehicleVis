@@ -400,7 +400,7 @@ public class TUIOListener implements TuioListener {
       float height = SSM.windowHeight;
       // 1) Remove touch point jitters
       //if ( t.getTuioTime().getTotalMilliseconds() - w.timestamp < 300)  {
-      if (dist(wcursor.x, wcursor.y, o.getX(), o.getY(), width, height) < 2) {
+      if (dist(wcursor.x, wcursor.y, o.getX(), o.getY(), width, height) < 1.5) {
          System.err.println("H1 " + eventTable.size());
          return;   
       }
@@ -409,7 +409,7 @@ public class TUIOListener implements TuioListener {
       
       // 4) Reinforce intention to actually move
       if (wcursor.numUpdate < 1 && wcursor.element != SSM.ELEMENT_LENS) {
-         if ( o.getTuioTime().getTotalMilliseconds() - wcursor.timestamp < 600)  {
+         if ( o.getTuioTime().getTotalMilliseconds() - wcursor.timestamp < 500)  {
             if (dist(wcursor.x, wcursor.y, o.getX(), o.getY(), width, height) < 20) {
                System.err.println("H4 " + eventTable.size());
                return;   
@@ -418,7 +418,7 @@ public class TUIOListener implements TuioListener {
       } 
       // 4.1) Lens Update: Reinforce intention to actually move for lens
       if (wcursor.numUpdate < 1 && wcursor.element == SSM.ELEMENT_LENS) {
-         if ( o.getTuioTime().getTotalMilliseconds() - wcursor.timestamp < 400)  {
+         if ( o.getTuioTime().getTotalMilliseconds() - wcursor.timestamp < 300)  {
             System.err.println("H4.1 " + eventTable.size());
             return;
          }
@@ -610,6 +610,7 @@ System.out.println("Pinch detected");
          Event.setCameraTUIO(x1, y1, x2, y2);
          //Event.setCamera(x1, y1, x2, y2);
       } else if (wcursor.element == SSM.ELEMENT_LENS){
+System.out.println("TUIO Move Lens : " + System.currentTimeMillis());         
          Event.moveLensTUIO(x1, y1, x2, y2);
       } else if (wcursor.element == SSM.ELEMENT_DOCUMENT) {
          Event.dragDocumentPanel(x1, y1, x2, y2);
@@ -645,9 +646,9 @@ System.out.println("Pinch detected");
             try {
                synchronized(eventTable) {
                   for (WCursor w : eventTable.values()) {
-System.out.println("checking " + Math.abs(w.timestamp - w.cursor.getTuioTime().getTotalMilliseconds()));                        
+//System.out.println("checking " + Math.abs(w.timestamp - w.cursor.getTuioTime().getTotalMilliseconds()));                        
                      if ( Math.abs(w.timestamp - w.cursor.getTuioTime().getTotalMilliseconds()) > 400 && w.state == WCursor.STATE_NOTHING) {
-System.out.println("Changing to state hold " + Math.abs(w.timestamp - w.cursor.getTuioTime().getTotalMilliseconds()));                        
+//System.out.println("Changing to state hold " + Math.abs(w.timestamp - w.cursor.getTuioTime().getTotalMilliseconds()));                        
                         w.state = WCursor.STATE_HOLD;   
                         SSM.hoverPoints.put(w.sessionID, new DCTriple(w.x*SSM.windowWidth, w.y*SSM.windowHeight, 0));
                      } else if (w.state == WCursor.STATE_HOLD){

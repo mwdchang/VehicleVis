@@ -270,9 +270,9 @@ public class FilterTask implements RenderTask {
    
    
    public void pickingSlider2(GL2 gl2, float px, float py) {
-System.out.println("FilterTask:Picking Start");      
+//System.out.println("FilterTask:Picking Start");      
       if (SSM.stopPicking == 1) return;
-System.out.println("FilterTask:Picking Start 2");      
+//System.out.println("FilterTask:Picking Start 2");      
       
       int x = (int)px;
       int y = SSM.windowHeight - (int)py;

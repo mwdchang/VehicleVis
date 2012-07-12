@@ -81,8 +81,10 @@ public class Event {
    ////////////////////////////////////////////////////////////////////////////////
    public static void moveLensTUIO(int posX, int posY, int oldPosX, int oldPosY) {
       for (int i=0; i < SSM.lensList.size(); i++) {
-         float x = (float)posX - (float)SSM.lensList.elementAt(i).magicLensX;
-         float y = (float)posY - (float)SSM.lensList.elementAt(i).magicLensY;
+         //float x = (float)posX - (float)SSM.lensList.elementAt(i).magicLensX;
+         //float y = (float)posY - (float)SSM.lensList.elementAt(i).magicLensY;
+         float x = (float)oldPosX - (float)SSM.lensList.elementAt(i).magicLensX;
+         float y = (float)oldPosY - (float)SSM.lensList.elementAt(i).magicLensY;
          float r = (float)SSM.lensList.elementAt(i).magicLensRadius;
          float d = (float)Math.sqrt(x*x + y*y);            
          if (d < r) {

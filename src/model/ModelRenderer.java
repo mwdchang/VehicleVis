@@ -499,6 +499,7 @@ public class ModelRenderer extends BaseModelRenderer {
          gl2.glDisable(GL2.GL_LIGHTING);
          gl2.glDisable(GL2.GL_TEXTURE_2D);
          gl2.glEnable(GL2.GL_BLEND);
+         gl2.glBlendFunc(GL2.GL_SRC_ALPHA, GL2.GL_ONE_MINUS_SRC_ALPHA);
          setOrthonormalView(gl2, 0, SSM.windowWidth, 0, SSM.windowHeight); {
             synchronized(SSM.touchPoint) {
                gl2.glColor4d(0, 0.35, 0.45, 0.12);
