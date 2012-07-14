@@ -41,19 +41,9 @@ public class DWin extends JFrame {
    public static final int ERR = 0x00000002;
    public static final int MSG = 0x00000004;
    
-   
    public static int typeFilter = DBG|ERR|MSG;
    
    
-   /*
-   public static void main(String args[]) {
-      for (int i=0; i < 500; i++) {
-      DWin.instance().debug("abc-delicious");
-      DWin.instance().msg("abc-delicious");
-      DWin.instance().error("abc-delicious");
-      }
-   }
-   */
    
    // Setup the window....once
    protected DWin() {
@@ -153,13 +143,13 @@ public class DWin extends JFrame {
    }
       
    public void debug(String s) {
-      doPrint(DBG, s, null);                                    
+      //doPrint(DBG, s, null);                                    
    }
    public void error(String s) {
-     doPrint(ERR, s, null); 
+     //doPrint(ERR, s, null); 
    }
    public void msg(String s) {
-      doPrint(MSG, s, null);
+      //doPrint(MSG, s, null);
    }
    
    

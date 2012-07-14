@@ -244,6 +244,8 @@ public class GLRenderer implements GLEventListener {
       domain_task.init(gl2);
       question_task.init(gl2);
       
+      // Hack test
+      question_task.q.firstElement().set();
       
       // Attemp to free some memory after all initializations
       System.gc();

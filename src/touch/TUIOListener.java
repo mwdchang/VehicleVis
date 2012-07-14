@@ -303,6 +303,7 @@ public class TUIOListener implements TuioListener {
       
       
       // Check to see if we are de-activating document
+      /*
       if (w.swipeCount == 0 && w.state != WCursor.STATE_MOVE && w.element == SSM.ELEMENT_DOCUMENT) {
          Vector<WCursor> doc = this.findSimilarCursorPixel(w, 0, 50);
          if (doc.size() == 1) {
@@ -313,6 +314,7 @@ public class TUIOListener implements TuioListener {
             return;
          }
       }
+      */
       
       
       
@@ -476,24 +478,6 @@ public class TUIOListener implements TuioListener {
       
       
       
-      // There are 2 other points
-      /*
-      if (findSimilarCursor(wcursor).size() == 2) {
-         Vector<WCursor> simCursor = findSimilarCursor(wcursor);
-         TuioPoint point     = wcursor.points.lastElement();
-         TuioPoint oldPoint  = wcursor.points.elementAt( wcursor.points.size()-2);         
-         
-         // They are all LENs
-         System.out.println("Detected 3 on same element");
-         if (wcursor.element == SSM.ELEMENT_LENS) {
-            System.out.println("Changing lens depth");
-            float direction = -(point.getY() - oldPoint.getY());
-            Event.scrollLens( (int)(point.getX()*SSM.windowWidth), (int)(point.getY()*SSM.windowHeight), direction > 0 ? 1 : -1);
-            return;
-         }
-      }
-      */
-      
       // There is another touch/gesture over the
       // same element
       //if (findSimilarCursor(wcursor) != null) {
@@ -518,7 +502,7 @@ System.out.println("Checking 2 finger gestures...");
          //if (newDistance <= 150 && wcursor.element == SSM.ELEMENT_DOCUMENT) {               // 1) Sufficiently close
          if ( newDistance <= 150 ) {
 System.out.println("Checking 50");
-            if (wcursor.state == WCursor.STATE_MOVE && sim.state == WCursor.STATE_MOVE) {  // 2) Same state 
+            //if (wcursor.state == WCursor.STATE_MOVE && sim.state == WCursor.STATE_MOVE) {  // 2) Same state 
 System.out.println("Checking 2 finger drag : " + vDir1 + " " + vDir2);
                if ( vDir1 * vDir2 > 0 ) {                                                  // 3) Same direction of movement ( ++ | -- )
 System.out.println("2 Finger Drag");   
@@ -530,7 +514,7 @@ System.out.println("2 Finger Drag");
                   }
                   return;
                }
-            }
+            //}
          }         
          
          
@@ -543,14 +527,17 @@ System.out.println("Spread detected");
             }
          } else if (oldDistance > newDistance) {
 System.out.println("Pinch detected");
+
             if (wcursor.element == SSM.ELEMENT_LENS) {
                Event.resizeLens( x1, y1, (int)(-2));
             } else if (wcursor.element == SSM.ELEMENT_NONE) {
                DCCamera.instance().move(-1.5f);
+            } else if (wcursor.element == SSM.ELEMENT_DOCUMENT ) {
+               SSM.docActive = false;
+               SSM.resizePanel = 1;
+               eventTable.remove(o.getSessionID());
             }
          }
-         
-
          
          return;
       }

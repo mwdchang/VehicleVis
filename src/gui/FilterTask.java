@@ -516,6 +516,10 @@ public class FilterTask implements RenderTask {
    // Restore/Reset year and month slider state using the SSM data
    ////////////////////////////////////////////////////////////////////////////////
    public void loadFromSSM() {
+System.out.println("Restore from SSM");      
+System.out.println("M " + SSM.startMonth );
+System.out.println("M " + SSM.endMonth );
+
    	for (int i=0; i < yearData.length; i++) {
    	   if (SSM.startYear == Integer.parseInt(yearData[i].key)) yearSlider.lowIdx = i; 	
    	   if (SSM.endYear == Integer.parseInt(yearData[i].key)) yearSlider.highIdx = i; 	

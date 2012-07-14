@@ -1094,6 +1094,9 @@ public class ModelRenderer extends BaseModelRenderer {
          // if the object has no context then continue
          if (comp.hasContext == false) continue;
          
+         // if the object is inactive click through
+         if (comp.active == false) continue;
+         
          gl2.glLoadName(partId);
          gl2.glPushMatrix();
             // Make sure the transform is also in picking mode 

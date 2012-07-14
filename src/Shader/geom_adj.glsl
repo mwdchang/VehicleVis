@@ -60,8 +60,8 @@ void main(void) {
 
 
    // Ignore back faces
-   //vec3 midpoint = (v0+v2+v4)/3.0;
-   //if (dot(normal_042, normalize( midpoint - eyePosition)) > 0) return;
+   vec3 midpoint = (v0+v2+v4)/3.0;
+   if (dot(normal_042, normalize( midpoint - eyePosition)) > 0) return;
 
 
    

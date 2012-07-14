@@ -205,77 +205,51 @@ public class DomainFilterTask implements RenderTask {
       float my = SSM.windowHeight - py;
       
       // Check if any one of the master scrollpane buttons are pressed
-//      if (SSM.useComparisonMode == true) {
-         if (DCUtil.between(mx, filterTexture.anchorX, filterTexture.anchorX+filterTexture.width))  {
-            if (DCUtil.between(my, filterTexture.anchorY, filterTexture.anchorY+filterTexture.height)) {
-               System.err.println("Clicked on master control");   
-               this.manufactureScroll.masterVisible = ! this.manufactureScroll.masterVisible;
-               this.makeScroll.masterVisible = ! this.makeScroll.masterVisible;
-               this.modelScroll.masterVisible = ! this.modelScroll.masterVisible;
-               this.yearScroll.masterVisible = ! this.yearScroll.masterVisible;
-               
-               if (this.manufactureScroll.masterVisible) {
-                  this.filterTexture.clearMark();
-                  this.filterTexture.addMark("Filter 1 <<", Color.BLACK, labelFont, 1, 1);
-                  this.filterTexture.renderToTexture(null);
-               } else {
-                  this.filterTexture.clearMark();
-                  this.filterTexture.addMark("Filter 1 >>", Color.BLACK, labelFont, 1, 1);
-                  this.filterTexture.renderToTexture(null);
-               }
-               
-               SSM.stopPicking = 1;
-               return;
+      if (DCUtil.between(mx, filterTexture.anchorX, filterTexture.anchorX+filterTexture.width))  {
+         if (DCUtil.between(my, filterTexture.anchorY, filterTexture.anchorY+filterTexture.height)) {
+            System.err.println("Clicked on master control");   
+            this.manufactureScroll.masterVisible = ! this.manufactureScroll.masterVisible;
+            this.makeScroll.masterVisible = ! this.makeScroll.masterVisible;
+            this.modelScroll.masterVisible = ! this.modelScroll.masterVisible;
+            this.yearScroll.masterVisible = ! this.yearScroll.masterVisible;
+            
+            if (this.manufactureScroll.masterVisible) {
+               this.filterTexture.clearMark();
+               this.filterTexture.addMark("Filter 1 <<", Color.BLACK, labelFont, 1, 1);
+               this.filterTexture.renderToTexture(null);
+            } else {
+               this.filterTexture.clearMark();
+               this.filterTexture.addMark("Filter 1 >>", Color.BLACK, labelFont, 1, 1);
+               this.filterTexture.renderToTexture(null);
             }
+            
+            SSM.stopPicking = 1;
+            return;
          }
-         
-         if (DCUtil.between(mx, c_filterTexture.anchorX, c_filterTexture.anchorX+c_filterTexture.width))  {
-            if (DCUtil.between(my, c_filterTexture.anchorY, c_filterTexture.anchorY+c_filterTexture.height)) {
-               System.err.println("Clicked on c master control");   
-               this.c_manufactureScroll.masterVisible = ! this.c_manufactureScroll.masterVisible;
-               this.c_makeScroll.masterVisible = ! this.c_makeScroll.masterVisible;
-               this.c_modelScroll.masterVisible = ! this.c_modelScroll.masterVisible;
-               this.c_yearScroll.masterVisible = ! this.c_yearScroll.masterVisible;
-               
-               if (this.c_manufactureScroll.masterVisible) {
-                  this.c_filterTexture.clearMark();
-                  this.c_filterTexture.addMark("Filter 2 <<", Color.BLACK, labelFont, 1, 1);
-                  this.c_filterTexture.renderToTexture(null);
-               } else {
-                  this.c_filterTexture.clearMark();
-                  this.c_filterTexture.addMark("Filter 2 >>", Color.BLACK, labelFont, 1, 1);
-                  this.c_filterTexture.renderToTexture(null);
-               }
-               
-               SSM.stopPicking = 1;
-               return;
+      }
+      
+      if (DCUtil.between(mx, c_filterTexture.anchorX, c_filterTexture.anchorX+c_filterTexture.width))  {
+         if (DCUtil.between(my, c_filterTexture.anchorY, c_filterTexture.anchorY+c_filterTexture.height)) {
+            System.err.println("Clicked on c master control");   
+            this.c_manufactureScroll.masterVisible = ! this.c_manufactureScroll.masterVisible;
+            this.c_makeScroll.masterVisible = ! this.c_makeScroll.masterVisible;
+            this.c_modelScroll.masterVisible = ! this.c_modelScroll.masterVisible;
+            this.c_yearScroll.masterVisible = ! this.c_yearScroll.masterVisible;
+            
+            if (this.c_manufactureScroll.masterVisible) {
+               this.c_filterTexture.clearMark();
+               this.c_filterTexture.addMark("Filter 2 <<", Color.BLACK, labelFont, 1, 1);
+               this.c_filterTexture.renderToTexture(null);
+            } else {
+               this.c_filterTexture.clearMark();
+               this.c_filterTexture.addMark("Filter 2 >>", Color.BLACK, labelFont, 1, 1);
+               this.c_filterTexture.renderToTexture(null);
             }
+            
+            SSM.stopPicking = 1;
+            return;
          }
-//      } else {
-//         if (DCUtil.between(mx, filterTexture.anchorX, filterTexture.anchorX+filterTexture.width))  {
-//            if (DCUtil.between(my, filterTexture.anchorY, filterTexture.anchorY+filterTexture.height)) {
-//               System.err.println("Clicked on master control");   
-//               this.manufactureScroll.masterVisible = ! this.manufactureScroll.masterVisible;
-//               this.makeScroll.masterVisible = ! this.makeScroll.masterVisible;
-//               this.modelScroll.masterVisible = ! this.modelScroll.masterVisible;
-//               this.yearScroll.masterVisible = ! this.yearScroll.masterVisible;
-//                              
-//               if (this.manufactureScroll.masterVisible) {
-//                  this.filterTexture.clearMark();
-//                  this.filterTexture.addMark("Filter 1 <<", Color.BLACK, labelFont, 1, 1);
-//                  this.filterTexture.renderToTexture(null);
-//               } else {
-//                  this.filterTexture.clearMark();
-//                  this.filterTexture.addMark("Filter 1 >>", Color.BLACK, labelFont, 1, 1);
-//                  this.filterTexture.renderToTexture(null);
-//               }
-//               
-//               SSM.stopPicking = 1;
-//               return;
-//            }
-//         }
-//      }
-      // end check      
+      }
       
       ////////////////////////////////////////////////////////////////////////////////
       // Check the UI elements first

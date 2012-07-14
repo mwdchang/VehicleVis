@@ -418,7 +418,8 @@ public class EventManager implements KeyListener, MouseListener, MouseMotionList
          }
          */
          
-         Event.setCamera(SSM.mouseX, SSM.mouseY, SSM.oldMouseX, SSM.oldMouseY);
+         //Event.setCamera(SSM.mouseX, SSM.mouseY, SSM.oldMouseX, SSM.oldMouseY);
+         Event.setCameraTUIO(SSM.mouseX, SSM.mouseY, SSM.oldMouseX, SSM.oldMouseY);
          SSM.refreshMagicLens = true;
       }
       

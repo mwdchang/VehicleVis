@@ -62,7 +62,7 @@ public class SSM {
       
       
       // Parse runtime parameters
-      useTUIO         = Boolean.parseBoolean(System.getProperty("UseTUIO", "true"));
+      useTUIO         = Boolean.parseBoolean(System.getProperty("UseTUIO", "false"));
       useFullScreen   = Boolean.parseBoolean(System.getProperty("UseFullScreen", "true"));
       refreshRate     = Long.parseLong(System.getProperty("RefreshRate", "800"));
       nearThreshold   = Float.parseFloat(System.getProperty("NearThreshold", "0.2f")); 
@@ -197,7 +197,7 @@ public class SSM {
    ///////////////////////////////////////////////////////////////////////////////// 
    // Level of Detail 
    ///////////////////////////////////////////////////////////////////////////////// 
-   public static int g_numPasses = 4;
+   public static int g_numPasses = 5;
    public static int g_numGeoPasses = 0;
    
    public static short stipplePattern = (short)0xF0FA;

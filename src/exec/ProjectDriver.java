@@ -65,8 +65,7 @@ public class ProjectDriver {
       //System.out.println(GLProfile.glAvailabilityToString());
       //GLProfile profile = GLProfile.get(GLProfile.GL3bc);
       GLProfile profile = GLProfile.getMaxProgrammable();
-      //DWin.instance().debug(GLProfile.glAvailabilityToString());
-      
+     
       GLCapabilities capabilities = new GLCapabilities(profile);
       capabilities.setHardwareAccelerated(true);
       
