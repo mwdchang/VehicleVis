@@ -143,13 +143,13 @@ public class DWin extends JFrame {
    }
       
    public void debug(String s) {
-      //doPrint(DBG, s, null);                                    
+      doPrint(DBG, s, null);                                    
    }
    public void error(String s) {
-     //doPrint(ERR, s, null); 
+     doPrint(ERR, s, null); 
    }
    public void msg(String s) {
-      //doPrint(MSG, s, null);
+      doPrint(MSG, s, null);
    }
    
    

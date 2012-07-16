@@ -103,6 +103,8 @@ public class DCUtil {
    // Check if a point P is in triangle abc using barycentric coordinates
    ////////////////////////////////////////////////////////////////////////////////
    public static boolean pointInTriangle(DCTriple point, DCTriple a, DCTriple b, DCTriple c) {
+      if (a == null || b == null || c == null) return false;
+      
       double areaABC = areaTriangle(a, b, c);   
       double area1   = areaTriangle(point, a, b)/areaABC;
       double area2   = areaTriangle(point, b, c)/areaABC;

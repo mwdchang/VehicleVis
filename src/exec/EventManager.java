@@ -126,6 +126,7 @@ public class EventManager implements KeyListener, MouseListener, MouseMotionList
       } else if (e.getButton() == MouseEvent.BUTTON3) {
          SSM.r_mousePressed = false;
          SSM.clearLens();
+         SSM.dragPoints.clear();
       }
       SSM.topElement = SSM.ELEMENT_NONE;
       

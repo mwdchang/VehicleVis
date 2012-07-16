@@ -70,9 +70,14 @@ public class QuestionTask implements RenderTask {
    }
 
    
+   ////////////////////////////////////////////////////////////////////////////////
+   // Just checking that the button is pressed ... somehow
+   ////////////////////////////////////////////////////////////////////////////////
    @Override
    public void picking(GL2 gl2, float px, float py) {
+      if (SSM.useScenario == false) return;
       if (SSM.l_mouseClicked == false) return;
+      
       float realX = px;
       float realY = SSM.windowHeight - py;
       
@@ -88,11 +93,18 @@ public class QuestionTask implements RenderTask {
                q_tf.renderToTexture(null);
                q.elementAt(qIdx).set();
                SSM.stopPicking = 1;
+               
+               // Hack to clean up memory
+               System.gc();
+               
             }
          }
       }
    }
    
+   ////////////////////////////////////////////////////////////////////////////////
+   // Generic logging procedure
+   ////////////////////////////////////////////////////////////////////////////////
    public void log(String taskStr) {
       ALogger.instance().log("Task: " + taskStr);
       ALogger.instance().log("Range: " + SSM.startYear + " " + SSM.endYear + " " + SSM.startMonth + " " + SSM.endMonth);

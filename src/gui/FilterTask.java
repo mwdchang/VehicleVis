@@ -268,11 +268,58 @@ public class FilterTask implements RenderTask {
    }
    
    
+   // Just to check if the indicators is being dragged
+   public void pickingDrag(GL2 gl2, float px, float py) {
+      int x = (int)px;
+      int y = SSM.windowHeight - (int)py;
+      DCTriple point = new DCTriple(x, y, 0);
+      boolean selected = false;
+      
+      // Check the interactive markers
+      if (DCUtil.pointInTriangle(point, SSM.yearHigh[0], SSM.yearHigh[1], SSM.yearHigh[2])) {
+         deferredRefresh = true;
+         yearSlider.isSelected = true;
+         yearSlider.sitem = 2;
+         yearSlider.anchor = px;
+         selected = true;
+      }
+      if (DCUtil.pointInTriangle(point, SSM.yearLow[0], SSM.yearLow[1], SSM.yearLow[2])) {
+         deferredRefresh = true;
+         yearSlider.isSelected = true;
+         yearSlider.sitem = 1;
+         yearSlider.anchor = px;
+         selected = true;
+      }
+      if (DCUtil.pointInTriangle(point, SSM.monthHigh[0], SSM.monthHigh[1], SSM.monthHigh[2])) {
+         deferredRefresh = true;
+         monthSlider.isSelected = true; 
+         monthSlider.sitem = 2;
+         monthSlider.anchor = px; 
+         selected = true;
+      }
+      if (DCUtil.pointInTriangle(point, SSM.monthLow[0], SSM.monthLow[1], SSM.monthLow[2])) {
+         deferredRefresh = true;
+         monthSlider.isSelected = true; 
+         monthSlider.sitem = 1;
+         monthSlider.anchor = px; 
+         selected = true;
+      }
+      
+      // If something is selected, than flag the necessary updates
+      if (selected == true) {
+         SSM.topElement = SSM.ELEMENT_FILTER;
+         SSM.globalFetchIdx = 0;
+         SSM.docStartIdx = 0;
+         yearSlider.createTexture();
+         monthSlider.createTexture();
+      }
+    
+   }
    
+   
+   // Picking ... for "clicking" action
    public void pickingSlider2(GL2 gl2, float px, float py) {
-//System.out.println("FilterTask:Picking Start");      
       if (SSM.stopPicking == 1) return;
-//System.out.println("FilterTask:Picking Start 2");      
       
       int x = (int)px;
       int y = SSM.windowHeight - (int)py;
@@ -318,7 +365,7 @@ public class FilterTask implements RenderTask {
       float yf_width   = (CacheManager.instance().timeLineSize/12)*SSM.instance().rangeFilterWidth;
       if (DCUtil.between(x, yf_anchorX, yf_anchorX + (CacheManager.instance().timeLineSize/(float)12)*SSM.instance().rangeFilterWidth)) {
          if (DCUtil.between(y, yf_anchorY-15, yf_anchorY+SSM.instance().rangeFilterHeight)) {
-            
+System.out.println("Selected something on the year bar");            
             float rawIdx = (float)(CacheManager.instance().timeLineSize/12)*( ((float)x - yf_anchorX)/ yf_width);
             int idx = (int)Math.floor(rawIdx);
             SSM.stopPicking = 1;
@@ -543,7 +590,7 @@ System.out.println("M " + SSM.endMonth );
    // When user stops dragging the markers
    ////////////////////////////////////////////////////////////////////////////////
    public void unfocus() {
-      System.err.println("In Unfocus");
+System.out.println("In Unfocus");
       yearSlider.isSelected = false;
       yearSlider.highIdx = (int)yearSlider.highIdx;
       yearSlider.lowIdx = (int)yearSlider.lowIdx;

@@ -62,15 +62,7 @@ public class GLRenderer implements GLEventListener {
    public void display(GLAutoDrawable glDrawable) {
       GL2 gl2 = glDrawable.getGL().getGL2();   
       
-      // Update logic goes in here
-      // Note there is a precedence order here, 
-      // model_renderer.resetData() should always go first because
-      // it resets the cache
-      if (SSM.dirty == 1) {
-         model_task.resetData();
-         domain_task.resetData();
-         SSM.dirty = 0;
-      }
+ 
       
       //if (SSM.instance().currentFocusLayer == SSM.UI_LAYER) {
       /*
@@ -108,6 +100,16 @@ public class GLRenderer implements GLEventListener {
       }      
       
       
+      // Update logic goes in here
+      // Note there is a precedence order here, 
+      // model_renderer.resetData() should always go first because
+      // it resets the cache
+      if (SSM.dirty == 1) {
+         model_task.resetData();
+         domain_task.resetData();
+         SSM.dirty = 0;
+      }      
+      
       // Clear the scene
       gl2.glClear(GL2.GL_COLOR_BUFFER_BIT);
       gl2.glClear(GL2.GL_DEPTH_BUFFER_BIT);
@@ -138,6 +140,7 @@ public class GLRenderer implements GLEventListener {
          //   renderTaskList.elementAt(i).picking(gl2);
          //}
          for (int i=0; i < SSM.pickPoints.size(); i++) {
+System.out.println("picking point picking");            
             DCTriple point = SSM.pickPoints.elementAt(i);
             filter_task.picking(gl2, point.x, point.y);
             legend_task.picking(gl2, point.x, point.y);
@@ -146,17 +149,20 @@ public class GLRenderer implements GLEventListener {
             model_task.picking(gl2, point.x, point.y);
          }
          SSM.l_mouseClicked = false;
-         SSM.stopPicking = 0;
+         //SSM.stopPicking = 0;
          SSM.pickPoints.clear();
       }
       synchronized(SSM.dragPoints){
          if (SSM.dragPoints.size() > 0) {
             for (DCTriple p : SSM.dragPoints.values())  {  
-               filter_task.picking(gl2, p.x, p.y);
+System.out.println("dragging point picking");            
+               filter_task.pickingDrag(gl2, p.x, p.y);
             }
-            SSM.stopPicking = 0;
+            //SSM.stopPicking = 0;
          }
       }
+      SSM.stopPicking = 0;
+      
       /*
       if (SSM.instance().l_mousePressed) {
          //TODO: Fix this later
@@ -245,7 +251,9 @@ public class GLRenderer implements GLEventListener {
       question_task.init(gl2);
       
       // Hack test
-      question_task.q.firstElement().set();
+      if (SSM.useScenario) {
+         question_task.q.firstElement().set();
+      }
       
       // Attemp to free some memory after all initializations
       System.gc();

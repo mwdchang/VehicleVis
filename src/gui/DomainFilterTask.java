@@ -60,8 +60,8 @@ public class DomainFilterTask implements RenderTask {
    @Override
    public void render(GL2 gl2) {
       checkComparisonMode();
-      renderScrollFilter(gl2);
       renderSwitch(gl2);
+      renderScrollFilter(gl2);
    }
 
    @Override
@@ -573,45 +573,25 @@ public class DomainFilterTask implements RenderTask {
    ////////////////////////////////////////////////////////////////////////////////
    public void checkComparisonMode() {
       /*
-      if (SSM.useComparisonMode == false) {
-         SSM.manufactureAttrib.anchorY = 50;
-         SSM.makeAttrib.anchorY = 50;
-         SSM.modelAttrib.anchorY = 50;
-         SSM.yearAttrib.anchorY = 50;
-         SSM.c_manufactureAttrib.anchorY = -150;
-         SSM.c_makeAttrib.anchorY = -150;
-         SSM.c_modelAttrib.anchorY = -150;
-         SSM.c_yearAttrib.anchorY = -150;
-         
-         manufactureScroll.anchorY = SSM.manufactureAttrib.anchorY;
-         makeScroll.anchorY = SSM.makeAttrib.anchorY;
-         modelScroll.anchorY = SSM.modelAttrib.anchorY;
-         yearScroll.anchorY = SSM.yearAttrib.anchorY;
-         c_manufactureScroll.anchorY = SSM.c_manufactureAttrib.anchorY;
-         c_makeScroll.anchorY = SSM.c_makeAttrib.anchorY;
-         c_modelScroll.anchorY = SSM.c_modelAttrib.anchorY;
-         c_yearScroll.anchorY = SSM.c_yearAttrib.anchorY;
-      } else {
+      SSM.c_manufactureAttrib.anchorY = 80;
+      SSM.c_makeAttrib.anchorY = 80;
+      SSM.c_modelAttrib.anchorY = 80;
+      SSM.c_yearAttrib.anchorY = 80;
+      
+      SSM.manufactureAttrib.anchorY = 50;
+      SSM.makeAttrib.anchorY = 50;
+      SSM.modelAttrib.anchorY = 50;
+      SSM.yearAttrib.anchorY = 50;
       */
-         SSM.c_manufactureAttrib.anchorY = 80;
-         SSM.c_makeAttrib.anchorY = 80;
-         SSM.c_modelAttrib.anchorY = 80;
-         SSM.c_yearAttrib.anchorY = 80;
-         
-         SSM.manufactureAttrib.anchorY = 50;
-         SSM.makeAttrib.anchorY = 50;
-         SSM.modelAttrib.anchorY = 50;
-         SSM.yearAttrib.anchorY = 50;
-         
-         manufactureScroll.anchorY = SSM.manufactureAttrib.anchorY;
-         makeScroll.anchorY = SSM.makeAttrib.anchorY;
-         modelScroll.anchorY = SSM.modelAttrib.anchorY;
-         yearScroll.anchorY = SSM.yearAttrib.anchorY;
-         c_manufactureScroll.anchorY = SSM.c_manufactureAttrib.anchorY;
-         c_makeScroll.anchorY = SSM.c_makeAttrib.anchorY;
-         c_modelScroll.anchorY = SSM.c_modelAttrib.anchorY;
-         c_yearScroll.anchorY = SSM.c_yearAttrib.anchorY;
-     //}
+      
+      manufactureScroll.anchorY = SSM.manufactureAttrib.anchorY;
+      makeScroll.anchorY  = SSM.makeAttrib.anchorY;
+      modelScroll.anchorY = SSM.modelAttrib.anchorY;
+      yearScroll.anchorY  = SSM.yearAttrib.anchorY;
+      c_manufactureScroll.anchorY = SSM.c_manufactureAttrib.anchorY;
+      c_makeScroll.anchorY  = SSM.c_makeAttrib.anchorY;
+      c_modelScroll.anchorY = SSM.c_modelAttrib.anchorY;
+      c_yearScroll.anchorY  = SSM.c_yearAttrib.anchorY;
    }    
    
    
@@ -714,9 +694,19 @@ System.out.println(">>>>>>>>>>>>>>>> " + i + " " + t.val);
    public void renderSwitch(GL2 gl2) {
       aggSwitch.anchorX = SSM.aggregationAnchorX;
       aggSwitch.anchorY = SSM.aggregationAnchorY;
-      
       aggSwitch.render(gl2);
+      
+      
+      perspectiveScroll.masterVisible = true;
+      perspectiveScroll.visible = true;
+      perspectiveScroll.yoffset = SSM.perspectiveAttrib.yOffset;
+      perspectiveScroll.render(gl2);
+      
+      perspectiveLabel.anchorX = SSM.perspectiveAttrib.anchorX - perspectiveLabel.width;
+      perspectiveLabel.anchorY = SSM.perspectiveAttrib.anchorY - 20;
+      perspectiveLabel.render(gl2);      
    }
+   
    
    
    public void renderScrollFilter(GL2 gl2) {
@@ -749,14 +739,7 @@ System.out.println(">>>>>>>>>>>>>>>> " + i + " " + t.val);
          c_yearScroll.render(gl2);
          
          
-         perspectiveScroll.masterVisible = true;
-         perspectiveScroll.visible = true;
-         perspectiveScroll.yoffset = SSM.perspectiveAttrib.yOffset;
-         perspectiveScroll.render(gl2);
-         
-         perspectiveLabel.anchorX = SSM.perspectiveAttrib.anchorX - perspectiveLabel.width;
-         perspectiveLabel.anchorY = SSM.perspectiveAttrib.anchorY - 20;
-         perspectiveLabel.render(gl2);
+
          
          
          

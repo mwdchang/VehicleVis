@@ -37,6 +37,10 @@ public class InitDB {
       boolean useReplacement = true;
       Vector<String> whiteList = new Vector<String>();
       whiteList.add("GENERAL MOTORS CORP.");
+      whiteList.add("FORD MOTOR COMPANY");
+      whiteList.add("DAIMLERCHRYSLER CORPORATION");
+      whiteList.add("TOYOTA MOTOR CORPORATION");
+      
       /*
       whiteList.add("FORD MOTOR COMPANY");                       
       whiteList.add("DAIMLERCHRYSLER CORPORATION");              

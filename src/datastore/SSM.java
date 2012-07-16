@@ -67,7 +67,7 @@ public class SSM {
       refreshRate     = Long.parseLong(System.getProperty("RefreshRate", "800"));
       nearThreshold   = Float.parseFloat(System.getProperty("NearThreshold", "0.2f")); 
       downsampleRate  = Integer.parseInt(System.getProperty("DownsampleRate", "3"));
-      useScenario     = Boolean.parseBoolean(System.getProperty("UseScenario", "true"));
+      useScenario     = Boolean.parseBoolean(System.getProperty("UseScenario", "false"));
       
       
    }
@@ -287,23 +287,23 @@ public class SSM {
    // Switch Buttons Management 
    ////////////////////////////////////////////////////////////////////////////////
    public static float aggregationAnchorX = 100f;
-   public static float aggregationAnchorY = 100f;
+   public static float aggregationAnchorY = 110f;
    
    
    ////////////////////////////////////////////////////////////////////////////////
    // Filter Panel management
    ////////////////////////////////////////////////////////////////////////////////
    public static float filterControlAnchorX = 120f;
-   public static PaneAttrib manufactureAttrib = new PaneAttrib(230, 150, 220, 200, 1);
-   public static PaneAttrib makeAttrib        = new PaneAttrib(480, 150, 220, 200, 1);
-   public static PaneAttrib modelAttrib       = new PaneAttrib(730, 150, 220, 200, 1);
-   public static PaneAttrib yearAttrib        = new PaneAttrib(980, 150, 220, 200, 1);
+   public static PaneAttrib manufactureAttrib = new PaneAttrib(230, 80, 220, 200, 1);
+   public static PaneAttrib makeAttrib        = new PaneAttrib(480, 80, 220, 200, 1);
+   public static PaneAttrib modelAttrib       = new PaneAttrib(730, 80, 220, 200, 1);
+   public static PaneAttrib yearAttrib        = new PaneAttrib(980, 80, 220, 200, 1);
    
    public static float c_filterControlAnchorX = 120f;
-   public static PaneAttrib c_manufactureAttrib = new PaneAttrib(230, 120, 220, 200, 1);
-   public static PaneAttrib c_makeAttrib        = new PaneAttrib(480, 120, 220, 200, 1);
-   public static PaneAttrib c_modelAttrib       = new PaneAttrib(730, 120, 220, 200, 1);
-   public static PaneAttrib c_yearAttrib        = new PaneAttrib(980, 120, 220, 200, 1);
+   public static PaneAttrib c_manufactureAttrib = new PaneAttrib(230, 50, 220, 200, 1);
+   public static PaneAttrib c_makeAttrib        = new PaneAttrib(480, 50, 220, 200, 1);
+   public static PaneAttrib c_modelAttrib       = new PaneAttrib(730, 50, 220, 200, 1);
+   public static PaneAttrib c_yearAttrib        = new PaneAttrib(980, 50, 220, 200, 1);
    
    
    public static PaneAttrib perspectiveAttrib   = new PaneAttrib(180, 150, 200, 100, 1);
