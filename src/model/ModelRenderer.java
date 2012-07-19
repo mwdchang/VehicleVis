@@ -748,7 +748,9 @@ public class ModelRenderer extends BaseModelRenderer {
    public void picking(GL2 gl2, float px, float py) {
       // Quickie way to get out and save unnecessary rendering 
       if (SSM.l_mouseClicked == false) return;
+System.out.println("Before ModelRenderer Picking : " + SSM.stopPicking);      
       if (SSM.stopPicking == 1) return;
+System.out.println("After ModelRenderer Picking : " + SSM.stopPicking);      
       
       
       // Force trigger depth peel re-render on mouse press action

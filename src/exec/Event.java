@@ -1,5 +1,6 @@
 package exec;
 
+import org.jdesktop.animation.timing.Animator;
 import org.jdesktop.animation.timing.interpolation.PropertySetter;
 
 import model.DCTriple;
@@ -536,8 +537,8 @@ System.out.println("<Near plane: " + la.nearPlane);
       float mx = posX;
       float my = SSM.windowHeight - posY;      
       
-      float yf_anchorX = SSM.instance().getYearAnchorX();
-      float yf_anchorY = SSM.instance().getYearAnchorY();
+      float yf_anchorX = SSM.yearAnchorX;
+      float yf_anchorY = SSM.yearAnchorY;
       if (DCUtil.between(mx, yf_anchorX, yf_anchorX + (CacheManager.instance().timeLineSize/12)*SSM.instance().rangeFilterWidth)) {
          if (DCUtil.between(my, yf_anchorY-15, yf_anchorY+SSM.instance().rangeFilterHeight)) {
             SSM.topElement = SSM.ELEMENT_FILTER;
@@ -545,8 +546,8 @@ System.out.println("<Near plane: " + la.nearPlane);
          }
       }
       
-      float mf_anchorX = SSM.instance().getMonthAnchorX();
-      float mf_anchorY = SSM.instance().getMonthAnchorY();
+      float mf_anchorX = SSM.monthAnchorX;
+      float mf_anchorY = SSM.monthAnchorY;
       // Always 12 month
       if (DCUtil.between(mx, mf_anchorX, mf_anchorX + 12*SSM.instance().rangeFilterWidth)) {
          if (DCUtil.between(my, mf_anchorY-15, mf_anchorY+SSM.instance().rangeFilterHeight)) {
@@ -643,6 +644,27 @@ System.out.println("<Near plane: " + la.nearPlane);
       for (Integer key : SSM.selectedGroup.keySet()) {
          SSM.docMaxSize += CacheManager.instance().groupOccurrence.get( key );
       }      
+   }
+   
+   
+   ////////////////////////////////////////////////////////////////////////////////
+   // Hide the interactive panels
+   ////////////////////////////////////////////////////////////////////////////////
+   public static void hidePanel() {
+      if (SSM.hidePanel == true) return;
+      SSM.hidePanel = true;
+      Animator legend = PropertySetter.createAnimator(500, SSM.instance(), "DoffsetX", new FloatEval(), SSM.DoffsetX, SSM.DoffsetX-1000);
+      legend.start();      
+   }
+   
+   ////////////////////////////////////////////////////////////////////////////////
+   // Show the interactive panels
+   ////////////////////////////////////////////////////////////////////////////////
+   public static void showPanel() {
+      if (SSM.hidePanel == false) return;
+      SSM.hidePanel = false;
+      Animator legend = PropertySetter.createAnimator(500, SSM.instance(), "DoffsetX", new FloatEval(), SSM.DoffsetX, SSM.DoffsetX+1000);
+      legend.start();      
    }
    
    

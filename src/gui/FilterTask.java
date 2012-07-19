@@ -52,14 +52,14 @@ public class FilterTask implements RenderTask {
       
       
       // Set the anchor here so it is with respect to the ortho
-      yearSlider.anchorX = SSM.instance().getYearAnchorX();
-      yearSlider.anchorY = SSM.instance().getYearAnchorY();
+      yearSlider.anchorX = SSM.yearAnchorX;
+      yearSlider.anchorY = SSM.yearAnchorY;
       
       yearSlider.tf.anchorX = yearSlider.anchorX;
       yearSlider.tf.anchorY = yearSlider.anchorY-12;
       
-      monthSlider.anchorX = SSM.instance().getMonthAnchorX();
-      monthSlider.anchorY = SSM.instance().getMonthAnchorY();
+      monthSlider.anchorX = SSM.monthAnchorX;
+      monthSlider.anchorY = SSM.monthAnchorY;
       monthSlider.tf.anchorX = monthSlider.anchorX;
       monthSlider.tf.anchorY = monthSlider.anchorY-12;
       
@@ -123,20 +123,20 @@ public class FilterTask implements RenderTask {
       
       // Override default interval amount
       yearSlider.interval = 45;
-      yearSlider.markerSize = 40;
+      yearSlider.markerSize = 35;
       monthSlider.interval = 45;
-      monthSlider.markerSize = 40;
+      monthSlider.markerSize = 35;
       
       
       yearSlider.barColour = SchemeManager.selected;
       monthSlider.barColour = SchemeManager.selected;
       
       // Set the bottom-left of the year range slider
-      yearSlider.anchorX = 80;
+      yearSlider.anchorX = SSM.rangeSliderAnchorX;
       yearSlider.anchorY = SSM.windowHeight - 150;
       
       // Set the bottom left of the month slider
-      monthSlider.anchorX = 80;
+      monthSlider.anchorX = SSM.rangeSliderAnchorX;
       monthSlider.anchorY = SSM.windowHeight - 200;
       
       monthSlider.createTexture();
@@ -360,8 +360,8 @@ public class FilterTask implements RenderTask {
       
       
       // Now check against individual bars
-      float yf_anchorX = SSM.instance().getYearAnchorX();
-      float yf_anchorY = SSM.instance().getYearAnchorY();      
+      float yf_anchorX = SSM.yearAnchorX;
+      float yf_anchorY = SSM.yearAnchorY;      
       float yf_width   = (CacheManager.instance().timeLineSize/12)*SSM.instance().rangeFilterWidth;
       if (DCUtil.between(x, yf_anchorX, yf_anchorX + (CacheManager.instance().timeLineSize/(float)12)*SSM.instance().rangeFilterWidth)) {
          if (DCUtil.between(y, yf_anchorY-15, yf_anchorY+SSM.instance().rangeFilterHeight)) {
@@ -382,8 +382,8 @@ System.out.println("Selected something on the year bar");
          }
       }      
       
-      float mf_anchorX = SSM.instance().getMonthAnchorX();
-      float mf_anchorY = SSM.instance().getMonthAnchorY();
+      float mf_anchorX = SSM.monthAnchorX;
+      float mf_anchorY = SSM.monthAnchorY;
       // Always 12 month
       if (DCUtil.between(x, mf_anchorX, mf_anchorX + 12*SSM.instance().rangeFilterWidth)) {
          if (DCUtil.between(y, mf_anchorY-15, mf_anchorY+SSM.instance().rangeFilterHeight)) {

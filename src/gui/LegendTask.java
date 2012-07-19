@@ -133,8 +133,11 @@ public class LegendTask implements RenderTask {
    public void render(GL2 gl2) {
       GraphicUtil.setOrthonormalView(gl2, 0, SSM.windowWidth, 0, SSM.windowHeight, -10, 10);
       
-      this.startX = 30;
-      this.startY = 20;
+      //this.startX = 30;
+      //this.startY = 20;
+      this.startX = (int)SSM.legendAnchorX;
+      this.startY = (int)SSM.legendAnchorY;
+      
       /*
       this.startX = SSM.instance().windowWidth - this.width - 50;
       this.startY = SSM.instance().windowHeight - this.height - 20;
@@ -187,8 +190,8 @@ public class LegendTask implements RenderTask {
          this.width = 200;
          this.height = 40;
       } else {
-         this.width  =  40;
-         this.height = 200;
+         this.width  =  30;
+         this.height = 150;
       }
       /*
       this.startX = 50;

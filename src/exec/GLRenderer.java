@@ -140,13 +140,18 @@ public class GLRenderer implements GLEventListener {
          //   renderTaskList.elementAt(i).picking(gl2);
          //}
          for (int i=0; i < SSM.pickPoints.size(); i++) {
-System.out.println("picking point picking");            
+//System.out.println("picking point picking");            
             DCTriple point = SSM.pickPoints.elementAt(i);
-            filter_task.picking(gl2, point.x, point.y);
-            legend_task.picking(gl2, point.x, point.y);
             domain_task.picking(gl2, point.x, point.y);
+//System.out.println(" debug stop picking : " + SSM.stopPicking);
+            filter_task.picking(gl2, point.x, point.y);
+//System.out.println(" debug stop picking : " + SSM.stopPicking);
+            legend_task.picking(gl2, point.x, point.y);
+//System.out.println(" debug stop picking : " + SSM.stopPicking);
             question_task.picking(gl2, point.x, point.y);
+//System.out.println(" debug stop picking : " + SSM.stopPicking);
             model_task.picking(gl2, point.x, point.y);
+//System.out.println(" debug stop picking : " + SSM.stopPicking);
          }
          SSM.l_mouseClicked = false;
          //SSM.stopPicking = 0;
@@ -155,7 +160,7 @@ System.out.println("picking point picking");
       synchronized(SSM.dragPoints){
          if (SSM.dragPoints.size() > 0) {
             for (DCTriple p : SSM.dragPoints.values())  {  
-System.out.println("dragging point picking");            
+//System.out.println("dragging point picking");            
                filter_task.pickingDrag(gl2, p.x, p.y);
             }
             //SSM.stopPicking = 0;

@@ -10,6 +10,12 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
+
+import org.jdesktop.animation.timing.Animator;
+import org.jdesktop.animation.timing.interpolation.PropertySetter;
+
+import TimingFrameExt.FloatEval;
+
 import model.DCTriple;
 import util.ALogger;
 import util.DCCamera;
@@ -229,6 +235,13 @@ public class EventManager implements KeyListener, MouseListener, MouseMotionList
          if (e.getKeyChar() == '4') {
             SSM.showLabels = ! SSM.showLabels;   
          }
+      }
+      
+      if (e.getKeyCode() == KeyEvent.VK_LEFT) {
+         Event.hidePanel();   
+      } 
+      if (e.getKeyCode() == KeyEvent.VK_RIGHT){
+         Event.showPanel();   
       }
       
       if (e.getKeyChar() == 'w') {

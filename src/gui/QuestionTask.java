@@ -144,7 +144,9 @@ public class QuestionTask implements RenderTask {
    // Each question can be loaded as a test trial scenario
    ////////////////////////////////////////////////////////////////////////////////
    public QuestionTask() {
-      // Question 1
+      ////////////////////////////////////////////////////////////////////////////////
+      // Warm up task
+      ////////////////////////////////////////////////////////////////////////////////
       q.add( new Question() {
          public boolean answered() {
             return SSM.startYear == 1995 && 
@@ -156,21 +158,18 @@ public class QuestionTask implements RenderTask {
             SSM.dirty = 1;
             SSM.dirtyLoad = 1;
          }
-         public String text() { return "Select between year 1995 and 1996"; }
+         public String text() { return "Select years 1995 and 1996"; }
       });
       
       
-      // Question 2
       q.add(new Question() {
          public boolean answered() {
             return SSM.selectedGroup.size() > 1;
          }
-         public void set() { }
-         public String text() { return "Select at least 2 components"; }
+         public void set() {}
+         public String text() { return "Select at least 2 components in the visualization"; }
       });
       
-      
-      // Question 3
       q.add(new Question() {
          public boolean answered() { return false; }
          public void set() {}

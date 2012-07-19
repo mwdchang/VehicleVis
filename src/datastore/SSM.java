@@ -282,31 +282,69 @@ public class SSM {
    public static boolean colourRampReverseAlpha = false; // Whether to inverse the alpha in the colour scale 
    
    
+   public static boolean hidePanel = false;
    
-   ////////////////////////////////////////////////////////////////////////////////
-   // Switch Buttons Management 
-   ////////////////////////////////////////////////////////////////////////////////
-   public static float aggregationAnchorX = 100f;
-   public static float aggregationAnchorY = 110f;
+   
    
    
    ////////////////////////////////////////////////////////////////////////////////
    // Filter Panel management
    ////////////////////////////////////////////////////////////////////////////////
-   public static float filterControlAnchorX = 120f;
-   public static PaneAttrib manufactureAttrib = new PaneAttrib(230, 80, 220, 200, 1);
-   public static PaneAttrib makeAttrib        = new PaneAttrib(480, 80, 220, 200, 1);
-   public static PaneAttrib modelAttrib       = new PaneAttrib(730, 80, 220, 200, 1);
-   public static PaneAttrib yearAttrib        = new PaneAttrib(980, 80, 220, 200, 1);
+   //public static float DoffsetX = 680;
+   //public static float DoffsetY = 850;
+   public static float DoffsetX = 0;
+   public static float DoffsetY = 0;
    
-   public static float c_filterControlAnchorX = 120f;
-   public static PaneAttrib c_manufactureAttrib = new PaneAttrib(230, 50, 220, 200, 1);
-   public static PaneAttrib c_makeAttrib        = new PaneAttrib(480, 50, 220, 200, 1);
-   public static PaneAttrib c_modelAttrib       = new PaneAttrib(730, 50, 220, 200, 1);
-   public static PaneAttrib c_yearAttrib        = new PaneAttrib(980, 50, 220, 200, 1);
+   // Piggy back on the animator function
+   public static void setDoffsetX(float x) { 
+      DoffsetX = x; 
+      legendAnchorX = 30 + DoffsetX;
+      filterControlAnchorX = 120f + DoffsetX;
+      c_filterControlAnchorX = 120f + DoffsetX;
+      manufactureAttrib.anchorX = 180 + DoffsetX;
+      makeAttrib.anchorX = 400 + DoffsetX;
+      modelAttrib.anchorX = 620 + DoffsetX;
+      yearAttrib.anchorX = 840 + DoffsetX;
+      c_manufactureAttrib.anchorX = 180 + DoffsetX;
+      c_makeAttrib.anchorX = 400 + DoffsetX;
+      c_modelAttrib.anchorX = 620 + DoffsetX;
+      c_yearAttrib.anchorX = 840 + DoffsetX;
+      aggregationAnchorX = 100f + DoffsetX;
+      perspectiveAttrib.anchorX = 180 + DoffsetX;
+      
+      yearAnchorX = 30.0f + DoffsetX;
+      monthAnchorX = 30.0f + DoffsetX;
+   }
+   public static float getDoffsetX() { return DoffsetX; }
+   
+   public static float yearAnchorX = 30.0f;
+   public static float yearAnchorY = 970;
+   public static float monthAnchorX = 30.0f;
+   public static float monthAnchorY = 880;
+   
+   public static float rangeSliderAnchorX = 80;
+   
+   public static float legendAnchorX = 30 + DoffsetX;
+   public static float legendAnchorY = 20 + DoffsetY;
    
    
-   public static PaneAttrib perspectiveAttrib   = new PaneAttrib(180, 150, 200, 100, 1);
+   public static float filterControlAnchorX = 120f + DoffsetX;
+   public static PaneAttrib manufactureAttrib = new PaneAttrib(180+DoffsetX, 80+DoffsetY, 200, 200, 1);
+   public static PaneAttrib makeAttrib        = new PaneAttrib(400+DoffsetX, 80+DoffsetY, 200, 200, 1);
+   public static PaneAttrib modelAttrib       = new PaneAttrib(620+DoffsetX, 80+DoffsetY, 200, 200, 1);
+   public static PaneAttrib yearAttrib        = new PaneAttrib(840+DoffsetX, 80+DoffsetY, 200, 200, 1);
+   
+   public static float c_filterControlAnchorX = 120f + DoffsetX;
+   public static PaneAttrib c_manufactureAttrib = new PaneAttrib(180+DoffsetX, 50+DoffsetY, 200, 200, 1);
+   public static PaneAttrib c_makeAttrib        = new PaneAttrib(400+DoffsetX, 50+DoffsetY, 200, 200, 1);
+   public static PaneAttrib c_modelAttrib       = new PaneAttrib(620+DoffsetX, 50+DoffsetY, 200, 200, 1);
+   public static PaneAttrib c_yearAttrib        = new PaneAttrib(840+DoffsetX, 50+DoffsetY, 200, 200, 1);
+   
+   public static PaneAttrib perspectiveAttrib   = new PaneAttrib(180+DoffsetX, 150+DoffsetY, 150, 100, 1);
+   
+   public static float aggregationAnchorX = 100f + DoffsetX;
+   public static float aggregationAnchorY = 110f + DoffsetY;
+   
    
    public static float offset_labelX = 130;
    public static float offset_labelY = 30;
@@ -409,10 +447,12 @@ public class SSM {
    // Dynamic position
    // Stuff that are "hooked" into borders ... etc etc
    ////////////////////////////////////////////////////////////////////////////////
-   public float getYearAnchorX() { return 30.0f; }
-   public float getMonthAnchorX() { return 30.0f; }
-   public float getYearAnchorY() { return windowHeight - 80; }
-   public float getMonthAnchorY() { return windowHeight - 170; }
+   //public float getYearAnchorX() { return 30.0f; }
+   //public float getMonthAnchorX() { return 30.0f; }
+   //public float getYearAnchorY() { return windowHeight - 80; }
+   //public float getMonthAnchorY() { return windowHeight - 170; }
+
+   
    public float rangeFilterHeight = 50;
    public float rangeFilterWidth  = 45;
    

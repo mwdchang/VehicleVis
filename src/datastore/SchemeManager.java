@@ -170,7 +170,7 @@ public class SchemeManager {
    
    public static DCColour inactive = DCColour.fromDouble(0.8, 0.8, 0.8, 0.8);
    
-   public static DCColour silhouette_default = new DCColour(0.6f, 0.6f, 0.6f, 0.10);
+   public static DCColour silhouette_default = new DCColour(0.6f, 0.6f, 0.6f, 0.12);
    
    public static DCColour gl_clear = new DCColour(1.0, 1.0 ,1.0 ,0.0);
    public static DCColour not_used = new DCColour(0.0, 0.0, 0.0, 0.0);

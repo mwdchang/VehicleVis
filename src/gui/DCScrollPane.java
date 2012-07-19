@@ -61,7 +61,8 @@ public class DCScrollPane {
    
    public boolean visible = true;
    
-   public boolean masterVisible = false; // master level visibility control
+   //public boolean masterVisible = false; // master level visibility control
+   public boolean masterVisible = true; // master level visibility control
    
    public TextureRenderer texture; 
    public Graphics2D g2d;
@@ -208,6 +209,9 @@ public class DCScrollPane {
          this.dirty = false;
       }
       
+      tf.anchorX = this.anchorX+10;
+      tf.anchorY = this.anchorY-15;
+      
       Texture t = texture.getTexture();
       t.enable(gl2);
       t.bind(gl2);
@@ -259,6 +263,20 @@ public class DCScrollPane {
 	      gl2.glEnd();     	
       }
       t.disable(gl2);      
+      
+      // To give it a more widget-y feel
+      gl2.glColor4d(0.4, 0.4, 0.4, 0.5);
+      if (direction == DCScrollPane.UP) {
+         gl2.glBegin(GL2.GL_LINES);
+            gl2.glVertex2d( anchorX+width+1, anchorY);
+            gl2.glVertex2d( anchorX+width+1, anchorY+height);
+         gl2.glEnd();
+      } else {
+         gl2.glBegin(GL2.GL_LINES);
+	         gl2.glVertex3d(anchorX+width+1, anchorY-height-20,depth);
+	         gl2.glVertex3d(anchorX+width+1, anchorY-height-20,depth);
+         gl2.glEnd();
+      }
       
       
       // Draw the buttons and stuff
