@@ -211,12 +211,16 @@ public class GLRenderer implements GLEventListener {
       DWin.instance().debug( gl2.getGL2().glGetString(GL3.GL_SHADING_LANGUAGE_VERSION));
       
       
+      
       int screenDimension[][] = GraphicUtil.getScreenResolution();
       if (screenDimension.length <= 0) {
       	System.out.println("Unable to fetch screen device dimension...exiting...");
       }
       SSM.LEN_TEXTURE_WIDTH  = screenDimension[0][0];
       SSM.LEN_TEXTURE_HEIGHT = screenDimension[0][1];
+      
+      SSM.windowWidth  = glDrawable.getWidth();
+      SSM.windowHeight = glDrawable.getHeight();
       
       
       gl2.glShadeModel(GL2.GL_SMOOTH);

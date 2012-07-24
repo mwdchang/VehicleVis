@@ -271,33 +271,33 @@ public class EventManager implements KeyListener, MouseListener, MouseMotionList
          SSM.dirtyGL = 1;
          SSM.refreshMagicLens = true;
       }
-      if (e.getKeyChar() == 'f') {
-         SSM.useLocalFocus = ! SSM.useLocalFocus;    
-         SSM.dirty = 1;
-         SSM.dirtyGL = 1;
-         SSM.refreshMagicLens = true;
-      }
-      if (e.getKeyChar() == ';') {
-         SSM.sortingMethod ++;
-         SSM.sortingMethod %= 3;
-         SSM.refreshMagicLens = true;
-         SSM.dirtyGL = 1;
-      }
-      if (e.getKeyChar() == 'c') {
-         SSM.colouringMethod ++;
-         SSM.colouringMethod %= 5;
-         SSM.refreshMagicLens = true;
-         SSM.dirty = 1; // Need to change this later
-         SSM.dirtyGL = 1;
-      }
-      if (e.getKeyChar() == 'v') {
-         SSM.colouringMethod --;
-         if (SSM.colouringMethod < 0) SSM.colouringMethod = 4;
-         SSM.colouringMethod %= 5;
-         SSM.refreshMagicLens = true;
-         SSM.dirty = 1; // Need to change this later
-         SSM.dirtyGL = 1;
-      }
+//      if (e.getKeyChar() == 'f') {
+//         SSM.useLocalFocus = ! SSM.useLocalFocus;    
+//         SSM.dirty = 1;
+//         SSM.dirtyGL = 1;
+//         SSM.refreshMagicLens = true;
+//      }
+//      if (e.getKeyChar() == ';') {
+//         SSM.sortingMethod ++;
+//         SSM.sortingMethod %= 3;
+//         SSM.refreshMagicLens = true;
+//         SSM.dirtyGL = 1;
+//      }
+//      if (e.getKeyChar() == 'c') {
+//         SSM.colouringMethod ++;
+//         SSM.colouringMethod %= 5;
+//         SSM.refreshMagicLens = true;
+//         SSM.dirty = 1; // Need to change this later
+//         SSM.dirtyGL = 1;
+//      }
+//      if (e.getKeyChar() == 'v') {
+//         SSM.colouringMethod --;
+//         if (SSM.colouringMethod < 0) SSM.colouringMethod = 4;
+//         SSM.colouringMethod %= 5;
+//         SSM.refreshMagicLens = true;
+//         SSM.dirty = 1; // Need to change this later
+//         SSM.dirtyGL = 1;
+//      }
       
       // Camera move
 //      if (e.getKeyChar() == 'w') {

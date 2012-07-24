@@ -1,9 +1,16 @@
 package gui;
 
 import java.awt.Color;
+import java.awt.Font;
 import java.util.Vector;
 
 import javax.media.opengl.GL2;
+
+import org.jdesktop.animation.timing.Animator;
+import org.jdesktop.animation.timing.interpolation.PropertySetter;
+
+
+import TimingFrameExt.FloatEval;
 
 import model.DCColour;
 
@@ -44,8 +51,8 @@ public class QuestionTask implements RenderTask {
       tf.render(gl2);
       //tf.renderBorder(gl2);
       
-      q_tf.anchorX = SSM.windowWidth - 500;
-      q_tf.anchorY = SSM.windowHeight - 100;
+      //q_tf.anchorX = SSM.windowWidth - 500;
+      //q_tf.anchorY = SSM.windowHeight - 100;
       q_tf.render(gl2);
       //q_tf.renderBorder(gl2);
       
@@ -58,17 +65,27 @@ public class QuestionTask implements RenderTask {
       tf = new TextureFont();
       tf.width = 100;
       tf.height = 50;
-      tf.addMark("Proceed", Color.LIGHT_GRAY, GraphicUtil.labelFont, 20, 10);
+      tf.addMark("Proceed", Color.LIGHT_GRAY, GraphicUtil.labelFont, 15, 15);
       tf.renderToTexture(null);
       
       q_tf = new TextureFont();
-      q_tf.width  = 300;
+      q_tf.width  = 350;
       q_tf.height = 50;
-      q_tf.addMark("Task : " + qIdx, Color.BLACK, GraphicUtil.font, 5, 20);
-      q_tf.addMark(q.elementAt(qIdx).text(), Color.BLACK, GraphicUtil.font, 5, 5);
+      //q_tf.addMark("Task : " + qIdx, Color.BLACK, GraphicUtil.font, 5, 20);
+      //q_tf.addMark(q.elementAt(qIdx).text(), Color.BLACK, GraphicUtil.font, 5, 5);
+      String s[] = q.elementAt(qIdx).text().split("\n");
+      for (int i=0; i < s.length; i++) {
+         q_tf.addMark(s[i], Color.BLACK, GraphicUtil.font, 2, q_tf.height - (i+1)*getHardFontHeight(GraphicUtil.font));
+      }
       q_tf.renderToTexture(null);
+      q_tf.anchorX = SSM.windowWidth - 500;
+      q_tf.anchorY = SSM.windowHeight - 100;
    }
 
+   public float getHardFontHeight(Font f) {
+      float size = f.getSize();
+      return size * 1.02f;
+   }   
    
    ////////////////////////////////////////////////////////////////////////////////
    // Just checking that the button is pressed ... somehow
@@ -88,11 +105,22 @@ public class QuestionTask implements RenderTask {
                log(qIdx+"");
                qIdx ++;   
                q_tf.clearMark();
-               q_tf.addMark("Task : " + qIdx, Color.BLACK, GraphicUtil.font, 2, 14);
-               q_tf.addMark(q.elementAt(qIdx).text(), Color.BLACK, GraphicUtil.font, 2, 2);
+               
+               //q_tf.addMark("Task : " + qIdx, Color.BLACK, GraphicUtil.font, 2, 14);
+               String s[] = q.elementAt(qIdx).text().split("\n");
+               for (int i=0; i < s.length; i++) {
+                  q_tf.addMark(s[i], Color.BLACK, GraphicUtil.font, 2, q_tf.height - (i+1)*getHardFontHeight(GraphicUtil.font));
+               }
+               
+               
                q_tf.renderToTexture(null);
                q.elementAt(qIdx).set();
                SSM.stopPicking = 1;
+               
+               
+               //q_tf.anchorX += 400;
+               Animator moveAnimator = PropertySetter.createAnimator(1000, q_tf, "anchorX", new FloatEval(), q_tf.anchorX+800, q_tf.anchorX);
+               moveAnimator.start();
                
                // Hack to clean up memory
                System.gc();
@@ -140,6 +168,15 @@ public class QuestionTask implements RenderTask {
    public int qIdx = 0;
    
    
+   public boolean dcEquals(String a, String b) {
+      if (a != null && b != null) {
+         return a.equals(b);   
+      } 
+      if (a == null && b == null) return true;
+      return false;
+   }
+   
+   
    ////////////////////////////////////////////////////////////////////////////////
    // Each question can be loaded as a test trial scenario
    ////////////////////////////////////////////////////////////////////////////////
@@ -158,22 +195,146 @@ public class QuestionTask implements RenderTask {
             SSM.dirty = 1;
             SSM.dirtyLoad = 1;
          }
-         public String text() { return "Select years 1995 and 1996"; }
+         public String text() { return "Warm up...\nSelect years 1995 and 1996"; }
       });
-      
       
       q.add(new Question() {
          public boolean answered() {
             return SSM.selectedGroup.size() > 1;
          }
          public void set() {}
-         public String text() { return "Select at least 2 components in the visualization"; }
+         public String text() { return "Warm up...\nSelect at least 2 components in the 3D model"; }
       });
       
       q.add(new Question() {
+         public boolean answered() {
+System.out.println(SSM.makeAttrib.selected);
+            return dcEquals(SSM.makeAttrib.selected, "MAKE3"); 
+         }
+         public void set() { 
+            SSM.selectedGroup.clear();   
+         }
+         public String text() { return "Select MAKE3 using the filters"; }
+      });
+      
+      
+      ////////////////////////////////////////////////////////////////////////////////
+      // Objective Tasks
+      ////////////////////////////////////////////////////////////////////////////////
+      q.add( new Question() {
+         public boolean answered() {
+            return true;
+         }
+         public void set() {
+            SSM.selectedGroup.clear();
+            SSM.startYear = 1998;
+            SSM.endYear = 1998;
+            SSM.startMonth = 0;
+            SSM.endMonth = 11;
+            SSM.showLabels = false;
+            SSM.dirty = 1;
+            SSM.dirtyLoad = 1;
+         }
+         public String text() { 
+            return "Select the vehicle component with the highest rate\nof complaint.(Heatmap is disabled)"; 
+         }
+      });
+      
+      q.add(new Question() {
+         public boolean answered() {
+            return true;    
+         }
+         public void set() {
+            SSM.selectedGroup.clear();   
+            SSM.startYear = 1997;
+            SSM.endYear = 1997;
+            SSM.showLabels = true;
+            SSM.dirty = 1;
+         }
+         public String text() {
+            return "Select the vehicle component with the highest rate\nof complaint using the heatmap";      
+         }
+      });
+      
+      q.add(new Question() {
+         public boolean answered() { 
+            return true;
+         }
+         public void set() {
+            SSM.selectedGroup.clear();
+            SSM.showLabels = true;
+            SSM.dirty = 1; 
+         }
+         public String text() {
+            return "Select the component with the highest\nnumber of complaints";
+         }
+         
+      });
+      
+      q.add(new Question() {
+         public boolean answered() {
+            return true;
+         }
+         public void set() {
+            SSM.selectedGroup.clear(); SSM.showLabels = true;
+            SSM.dirty = 1;
+         }
+         public String text() {
+            return "Use the lens to hover the region of the vehicle\nthat contains the highest number of issues";
+         }
+      });
+      
+      
+      ////////////////////////////////////////////////////////////////////////////////
+      // Subjective tasks, this is only partially automated for the sake
+      // of convenience - these will always be true regardless, the investigators
+      // will need to record the answers
+      ////////////////////////////////////////////////////////////////////////////////
+      q.add(new Question() {
+         public boolean answered() { return true; }
+         public void set() {
+            SSM.selectedGroup.clear();   
+            SSM.showLabels = true;
+            SSM.dirty = 1;
+         }
+         public String text() {
+            return "Identify the entities that failed\nwhen the wheel component also failed";
+         }
+      });
+      
+      q.add(new Question() {
+         public boolean answered() { return true; }
+         public void set() {
+            SSM.selectedGroup.clear();   
+            SSM.showLabels = true;
+            SSM.dirty = 1;
+         }
+         public String text() {
+            return "TODO:";
+         }
+      });
+      
+      q.add(new Question() {
+         public boolean answered() { return true; }
+         public void set() {
+            SSM.selectedGroup.clear();   
+            SSM.showLabels = true;
+            SSM.dirty = 1;
+         }
+         public String text() {
+            return "Given a list of vehicles() of similar\ntype and price, which vehicle\nwould you purchase and why?";
+         }
+      });
+     
+      
+      
+      ////////////////////////////////////////////////////////////////////////////////
+      // Last question...answered should always return false
+      ////////////////////////////////////////////////////////////////////////////////
+      q.add(new Question() {
          public boolean answered() { return false; }
          public void set() {}
-         public String text() { return ""; }
+         public String text() { return "The End"; }
       });
    }
 

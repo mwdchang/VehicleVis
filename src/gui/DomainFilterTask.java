@@ -789,26 +789,28 @@ System.out.println(">>>>>>>>>>>>>>>> " + i + " " + t.val);
          
          // Draw in indicator so the users will known which colour is associated with 
          // which selection
-         ax = SSM.filterControlAnchorX-20;
-         ay = manufactureScroll.anchorY-20;
-         gl2.glColor4fv(SchemeManager.comp_1.toArray(), 0);
-         gl2.glBegin(GL2.GL_QUADS);    
-            gl2.glVertex2f(ax, ay+3);
-            gl2.glVertex2f(ax+15, ay+3);
-            gl2.glVertex2f(ax+15, ay+20-3);
-            gl2.glVertex2f(ax, ay+20-3);
-         gl2.glEnd();
-         
-         ax = SSM.c_filterControlAnchorX-20;
-         ay = c_manufactureScroll.anchorY-20;
-         gl2.glColor4fv(SchemeManager.comp_2.toArray(), 0);
-         gl2.glBegin(GL2.GL_QUADS);
-            gl2.glVertex2f(ax, ay+3);
-            gl2.glVertex2f(ax+15, ay+3);
-            gl2.glVertex2f(ax+15, ay+20-3);
-            gl2.glVertex2f(ax, ay+20-3);
-         gl2.glEnd();
-      }      
+         if (SSM.useComparisonMode == true) {
+            ax = SSM.filterControlAnchorX-20;
+            ay = manufactureScroll.anchorY-20;
+            gl2.glColor4fv(SchemeManager.comp_1.toArray(), 0);
+            gl2.glBegin(GL2.GL_QUADS);    
+               gl2.glVertex2f(ax, ay+3);
+               gl2.glVertex2f(ax+15, ay+3);
+               gl2.glVertex2f(ax+15, ay+20-3);
+               gl2.glVertex2f(ax, ay+20-3);
+            gl2.glEnd();
+            
+            ax = SSM.c_filterControlAnchorX-20;
+            ay = c_manufactureScroll.anchorY-20;
+            gl2.glColor4fv(SchemeManager.comp_2.toArray(), 0);
+            gl2.glBegin(GL2.GL_QUADS);
+               gl2.glVertex2f(ax, ay+3);
+               gl2.glVertex2f(ax+15, ay+3);
+               gl2.glVertex2f(ax+15, ay+20-3);
+               gl2.glVertex2f(ax, ay+20-3);
+            gl2.glEnd();
+         }      
+      }
    }   
    
    

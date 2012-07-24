@@ -46,6 +46,9 @@ public class TUIOListener implements TuioListener {
    public Hashtable<Long, WCursor> eventTable = new Hashtable<Long, WCursor>();
    public Vector<TapAction> tapActionList = new Vector<TapAction>();
    
+   
+   public Hashtable<Long, WCursor> lostAndFound = new Hashtable<Long, WCursor>();
+   
    public float sensitivity = 0;
    
    public TUIOListener() {
@@ -187,8 +190,10 @@ public class TUIOListener implements TuioListener {
             // 2) Remove new touch points that are way too close in terms of time and distance
             if (dist(wc.x, wc.y, w.x, w.y, width, height) < 30) {
                if (Math.abs( wc.timestamp-w.timestamp) < 100) {
-                  System.err.println("H2 " + eventTable.size());
-                  return;   
+                  if (wc.element != SSM.ELEMENT_DOCUMENT && wc.element != SSM.ELEMENT_LENS) {
+                     System.err.println("H2 " + eventTable.size());
+                     return;   
+                  }
                }
             }
             
@@ -201,14 +206,25 @@ public class TUIOListener implements TuioListener {
                   return;   
                }
             }
+            
          }
+            
+         // 3.1) Remove new touch points if it overflows the Zone maximum
+         // There should be a maximum of two touch points for document zone and
+         // the lens zone
+         if (w.element == SSM.ELEMENT_LENS || w.element == SSM.ELEMENT_DOCUMENT) {
+            if (this.findSimilarCursorPixel(w, 0, 999).size() >= 2) {
+               System.err.println("H3.1 " + eventTable.size());
+               return;
+            }
+         }            
          
          // Register a point for the filter widget dragging
          SSM.dragPoints.put(o.getSessionID(), new DCTriple(posX, posY, 0));
          
          // Register a point for hover effects
          // synchronized(SSM.hoverPoints) { SSM.hoverPoints.put(o.getSessionID(), new DCTriple(posX, posY, 0)); }
-         
+         System.err.println("=== Adding TUIO Cursor [" + o.getSessionID() + "," + w.element+"] " + w.x + " " + w.y);
          eventTable.put(o.getSessionID(), w);
          
          // Register a touch point
@@ -241,7 +257,7 @@ public class TUIOListener implements TuioListener {
       
       
       //System.err.println("=== Removing TUIO Cursor " + o.getPath().size());
-      System.err.println("=== Removing TUIO Cursor " + w.points.size());
+      System.err.println("=== Removing TUIO Cursor [" + o.getSessionID() + "] " + w.points.size());
       
       
       SSM.checkDragEvent = true;
@@ -321,8 +337,10 @@ public class TUIOListener implements TuioListener {
       // Check if this is a swipe event
 //      if (w.points.size() > 1 && w.state == WCursor.STATE_SWIPE) {
       if (w.swipeCount > 1) {
-         SSM.chartMode ++;
-         if (SSM.chartMode > 3) SSM.chartMode = 1;
+         if (SSM.hidePanel == true) Event.showPanel();
+         else Event.hidePanel();
+//         SSM.chartMode ++;
+//         if (SSM.chartMode > 3) SSM.chartMode = 1;
          
          
 //         if (Math.abs(w.x - w.points.elementAt(0).getX()) > Math.abs(w.y - w.points.elementAt(0).getY())) {
@@ -363,6 +381,7 @@ public class TUIOListener implements TuioListener {
          // Only clickable elements can send a tap event
          if (w.element == SSM.ELEMENT_NONE || w.element == SSM.ELEMENT_LENS || 
              w.element == SSM.ELEMENT_SCENARIO ||
+             w.element == SSM.ELEMENT_FILTER ||
              w.element == SSM.ELEMENT_MANUFACTURE_SCROLL|| w.element == SSM.ELEMENT_CMANUFACTURE_SCROLL || 
              w.element == SSM.ELEMENT_MAKE_SCROLL || w.element == SSM.ELEMENT_CMAKE_SCROLL ||
              w.element == SSM.ELEMENT_MODEL_SCROLL || w.element == SSM.ELEMENT_CMODEL_SCROLL ||
@@ -379,6 +398,11 @@ public class TUIOListener implements TuioListener {
          }
          
       }
+      
+      if (w.element == SSM.ELEMENT_LENS){
+         lostAndFound.put(o.getSessionID(), w);   
+      }
+      
       eventTable.remove(o.getSessionID());
       
       
@@ -402,7 +426,7 @@ public class TUIOListener implements TuioListener {
       float height = SSM.windowHeight;
       // 1) Remove touch point jitters
       //if ( t.getTuioTime().getTotalMilliseconds() - w.timestamp < 300)  {
-      if (dist(wcursor.x, wcursor.y, o.getX(), o.getY(), width, height) < 1.5) {
+      if (dist(wcursor.x, wcursor.y, o.getX(), o.getY(), width, height) < 1.0) {
          System.err.println("H1 " + eventTable.size());
          return;   
       }
@@ -448,7 +472,7 @@ public class TUIOListener implements TuioListener {
       int y2 = (int)(wcursor.y*SSM.windowHeight);
       
       
-      System.err.println("=== Updating TUIO Cursor : " + dist(x1, y1, x2, y2, 1, 1));
+      System.err.println("=== Updating TUIO Cursor : [" + o.getSessionID() + "] ");
       wcursor.points.add( o.getPosition() );
       wcursor.numUpdate++;
       
@@ -523,15 +547,18 @@ System.out.println("Spread detected");
             if (wcursor.element == SSM.ELEMENT_LENS) {
                Event.resizeLens( x1, y1, (int)(2));
             } else if (wcursor.element == SSM.ELEMENT_NONE) {
-               DCCamera.instance().move(1.5f);
+               double dist = DCCamera.instance().eye.sub(new DCTriple(0,0,0)).mag();
+               if (dist < 20) return;
+               DCCamera.instance().move(1.2f);
             }
          } else if (oldDistance > newDistance) {
 System.out.println("Pinch detected");
-
             if (wcursor.element == SSM.ELEMENT_LENS) {
                Event.resizeLens( x1, y1, (int)(-2));
             } else if (wcursor.element == SSM.ELEMENT_NONE) {
-               DCCamera.instance().move(-1.5f);
+               double dist = DCCamera.instance().eye.sub(new DCTriple(0,0,0)).mag();
+               if (dist > 70) return;
+               DCCamera.instance().move(-1.2f);
             } else if (wcursor.element == SSM.ELEMENT_DOCUMENT ) {
                SSM.docActive = false;
                SSM.resizePanel = 1;
@@ -643,7 +670,8 @@ System.out.println("TUIO Move Lens : " + System.currentTimeMillis());
                      }
                   }
                }
-               Thread.sleep(20);
+               Thread.sleep(30);
+               lostAndFound.clear();
             } catch (Exception e) {}
          }
       }

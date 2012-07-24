@@ -160,6 +160,12 @@ public class TextureFont {
    public float anchorY = 0;
    public double opacity = 1.0f;
    
+   public void setAnchorX(float v) { anchorX = v; }
+   public float getAnchorX() { return anchorX; }
+   public void setAnchorY(float v) { anchorY = v; }
+   public float getAnchorY() { return anchorY; }
+   
+   
    
    public Vector<Mark> marks = new Vector<Mark>();
    public int dirty = 0;

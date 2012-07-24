@@ -513,7 +513,7 @@ public class ModelRenderer extends BaseModelRenderer {
                   int c = 0;
                   for (int idx=(p.points.size()-1); idx > 0; idx -=2) {
                      c++;   
-                     if (c > 10) break;
+                     if (c > 1000) break;
                      if (idx < 0) break;
                      GraphicUtil.drawPie(gl2, p.points.elementAt(idx).getX()*SSM.windowWidth, (1.0-p.points.elementAt(idx).getY())*SSM.windowHeight, 0, 5, 0, 360, 10);   
                   }

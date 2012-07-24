@@ -63,7 +63,8 @@ public class DCRSlider {
          } else {
                gl2.glColor4fv( SchemeManager.unselected.toArray(), 0);
          }
-         renderQuad(gl2, data[i], null, 1, i);   
+         //renderQuad(gl2, data[i], null, 1, i);   
+         renderQuadInterpolate(gl2, barHeight[i], null, 1, i);   
       }
       gl2.glPopMatrix();
       
@@ -115,21 +116,35 @@ public class DCRSlider {
       
    }
    
+   public void renderQuadInterpolate(GL2 gl2, double bHeight, DCColour c, int style, int index) {
+      float idx = (float)index;
+      
+      
+      gl2.glBegin(GL2.GL_QUADS);
+         gl2.glVertex2d(idx*interval+anchorX, anchorY); 
+         gl2.glVertex2d(idx*interval+interval+anchorX, anchorY);  
+         gl2.glVertex2d(idx*interval+anchorX+interval, anchorY+bHeight);
+         gl2.glVertex2d(idx*interval+anchorX, anchorY+bHeight);
+      gl2.glEnd();
+      
+      if (style == 1) {
+         gl2.glPolygonMode(GL2.GL_FRONT_AND_BACK, GL2.GL_LINE);
+         gl2.glColor4d( 0, 0, 0, 1);
+         gl2.glBegin(GL2.GL_QUADS);
+            gl2.glVertex2d(idx*interval+anchorX, anchorY); 
+            gl2.glVertex2d(idx*interval+anchorX+interval, anchorY);  
+            gl2.glVertex2d(idx*interval+anchorX+interval, anchorY+bHeight);
+            gl2.glVertex2d(idx*interval+anchorX, anchorY+bHeight);
+         gl2.glEnd();
+         gl2.glPolygonMode(GL2.GL_FRONT_AND_BACK, GL2.GL_FILL);
+      }
+      
+   }
+  
    
    ////////////////////////////////////////////////////////////////////////////////
    // Renders the left marker
    ////////////////////////////////////////////////////////////////////////////////
-   /*
-   public void renderMarkerLow(GL2 gl2) {
-      // Low marker
-      gl2.glColor4d(0.5, 0.5, 0.5, 1.0);
-      gl2.glBegin(GL2.GL_TRIANGLES);     
-         gl2.glVertex2d(lowIdx * interval - markerSize, -markerSize);
-         gl2.glVertex2d(lowIdx * interval, -markerSize*0.5);
-         gl2.glVertex2d(lowIdx * interval - markerSize, 0);
-      gl2.glEnd();
-   }
-   */
    public void renderMarkerLow(GL2 gl2) {
       // Low marker
       if (this.isSelected == true)
@@ -148,17 +163,6 @@ public class DCRSlider {
    ////////////////////////////////////////////////////////////////////////////////
    // Renders the right marker
    ////////////////////////////////////////////////////////////////////////////////
-   /*
-   public void renderMarkerHigh(GL2 gl2) {
-      // High marker
-      gl2.glColor4d(0.5, 0.5, 0.5, 1.0);
-      gl2.glBegin(GL2.GL_TRIANGLES);     
-         gl2.glVertex2d( (highIdx+1) * interval + markerSize, -markerSize);
-         gl2.glVertex2d( (highIdx+1) * interval + markerSize, 0);
-         gl2.glVertex2d( (highIdx+1) * interval, -markerSize*0.5);
-      gl2.glEnd();
-   }
-   */
    public void renderMarkerHigh(GL2 gl2) {
       // High marker
       if (this.isSelected == true)
@@ -217,18 +221,19 @@ public class DCRSlider {
    
    // Just for the animator reflections, we don't
    // really need this with public scooped variables
-   public void setData(DCPair[] d) {
-      data = d;
-   }
-   public DCPair[] getData() {
-      return data;
-   }
+   public void setData(DCPair[] d) { data = d; }
+   public DCPair[] getData() { return data; }
+   
    public void setMaxValue(Double d) {
       maxValue = d.doubleValue();      
    }
    public Double getMaxValue() {
       return maxValue;   
    }
+   
+   public double barHeight[];
+   public void setBarHeight( double[] v) { barHeight = v; }
+   public double[] getBarHeight() { return barHeight; }
    
    
    ////////////////////////////////////////////////////////////////////////////////
@@ -271,6 +276,7 @@ public class DCRSlider {
    
    public DCPair[] data;      // Primary Data
    public DCPair[] subData;   // Secondary Data
+   public double hValue[];   // The actual height positions
    
    //public String labelTxt;
    public double interval;

@@ -15,6 +15,7 @@ import org.jdesktop.animation.timing.interpolation.PropertySetter;
 
 import util.DCUtil;
 import util.DWin;
+import TimingFrameExt.DoubleArrayEval;
 import TimingFrameExt.DoubleEval;
 import TimingFrameExt.SliderEval;
 
@@ -195,17 +196,29 @@ public class FilterTask implements RenderTask {
          }
       }
       
+      yearBarHeight = new double[ yearVolume.size()];
+      for (int i=0; i < yearVolume.size(); i++) {
+         yearBarHeight[i] = yearData[i].value / max * yearSlider.height;    
+      }
+      
       yearSlider.tempMaxValue = max;
       yearSlider.tempData = yearData;
       
       if (yearSlider.data != null) {
+         /*
          yearAnimator = PropertySetter.createAnimator(SSM.TIME_CHANGE_DURATION, yearSlider, "data", new SliderEval(), yearSlider.data, yearData);
          yearAnimator2 = PropertySetter.createAnimator(SSM.TIME_CHANGE_DURATION, yearSlider, "maxValue", new DoubleEval(), yearSlider.maxValue, (double)max);
          yearAnimator.start();
          yearAnimator2.start();
+         */
+         yearAnimator = PropertySetter.createAnimator(SSM.TIME_CHANGE_DURATION, yearSlider, "barHeight", new DoubleArrayEval(), yearSlider.barHeight, yearBarHeight);
+         yearAnimator.start();
+         yearSlider.maxValue = max;
+         yearSlider.data = yearData;
       } else {
          yearSlider.maxValue = max;
          yearSlider.data = yearData;
+         yearSlider.barHeight = yearBarHeight;
       }
    }
    
@@ -245,14 +258,26 @@ public class FilterTask implements RenderTask {
       monthSlider.tempMaxValue = max;
       monthSlider.tempData = monthData;
       
+      monthBarHeight = new double[ monthVolume.length ];
+      for (int i=0; i < monthVolume.length; i++) {
+         monthBarHeight[i] = monthData[i].value / max * monthSlider.height;    
+      }
+     
       if (monthSlider.data != null) {
+         /*
          monthAnimator = PropertySetter.createAnimator(SSM.TIME_CHANGE_DURATION, monthSlider, "data", new SliderEval(), monthSlider.data, monthData);
          monthAnimator2 = PropertySetter.createAnimator(SSM.TIME_CHANGE_DURATION, monthSlider, "maxValue", new DoubleEval(), monthSlider.maxValue, (double)max);
          monthAnimator.start();
          monthAnimator2.start();
+         */
+         monthAnimator = PropertySetter.createAnimator(SSM.TIME_CHANGE_DURATION, monthSlider, "barHeight", new DoubleArrayEval(), monthSlider.barHeight, monthBarHeight);
+         monthAnimator.start();
+         monthSlider.data = monthData;
+         monthSlider.maxValue = max;
       } else {
          monthSlider.data = monthData;
          monthSlider.maxValue = max;
+         monthSlider.barHeight = monthBarHeight;
       }
       
    }
@@ -568,6 +593,7 @@ System.out.println("M " + SSM.startMonth );
 System.out.println("M " + SSM.endMonth );
 
    	for (int i=0; i < yearData.length; i++) {
+System.out.println(">>>>> " + yearData[i].key + " " + SSM.startYear);   	   
    	   if (SSM.startYear == Integer.parseInt(yearData[i].key)) yearSlider.lowIdx = i; 	
    	   if (SSM.endYear == Integer.parseInt(yearData[i].key)) yearSlider.highIdx = i; 	
    	}
@@ -657,7 +683,9 @@ System.out.println("In Unfocus");
    
    
    public DCPair[] yearData;
+   public double yearBarHeight[];
    public DCPair[] monthData;
+   public double monthBarHeight[];
    
    public GLU glu = new GLU(); // for picking matrix
    public DCRSlider yearSlider;

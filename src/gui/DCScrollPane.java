@@ -157,25 +157,27 @@ public class DCScrollPane {
       for (int i=0; i < tagList.size(); i++) {
          GTag t = tagList.elementAt(i);
          
+         /*
          if (i % 2 == 0) 
-            //g2d.setColor(Color.GRAY);
             g2d.setColor(DCColour.fromInt(200, 200, 200, 255).awtRGBA());
          else 
             g2d.setColor(DCColour.fromInt(230, 230, 230, 255).awtRGBA());
-            //g2d.setColor(Color.LIGHT_GRAY);
+         */
+         g2d.setColor(DCColour.fromInt(240, 240, 240, 255).awtRGBA());
          g2d.fillRect((int)0, (int)t.yPrime, (int)width, (int)spacing);
          
-         //g2d.setColor(c);
          
-//         if (i == current)  
+         
          if (currentStr.equals(t.val))
             g2d.setFont(fontBold);
          else 
             g2d.setFont(font);
          
          if (i > 0) {
-            //g2d.setColor( DCColour.fromInt(10, 10, 180, 120).awtRGBA());
-            g2d.setColor( SchemeManager.selected.awtRGBA());
+            if (currentStr.equals(t.val)) 
+               g2d.setColor( SchemeManager.selected.awtRGBA());
+            else
+               g2d.setColor( DCColour.fromInt(210, 210, 210, 255).awtRGBA());
             g2d.fillRect((int)1, (int)t.y-12, (int)(0.95*this.width*((float)t.num/(float)this.maxValue)), 8);
          }
          

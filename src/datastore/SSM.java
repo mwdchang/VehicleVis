@@ -67,8 +67,7 @@ public class SSM {
       refreshRate     = Long.parseLong(System.getProperty("RefreshRate", "800"));
       nearThreshold   = Float.parseFloat(System.getProperty("NearThreshold", "0.2f")); 
       downsampleRate  = Integer.parseInt(System.getProperty("DownsampleRate", "3"));
-      useScenario     = Boolean.parseBoolean(System.getProperty("UseScenario", "false"));
-      
+      useScenario     = Boolean.parseBoolean(System.getProperty("UseScenario", "true"));
       
    }
    
