@@ -49,7 +49,7 @@ public class DCScrollPane {
    
    
    public static float buttonHeight = 10.0f;
-   public static float spacing = 18.0f;
+   public static float spacing = 22.0f;
    public static short UP   =   1;
    public static short DOWN =   2;
    
@@ -67,8 +67,8 @@ public class DCScrollPane {
    public TextureRenderer texture; 
    public Graphics2D g2d;
    
-   public static Font font = DCUtil.loadFont(Const.FONT_PATH+"din1451m.ttf", Font.PLAIN, 12f);
-   public static Font fontBold = DCUtil.loadFont(Const.FONT_PATH+"din1451m.ttf", Font.BOLD, 12f);
+   public static Font font = DCUtil.loadFont(Const.FONT_PATH+"din1451m.ttf", Font.PLAIN, 13f);
+   public static Font fontBold = DCUtil.loadFont(Const.FONT_PATH+"din1451m.ttf", Font.BOLD, 13f);
    
    public TextureFont tf = new TextureFont();   
    

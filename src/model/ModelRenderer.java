@@ -349,16 +349,19 @@ public class ModelRenderer extends BaseModelRenderer {
               la.mlen.renderLens( gl2, la );
               // TODO: This is probably not very efficient, can we get away with just a single render for the entire render cycle at the end ???
               //this.renderComparison(gl2);
+              
+              /*
               if (la.tip.tf == null) la.tip.init(gl2);
               la.tip.clear();
               la.tip.addText(la.nearPlane+"");
               la.tip.setTip( 400, 400, SSM.windowWidth, SSM.windowHeight);                
+              */
               /*
               la.tip.setTip( la.magicLensX,
                     SSM.windowHeight-la.magicLensY,
                     SSM.windowWidth, SSM.windowHeight);                
                     */
-              la.tip.render(gl2);
+              //la.tip.render(gl2);
             }
          }
       }
@@ -466,7 +469,7 @@ public class ModelRenderer extends BaseModelRenderer {
       
      
       ////////////////////////////////////////////////////////////////////////////////
-      // Renders a tool tip
+      // Renders tooltips and scroll bar for the lens
       ////////////////////////////////////////////////////////////////////////////////
       setOrthonormalView(gl2, 0, SSM.windowWidth, 0, SSM.windowHeight); {
          //DCTip.render(gl2);
@@ -474,7 +477,21 @@ public class ModelRenderer extends BaseModelRenderer {
             tip.render(gl2);
          }
          
+         for (int i=0; i < SSM.lensList.size(); i++) {
+            LensAttrib la = SSM.lensList.elementAt(i);   
+            if (la.mlen != null && la.magicLensSelected == 1 ) {
+               gl2.glColor4d(0.7, 0.7, 0.7, 0.6);
+               gl2.glBegin(GL2.GL_QUADS);
+                  gl2.glVertex2d(la.magicLensX + la.magicLensRadius+10,   SSM.windowHeight-(la.magicLensY-100));
+                  gl2.glVertex2d(la.magicLensX + la.magicLensRadius+20,   SSM.windowHeight-(la.magicLensY-100));
+                  gl2.glVertex2d(la.magicLensX + la.magicLensRadius+20,   SSM.windowHeight-(la.magicLensY+100));
+                  gl2.glVertex2d(la.magicLensX + la.magicLensRadius+10,   SSM.windowHeight-(la.magicLensY+100));
+               gl2.glEnd();
+            }
+         }
+         
          // Render lens tip
+         /*
          for (int i=0; i < SSM.lensList.size(); i++) {
             LensAttrib la = SSM.lensList.elementAt(i);         
             if (la.mlen != null) {
@@ -489,6 +506,7 @@ public class ModelRenderer extends BaseModelRenderer {
                la.tip.render(gl2);               
             }
          }
+         */
       } // end setOrtho
       
       

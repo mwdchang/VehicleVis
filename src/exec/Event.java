@@ -344,6 +344,10 @@ System.out.println("<Near plane: " + la.nearPlane);
    }
    
    
+   public static void dragDocumentPanelTUIO(int posX, int posY, int oldPosX, int oldPosY) {
+      if (posX < SSM.docAnchorX + SSM.docWidth*0.8)
+         dragDocumentPanel(posX, posY, oldPosX, oldPosY);
+   }
    public static void dragDocumentPanel(int posX, int posY, int oldPosX, int oldPosY) {
       SSM.docAnchorX += (posX - oldPosX);   
       SSM.docAnchorY -= (posY - oldPosY);   
@@ -352,6 +356,10 @@ System.out.println("<Near plane: " + la.nearPlane);
    ////////////////////////////////////////////////////////////////////////////////
    // Scroll document panel
    ////////////////////////////////////////////////////////////////////////////////
+   public static void checkDocumentScrollTUIO(int posX, int posY, int unit) {
+      if (posX > SSM.docAnchorX + SSM.docWidth*0.8)
+         checkDocumentScroll(posX, posY, unit);
+   }
    public static void checkDocumentScroll(int posX, int posY, int unit) {
       if (unit < 0) {
          // Prevent underflow

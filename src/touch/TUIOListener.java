@@ -46,6 +46,8 @@ public class TUIOListener implements TuioListener {
    public Hashtable<Long, WCursor> eventTable = new Hashtable<Long, WCursor>();
    public Vector<TapAction> tapActionList = new Vector<TapAction>();
    
+   public Hashtable<Long, WCursor> deadzone = new Hashtable<Long, WCursor>();
+   
    
    public Hashtable<Long, WCursor> lostAndFound = new Hashtable<Long, WCursor>();
    
@@ -219,6 +221,21 @@ public class TUIOListener implements TuioListener {
             }
          }            
          
+         // Check if a deadzone exist for the wcursor, a deadzone is an
+         // area that has just been deactivated (remove cursor) in a 
+         // non moveable zone...we restrict this so the action does not
+         // try to repeat itself
+         if (w.element != SSM.ELEMENT_LENS && w.element != SSM.ELEMENT_DOCUMENT && w.state != WCursor.STATE_MOVE) {
+            for (WCursor deadCursor : deadzone.values()) {
+               System.err.println( w.x*width + " " + w.y*height + " | " + deadCursor.x*width + " " + deadCursor.y*height);
+               if ( this.dist(deadCursor.x*width, deadCursor.y*height, w.x*width, w.y*height, 1, 1) < 100) {
+                  System.err.println("HX.1 ");   
+                  return;
+               }
+            }
+         }
+         
+         
          // Register a point for the filter widget dragging
          SSM.dragPoints.put(o.getSessionID(), new DCTriple(posX, posY, 0));
          
@@ -259,9 +276,13 @@ public class TUIOListener implements TuioListener {
       //System.err.println("=== Removing TUIO Cursor " + o.getPath().size());
       System.err.println("=== Removing TUIO Cursor [" + o.getSessionID() + "] " + w.points.size());
       
-      
       SSM.checkDragEvent = true;
       
+      // Create a dead zone
+      w.endTimestamp = System.currentTimeMillis();
+      if (w.element != SSM.ELEMENT_DOCUMENT && w.element != SSM.ELEMENT_LENS) {
+         deadzone.put(w.sessionID, w);   
+      }
       
       // Are there too many fingers down ? We only support 2 touch gestures, so if
       // there are too many lets just remove them all
@@ -339,44 +360,6 @@ public class TUIOListener implements TuioListener {
       if (w.swipeCount > 1) {
          if (SSM.hidePanel == true) Event.showPanel();
          else Event.hidePanel();
-//         SSM.chartMode ++;
-//         if (SSM.chartMode > 3) SSM.chartMode = 1;
-         
-         
-//         if (Math.abs(w.x - w.points.elementAt(0).getX()) > Math.abs(w.y - w.points.elementAt(0).getY())) {
-//            // Are they all in the same direction (more or less)?   
-//            float x1 = w.points.elementAt(0).getX();
-//            float x2 = w.points.elementAt(1).getX();
-//            float sign1 = x1-x2;
-//            float sign2;
-//            boolean sameDirection = true;
-//            for (int i=2; i < w.points.size(); i++) {
-//               x1 = x2;
-//               x2 = w.points.elementAt(i).getX();
-//               sign2 = x1-x2;
-//               if (sign2*sign1 < 0) { 
-//                  sameDirection = false; 
-//                  break; 
-//               }
-//            }
-//         } else {
-//            // Are they all in the same direction (more or less)?   
-//            float y1 = w.points.elementAt(0).getY();
-//            float y2 = w.points.elementAt(1).getY();
-//            float sign1 = y1-y2;
-//            float sign2;
-//            boolean sameDirection = true;
-//            for (int i=2; i < w.points.size(); i++) {
-//               y1 = y2;
-//               y2 = w.points.elementAt(i).getY();
-//               sign2 = y1-y2;
-//               if (sign2*sign1 < 0) { 
-//                  sameDirection = false; 
-//                  break; 
-//               }
-//            }
-//         }
-      // Check if this is a tap event (approximate)
       } else if (w.points.size() < 3) {
          // Only clickable elements can send a tap event
          if (w.element == SSM.ELEMENT_NONE || w.element == SSM.ELEMENT_LENS || 
@@ -531,7 +514,7 @@ System.out.println("Checking 2 finger drag : " + vDir1 + " " + vDir2);
                if ( vDir1 * vDir2 > 0 ) {                                                  // 3) Same direction of movement ( ++ | -- )
 System.out.println("2 Finger Drag");   
                   if (wcursor.element == SSM.ELEMENT_DOCUMENT) {
-                     Event.checkDocumentScroll(x1, y1, (y2-y1));
+                     //Event.checkDocumentScroll(x1, y1, (y2-y1));
                   } else if (wcursor.element == SSM.ELEMENT_LENS) {
                      int direction = (y2 > y1)? 1 : -1;
                      Event.scrollLens(x1, y1, direction);
@@ -627,7 +610,8 @@ System.out.println("Pinch detected");
 System.out.println("TUIO Move Lens : " + System.currentTimeMillis());         
          Event.moveLensTUIO(x1, y1, x2, y2);
       } else if (wcursor.element == SSM.ELEMENT_DOCUMENT) {
-         Event.dragDocumentPanel(x1, y1, x2, y2);
+         Event.checkDocumentScrollTUIO(x1, y1, (y2-y1));
+         Event.dragDocumentPanelTUIO(x1, y1, x2, y2);
          /*
          if (wcursor.intention == WCursor.MOVE_ELEMENT)
             Event.dragDocumentPanel(x1, y1, x2, y2);
@@ -660,9 +644,7 @@ System.out.println("TUIO Move Lens : " + System.currentTimeMillis());
             try {
                synchronized(eventTable) {
                   for (WCursor w : eventTable.values()) {
-//System.out.println("checking " + Math.abs(w.timestamp - w.cursor.getTuioTime().getTotalMilliseconds()));                        
                      if ( Math.abs(w.timestamp - w.cursor.getTuioTime().getTotalMilliseconds()) > 400 && w.state == WCursor.STATE_NOTHING) {
-//System.out.println("Changing to state hold " + Math.abs(w.timestamp - w.cursor.getTuioTime().getTotalMilliseconds()));                        
                         w.state = WCursor.STATE_HOLD;   
                         SSM.hoverPoints.put(w.sessionID, new DCTriple(w.x*SSM.windowWidth, w.y*SSM.windowHeight, 0));
                      } else if (w.state == WCursor.STATE_HOLD){
@@ -672,6 +654,14 @@ System.out.println("TUIO Move Lens : " + System.currentTimeMillis());
                }
                Thread.sleep(30);
                lostAndFound.clear();
+               
+               // Clearn up deadzones
+               for (WCursor w : deadzone.values()) {
+                  if (System.currentTimeMillis() - w.endTimestamp > 500) {
+                     System.out.println("Cleaning up deadzones");
+                     deadzone.remove(w.sessionID);   
+                  }
+               }
             } catch (Exception e) {}
          }
       }

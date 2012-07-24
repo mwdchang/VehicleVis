@@ -34,6 +34,7 @@ public class WCursor {
    public long sessionID = 0;
    public int tap = 0;
    public long timestamp;      // start timestamp
+   public long endTimestamp;   // timestamp of removal
    public float oldX, oldY;    // Normalized previous positions 
    public float x, y;          // Normalized positions 
    public int element;         // The element associated with the touch point
