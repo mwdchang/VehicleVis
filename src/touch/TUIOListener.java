@@ -401,16 +401,14 @@ public class TUIOListener implements TuioListener {
       float width  = SSM.windowWidth;
       float height = SSM.windowHeight;
       // 1) Remove touch point jitters
-      //if ( t.getTuioTime().getTotalMilliseconds() - w.timestamp < 300)  {
       if (dist(wcursor.x, wcursor.y, o.getX(), o.getY(), width, height) < 1.0) {
          System.err.println("H1 " + eventTable.size());
          return;   
       }
-      //}
       
       
       // 4) Reinforce intention to actually move
-      if (wcursor.numUpdate < 1 && wcursor.element != SSM.ELEMENT_LENS) {
+      if (wcursor.numUpdate < 1 && wcursor.element != SSM.ELEMENT_LENS && wcursor.element != SSM.ELEMENT_LENS_HANDLE && wcursor.element != SSM.ELEMENT_DOCUMENT) {
          if ( o.getTuioTime().getTotalMilliseconds() - wcursor.timestamp < 500)  {
             if (dist(wcursor.x, wcursor.y, o.getX(), o.getY(), width, height) < 20) {
                System.err.println("H4 " + eventTable.size());

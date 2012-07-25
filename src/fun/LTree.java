@@ -109,7 +109,7 @@ public class LTree extends JOGLBase implements KeyListener {
                ((double)line_index / (double)tBuffer.size())*0.6+0.4,
                0.5);
          */
-         gl2.glColor4d(0.7, 0.4 + 0.3*( line_index/(double)tBuffer.size()), 0, 1);
+         gl2.glColor4d(0.7, 0.4 + 0.3*( line_index/(double)tBuffer.size()), 0, 0.6);
         
          if (c == 'd') {
             gl2.glMatrixMode(GL2.GL_MODELVIEW);
@@ -162,7 +162,7 @@ public class LTree extends JOGLBase implements KeyListener {
             float tmp[] = stack.peek();
             gl2.glMultMatrixf(tmp, 0);
             
-            gl2.glColor4d(0, ((double)i)/(double)sb.length(), 0.2, 1);
+            gl2.glColor4d(0, ((double)i)/(double)sb.length(), 0.2, 0.6);
             gl2.glBegin(GL2.GL_QUADS);
                gl2.glVertex3d(-0.8, -0.8, 0);
                gl2.glVertex3d(-0.8,  0.8, 0);

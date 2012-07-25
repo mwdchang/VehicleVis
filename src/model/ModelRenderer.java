@@ -480,10 +480,21 @@ public class ModelRenderer extends BaseModelRenderer {
          gl2.glBlendFunc(GL2.GL_SRC_ALPHA, GL2.GL_ONE_MINUS_SRC_ALPHA);
          for (int i=0; i < SSM.lensList.size(); i++) {
             LensAttrib la = SSM.lensList.elementAt(i);   
-            gl2.glColor4d(0.7, 0.7, 0.7, 0.6);
-            GraphicUtil.drawArc(gl2, la.magicLensX, (SSM.windowHeight-la.magicLensY), 0, 
-                  la.magicLensRadius, la.magicLensRadius+40, 
-                  la.nearPlane, la.nearPlane+30, 15);
+            
+            // If the handle is selected, we rendered it in the selected colour
+            // and make it slightly bigger so the users would know
+            if (SSM.lensList.elementAt(i).handleSelected) {
+               gl2.glColor4fv( SchemeManager.selected.toArray(), 0);
+               GraphicUtil.drawArc(gl2, la.magicLensX, (SSM.windowHeight-la.magicLensY), 0, 
+                     la.magicLensRadius, la.magicLensRadius+42, 
+                     la.nearPlane-1, la.nearPlane+31, 15);
+            } else {
+               //gl2.glColor4d(0.7, 0.7, 0.7, 0.6);
+               gl2.glColor4fv( SchemeManager.unselected.toArray(), 0);
+               GraphicUtil.drawArc(gl2, la.magicLensX, (SSM.windowHeight-la.magicLensY), 0, 
+                     la.magicLensRadius, la.magicLensRadius+40, 
+                     la.nearPlane, la.nearPlane+30, 15);
+            }
                
             // Draw a special marker if the near plane is at the minimum or at the maximum
             if (la.nearPlane <= 1.1) {

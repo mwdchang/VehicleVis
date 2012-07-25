@@ -56,6 +56,8 @@ public class LensAttrib {
    public float magicLensRadius;
    public int magicLensType;
    
+   public boolean handleSelected = false;
+   
    
    // This really shouldn't be here because we created
    // a circular dependency...but works for now
@@ -79,7 +81,7 @@ public class LensAttrib {
    public int displayList;
    public float borderSize = 2;
    public float borderSizeNormal   = 2;
-   public float borderSizeSelected = 5;
+   public float borderSizeSelected = 4;
    
    public float getBorderSize() { return borderSize; }
    

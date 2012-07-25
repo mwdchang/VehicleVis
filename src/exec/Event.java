@@ -565,6 +565,8 @@ System.out.println("<Near plane: " + la.nearPlane);
             
             if ( ang >= SSM.lensList.elementAt(i).nearPlane && ang <= SSM.lensList.elementAt(i).nearPlane+30 ) {
                System.out.println("Selected a lens handle " + ang);
+               
+               SSM.lensList.elementAt(i).handleSelected = true;
                SSM.topElement = SSM.ELEMENT_LENS_HANDLE;
                return SSM.ELEMENT_LENS_HANDLE;
             }

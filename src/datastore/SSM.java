@@ -169,6 +169,7 @@ public class SSM {
    
    public static void clearLens() {
       for (int i=0; i < lensList.size(); i++) {
+         lensList.elementAt(i).handleSelected = false;
          lensList.elementAt(i).magicLensSelected = 0;
          lensList.elementAt(i).deSelectAnimator = PropertySetter.createAnimator(200, lensList.elementAt(i), "borderSize", new FloatEval(), lensList.elementAt(i).borderSizeNormal);
          lensList.elementAt(i).deSelectAnimator.start();
@@ -340,10 +341,10 @@ public class SSM {
    public static PaneAttrib c_modelAttrib       = new PaneAttrib(620+DoffsetX, 50+DoffsetY, 200, 200, 1);
    public static PaneAttrib c_yearAttrib        = new PaneAttrib(840+DoffsetX, 50+DoffsetY, 200, 200, 1);
    
-   public static PaneAttrib perspectiveAttrib   = new PaneAttrib(180+DoffsetX, 150+DoffsetY, 150, 100, 1);
+   public static PaneAttrib perspectiveAttrib   = new PaneAttrib(180+DoffsetX, 170+DoffsetY, 150, 100, 1);
    
    public static float aggregationAnchorX = 100f + DoffsetX;
-   public static float aggregationAnchorY = 110f + DoffsetY;
+   public static float aggregationAnchorY = 130f + DoffsetY;
    
    
    public static float offset_labelX = 130;
@@ -489,6 +490,8 @@ public class SSM {
    public static int ELEMENT_CMAKE_SCROLL = 14;
    public static int ELEMENT_CMODEL_SCROLL = 15;
    public static int ELEMENT_CYEAR_SCROLL = 16;
+   
+   public static int ELEMENT_LENS_HANDLE = 99;
    
    
    public static int ELEMENT_PERSPECTIVE_SCROLL = 17;

@@ -206,16 +206,6 @@ public class QuestionTask implements RenderTask {
          public String text() { return "Warm up...\nSelect at least 2 components in the 3D model"; }
       });
       
-      q.add(new Question() {
-         public boolean answered() {
-System.out.println(SSM.makeAttrib.selected);
-            return dcEquals(SSM.makeAttrib.selected, "MAKE3"); 
-         }
-         public void set() { 
-            SSM.selectedGroup.clear();   
-         }
-         public String text() { return "Select MAKE3 using the filters"; }
-      });
       
       
       ////////////////////////////////////////////////////////////////////////////////
