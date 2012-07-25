@@ -43,7 +43,7 @@ public class ModelRenderer extends BaseModelRenderer {
    public float vpadding = 15.0f;
    public float rpadding = 30.0f;
    public float lpadding = 30.0f;
-   public float spadding = 10.0f;
+   public float spadding = 40.0f;
    
    
    public float OUTLINE_DOWN_SAMPLE = 1.5f;
@@ -477,14 +477,22 @@ public class ModelRenderer extends BaseModelRenderer {
             tip.render(gl2);
          }
          
+         gl2.glBlendFunc(GL2.GL_SRC_ALPHA, GL2.GL_ONE_MINUS_SRC_ALPHA);
          for (int i=0; i < SSM.lensList.size(); i++) {
             LensAttrib la = SSM.lensList.elementAt(i);   
-            //if (la.mlen != null && la.magicLensSelected == 1 ) {
-               gl2.glColor4d(0.7, 0.7, 0.7, 0.6);
+            gl2.glColor4d(0.7, 0.7, 0.7, 0.6);
+            GraphicUtil.drawArc(gl2, la.magicLensX, (SSM.windowHeight-la.magicLensY), 0, 
+                  la.magicLensRadius, la.magicLensRadius+40, 
+                  la.nearPlane, la.nearPlane+30, 15);
+               
+            // Draw a special marker if the near plane is at the minimum or at the maximum
+            if (la.nearPlane <= 1.1) {
+               gl2.glColor4d(0.5, 0.5, 0.5, 0.6);
                GraphicUtil.drawArc(gl2, la.magicLensX, (SSM.windowHeight-la.magicLensY), 0, 
                      la.magicLensRadius, la.magicLensRadius+40, 
-                     la.nearPlane, la.nearPlane+30, 15);
-            //}
+                     la.nearPlane, la.nearPlane+1, 2);
+                  
+            }
          }
          
          /*

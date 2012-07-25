@@ -39,8 +39,11 @@ public class EventManager implements KeyListener, MouseListener, MouseMotionList
          if (SSM.controlKey == true) {
             Event.createLens(SSM.mouseX, SSM.mouseY);
          } else {
-            SSM.pickPoints.add(new DCTriple(SSM.mouseX, SSM.mouseY, 0));
-            SSM.l_mouseClicked = true;
+            // Every except for the lens widget handle should be click-able 
+            if ( Event.checkLensHandle(SSM.mouseX, SSM.mouseY) == SSM.ELEMENT_NONE) {
+               SSM.pickPoints.add(new DCTriple(SSM.mouseX, SSM.mouseY, 0));
+               SSM.l_mouseClicked = true;
+            }
          }
       } else  if (e.getButton() == MouseEvent.BUTTON3){
          if (SSM.controlKey == true) {

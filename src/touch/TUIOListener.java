@@ -29,15 +29,6 @@ import TUIO.TuioTime;
 ////////////////////////////////////////////////////////////////////////////////
 public class TUIOListener implements TuioListener {
    
-   // Variables that may be hardware dependent
-   // Some sensors are too sensitive and need to be toned down in order for gestures to work,
-   // others have difference screen sizes and have a different metrics of what "near" means
-   // ... etc etc
-   /*
-   public static long  REFRESH_INTERVAL = 800;  // Thread refresh every 800 milliseconds
-   public static int   DOWNSAMPLE_RATE = 3;     // Sample every 3 update messages
-   public static float NEAR_THRESHOLD = 0.2f;   // "Near" items are <= 0.2 normalized distance 
-   */
    
    public static long  REFRESH_INTERVAL = SSM.refreshRate;
    public static int   DOWNSAMPLE_RATE  = SSM.downsampleRate;
@@ -154,6 +145,8 @@ public class TUIOListener implements TuioListener {
       WCursor w;
       if (Event.checkLens(posX, posY) == SSM.ELEMENT_LENS) {
          w = new WCursor(SSM.ELEMENT_LENS, o);
+      } else if (Event.checkLensHandle(posX, posY) == SSM.ELEMENT_LENS_HANDLE) {
+         w = new WCursor(SSM.ELEMENT_LENS_HANDLE, o);
       } else if (Event.checkDocumentPanel(posX, posY) != SSM.ELEMENT_NONE) {
          w = new WCursor(SSM.ELEMENT_DOCUMENT, o);
       } else if (Event.checkSlider(posX, posY) != SSM.ELEMENT_NONE) {
@@ -609,6 +602,8 @@ System.out.println("Pinch detected");
       } else if (wcursor.element == SSM.ELEMENT_LENS){
 System.out.println("TUIO Move Lens : " + System.currentTimeMillis());         
          Event.moveLensTUIO(x1, y1, x2, y2);
+      } else if (wcursor.element == SSM.ELEMENT_LENS_HANDLE) {
+         Event.moveLensHandle(x1, y1, x2, y2);
       } else if (wcursor.element == SSM.ELEMENT_DOCUMENT) {
          Event.checkDocumentScrollTUIO(x1, y1, (y2-y1));
          Event.dragDocumentPanelTUIO(x1, y1, x2, y2);
