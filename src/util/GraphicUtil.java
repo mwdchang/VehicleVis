@@ -33,6 +33,37 @@ import datastore.Const;
 /////////////////////////////////////////////////////////////////////////////////
 public class GraphicUtil {
    
+   public static void drawArc(GL2 gl2, double x, double y, double z, double r1, double r2, double start, double end, int seg) {
+      double ang = (end - start)/(double)seg;
+      
+      gl2.glBegin(GL2.GL_TRIANGLE_STRIP);
+         for (int i=0; i <= seg; i++) {
+            double rx = r1*Math.cos( (start+ang*i)*3.1416/180.0 );
+            double ry = r1*Math.sin( (start+ang*i)*3.1416/180.0 );
+            gl2.glVertex3d(x + rx, y + ry, z);         
+            
+            double rx2 = r2*Math.cos( (start+ang*i)*3.1416/180.0 );
+            double ry2 = r2*Math.sin( (start+ang*i)*3.1416/180.0 );
+            gl2.glVertex3d(x + rx2, y + ry2, z);         
+         }
+     gl2.glEnd();
+      
+      /*
+      gl2.glBegin(GL2.GL_POLYGON);
+         for (int i=0; i <= seg; i++) {
+            double rx = r1*Math.cos( (start+ang*i)*3.1416/180.0 );
+            double ry = r1*Math.sin( (start+ang*i)*3.1416/180.0 );
+            gl2.glVertex3d(x + rx, y + ry, z);         
+         }
+         for (int i=seg; i >= 0; i-=1) {
+            double rx = r2*Math.cos( (start+ang*i)*3.1416/180.0 );
+            double ry = r2*Math.sin( (start+ang*i)*3.1416/180.0 );
+            gl2.glVertex3d(x + rx, y + ry, z);         
+         }
+     gl2.glEnd();
+     */
+   }   
+   
    ////////////////////////////////////////////////////////////////////////////////
    // Draws a grid
    ////////////////////////////////////////////////////////////////////////////////

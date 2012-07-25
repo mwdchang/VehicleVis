@@ -95,7 +95,38 @@ public class Event {
          }
       }      
    }
-  
+   
+   public static void moveLensHandle(int posX, int posY, int oldPosX, int oldPosY) {
+      for (int i=0; i < SSM.lensList.size(); i++) {
+         float x = (float)oldPosX - (float)SSM.lensList.elementAt(i).magicLensX;
+         float y = (float)oldPosY - (float)SSM.lensList.elementAt(i).magicLensY;
+         float r = (float)SSM.lensList.elementAt(i).magicLensRadius;
+         float d = (float)Math.sqrt(x*x + y*y);
+         
+         float nx = (float)posX - (float)SSM.lensList.elementAt(i).magicLensX;
+         float ny = (float)posY - (float)SSM.lensList.elementAt(i).magicLensY;
+         float nd = (float)Math.sqrt(nx*nx + ny*ny);
+         
+         if ( d >=r && d <= (r+40) ) {
+            double ang = Math.toDegrees(Math.atan2( y, x+0.000001));
+            ang = (-ang+360)%360;
+            
+            if ( ang >= SSM.lensList.elementAt(i).nearPlane && ang <= SSM.lensList.elementAt(i).nearPlane+30 ) {
+               double angNew = Math.toDegrees(Math.atan2( ny, nx+0.000001));
+               angNew = (-angNew+360)%360;
+               SSM.lensList.elementAt(i).nearPlane += ((float)angNew - (float)ang);
+               
+               if (SSM.lensList.elementAt(i).nearPlane <= 1) SSM.lensList.elementAt(i).nearPlane = 1.0f;
+               
+               System.out.println( "Near plane is: " + SSM.lensList.elementAt(i).nearPlane);
+               SSM.refreshMagicLens = true;
+            }
+            
+         }
+       
+      }      
+   }
+ 
    ////////////////////////////////////////////////////////////////////////////////
    // Resize lens by delta
    ////////////////////////////////////////////////////////////////////////////////
@@ -516,6 +547,34 @@ System.out.println("<Near plane: " + la.nearPlane);
    }
    
    
+   public static int checkLensHandle(int posX, int posY) {
+      float mx = posX;
+      float my = posY;
+      
+      for (int i=0; i < SSM.lensList.size(); i++) {
+         float x = (float)mx - (float)SSM.lensList.elementAt(i).magicLensX;
+         float y = (float)my - (float)SSM.lensList.elementAt(i).magicLensY;
+         float r = (float)SSM.lensList.elementAt(i).magicLensRadius;
+         float d = (float)Math.sqrt(x*x + y*y);
+         
+         if ( d >=r && d <= (r+40) ) {
+            double ang = Math.toDegrees(Math.atan2( y, x+0.000001));
+            ang = (-ang+360)%360;
+            //ang = ang * 180.0 / Math.PI;
+            //if (ang < 0) ang += 360.0;
+            
+            if ( ang >= SSM.lensList.elementAt(i).nearPlane && ang <= SSM.lensList.elementAt(i).nearPlane+30 ) {
+               System.out.println("Selected a lens handle " + ang);
+               SSM.topElement = SSM.ELEMENT_LENS_HANDLE;
+               return SSM.ELEMENT_LENS_HANDLE;
+            }
+         }
+         
+      }
+      return SSM.ELEMENT_NONE;
+   }
+   
+   
    ////////////////////////////////////////////////////////////////////////////////
    // Check the slider zone for TUIO
    ////////////////////////////////////////////////////////////////////////////////
@@ -578,8 +637,9 @@ System.out.println("<Near plane: " + la.nearPlane);
    }
    
    public static boolean isEmptySpace(int sx, int sy) {
-      if (Event.checkDocumentPanel(sx, sy) == SSM.ELEMENT_NONE &&
+      if (  Event.checkDocumentPanel(sx, sy) == SSM.ELEMENT_NONE &&
             Event.checkLens(sx, sy) == SSM.ELEMENT_NONE &&
+            Event.checkLensHandle(sx, sy) == SSM.ELEMENT_NONE &&
             Event.checkSlider(sx, sy) == SSM.ELEMENT_NONE &&
             Event.checkScrollPanels(sx, sy, SSM.manufactureAttrib, SSM.ELEMENT_MANUFACTURE_SCROLL) == SSM.ELEMENT_NONE &&
             Event.checkScrollPanels(sx, sy, SSM.makeAttrib, SSM.ELEMENT_MAKE_SCROLL) == SSM.ELEMENT_NONE &&
@@ -674,7 +734,5 @@ System.out.println("<Near plane: " + la.nearPlane);
       Animator legend = PropertySetter.createAnimator(500, SSM.instance(), "DoffsetX", new FloatEval(), SSM.DoffsetX, SSM.DoffsetX+1000);
       legend.start();      
    }
-   
-   
    
 }

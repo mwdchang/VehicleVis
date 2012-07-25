@@ -71,6 +71,7 @@ public class EventManager implements KeyListener, MouseListener, MouseMotionList
          
          // Check the lens
          Event.checkLens(e.getX(), e.getY());
+         Event.checkLensHandle(e.getX(), e.getY());
          
          // Check the document widget
          Event.checkDocumentPanel(e.getX(), e.getY());
@@ -443,6 +444,7 @@ public class EventManager implements KeyListener, MouseListener, MouseMotionList
       // Moving the lens
       if (SSM.l_mousePressed) {
          Event.moveLens(SSM.mouseX, SSM.mouseY, SSM.oldMouseX, SSM.oldMouseY);
+         Event.moveLensHandle(SSM.mouseX, SSM.mouseY, SSM.oldMouseX, SSM.oldMouseY);
       }
       
       // Resize the lens

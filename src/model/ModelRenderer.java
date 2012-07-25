@@ -479,6 +479,17 @@ public class ModelRenderer extends BaseModelRenderer {
          
          for (int i=0; i < SSM.lensList.size(); i++) {
             LensAttrib la = SSM.lensList.elementAt(i);   
+            //if (la.mlen != null && la.magicLensSelected == 1 ) {
+               gl2.glColor4d(0.7, 0.7, 0.7, 0.6);
+               GraphicUtil.drawArc(gl2, la.magicLensX, (SSM.windowHeight-la.magicLensY), 0, 
+                     la.magicLensRadius, la.magicLensRadius+40, 
+                     la.nearPlane, la.nearPlane+30, 15);
+            //}
+         }
+         
+         /*
+         for (int i=0; i < SSM.lensList.size(); i++) {
+            LensAttrib la = SSM.lensList.elementAt(i);   
             if (la.mlen != null && la.magicLensSelected == 1 ) {
                gl2.glColor4d(0.7, 0.7, 0.7, 0.6);
                gl2.glBegin(GL2.GL_QUADS);
@@ -489,6 +500,7 @@ public class ModelRenderer extends BaseModelRenderer {
                gl2.glEnd();
             }
          }
+         */
          
          // Render lens tip
          /*
@@ -526,7 +538,6 @@ public class ModelRenderer extends BaseModelRenderer {
                   for (int i = 0; i < 10; i++) {
                      GraphicUtil.drawPie(gl2, p.x*SSM.windowWidth, (1.0-p.y)*SSM.windowHeight, 0, (i+1)*1.9, 0, 360, 36);   
                   }
-                  
                   // Trail
                   int c = 0;
                   for (int idx=(p.points.size()-1); idx > 0; idx -=2) {
