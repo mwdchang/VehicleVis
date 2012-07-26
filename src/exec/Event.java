@@ -460,6 +460,24 @@ System.out.println("<Near plane: " + la.nearPlane);
    }
    
    ////////////////////////////////////////////////////////////////////////////////
+   // Check if the point is over the aggregation switch button 
+   ////////////////////////////////////////////////////////////////////////////////
+//   public static int checkAggregation(int posX, int posY) {
+//      float mx = posX;
+//      float my = SSM.windowHeight - posY;
+//      
+//      if (DCUtil.between(mx, SSM.aggregationAnchorX+80, SSM.aggregationAnchorX+80+60)) {
+//         if (DCUtil.between(my, SSM.aggregationAnchorY, SSM.aggregationAnchorY)) {
+//System.out.println("In checkAggregation...hit a switch");            
+//            SSM.topElement = SSM.ELEMENT_AGGREGATION;   
+//            return SSM.ELEMENT_AGGREGATION;
+//         }
+//      }
+//      return SSM.ELEMENT_NONE;
+//   }
+//   
+   
+   ////////////////////////////////////////////////////////////////////////////////
    // Set the top element to id if mouse is clicked over the panel
    ////////////////////////////////////////////////////////////////////////////////
    public static int checkScrollPanels(int posX, int posY, PaneAttrib attrib, int id) {

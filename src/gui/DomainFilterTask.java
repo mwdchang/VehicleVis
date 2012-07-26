@@ -358,11 +358,14 @@ public class DomainFilterTask implements RenderTask {
       
       // Now test the switch intersection
       if (DCUtil.between(mx, SSM.aggregationAnchorX+aggSwitch.width, SSM.aggregationAnchorX+aggSwitch.width+aggSwitch.buttonWidth)) {
-         if (DCUtil.between(my, SSM.aggregationAnchorY, SSM.aggregationAnchorY+aggSwitch.height)) {
+         if (DCUtil.between(my, SSM.aggregationAnchorY-aggSwitch.height/2.0f, SSM.aggregationAnchorY+aggSwitch.height/2.0f)) {
+            SSM.stopPicking = 1;
             System.out.println("Hit a switch...");
             aggSwitch.state = ! aggSwitch.state;
             if (aggSwitch.state == true) { SSM.useAggregate = true; }
             else { SSM.useAggregate = false; }
+            SSM.dirty = 1;
+            SSM.dirtyGL = 1;
          }
       }
       
@@ -391,44 +394,36 @@ public class DomainFilterTask implements RenderTask {
       perspectiveHash.put("Month", 0);
       perspectiveHash.put("Component", 0);
       perspectiveHash.put("Global", 0);
-      this.resetPane(perspectiveHash, perspectiveScroll, SSM.perspectiveAttrib);
+      this.resetPane(perspectiveHash, perspectiveScroll, SSM.perspectiveAttrib, false);
       
       
       // Set up default 
       Hashtable<String, Integer> manufactureHash = this.getHierFilter(startIdx, endIdx);
-      //DCUtil.removeLowerBound(manufactureHash, 100);
-      this.resetPane(manufactureHash, manufactureScroll, SSM.manufactureAttrib);
+      this.resetPane(manufactureHash, manufactureScroll, SSM.manufactureAttrib, true);
       
       Hashtable<String, Integer> makeHash = this.getHierFilter(startIdx, endIdx, manufactureScroll);
-      //DCUtil.removeLowerBound(makeHash, 20);
-      this.resetPane(makeHash, makeScroll, SSM.makeAttrib);
+      this.resetPane(makeHash, makeScroll, SSM.makeAttrib, true);
       
       Hashtable<String, Integer> modelHash = this.getHierFilter(startIdx, endIdx, manufactureScroll, makeScroll);
-      //DCUtil.removeLowerBound(modelHash, 20);
-      this.resetPane(modelHash, modelScroll, SSM.modelAttrib);
+      this.resetPane(modelHash, modelScroll, SSM.modelAttrib, true);
       
       Hashtable<String, Integer> yearHash = this.getHierFilter(startIdx, endIdx, manufactureScroll, makeScroll, modelScroll);
-      //DCUtil.removeLowerBound(yearHash, 20);
-      this.resetPane(yearHash, yearScroll, SSM.yearAttrib);
+      this.resetPane(yearHash, yearScroll, SSM.yearAttrib, true);
 
             
       
       // Set up the comparisons
       Hashtable<String, Integer> c_manufactureHash = this.getHierFilter(startIdx, endIdx);
-      //DCUtil.removeLowerBound(c_manufactureHash, 100);
-      this.resetPane(c_manufactureHash, c_manufactureScroll, SSM.c_manufactureAttrib);
+      this.resetPane(c_manufactureHash, c_manufactureScroll, SSM.c_manufactureAttrib, true);
       
       Hashtable<String, Integer> c_makeHash = this.getHierFilter(startIdx, endIdx, c_manufactureScroll);
-      //DCUtil.removeLowerBound(c_makeHash, 20);
-      this.resetPane(c_makeHash, c_makeScroll, SSM.c_makeAttrib);
+      this.resetPane(c_makeHash, c_makeScroll, SSM.c_makeAttrib, true);
       
       Hashtable<String, Integer> c_modelHash = this.getHierFilter(startIdx, endIdx, c_manufactureScroll, c_makeScroll);
-      //DCUtil.removeLowerBound(c_modelHash, 20);
-      this.resetPane(c_modelHash, c_modelScroll, SSM.c_modelAttrib);
+      this.resetPane(c_modelHash, c_modelScroll, SSM.c_modelAttrib, true);
       
       Hashtable<String, Integer> c_yearHash = this.getHierFilter(startIdx, endIdx, c_manufactureScroll, c_makeScroll, c_modelScroll);
-      //DCUtil.removeLowerBound(c_yearHash, 20);
-      this.resetPane(c_yearHash, c_yearScroll, SSM.c_yearAttrib);
+      this.resetPane(c_yearHash, c_yearScroll, SSM.c_yearAttrib, true);
       
       
    }
@@ -437,7 +432,7 @@ public class DomainFilterTask implements RenderTask {
    ////////////////////////////////////////////////////////////////////////////////
    // Reset a scroll-able panel
    ////////////////////////////////////////////////////////////////////////////////
-   public void resetPane(Hashtable<String, Integer> table, DCScrollPane widget, PaneAttrib attrib) {
+   public void resetPane(Hashtable<String, Integer> table, DCScrollPane widget, PaneAttrib attrib, boolean showCount) {
       int counter = 0;
       int prev= -1;
       
@@ -471,9 +466,12 @@ public class DomainFilterTask implements RenderTask {
          String s2 = "";
          if (s.length() > 20) {
             s2 = s.substring(0, 20);
-            txt = s2 + " (" + table.get(s) + ")";
+            txt = s2;
          } else {
-            txt = s + " (" + table.get(s) + ")";
+            txt = s;
+         }
+         if (showCount == true) {
+           txt = txt + " (" + table.get(s) + ")";   
          }
          
          GTag t = new GTag(10.0f, (counter+1)*DCScrollPane.spacing, counter*DCScrollPane.spacing, txt, s, table.get(s));
@@ -621,7 +619,7 @@ public class DomainFilterTask implements RenderTask {
    ////////////////////////////////////////////////////////////////////////////////
    public void scrollPaneTransition(float mx, float my, DCScrollPane widget, PaneAttrib attrib ) {
       if (DCUtil.between(mx, widget.anchorX, widget.anchorX+SSM.scrollWidth)) {
-         if (DCUtil.between(my, widget.anchorY-20, widget.anchorY)) {
+         if (DCUtil.between(my, widget.anchorY-SSM.scrollHeight, widget.anchorY)) {
             attrib.active = ! attrib.active;
             SSM.stopPicking = 1;
             
@@ -647,8 +645,7 @@ public class DomainFilterTask implements RenderTask {
          if (widget.direction == DCScrollPane.UP ) {
             yCheck = DCUtil.between(my, attrib.anchorY, attrib.anchorY+widget.height); 
          } else {
-            yCheck = DCUtil.between(my, attrib.anchorY-20-widget.height, attrib.anchorY-20);
-            System.out.println( (attrib.anchorY-20-widget.height) + " " + (attrib.anchorY-20));
+            yCheck = DCUtil.between(my, attrib.anchorY-SSM.scrollHeight-widget.height, attrib.anchorY-20);
          }
                   
          //if (DCUtil.between(my, attrib.anchorY, attrib.anchorY+widget.height)) {
@@ -660,7 +657,7 @@ public class DomainFilterTask implements RenderTask {
             if (widget.direction == DCScrollPane.UP)
                texY = my - attrib.anchorY;
             else
-               texY = widget.height - Math.abs(my - (widget.anchorY-20));
+               texY = widget.height - Math.abs(my - (widget.anchorY-SSM.scrollHeight));
             
             // 2) Adjust for Y-offset
             texY = attrib.yOffset - (texY);
@@ -791,7 +788,7 @@ System.out.println(">>>>>>>>>>>>>>>> " + i + " " + t.val);
          // which selection
          if (SSM.useComparisonMode == true) {
             ax = SSM.filterControlAnchorX-20;
-            ay = manufactureScroll.anchorY-20;
+            ay = manufactureScroll.anchorY-SSM.scrollHeight;
             gl2.glColor4fv(SchemeManager.comp_1.toArray(), 0);
             gl2.glBegin(GL2.GL_QUADS);    
                gl2.glVertex2f(ax, ay+3);
@@ -801,7 +798,7 @@ System.out.println(">>>>>>>>>>>>>>>> " + i + " " + t.val);
             gl2.glEnd();
             
             ax = SSM.c_filterControlAnchorX-20;
-            ay = c_manufactureScroll.anchorY-20;
+            ay = c_manufactureScroll.anchorY-SSM.scrollHeight;
             gl2.glColor4fv(SchemeManager.comp_2.toArray(), 0);
             gl2.glBegin(GL2.GL_QUADS);
                gl2.glVertex2f(ax, ay+3);

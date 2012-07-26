@@ -62,7 +62,7 @@ public class SSM {
       
       
       // Parse runtime parameters
-      useTUIO         = Boolean.parseBoolean(System.getProperty("UseTUIO", "true"));
+      useTUIO         = Boolean.parseBoolean(System.getProperty("UseTUIO", "false"));
       useFullScreen   = Boolean.parseBoolean(System.getProperty("UseFullScreen", "true"));
       refreshRate     = Long.parseLong(System.getProperty("RefreshRate", "800"));
       nearThreshold   = Float.parseFloat(System.getProperty("NearThreshold", "0.2f")); 
@@ -88,7 +88,9 @@ public class SSM {
    public static int downsampleRate = 3;
    
    
-   public static float scrollHeight = 20;
+   // This should be a multiple of 2 due to the rounded rectangle thingy
+   public static float scrollHeight = 24;
+   
    ////////////////////////////////////////////////////////////////////////////////
    // Reset data
    // - destroy all lens
@@ -330,10 +332,10 @@ public class SSM {
    
    
    public static float filterControlAnchorX = 120f + DoffsetX;
-   public static PaneAttrib manufactureAttrib = new PaneAttrib(180+DoffsetX, 80+DoffsetY, 200, 200, 1);
-   public static PaneAttrib makeAttrib        = new PaneAttrib(400+DoffsetX, 80+DoffsetY, 200, 200, 1);
-   public static PaneAttrib modelAttrib       = new PaneAttrib(620+DoffsetX, 80+DoffsetY, 200, 200, 1);
-   public static PaneAttrib yearAttrib        = new PaneAttrib(840+DoffsetX, 80+DoffsetY, 200, 200, 1);
+   public static PaneAttrib manufactureAttrib = new PaneAttrib(180+DoffsetX, 90+DoffsetY, 200, 200, 1);
+   public static PaneAttrib makeAttrib        = new PaneAttrib(400+DoffsetX, 90+DoffsetY, 200, 200, 1);
+   public static PaneAttrib modelAttrib       = new PaneAttrib(620+DoffsetX, 90+DoffsetY, 200, 200, 1);
+   public static PaneAttrib yearAttrib        = new PaneAttrib(840+DoffsetX, 90+DoffsetY, 200, 200, 1);
    
    public static float c_filterControlAnchorX = 120f + DoffsetX;
    public static PaneAttrib c_manufactureAttrib = new PaneAttrib(180+DoffsetX, 50+DoffsetY, 200, 200, 1);
@@ -344,7 +346,7 @@ public class SSM {
    public static PaneAttrib perspectiveAttrib   = new PaneAttrib(180+DoffsetX, 170+DoffsetY, 150, 100, 1);
    
    public static float aggregationAnchorX = 100f + DoffsetX;
-   public static float aggregationAnchorY = 130f + DoffsetY;
+   public static float aggregationAnchorY = 125f + DoffsetY;
    
    
    public static float offset_labelX = 130;
@@ -403,7 +405,7 @@ public class SSM {
    public static float docAnchorX = 400;                 // Bottom left of the document panel
    public static float docAnchorY = 400;                 // Bottom left of the document panel
    public static float docPadding = 25;                  // Padding area (for dragging)
-   public static float docWidth = 550;                  
+   public static float docWidth  = 550;                  
    public static float docHeight = 400;
    public static float docHeader = 15;     // not currently used
    public static float docFooter = 15;     // not currently used
@@ -495,6 +497,7 @@ public class SSM {
    
    
    public static int ELEMENT_PERSPECTIVE_SCROLL = 17;
+   public static int ELEMENT_AGGREGATION = 18;
    
    public static int topElement = ELEMENT_NONE;
    //public int location   = ELEMENT_NONE; // Horrible hack

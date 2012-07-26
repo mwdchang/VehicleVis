@@ -100,6 +100,9 @@ public class QuestionTask implements RenderTask {
       
       if (DCUtil.between(realX, SSM.windowWidth-200, SSM.windowWidth-100)) {
          if (DCUtil.between(realY, SSM.windowHeight-100, SSM.windowWidth-60)) {
+            // Set picking to true so we do not go through other tasks
+            SSM.stopPicking = 1;
+            
             if (q.elementAt(qIdx).answered() && qIdx < q.size()) {
                System.out.println("about to log.................");
                log(qIdx+"");

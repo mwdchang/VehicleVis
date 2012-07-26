@@ -24,6 +24,7 @@ import com.jogamp.opengl.util.texture.Texture;
 import com.jogamp.opengl.util.texture.TextureCoords;
 
 import datastore.Const;
+import datastore.SSM;
 import datastore.SchemeManager;
 
 
@@ -188,7 +189,7 @@ public class DCScrollPane {
       }
       
       tf.anchorX = this.anchorX+10;
-      tf.anchorY = this.anchorY-15;
+      tf.anchorY = this.anchorY-18;
       tf.width = this.width;
       tf.height = 20;
       tf.clearMark();
@@ -212,7 +213,7 @@ public class DCScrollPane {
       }
       
       tf.anchorX = this.anchorX+10;
-      tf.anchorY = this.anchorY-15;
+      tf.anchorY = this.anchorY-18;
       
       Texture t = texture.getTexture();
       t.enable(gl2);
@@ -249,19 +250,19 @@ public class DCScrollPane {
  	      gl2.glBegin(GL2.GL_QUADS);
 	         //gl2.glTexCoord2f(0, 1);
 	         gl2.glTexCoord2f(0, yoffset/texPanelHeight);
-	         gl2.glVertex3f(anchorX, anchorY-height-20,depth);
+	         gl2.glVertex3f(anchorX, anchorY-height-SSM.scrollHeight,depth);
 	         
 	         //gl2.glTexCoord2f(1, 1);
 	         gl2.glTexCoord2f(1, yoffset/texPanelHeight);
-	         gl2.glVertex3f(anchorX+width, anchorY-height-20,depth);
+	         gl2.glVertex3f(anchorX+width, anchorY-height-SSM.scrollHeight,depth);
 	         
 	         //gl2.glTexCoord2f(1, 0);
 	         gl2.glTexCoord2f(1, (yoffset-height)/texPanelHeight);
-	         gl2.glVertex3f(anchorX+width, anchorY-20,depth);
+	         gl2.glVertex3f(anchorX+width, anchorY-SSM.scrollHeight,depth);
 	         
 	         //gl2.glTexCoord2f(0, 0);
 	         gl2.glTexCoord2f(0, (yoffset-height)/texPanelHeight);
-	         gl2.glVertex3f(anchorX, anchorY-20,depth);
+	         gl2.glVertex3f(anchorX, anchorY-SSM.scrollHeight,depth);
 	      gl2.glEnd();     	
       }
       t.disable(gl2);      
@@ -275,14 +276,14 @@ public class DCScrollPane {
          gl2.glEnd();
       } else {
          gl2.glBegin(GL2.GL_LINES);
-	         gl2.glVertex3d(anchorX+width+1, anchorY-height-20,depth);
-	         gl2.glVertex3d(anchorX+width+1, anchorY-height-20,depth);
+	         gl2.glVertex3d(anchorX+width+1, anchorY-SSM.scrollHeight,depth);
+	         gl2.glVertex3d(anchorX+width+1, anchorY-height-SSM.scrollHeight,depth);
          gl2.glEnd();
       }
       
       
       // Draw the buttons and stuff
-      GraphicUtil.drawRoundedRect(gl2, anchorX+(width/2), anchorY-10, 0, (width/2), 10, 5, 6,
+      GraphicUtil.drawRoundedRect(gl2, anchorX+(width/2), anchorY-(SSM.scrollHeight/2), 0, (width/2), SSM.scrollHeight/2, 5, 6,
             DCColour.fromDouble(0.68, 0.68, 0.68, 0.65).toArray(), 
             DCColour.fromDouble(0.77, 0.77, 0.77, 0.65).toArray());
       
