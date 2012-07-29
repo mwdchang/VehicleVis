@@ -47,6 +47,11 @@ public class LensAttrib {
       magicLensRadius = r;
       magicLensType = t;
    }
+   
+   @Override
+   public boolean equals(Object o) {
+      return ((LensAttrib)o).magicLensX == magicLensX && ((LensAttrib)o).magicLensY == magicLensY;   
+   }
 
    
    // Attributes
@@ -79,12 +84,11 @@ public class LensAttrib {
    public int l_bottom;
    
    public int displayList;
+   
    public float borderSize = 2;
    public float borderSizeNormal   = 2;
    public float borderSizeSelected = 4;
-   
    public float getBorderSize() { return borderSize; }
-   
    public void setBorderSize( float v ) { borderSize = v; }
    
    
@@ -99,6 +103,13 @@ public class LensAttrib {
    // Types
    public static int LENS_NORMAL = 0;
    public static int LENS_DEPTH  = 1;
+   
+   
+   // To keep track of where the finger is touching for TUIO
+   // This is not used for desktop applications
+   public int offsetX = 0;
+   public int offsetY = 0;
+   
    
    
 }

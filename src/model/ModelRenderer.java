@@ -481,6 +481,14 @@ public class ModelRenderer extends BaseModelRenderer {
          for (int i=0; i < SSM.lensList.size(); i++) {
             LensAttrib la = SSM.lensList.elementAt(i);   
             
+            if (la.magicLensSelected == 1) {
+               gl2.glColor4fv( SchemeManager.selected.toArray(), 0);
+            } else {
+               gl2.glColor4fv( SchemeManager.unselected.toArray(), 0);
+            }
+            GraphicUtil.drawArc(gl2, la.magicLensX, (SSM.windowHeight-la.magicLensY), 0, 
+                  la.magicLensRadius, la.magicLensRadius+la.borderSize, 0, 360, 36, 1);
+            
             // If the handle is selected, we rendered it in the selected colour
             // and make it slightly bigger so the users would know
             if (SSM.lensList.elementAt(i).handleSelected) {
@@ -883,6 +891,26 @@ System.out.println("After ModelRenderer Picking : " + SSM.stopPicking);
          }
          
       } else {
+         boolean canCreateDocumentPanel = true;
+         for (int i=0; i < SSM.lensList.size(); i++) {
+            LensAttrib la = SSM.lensList.elementAt(i);
+            float r = la.magicLensRadius;
+            float xx = px - la.magicLensX;
+            float yy = py - la.magicLensY;
+            float d  = (float)Math.sqrt(xx*xx + yy*yy);
+            if (d < r) canCreateDocumentPanel = false;
+            
+         }
+         if (canCreateDocumentPanel) {
+            if (SSM.docActive == false) {
+               SSM.docActive = true;
+               SSM.docAnchorX = mx;
+               SSM.docAnchorY = my;
+               SSM.resizePanel = 1;
+            }
+         }
+         
+         /*
          SSM.selectedGroup.clear();
          SSM.dirty = 1;
          SSM.dirtyGL = 1; // for the text panel
@@ -890,6 +918,7 @@ System.out.println("After ModelRenderer Picking : " + SSM.stopPicking);
          SSM.t2Start = SSM.globalFetchSize;
          SSM.yoffset = SSM.docHeight;
          SSM.docMaxSize = 0;
+         */
       }
       
       

@@ -2,6 +2,8 @@ package touch;
 
 import java.util.Vector;
 
+import model.LensAttrib;
+
 import TUIO.TuioCursor;
 import TUIO.TuioPoint;
 
@@ -9,6 +11,8 @@ import TUIO.TuioPoint;
 // Place holder for location aware 
 ////////////////////////////////////////////////////////////////////////////////
 public class WCursor {
+   public WCursor() {}
+   
    public WCursor(int e) {
       element = e;
       cursor = null;
@@ -24,6 +28,7 @@ public class WCursor {
       x = c.getX();
       y = c.getY();
       timestamp = c.getTuioTime().getTotalMilliseconds();
+      updTimestamp = timestamp;
       sessionID = c.getSessionID();
       oldX = 0;
       oldY = 0;
@@ -32,13 +37,18 @@ public class WCursor {
    
    
    public long sessionID = 0;
-   public int tap = 0;
+   //public int tap = 0;
    public long timestamp;      // start timestamp
+   public long updTimestamp;   // updated timestamp
    public long endTimestamp;   // timestamp of removal
+   
    public float oldX, oldY;    // Normalized previous positions 
    public float x, y;          // Normalized positions 
    public int element;         // The element associated with the touch point
    public TuioCursor cursor; 
+   
+   public LensAttrib lensReference;
+   public int lensIndex = -1;
    
    public int state = STATE_NOTHING;
    public int intention = NOTHING;
@@ -52,6 +62,14 @@ public class WCursor {
    public Vector<TuioPoint> points = new Vector<TuioPoint>();
    
    public int swipeCount = 0;
+   public int swipeDirection = -1;
+   public int tapCount = 0;
+   
+   
+   public static int LEFT = 0;
+   public static int RIGHT = 1;
+   public static int UP = 2;
+   public static int DOWN = 3;
    
    
    public static int NOTHING = 0;

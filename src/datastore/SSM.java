@@ -62,7 +62,7 @@ public class SSM {
       
       
       // Parse runtime parameters
-      useTUIO         = Boolean.parseBoolean(System.getProperty("UseTUIO", "false"));
+      useTUIO         = Boolean.parseBoolean(System.getProperty("UseTUIO", "true"));
       useFullScreen   = Boolean.parseBoolean(System.getProperty("UseFullScreen", "true"));
       refreshRate     = Long.parseLong(System.getProperty("RefreshRate", "800"));
       nearThreshold   = Float.parseFloat(System.getProperty("NearThreshold", "0.2f")); 
@@ -497,7 +497,10 @@ public class SSM {
    
    
    public static int ELEMENT_PERSPECTIVE_SCROLL = 17;
-   public static int ELEMENT_AGGREGATION = 18;
+   
+   public static int ELEMENT_CLEAR_SELECTION = 18;
+   
+//   public static int ELEMENT_AGGREGATION = 18;
    
    public static int topElement = ELEMENT_NONE;
    //public int location   = ELEMENT_NONE; // Horrible hack

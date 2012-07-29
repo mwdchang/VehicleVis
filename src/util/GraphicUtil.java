@@ -34,10 +34,14 @@ import datastore.Const;
 public class GraphicUtil {
    
    public static void drawArc(GL2 gl2, double x, double y, double z, double r1, double r2, double start, double end, int seg) {
+      drawArc(gl2, x, y, z, r1, r2, start, end, seg, 1);    
+   }
+   
+   public static void drawArc(GL2 gl2, double x, double y, double z, double r1, double r2, double start, double end, int seg, int step) {
       double ang = (end - start)/(double)seg;
       
       gl2.glBegin(GL2.GL_TRIANGLE_STRIP);
-         for (int i=0; i <= seg; i++) {
+         for (int i=0; i <= seg; i+=step ) {
             double rx = r1*Math.cos( (start+ang*i)*3.1416/180.0 );
             double ry = r1*Math.sin( (start+ang*i)*3.1416/180.0 );
             gl2.glVertex3d(x + rx, y + ry, z);         

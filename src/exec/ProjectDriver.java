@@ -16,7 +16,6 @@ import TUIO.TuioClient;
 import TUIO.TuioListener;
 
 import touch.TUIOListener;
-import touch.TUIOTest;
 import util.ALogger;
 import datastore.CacheManager;
 import datastore.Const;

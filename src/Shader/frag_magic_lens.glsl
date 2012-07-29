@@ -88,16 +88,17 @@ void main() {
    if (  hypo > (magicLensRadius + borderSize)) {
       //outColour = vec4(1,0,0,1);
       outColour = vec4(0,0,0,0);
+   }
    //} else if ( hypo > magicLensRadius-borderSize && hypo <= magicLensRadius) {
-   } else if ( hypo > magicLensRadius && hypo <= (magicLensRadius + borderSize)) {
-      outColour.rgba = lensColour;
+   //} else if ( hypo > magicLensRadius && hypo <= (magicLensRadius + borderSize)) {
+   //   outColour.rgba = lensColour;
       /*
       if (magicLensSelected == 1)
 	      outColour = vec4(0.2,0.2,0.9,0.5);
 	  else    
 	      outColour = vec4(0.5,0.5,0.5,0.5);
 	  */     
-   }
+   //}
 
    //outColour = pass_colour;
    //outColour = vec4(1.0f, 0.0f, 0.0f, 1.0f);

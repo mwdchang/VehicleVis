@@ -80,6 +80,7 @@ public class Event {
    ////////////////////////////////////////////////////////////////////////////////
    // Moving the lens with TUIO messages - additional sanity check required
    ////////////////////////////////////////////////////////////////////////////////
+   /*
    public static void moveLensTUIO(int posX, int posY, int oldPosX, int oldPosY) {
       for (int i=0; i < SSM.lensList.size(); i++) {
          //float x = (float)posX - (float)SSM.lensList.elementAt(i).magicLensX;
@@ -94,6 +95,33 @@ public class Event {
             SSM.lensList.elementAt(i).start = 0;
          }
       }      
+   }
+   */
+   public static void moveLensTUIO(int posX, int posY, int oldPosX, int oldPosY, LensAttrib la) { 
+      if (SSM.lensList.isEmpty() == true) return; // sanity
+      
+      //LensAttrib la = SSM.lensList.elementAt(laIndex);
+      if (la != null) {
+         float r = la.magicLensRadius; 
+         float x = posX - la.magicLensX;
+         float y = posY - la.magicLensY;
+         float ox = oldPosX - la.magicLensX;
+         float oy = oldPosY - la.magicLensY;
+         
+         float oldRadius = (float)Math.sqrt(ox*ox + oy*oy);
+         float newRadius = (float)Math.sqrt(x*x + y*y);
+         if (oldRadius >= r*0.8) {
+            la.magicLensRadius = newRadius; 
+            if (la.magicLensRadius < 30) {
+               SSM.lensList.remove(la);
+               la = null;
+            }
+         } else {
+            la.magicLensX += posX - oldPosX;
+            la.magicLensY += posY - oldPosY;
+         }
+         
+      }
    }
    
    public static void moveLensHandle(int posX, int posY, int oldPosX, int oldPosY) {
