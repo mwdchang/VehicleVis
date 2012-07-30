@@ -205,12 +205,7 @@ public class FilterTask implements RenderTask {
       yearSlider.tempData = yearData;
       
       if (yearSlider.data != null) {
-         /*
-         yearAnimator = PropertySetter.createAnimator(SSM.TIME_CHANGE_DURATION, yearSlider, "data", new SliderEval(), yearSlider.data, yearData);
-         yearAnimator2 = PropertySetter.createAnimator(SSM.TIME_CHANGE_DURATION, yearSlider, "maxValue", new DoubleEval(), yearSlider.maxValue, (double)max);
-         yearAnimator.start();
-         yearAnimator2.start();
-         */
+         if (yearAnimator != null) yearAnimator.stop();
          yearAnimator = PropertySetter.createAnimator(SSM.TIME_CHANGE_DURATION, yearSlider, "barHeight", new DoubleArrayEval(), yearSlider.barHeight, yearBarHeight);
          yearAnimator.start();
          yearSlider.maxValue = max;
@@ -264,12 +259,7 @@ public class FilterTask implements RenderTask {
       }
      
       if (monthSlider.data != null) {
-         /*
-         monthAnimator = PropertySetter.createAnimator(SSM.TIME_CHANGE_DURATION, monthSlider, "data", new SliderEval(), monthSlider.data, monthData);
-         monthAnimator2 = PropertySetter.createAnimator(SSM.TIME_CHANGE_DURATION, monthSlider, "maxValue", new DoubleEval(), monthSlider.maxValue, (double)max);
-         monthAnimator.start();
-         monthAnimator2.start();
-         */
+         if (monthAnimator != null) monthAnimator.stop(); 
          monthAnimator = PropertySetter.createAnimator(SSM.TIME_CHANGE_DURATION, monthSlider, "barHeight", new DoubleArrayEval(), monthSlider.barHeight, monthBarHeight);
          monthAnimator.start();
          monthSlider.data = monthData;
@@ -593,7 +583,6 @@ System.out.println("M " + SSM.startMonth );
 System.out.println("M " + SSM.endMonth );
 
    	for (int i=0; i < yearData.length; i++) {
-System.out.println(">>>>> " + yearData[i].key + " " + SSM.startYear);   	   
    	   if (SSM.startYear == Integer.parseInt(yearData[i].key)) yearSlider.lowIdx = i; 	
    	   if (SSM.endYear == Integer.parseInt(yearData[i].key)) yearSlider.highIdx = i; 	
    	}
@@ -694,7 +683,5 @@ System.out.println("In Unfocus");
    
    // Animation
    public Animator monthAnimator;
-   public Animator monthAnimator2;
    public Animator yearAnimator;
-   public Animator yearAnimator2;
 }

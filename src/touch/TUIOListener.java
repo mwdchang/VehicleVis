@@ -615,7 +615,7 @@ System.out.println("Pinch detected");
             if (SSM.hidePanel == true) Event.showPanel();
             else Event.hidePanel();
          }
-      } else if (w.points.size() < 3 && findSimilarCursorPixel(w, 0, 400).size() == 0) {
+      } else if (w.points.size() < 4 && findSimilarCursorPixel(w, 0, 400).size() == 0) {
          // Only clickable elements can send a tap event
          if (w.element == SSM.ELEMENT_NONE || w.element == SSM.ELEMENT_LENS || 
              w.element == SSM.ELEMENT_DOCUMENT ||

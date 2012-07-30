@@ -138,16 +138,21 @@ public class Event {
          float ny = (float)posY - (float)SSM.lensList.elementAt(i).magicLensY;
          float nd = (float)Math.sqrt(nx*nx + ny*ny);
          
-         if ( d >=r && d <= (r+40) ) {
+         //if ( d >=r && d <= (r+40) ) {
+         if (SSM.lensList.elementAt(i).handleSelected == true) {
             double ang = Math.toDegrees(Math.atan2( y, x+0.000001));
             ang = (-ang+360)%360;
             
-            if ( ang >= SSM.lensList.elementAt(i).nearPlane && ang <= SSM.lensList.elementAt(i).nearPlane+30 ) {
+            if ( ang >= SSM.lensList.elementAt(i).handleAngle && ang <= SSM.lensList.elementAt(i).handleAngle+30 ) {
                double angNew = Math.toDegrees(Math.atan2( ny, nx+0.000001));
                angNew = (-angNew+360)%360;
-               SSM.lensList.elementAt(i).nearPlane += ((float)angNew - (float)ang);
                
-               if (SSM.lensList.elementAt(i).nearPlane <= 1) SSM.lensList.elementAt(i).nearPlane = 1.0f;
+               if (SSM.lensList.elementAt(i).nearPlane + ((float)angNew - (float)ang)/4.0f < 1) return; 
+               
+               SSM.lensList.elementAt(i).nearPlane += ((float)angNew - (float)ang)/4.0;
+               SSM.lensList.elementAt(i).handleAngle += ((float)angNew - (float)ang);
+               
+               //if (SSM.lensList.elementAt(i).nearPlane <= 1) SSM.lensList.elementAt(i).nearPlane = 1.0f;
                
                System.out.println( "Near plane is: " + SSM.lensList.elementAt(i).nearPlane);
                SSM.refreshMagicLens = true;
@@ -612,7 +617,7 @@ System.out.println("<Near plane: " + la.nearPlane);
             //ang = ang * 180.0 / Math.PI;
             //if (ang < 0) ang += 360.0;
             
-            if ( ang >= SSM.lensList.elementAt(i).nearPlane && ang <= SSM.lensList.elementAt(i).nearPlane+30 ) {
+            if ( ang >= SSM.lensList.elementAt(i).handleAngle && ang <= SSM.lensList.elementAt(i).handleAngle+30 ) {
                System.out.println("Selected a lens handle " + ang);
                
                SSM.lensList.elementAt(i).handleSelected = true;

@@ -496,16 +496,16 @@ public class ModelRenderer extends BaseModelRenderer {
                   gl2.glColor4fv( SchemeManager.selected.toArray(), 0);
                   GraphicUtil.drawArc(gl2, la.magicLensX, (SSM.windowHeight-la.magicLensY), 0, 
                         la.magicLensRadius, la.magicLensRadius+42, 
-                        la.nearPlane-1, la.nearPlane+31, 15);
+                        la.handleAngle-1, la.handleAngle+31, 20);
                } else {
-                  //gl2.glColor4d(0.7, 0.7, 0.7, 0.6);
                   gl2.glColor4fv( SchemeManager.unselected.toArray(), 0);
                   GraphicUtil.drawArc(gl2, la.magicLensX, (SSM.windowHeight-la.magicLensY), 0, 
                         la.magicLensRadius, la.magicLensRadius+40, 
-                        la.nearPlane, la.nearPlane+30, 15);
+                        la.handleAngle, la.handleAngle+30, 20);
                }
                   
                // Draw a special marker if the near plane is at the minimum or at the maximum
+               /*
                if (la.nearPlane <= 1.1) {
                   gl2.glColor4d(0.5, 0.5, 0.5, 0.6);
                   GraphicUtil.drawArc(gl2, la.magicLensX, (SSM.windowHeight-la.magicLensY), 0, 
@@ -513,6 +513,7 @@ public class ModelRenderer extends BaseModelRenderer {
                         la.nearPlane, la.nearPlane+1, 2);
                      
                }
+               */
             }
          }
          

@@ -28,13 +28,13 @@ public class VFeedbackTask implements RenderTask {
          
          for (WCursor p : SSM.touchPoint.values()) {
             for (int i = 0; i < 10; i++) {
-               GraphicUtil.drawPie(gl2, p.x*SSM.windowWidth, (1.0-p.y)*SSM.windowHeight, 0, (i+1)*1.9, 0, 360, 36);   
+               GraphicUtil.drawPie(gl2, p.x*SSM.windowWidth, (1.0-p.y)*SSM.windowHeight, 0, (i+1)*1.7, 0, 360, 36);   
             }
             // Trail
             int c = 0;
             for (int idx=(p.points.size()-1); idx > 0; idx -=2) {
                c++;   
-               if (c > 1000) break;
+               if (c > 15) break;
                if (idx < 0) break;
                GraphicUtil.drawPie(gl2, p.points.elementAt(idx).getX()*SSM.windowWidth, (1.0-p.points.elementAt(idx).getY())*SSM.windowHeight, 0, 5, 0, 360, 10);   
             }

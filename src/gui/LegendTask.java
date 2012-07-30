@@ -27,8 +27,8 @@ public class LegendTask implements RenderTask {
       
       // Draws the distinct colours
       //gl2.glEnable(GL2.GL_BLEND);
-      gl2.glBegin(GL2.GL_QUADS);
       if (DIRECTION == HORIZONTAL) {
+         gl2.glBegin(GL2.GL_QUADS);
          for (float i=0; i < buckets; i++) {
             DCColour c = SchemeManager.instance().getColour(1, i*interval, 1.0f);
             gl2.glColor4fv(c.toArray(), 0);
@@ -37,7 +37,11 @@ public class LegendTask implements RenderTask {
             gl2.glVertex2d( startX + (i+1)*interval*width, startY+height);
             gl2.glVertex2d( startX + i*interval*width, startY+height);
          }
+         gl2.glEnd();
+         
+         
       } else {
+         gl2.glBegin(GL2.GL_QUADS);
          for (float i=0; i < buckets; i++) {
             DCColour c = SchemeManager.instance().getColour(1, i*interval, 1.0f);
             gl2.glColor4fv(c.toArray(), 0);
@@ -46,9 +50,14 @@ public class LegendTask implements RenderTask {
             gl2.glVertex2d( startX + width, (int)((i+1)*interval*height+startY));
             gl2.glVertex2d( startX,         (int)((i+1)*interval*height+startY));
          }
-        
+         gl2.glEnd();
+         
+         gl2.glColor4fv( SchemeManager.silhouette_default.toArray(), 0);
+         gl2.glBegin(GL2.GL_LINES);
+            gl2.glVertex2d(startX+width+10, startY);
+            gl2.glVertex2d(startX+width+10, startY+height);
+         gl2.glEnd();
       }
-      gl2.glEnd();
       
       
       // Draws the line separators

@@ -320,9 +320,9 @@ public class SSM {
    }
    public static float getDoffsetX() { return DoffsetX; }
    
-   public static float yearAnchorX = 50.0f;
+   public static float yearAnchorX = 60.0f;
    public static float yearAnchorY = 970;
-   public static float monthAnchorX = 50.0f;
+   public static float monthAnchorX = 60.0f;
    public static float monthAnchorY = 880;
    
    public static float rangeSliderAnchorX = 80;

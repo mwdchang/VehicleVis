@@ -73,6 +73,8 @@ public class LensAttrib {
    public float nearPlane = SSM.nearPlane;
    public float farPlane  = SSM.farPlane;
    
+   public float handleAngle = 1.0f;
+   
    // Number of labels to display
    public int start = 0;
    public final int numToDisplay = 8;
