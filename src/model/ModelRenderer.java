@@ -161,7 +161,6 @@ public class ModelRenderer extends BaseModelRenderer {
    ////////////////////////////////////////////////////////////////////////////////
    public void renderIntegratedView(GL2 gl2) {
       
-     
       ////////////////////////////////////////////////////////////////////////////////
       // Need to re-adjust the buffer size if the screen size is changed
       ////////////////////////////////////////////////////////////////////////////////
@@ -486,31 +485,34 @@ public class ModelRenderer extends BaseModelRenderer {
             } else {
                gl2.glColor4fv( SchemeManager.unselected.toArray(), 0);
             }
+            
             GraphicUtil.drawArc(gl2, la.magicLensX, (SSM.windowHeight-la.magicLensY), 0, 
-                  la.magicLensRadius, la.magicLensRadius+la.borderSize, 0, 360, 36, 1);
+                  la.magicLensRadius, la.magicLensRadius+la.borderSize, 0, 360, 72, 1);
             
             // If the handle is selected, we rendered it in the selected colour
             // and make it slightly bigger so the users would know
-            if (SSM.lensList.elementAt(i).handleSelected) {
-               gl2.glColor4fv( SchemeManager.selected.toArray(), 0);
-               GraphicUtil.drawArc(gl2, la.magicLensX, (SSM.windowHeight-la.magicLensY), 0, 
-                     la.magicLensRadius, la.magicLensRadius+42, 
-                     la.nearPlane-1, la.nearPlane+31, 15);
-            } else {
-               //gl2.glColor4d(0.7, 0.7, 0.7, 0.6);
-               gl2.glColor4fv( SchemeManager.unselected.toArray(), 0);
-               GraphicUtil.drawArc(gl2, la.magicLensX, (SSM.windowHeight-la.magicLensY), 0, 
-                     la.magicLensRadius, la.magicLensRadius+40, 
-                     la.nearPlane, la.nearPlane+30, 15);
-            }
-               
-            // Draw a special marker if the near plane is at the minimum or at the maximum
-            if (la.nearPlane <= 1.1) {
-               gl2.glColor4d(0.5, 0.5, 0.5, 0.6);
-               GraphicUtil.drawArc(gl2, la.magicLensX, (SSM.windowHeight-la.magicLensY), 0, 
-                     la.magicLensRadius, la.magicLensRadius+40, 
-                     la.nearPlane, la.nearPlane+1, 2);
+            if (SSM.useTUIO == true) {
+               if (SSM.lensList.elementAt(i).handleSelected) {
+                  gl2.glColor4fv( SchemeManager.selected.toArray(), 0);
+                  GraphicUtil.drawArc(gl2, la.magicLensX, (SSM.windowHeight-la.magicLensY), 0, 
+                        la.magicLensRadius, la.magicLensRadius+42, 
+                        la.nearPlane-1, la.nearPlane+31, 15);
+               } else {
+                  //gl2.glColor4d(0.7, 0.7, 0.7, 0.6);
+                  gl2.glColor4fv( SchemeManager.unselected.toArray(), 0);
+                  GraphicUtil.drawArc(gl2, la.magicLensX, (SSM.windowHeight-la.magicLensY), 0, 
+                        la.magicLensRadius, la.magicLensRadius+40, 
+                        la.nearPlane, la.nearPlane+30, 15);
+               }
                   
+               // Draw a special marker if the near plane is at the minimum or at the maximum
+               if (la.nearPlane <= 1.1) {
+                  gl2.glColor4d(0.5, 0.5, 0.5, 0.6);
+                  GraphicUtil.drawArc(gl2, la.magicLensX, (SSM.windowHeight-la.magicLensY), 0, 
+                        la.magicLensRadius, la.magicLensRadius+40, 
+                        la.nearPlane, la.nearPlane+1, 2);
+                     
+               }
             }
          }
          
@@ -549,35 +551,7 @@ public class ModelRenderer extends BaseModelRenderer {
       } // end setOrtho
       
       
-      ////////////////////////////////////////////////////////////////////////////////
-      // Draw any active touch points
-      ////////////////////////////////////////////////////////////////////////////////
-      if (SSM.useTUIO == true) {
-         gl2.glDisable(GL2.GL_LIGHTING);
-         gl2.glDisable(GL2.GL_TEXTURE_2D);
-         gl2.glEnable(GL2.GL_BLEND);
-         gl2.glBlendFunc(GL2.GL_SRC_ALPHA, GL2.GL_ONE_MINUS_SRC_ALPHA);
-         setOrthonormalView(gl2, 0, SSM.windowWidth, 0, SSM.windowHeight); {
-            synchronized(SSM.touchPoint) {
-               gl2.glColor4d(0, 0.35, 0.45, 0.12);
-               
-               for (WCursor p : SSM.touchPoint.values()) {
-                  for (int i = 0; i < 10; i++) {
-                     GraphicUtil.drawPie(gl2, p.x*SSM.windowWidth, (1.0-p.y)*SSM.windowHeight, 0, (i+1)*1.9, 0, 360, 36);   
-                  }
-                  // Trail
-                  int c = 0;
-                  for (int idx=(p.points.size()-1); idx > 0; idx -=2) {
-                     c++;   
-                     if (c > 1000) break;
-                     if (idx < 0) break;
-                     GraphicUtil.drawPie(gl2, p.points.elementAt(idx).getX()*SSM.windowWidth, (1.0-p.points.elementAt(idx).getY())*SSM.windowHeight, 0, 5, 0, 360, 10);   
-                  }
-               }
-               
-            } // end synchronize
-         } // end set ortho
-      } // end if useTUIO
+
             
    }   
    

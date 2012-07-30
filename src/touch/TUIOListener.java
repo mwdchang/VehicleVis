@@ -9,6 +9,7 @@ import model.DCTriple;
 
 import util.DCCamera;
 import util.DCUtil;
+import util.DWin;
 
 import datastore.SSM;
 import exec.Event;
@@ -455,8 +456,8 @@ System.out.println("Spread detected");
                //Event.resizeLens( x1, y1, (int)(2));
             } else if (wcursor.element == SSM.ELEMENT_NONE) {
                double dist = DCCamera.instance().eye.sub(new DCTriple(0,0,0)).mag();
-               if (dist < 20) return;
-               DCCamera.instance().move(1.2f);
+               if (dist < 15) return;
+               DCCamera.instance().move(1.1f);
             }
          } else if (oldDistance > newDistance) {
 System.out.println("Pinch detected");
@@ -464,8 +465,8 @@ System.out.println("Pinch detected");
                //Event.resizeLens( x1, y1, (int)(-2));
             } else if (wcursor.element == SSM.ELEMENT_NONE) {
                double dist = DCCamera.instance().eye.sub(new DCTriple(0,0,0)).mag();
-               if (dist > 70) return;
-               DCCamera.instance().move(-1.2f);
+               if (dist > 90) return;
+               DCCamera.instance().move(-1.1f);
             } else if (wcursor.element == SSM.ELEMENT_DOCUMENT ) {
                /*
                SSM.docActive = false;
@@ -489,7 +490,11 @@ System.out.println("Pinch detected");
       } else if (wcursor.element == SSM.ELEMENT_LENS){
          //Event.moveLensTUIO(x1, y1, x2, y2);
          //Event.moveLensTUIO(x1, y1, x2, y2, wcursor.lensReference);
-         Event.moveLensTUIO(x1, y1, x2, y2, wcursor.lensReference);
+         Event.moveLensTUIO(x1, y1, x2, y2, wcursor);
+         if (wcursor.lensReference == null) {
+            eventTable.remove(wcursor.sessionID);
+            DWin.instance().debug("Removed a lens");   
+         }
       } else if (wcursor.element == SSM.ELEMENT_LENS_HANDLE) {
          Event.moveLensHandle(x1, y1, x2, y2);
       } else if (wcursor.element == SSM.ELEMENT_DOCUMENT) {

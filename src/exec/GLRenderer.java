@@ -17,6 +17,7 @@ import javax.media.opengl.glu.GLU;
 import model.DCTriple;
 import model.ModelRenderer;
 
+import touch.VFeedbackTask;
 import util.DWin;
 import util.GraphicUtil;
 
@@ -43,6 +44,7 @@ public class GLRenderer implements GLEventListener {
    SaveLoadTask save_task = new SaveLoadTask();
    DomainFilterTask domain_task = new DomainFilterTask();
    QuestionTask question_task = new QuestionTask();
+   VFeedbackTask feedback_task = new VFeedbackTask();
    
    
    // Renders a test scene for sanity check
@@ -124,6 +126,7 @@ public class GLRenderer implements GLEventListener {
       legend_task.render(gl2);
       domain_task.render(gl2);
       question_task.render(gl2);
+      feedback_task.render(gl2);
       
       //for (int i=0; i < renderTaskList.size(); i++) {
       //      renderTaskList.elementAt(i).render(gl2);
@@ -258,6 +261,7 @@ public class GLRenderer implements GLEventListener {
       legend_task.init(gl2);
       domain_task.init(gl2);
       question_task.init(gl2);
+      feedback_task.init(gl2);
       
       // Hack test
       if (SSM.useScenario) {

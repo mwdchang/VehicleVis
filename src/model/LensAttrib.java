@@ -62,6 +62,7 @@ public class LensAttrib {
    public int magicLensType;
    
    public boolean handleSelected = false;
+   public boolean rimSelected = false;
    
    
    // This really shouldn't be here because we created

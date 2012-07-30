@@ -48,7 +48,8 @@ public class DWin extends JFrame {
    // Setup the window....once
    protected DWin() {
       super("Debug Window");   
-      this.setBounds(100+1920, 100, 400, 700);      
+      //this.setBounds(100+1920, 100, 400, 700);      
+      this.setBounds(100, 100, 400, 700);      
       this.setSize(600, 700);
       this.setPreferredSize(new Dimension(600, 700));
       this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

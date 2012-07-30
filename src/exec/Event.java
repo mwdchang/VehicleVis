@@ -6,6 +6,7 @@ import org.jdesktop.animation.timing.interpolation.PropertySetter;
 import model.DCTriple;
 import model.LensAttrib;
 import model.PaneAttrib;
+import touch.WCursor;
 import util.DCCamera;
 import util.DCUtil;
 import util.DWin;
@@ -97,10 +98,10 @@ public class Event {
       }      
    }
    */
-   public static void moveLensTUIO(int posX, int posY, int oldPosX, int oldPosY, LensAttrib la) { 
+   public static void moveLensTUIO(int posX, int posY, int oldPosX, int oldPosY, WCursor cursor) { 
       if (SSM.lensList.isEmpty() == true) return; // sanity
       
-      //LensAttrib la = SSM.lensList.elementAt(laIndex);
+      LensAttrib la = cursor.lensReference;
       if (la != null) {
          float r = la.magicLensRadius; 
          float x = posX - la.magicLensX;
@@ -112,11 +113,13 @@ public class Event {
          float newRadius = (float)Math.sqrt(x*x + y*y);
          if (oldRadius >= r*0.8) {
             la.magicLensRadius = newRadius; 
+            la.rimSelected = true;
             if (la.magicLensRadius < 30) {
                SSM.lensList.remove(la);
-               la = null;
+               cursor.lensReference = null;
             }
          } else {
+            la.rimSelected = false;
             la.magicLensX += posX - oldPosX;
             la.magicLensY += posY - oldPosY;
          }
@@ -578,7 +581,7 @@ System.out.println("<Near plane: " + la.nearPlane);
          float r = (float)SSM.lensList.elementAt(i).magicLensRadius;
          float d = (float)Math.sqrt(x*x + y*y);
          
-         if (d <= r) {
+         if (d <= (r+3)) { // Give some error threshold
             SSM.lensList.elementAt(i).magicLensSelected = 1;
             SSM.topElement = SSM.ELEMENT_LENS;
 //System.out.println("=============================================> Found Lens");            
