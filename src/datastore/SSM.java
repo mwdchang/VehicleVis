@@ -62,7 +62,7 @@ public class SSM {
       
       
       // Parse runtime parameters
-      useTUIO         = Boolean.parseBoolean(System.getProperty("UseTUIO", "true"));
+      useTUIO         = Boolean.parseBoolean(System.getProperty("UseTUIO", "false"));
       useFullScreen   = Boolean.parseBoolean(System.getProperty("UseFullScreen", "true"));
       refreshRate     = Long.parseLong(System.getProperty("RefreshRate", "800"));
       nearThreshold   = Float.parseFloat(System.getProperty("NearThreshold", "0.2f")); 
@@ -96,7 +96,7 @@ public class SSM {
    // - destroy all lens
    // - reset near far and fov 
    ////////////////////////////////////////////////////////////////////////////////
-   public void reset() {
+   public static void reset() {
       fov = 30.0f;   
       nearPlane = 1.0f;
       farPlane = 1000.0f;
@@ -114,9 +114,32 @@ public class SSM {
       
       
       manufactureAttrib.selected = null;
+      manufactureAttrib.active = false;
+      
       makeAttrib.selected = null;
+      makeAttrib.active = false;
+      
       modelAttrib.selected = null;
+      modelAttrib.active = false;
+      
+      yearAttrib.selected = null;
+      yearAttrib.active = false;
+      
       selectedGroup = new Hashtable<Integer, Integer>();
+      
+      c_manufactureAttrib.selected = null;
+      c_manufactureAttrib.active =false;
+      
+      c_makeAttrib.selected = null;
+      c_makeAttrib.active = false;
+      
+      c_modelAttrib.selected = null;
+      c_modelAttrib.active = false;
+      
+      c_yearAttrib.selected = null;
+      c_yearAttrib.active = false;
+      
+      
       relatedList.clear();
       
       // Clear buffers

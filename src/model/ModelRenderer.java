@@ -73,11 +73,11 @@ public class ModelRenderer extends BaseModelRenderer {
          SSM.dirtyGL = 0;
       }
       
-      if (SSM.use3DModel == true) {
+      //if (SSM.use3DModel == true) {
          this.renderIntegratedView(gl2);
-      } else {
-         this.renderChartsOnly(gl2);
-      }
+      //} else {
+      //   this.renderChartsOnly(gl2);
+      //}
       
    }
    
@@ -866,6 +866,7 @@ System.out.println("After ModelRenderer Picking : " + SSM.stopPicking);
          }
          
       } else {
+         if (SSM.useTUIO == false) return;
          boolean canCreateDocumentPanel = true;
          for (int i=0; i < SSM.lensList.size(); i++) {
             LensAttrib la = SSM.lensList.elementAt(i);
@@ -1467,7 +1468,6 @@ System.out.println("After ModelRenderer Picking : " + SSM.stopPicking);
             gl2.glColor4fv( SchemeManager.selected.toArray(), 0);
          } else if (SSM.relatedList != null && SSM.relatedList.contains(comp.id)) { 
             gl2.glColor4fv( SchemeManager.sparkline_guideline.toArray(), 0);
-            //gl2.glColor4fv( SchemeManager.related.toArray(), 0);
          } else {
             if (comp.cchart.active) 
                gl2.glColor4fv( SchemeManager.sparkline_guideline.toArray(), 0);
@@ -1602,7 +1602,6 @@ System.out.println("After ModelRenderer Picking : " + SSM.stopPicking);
          comp.cchart.tf.anchorY = comp.cchart.anchorY;         
          comp.cchart.setLabel(txt);
          comp.cchart.tf.render(gl2);
-         //comp.cchart.tf.renderBorder(gl2);
          
             
          // Doodle
@@ -1613,7 +1612,6 @@ System.out.println("After ModelRenderer Picking : " + SSM.stopPicking);
          if (SSM.selectedGroup.size() > 0 && SSM.selectedGroup.contains(comp.cchart.id)){
             gl2.glColor4fv( SchemeManager.selected.toArray(), 0);
          } else if (SSM.relatedList != null && SSM.relatedList.contains(comp.id)) {   
-            //gl2.glColor4fv( SchemeManager.related.toArray(), 0);
             gl2.glColor4fv( SchemeManager.sparkline_guideline.toArray(), 0);
          } else {
             if (comp.cchart.active)
@@ -1656,29 +1654,6 @@ System.out.println("After ModelRenderer Picking : " + SSM.stopPicking);
          gl2.glDisable(GL2.GL_LINE_STIPPLE);
       }
       
-      
-      
-      
-      // Draw a down and up for scrolling
-      // TODO: Fix selection
-      /*
-      Integer obj = this.pickingCircleLabel(gl2, la, SSM.mouseX, SSM.mouseY);
-     
-      float x = (float)SSM.mouseX - lensX;
-      float y = (float)SSM.mouseY - lensY;
-      float r = (float)lensRadius;
-      float d = (float)Math.sqrt(x*x + y*y);
-      if ( d <= r ) {
-         la.magicLensSelected = 1;
-      } else {
-         la.magicLensSelected = 0;
-      }
-      
-      if (obj != null) {
-         la.magicLensSelected = 1;
-         SSM.instance().topElement = SSM.ELEMENT_LENS;
-      } 
-      */
       
       
       for (DCTriple point: SSM.hoverPoints.values()) {

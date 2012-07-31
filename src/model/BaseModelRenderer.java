@@ -33,6 +33,7 @@ import datastore.MM;
 import datastore.SSM;
 import datastore.SchemeManager;
 import exec.RenderTask;
+import gui.ComponentChart;
 import gui.DCTextPanel2;
 import gui.Heatmap;
 import gui.StatusWindow;
@@ -800,6 +801,9 @@ public abstract class BaseModelRenderer implements RenderTask {
       
       range = (SSM.endYear - SSM.startYear)+1; 
       
+      SSM.sparkLineHeight = SSM.heatmapCellHeight*range + ComponentChart.labelBuffer;
+         
+      
       
       String[] clist = getComponentUnsorted( null ); //passing in null (no context)         
       SSM.instance().segmentMax = 0;
@@ -932,16 +936,9 @@ public abstract class BaseModelRenderer implements RenderTask {
          
          comp.cchart.setMaxValue(localMax);
          
-         /*
-         if (SSM.selectedGroup.size() > 0 && SSM.selectedGroup.contains(comp.id)) {
-            comp.cchart.resize(SSM.sparkLineWidth, 10*range+comp.cchart.labelBuffer);
-         } else {
-            comp.cchart.resize(SSM.sparkLineWidth, 10*range+comp.cchart.labelBuffer);
-         }
-         */
          //comp.cchart.resize(SSM.sparkLineWidth, 15*range+comp.cchart.labelBuffer);
-         comp.cchart.resize(SSM.sparkLineWidth, SSM.heatmapCellHeight*range+comp.cchart.labelBuffer);
-         
+         //comp.cchart.resize(SSM.sparkLineWidth, SSM.heatmapCellHeight*range+ComponentChart.labelBuffer);
+         comp.cchart.resize(SSM.sparkLineWidth, SSM.sparkLineHeight);
          comp.cchart.createSegment( segSize ); // needs to go after setData and setHeight
          
          // Set it to the same colour as the component

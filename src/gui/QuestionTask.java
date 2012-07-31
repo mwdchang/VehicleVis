@@ -73,9 +73,10 @@ public class QuestionTask implements RenderTask {
       q_tf.height = 50;
       //q_tf.addMark("Task : " + qIdx, Color.BLACK, GraphicUtil.font, 5, 20);
       //q_tf.addMark(q.elementAt(qIdx).text(), Color.BLACK, GraphicUtil.font, 5, 5);
-      String s[] = q.elementAt(qIdx).text().split("\n");
-      for (int i=0; i < s.length; i++) {
-         q_tf.addMark(s[i], Color.BLACK, GraphicUtil.font, 2, q_tf.height - (i+1)*getHardFontHeight(GraphicUtil.font));
+      //String s[] = q.elementAt(qIdx).text().split("\n");
+      Vector<StringBuffer> sb = tSplit(q.elementAt(qIdx).text());
+      for (int i=0; i < sb.size(); i++) {
+         q_tf.addMark(sb.elementAt(i).toString(), Color.BLACK, GraphicUtil.font, 2, q_tf.height - (i+1)*getHardFontHeight(GraphicUtil.font));
       }
       q_tf.renderToTexture(null);
       q_tf.anchorX = SSM.windowWidth - 500;
@@ -109,11 +110,10 @@ public class QuestionTask implements RenderTask {
                qIdx ++;   
                q_tf.clearMark();
                
-               //q_tf.addMark("Task : " + qIdx, Color.BLACK, GraphicUtil.font, 2, 14);
-               String s[] = q.elementAt(qIdx).text().split("\n");
-               for (int i=0; i < s.length; i++) {
-                  q_tf.addMark(s[i], Color.BLACK, GraphicUtil.font, 2, q_tf.height - (i+1)*getHardFontHeight(GraphicUtil.font));
-               }
+               Vector<StringBuffer> sb = tSplit(q.elementAt(qIdx).text());
+               for (int i=0; i < sb.size(); i++) {
+                  q_tf.addMark(sb.elementAt(i).toString(), Color.BLACK, GraphicUtil.font, 2, q_tf.height - (i+1)*getHardFontHeight(GraphicUtil.font));
+               }               
                
                
                q_tf.renderToTexture(null);
@@ -181,6 +181,27 @@ public class QuestionTask implements RenderTask {
    
    
    ////////////////////////////////////////////////////////////////////////////////
+   // Customized string splitter
+   ////////////////////////////////////////////////////////////////////////////////
+   public Vector<StringBuffer> tSplit(String s) {
+      Vector<StringBuffer> result = new Vector<StringBuffer>();
+      String tokens[] = s.split(" "); 
+      
+      int c=0;
+      result.add(new StringBuffer());
+      for (int i=0; i < tokens.length; i++) {
+         c += tokens[i].length();
+         if (c > 40) {
+            result.add(new StringBuffer());   
+            c = 0;
+         }
+         result.lastElement().append(tokens[i] + " ");
+      }
+      return result;
+   }
+   
+   
+   ////////////////////////////////////////////////////////////////////////////////
    // Each question can be loaded as a test trial scenario
    ////////////////////////////////////////////////////////////////////////////////
    public QuestionTask() {
@@ -198,15 +219,29 @@ public class QuestionTask implements RenderTask {
             SSM.dirty = 1;
             SSM.dirtyLoad = 1;
          }
-         public String text() { return "Warm up...\nSelect years 1995 and 1996"; }
+         public String text() { return "Warm up task: Select years 1995 and 1996 on the year slider"; }
       });
       
       q.add(new Question() {
          public boolean answered() {
             return SSM.selectedGroup.size() > 1;
          }
-         public void set() {}
-         public String text() { return "Warm up...\nSelect at least 2 components in the 3D model"; }
+         public void set() {
+            SSM.reset();
+         }
+         public String text() { return "Warm up task: Select at least two components on the 3D vehicle model"; }
+      });
+      
+      q.add(new Question() {
+         public boolean answered() {
+            return (
+                  SSM.makeAttrib.selected != null && 
+                  SSM.c_makeAttrib.selected != null && 
+                  ! SSM.makeAttrib.selected.equals(SSM.c_makeAttrib.selected)
+                  );
+         }
+         public void set() { SSM.reset(); }
+         public String text() { return "Warm up task: Use the comparison functionality to compare two different vehicle Models"; }
       });
       
       

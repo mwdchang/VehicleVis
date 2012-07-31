@@ -551,9 +551,9 @@ System.out.println("Pinch detected");
       
       // Create a dead zone
       w.endTimestamp = System.currentTimeMillis();
-      if ( w.element != SSM.ELEMENT_DOCUMENT && w.element != SSM.ELEMENT_LENS) {
+      //if ( w.element != SSM.ELEMENT_DOCUMENT && w.element != SSM.ELEMENT_LENS) {
          deadzone.put(w.sessionID, w);   
-      }
+      //}
       
       
       // Are there too many fingers down ? We only support 2 touch gestures, so if

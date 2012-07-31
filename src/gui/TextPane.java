@@ -91,7 +91,7 @@ public class TextPane {
             s += SSM.yearAttrib.selected  == null? "" : SSM.yearAttrib.selected;
             String c = d.mfr + d.make + d.model + d.year;
             
-//            System.out.println("In Text Panel : " + s + "<>" + c);
+            //System.out.println("In Text Panel : " + s + "<>" + c);
             if (s != null && c.contains(s)) {
                tag.c = SchemeManager.comp_1;   
             } else {
@@ -178,6 +178,7 @@ public class TextPane {
          }
          g2d.setColor(t.c.awtRGBA());
          
+         
          if (t.isKey) {
             g2d.fillRect((int)t.x-2, (int)(t.y-t.yPrime+2), (int)t.width, (int)(t.yPrime+2));
             g2d.setColor(Color.white);
@@ -187,7 +188,7 @@ public class TextPane {
             g2d.setColor(Color.LIGHT_GRAY);
             g2d.drawString(t.s, t.x, t.y);
          } else {
-            g2d.setColor(Color.black);
+            //g2d.setColor(Color.black);
             g2d.drawString(t.s, t.x, t.y);
          }
          

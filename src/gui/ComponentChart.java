@@ -74,5 +74,5 @@ public abstract class ComponentChart {
    //public static Font  labelFont  = new Font("Arial", Font.PLAIN, 12);
    public static Font  labelFont  = DCUtil.loadFont(Const.FONT_PATH+"din1451m.ttf", Font.PLAIN, 16);
    public TextureFont tf = new TextureFont();     
-   public float labelBuffer = 20.0f;
+   public static float labelBuffer = 20.0f;
 }
