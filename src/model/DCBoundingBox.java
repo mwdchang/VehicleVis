@@ -83,7 +83,7 @@ public class DCBoundingBox extends DCObj {
    	   //gl2.glColor3f(0.0f, 0.8f, 0.8f);
 //   	   gl2.glColor4fv( SchemeManager.colour_blue.toArray(), 0);
    	   gl2.glColor4fv( colour.toArray(), 0);
-         gl2.glPolygonMode(GL2.GL_FRONT_AND_BACK, GL2.GL_LINE);
+         gl2.glPolygonMode(GL2.GL_FRONT_AND_BACK, GL2.GL_FILL);
          gl2.glLineWidth(0.8f);
       	gl2.glBegin(GL2.GL_QUADS);
       	   // back

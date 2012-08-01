@@ -495,12 +495,12 @@ public class ModelRenderer extends BaseModelRenderer {
                if (SSM.lensList.elementAt(i).handleSelected) {
                   gl2.glColor4fv( SchemeManager.selected.toArray(), 0);
                   GraphicUtil.drawArc(gl2, la.magicLensX, (SSM.windowHeight-la.magicLensY), 0, 
-                        la.magicLensRadius, la.magicLensRadius+42, 
+                        la.magicLensRadius, la.magicLensRadius+47, 
                         la.handleAngle-1, la.handleAngle+31, 20);
                } else {
                   gl2.glColor4fv( SchemeManager.unselected.toArray(), 0);
                   GraphicUtil.drawArc(gl2, la.magicLensX, (SSM.windowHeight-la.magicLensY), 0, 
-                        la.magicLensRadius, la.magicLensRadius+40, 
+                        la.magicLensRadius, la.magicLensRadius+45, 
                         la.handleAngle, la.handleAngle+30, 20);
                }
                   
@@ -850,6 +850,7 @@ System.out.println("After ModelRenderer Picking : " + SSM.stopPicking);
       
       
       if (obj != null) {
+         
          // Disable any action if in local focus mode and 
          // the part clicked is not related nor selected
          if (SSM.useLocalFocus == true) {
@@ -867,6 +868,22 @@ System.out.println("After ModelRenderer Picking : " + SSM.stopPicking);
          
       } else {
          if (SSM.useTUIO == false) return;
+         
+         // Check if we are hitting the bounding box of the objects
+         // if we are than do nothing
+         IntBuffer buffer = (IntBuffer)GLBuffers.newDirectGLBuffer(GL2.GL_UNSIGNED_INT, 512);
+         startPickingPerspective(gl2, buffer, px, py);
+         gl2.glLoadName(987);
+         gl2.glPushMatrix();
+            basicTransform(gl2);
+            MM.currentModel.mbox.renderBoundingBox(gl2); 
+         gl2.glPopMatrix();   
+         Integer obj2 = this.finishPicking(gl2, buffer);
+         System.out.println("Obj 2: " + obj2);
+         if (obj2 != null) return;
+         System.out.println("Obj 2: " + obj2);
+         
+         
          boolean canCreateDocumentPanel = true;
          for (int i=0; i < SSM.lensList.size(); i++) {
             LensAttrib la = SSM.lensList.elementAt(i);
@@ -886,7 +903,8 @@ System.out.println("After ModelRenderer Picking : " + SSM.stopPicking);
             }
          }
          
-         /*
+         
+         /* Old code to clear selection on selection of empty space
          SSM.selectedGroup.clear();
          SSM.dirty = 1;
          SSM.dirtyGL = 1; // for the text panel
@@ -1138,7 +1156,6 @@ System.out.println("After ModelRenderer Picking : " + SSM.stopPicking);
       while (e.hasMoreElements()) {   
          //String partName = e.nextElement(); 
          String partName = e.nextElement(); 
-         String baseName = MM.currentModel.componentTable.get(partName).baseName;
          DCComponent comp = MM.currentModel.componentTable.get(partName);
          int partId = comp.id;
          

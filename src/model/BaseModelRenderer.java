@@ -1570,6 +1570,7 @@ public abstract class BaseModelRenderer implements RenderTask {
      
      public void DrawModel(GL2 gl2) {
         //gl2.glEnable(GL2.GL_CULL_FACE);
+        //MM.currentModel.mbox.renderBoundingBox(gl2, DCColour.fromDouble(1, 0, 0, 1)); 
         
         for (DCComponent comp : MM.currentModel.componentTable.values()) {
            if (! comp.hasContext || ! comp.active) continue; // Dont' render if it does not have associated values

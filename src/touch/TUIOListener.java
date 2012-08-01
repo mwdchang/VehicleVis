@@ -6,6 +6,7 @@ import java.util.Vector;
 import org.jdesktop.animation.timing.interpolation.PropertySetter;
 
 import model.DCTriple;
+import model.LensAttrib;
 
 import util.DCCamera;
 import util.DCUtil;
@@ -166,6 +167,8 @@ public class TUIOListener implements TuioListener {
       WCursor w;
       if (Event.checkLens(posX, posY) == SSM.ELEMENT_LENS) {
          w = new WCursor(SSM.ELEMENT_LENS, o);
+      } else if (Event.checkLens(posX, posY) == SSM.ELEMENT_LENS_RIM) {    
+         w = new WCursor(SSM.ELEMENT_LENS_RIM, o);
       } else if (Event.checkLensHandle(posX, posY) == SSM.ELEMENT_LENS_HANDLE) {
          w = new WCursor(SSM.ELEMENT_LENS_HANDLE, o);
       } else if (Event.checkDocumentPanel(posX, posY) != SSM.ELEMENT_NONE) {
@@ -211,7 +214,7 @@ public class TUIOListener implements TuioListener {
             // 2) Remove new touch points that are way too close in terms of time and distance
             if (dist(wc.x, wc.y, w.x, w.y, width, height) < 30) {
                if (Math.abs( wc.timestamp-w.timestamp) < 100) {
-                  if (wc.element != SSM.ELEMENT_DOCUMENT && wc.element != SSM.ELEMENT_LENS) {
+                  if (wc.element != SSM.ELEMENT_DOCUMENT && wc.element != SSM.ELEMENT_LENS && wc.element != SSM.ELEMENT_LENS_RIM) {
                      System.err.println("H2 " + eventTable.size());
                      return;   
                   }
@@ -222,19 +225,41 @@ public class TUIOListener implements TuioListener {
             // 3) Remove new touch points if there are move points in the vicinity
             if (dist(wc.x, wc.y, w.x, w.y, width, height) < 500 &&
                 dist(wc.x, wc.y, w.x, w.y, width, height) > 20) {
-               //if (wc.state == WCursor.STATE_MOVE) {
-               if (wc.state == WCursor.STATE_MOVE && wc.element != SSM.ELEMENT_DOCUMENT && wc.element != SSM.ELEMENT_LENS) {
+               if (wc.state == WCursor.STATE_MOVE && wc.element != SSM.ELEMENT_DOCUMENT && wc.element != SSM.ELEMENT_LENS && wc.element != SSM.ELEMENT_LENS_RIM) {
                   System.err.println("H3 " + eventTable.size());
                   return;   
                }
             }
+            
+            // Clear a zone around the lens to prevent accidental triggers
+            if (wc.element == SSM.ELEMENT_LENS || wc.element == SSM.ELEMENT_LENS_RIM) {
+               LensAttrib la = wc.lensReference;       
+               if (la != null) {
+                  float dist = (float)Math.sqrt((posX - la.magicLensX)*(posX - la.magicLensX)  + (posY - la.magicLensY)*(posY - la.magicLensY));       
+                  if (dist < la.magicLensRadius+50) {
+                     System.err.println("H3 Lens " + eventTable.size());    
+                     return;
+                  }
+               }
+            }
+            
+            // Clear a zone around the document panel to prevent accidental triggers
+            if (wc.element == SSM.ELEMENT_DOCUMENT) {
+               if (DCUtil.between(posX, SSM.docAnchorX-40, SSM.docAnchorX+SSM.docWidth+40)) {
+                  if (DCUtil.between((SSM.windowHeight-posY), SSM.docAnchorY-40, SSM.docAnchorY+SSM.docHeight+40)) {
+                     System.err.println("H3 Document " + eventTable.size());
+                     return;
+                  }
+               }
+            }
+            
             
          }
             
          // 3.1) Remove new touch points if it overflows the Zone maximum
          // There should be a maximum of two touch points for document zone and
          // the lens zone
-         if (w.element == SSM.ELEMENT_LENS) {
+         if (w.element == SSM.ELEMENT_LENS || w.element == SSM.ELEMENT_LENS_RIM) {
             if (this.findSimilarCursorPixel(w, 0, 999).size() >= 1) {
                System.err.println("H3.1 " + eventTable.size());
                return;
@@ -256,7 +281,7 @@ public class TUIOListener implements TuioListener {
          // area that has just been deactivated (remove cursor) in a 
          // non moveable zone...we restrict this so the action does not
          // try to repeat itself
-         if (w.element != SSM.ELEMENT_LENS && w.element != SSM.ELEMENT_DOCUMENT && w.state != WCursor.STATE_MOVE) {
+         if (w.element != SSM.ELEMENT_LENS && w.element != SSM.ELEMENT_LENS_RIM && w.element != SSM.ELEMENT_DOCUMENT && w.state != WCursor.STATE_MOVE) {
             for (WCursor deadCursor : deadzone.values()) {
                System.err.println( w.x*width + " " + w.y*height + " | " + deadCursor.x*width + " " + deadCursor.y*height);
                if ( this.dist(deadCursor.x*width, deadCursor.y*height, w.x*width, w.y*height, 1, 1) < 100) {
@@ -268,7 +293,7 @@ public class TUIOListener implements TuioListener {
          
          
          // If the type is lens, register which lens
-         if (w.element == SSM.ELEMENT_LENS) {
+         if (w.element == SSM.ELEMENT_LENS || w.element == SSM.ELEMENT_LENS_RIM) {
             for (int i=0; i < SSM.lensList.size(); i++) {
                float x = (float)w.x*width - (float)SSM.lensList.elementAt(i).magicLensX;
                float y = (float)w.y*height - (float)SSM.lensList.elementAt(i).magicLensY;
@@ -319,15 +344,15 @@ public class TUIOListener implements TuioListener {
       float width  = SSM.windowWidth;
       float height = SSM.windowHeight;
       // 1) Remove touch point jitters
-      if (dist(wcursor.x, wcursor.y, o.getX(), o.getY(), width, height) < 1.0) {
+      if (dist(wcursor.x, wcursor.y, o.getX(), o.getY(), width, height) < 1.0 && wcursor.element != SSM.ELEMENT_LENS_RIM) {
          System.err.println("H1 " + eventTable.size());
          return;   
       }
       
       
       // 4) Reinforce intention to actually move
-      if (wcursor.numUpdate < 1 && wcursor.element != SSM.ELEMENT_LENS && wcursor.element != SSM.ELEMENT_LENS_HANDLE && wcursor.element != SSM.ELEMENT_DOCUMENT) {
-         if ( o.getTuioTime().getTotalMilliseconds() - wcursor.timestamp < 500)  {
+      if (wcursor.numUpdate < 1 && wcursor.element != SSM.ELEMENT_LENS && wcursor.element != SSM.ELEMENT_LENS_RIM && wcursor.element != SSM.ELEMENT_LENS_HANDLE && wcursor.element != SSM.ELEMENT_DOCUMENT) {
+         if ( o.getTuioTime().getTotalMilliseconds() - wcursor.timestamp < 350)  {
             if (dist(wcursor.x, wcursor.y, o.getX(), o.getY(), width, height) < 20) {
                System.err.println("H4 " + eventTable.size());
                return;   
@@ -335,8 +360,8 @@ public class TUIOListener implements TuioListener {
          }
       } 
       // 4.1) Lens Update: Reinforce intention to actually move for lens
-      if (wcursor.numUpdate < 1 && wcursor.element == SSM.ELEMENT_LENS) {
-         if ( o.getTuioTime().getTotalMilliseconds() - wcursor.timestamp < 300)  {
+      if (wcursor.numUpdate < 1 && (wcursor.element == SSM.ELEMENT_LENS || wcursor.element == SSM.ELEMENT_LENS_RIM)) {
+         if ( o.getTuioTime().getTotalMilliseconds() - wcursor.timestamp < 200)  {
             System.err.println("H4.1 " + eventTable.size());
             return;
          }
@@ -416,7 +441,6 @@ public class TUIOListener implements TuioListener {
       //System.out.println("Similar cursors = " + findSimilarCursorPixel(wcursor, 0, 500));
       Vector<WCursor> simCursor = findSimilarCursorPixel(wcursor, 0, 500);
       if (simCursor.size() == 1) {
-System.out.println("Checking 2 finger gestures...");         
          WCursor sim = simCursor.elementAt(0);   
          int simX = (int)(sim.x * width);
          int simY = (int)(sim.y * height);
@@ -424,55 +448,19 @@ System.out.println("Checking 2 finger gestures...");
          double oldDistance = dist(simX, simY, x2, y2, 1, 1);
          double newDistance = dist(simX, simY, x1, y1, 1, 1);
          
-         double vDir1 = (wcursor.y - wcursor.oldY)*height;
-         double vDir2 = (sim.y - sim.oldY)*height;         
-         
-         // Check if there is a two-finger drag going on,
-         // To check for two finger drag, we check that the 
-         // two touch points are sufficiently close, are both in move state, and are moving in
-         // the same direction
-         //if (newDistance <= 150 && wcursor.element == SSM.ELEMENT_DOCUMENT) {               // 1) Sufficiently close
-         if ( newDistance <= 150 ) {
-System.out.println("Checking 50");
-            //if (wcursor.state == WCursor.STATE_MOVE && sim.state == WCursor.STATE_MOVE) {  // 2) Same state 
-System.out.println("Checking 2 finger drag : " + vDir1 + " " + vDir2);
-               if ( vDir1 * vDir2 > 0 ) {                                                  // 3) Same direction of movement ( ++ | -- )
-System.out.println("2 Finger Drag");   
-                  if (wcursor.element == SSM.ELEMENT_DOCUMENT) {
-                     //Event.checkDocumentScroll(x1, y1, (y2-y1));
-                  } else if (wcursor.element == SSM.ELEMENT_LENS) {
-                     int direction = (y2 > y1)? 1 : -1;
-                     //Event.scrollLens(x1, y1, direction);
-                  }
-                  return;
-               }
-            //}
-         }         
-         
-         
          if (oldDistance < newDistance) {
 System.out.println("Spread detected");    
-            if (wcursor.element == SSM.ELEMENT_LENS) {
-               //Event.resizeLens( x1, y1, (int)(2));
-            } else if (wcursor.element == SSM.ELEMENT_NONE) {
+            if (wcursor.element == SSM.ELEMENT_NONE) {
                double dist = DCCamera.instance().eye.sub(new DCTriple(0,0,0)).mag();
                if (dist < 15) return;
                DCCamera.instance().move(1.1f);
             }
          } else if (oldDistance > newDistance) {
 System.out.println("Pinch detected");
-            if (wcursor.element == SSM.ELEMENT_LENS) {
-               //Event.resizeLens( x1, y1, (int)(-2));
-            } else if (wcursor.element == SSM.ELEMENT_NONE) {
+            if (wcursor.element == SSM.ELEMENT_NONE) {
                double dist = DCCamera.instance().eye.sub(new DCTriple(0,0,0)).mag();
                if (dist > 90) return;
                DCCamera.instance().move(-1.1f);
-            } else if (wcursor.element == SSM.ELEMENT_DOCUMENT ) {
-               /*
-               SSM.docActive = false;
-               SSM.resizePanel = 1;
-               eventTable.remove(o.getSessionID());
-               */
             }
          }
          
@@ -484,12 +472,11 @@ System.out.println("Pinch detected");
       ////////////////////////////////////////////////////////////////////////////////
       // Execute any move event
       ////////////////////////////////////////////////////////////////////////////////
+      if (wcursor.numUpdate < 2) return; // Lag the update a bit to further distinguish swipe and move events
+      
       if (wcursor.element == SSM.ELEMENT_NONE){
          Event.setCameraTUIO(x1, y1, x2, y2);
-         //Event.setCamera(x1, y1, x2, y2);
-      } else if (wcursor.element == SSM.ELEMENT_LENS){
-         //Event.moveLensTUIO(x1, y1, x2, y2);
-         //Event.moveLensTUIO(x1, y1, x2, y2, wcursor.lensReference);
+      } else if (wcursor.element == SSM.ELEMENT_LENS || wcursor.element == SSM.ELEMENT_LENS_RIM){
          Event.moveLensTUIO(x1, y1, x2, y2, wcursor);
          if (wcursor.lensReference == null) {
             eventTable.remove(wcursor.sessionID);
@@ -617,7 +604,7 @@ System.out.println("Pinch detected");
          }
       } else if (w.points.size() < 4 && findSimilarCursorPixel(w, 0, 400).size() == 0) {
          // Only clickable elements can send a tap event
-         if (w.element == SSM.ELEMENT_NONE || w.element == SSM.ELEMENT_LENS || 
+         if (w.element == SSM.ELEMENT_NONE || w.element == SSM.ELEMENT_LENS || w.element == SSM.ELEMENT_LENS_RIM ||
              w.element == SSM.ELEMENT_DOCUMENT ||
              w.element == SSM.ELEMENT_SCENARIO ||
              w.element == SSM.ELEMENT_FILTER ||
@@ -700,7 +687,7 @@ System.out.println("Pinch detected");
             try {
                synchronized(eventTable) {
                   for (WCursor w : eventTable.values()) {
-                     if ( Math.abs(w.timestamp - w.cursor.getTuioTime().getTotalMilliseconds()) > 400 && w.state == WCursor.STATE_NOTHING) {
+                     if ( Math.abs(w.timestamp - w.cursor.getTuioTime().getTotalMilliseconds()) > 250 && w.state == WCursor.STATE_NOTHING) {
                         w.state = WCursor.STATE_HOLD;   
                         SSM.hoverPoints.put(w.sessionID, new DCTriple(w.x*SSM.windowWidth, w.y*SSM.windowHeight, 0));
                      } else if (w.state == WCursor.STATE_HOLD){

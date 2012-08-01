@@ -111,6 +111,20 @@ public class Event {
          
          float oldRadius = (float)Math.sqrt(ox*ox + oy*oy);
          float newRadius = (float)Math.sqrt(x*x + y*y);
+         
+         if (cursor.element == SSM.ELEMENT_LENS) {
+            la.magicLensX += posX - oldPosX;
+            la.magicLensY += posY - oldPosY;
+         } else if (cursor.element == SSM.ELEMENT_LENS_RIM){
+            la.magicLensRadius = newRadius; 
+            if (la.magicLensRadius < 30) {
+               SSM.lensList.remove(la);
+               cursor.lensReference = null;
+            }
+         }
+         /*
+         float oldRadius = (float)Math.sqrt(ox*ox + oy*oy);
+         float newRadius = (float)Math.sqrt(x*x + y*y);
          if (oldRadius >= r*0.8) {
             la.magicLensRadius = newRadius; 
             la.rimSelected = true;
@@ -123,6 +137,7 @@ public class Event {
             la.magicLensX += posX - oldPosX;
             la.magicLensY += posY - oldPosY;
          }
+         */
          
       }
    }
@@ -184,21 +199,6 @@ public class Event {
             }
             SSM.lensList.elementAt(i).magicLensRadius = d;  
          }
-         
-         /*
-         if (SSM.lensList.elementAt(i).magicLensSelected == 1) {
-            float x = (float)posX - (float)SSM.lensList.elementAt(i).magicLensX;
-            float y = (float)posY - (float)SSM.lensList.elementAt(i).magicLensY;
-            float d = (float)Math.sqrt(x*x + y*y);         
-            
-            // Test
-            if (d < 90) {
-               SSM.lensList.remove(i);
-               break;
-            }
-            SSM.lensList.elementAt(i).magicLensRadius = d;  
-         }
-         */
       }
    }
    
@@ -220,17 +220,6 @@ public class Event {
                return;
             }
          }
-         
-         /*
-         if (SSM.lensList.elementAt(i).magicLensSelected == 1) {
-            // Test
-            if ( SSM.lensList.elementAt(i).magicLensRadius + d < 90) {
-               SSM.lensList.remove(i);
-               break;
-            }
-            SSM.lensList.elementAt(i).magicLensRadius += d;  
-         }
-         */
       }
    }
    
@@ -589,10 +578,12 @@ System.out.println("<Near plane: " + la.nearPlane);
          if (d <= (r+3)) { // Give some error threshold
             SSM.lensList.elementAt(i).magicLensSelected = 1;
             SSM.topElement = SSM.ELEMENT_LENS;
-//System.out.println("=============================================> Found Lens");            
             if ( SSM.lensList.elementAt(i).borderSize < SSM.lensList.elementAt(i).borderSizeSelected ) {
                SSM.lensList.elementAt(i).selectAnimator = PropertySetter.createAnimator(200, SSM.lensList.elementAt(i), "borderSize", new FloatEval(), SSM.lensList.elementAt(i).borderSizeSelected);
                SSM.lensList.elementAt(i).selectAnimator.start();
+            }
+            if ( d >= r*0.8) {
+               return SSM.ELEMENT_LENS_RIM;   
             }
             return SSM.ELEMENT_LENS;
          }
@@ -611,7 +602,7 @@ System.out.println("<Near plane: " + la.nearPlane);
          float r = (float)SSM.lensList.elementAt(i).magicLensRadius;
          float d = (float)Math.sqrt(x*x + y*y);
          
-         if ( d >=r && d <= (r+40) ) {
+         if ( d >=r && d <= (r+45) ) {
             double ang = Math.toDegrees(Math.atan2( y, x+0.000001));
             ang = (-ang+360)%360;
             //ang = ang * 180.0 / Math.PI;
