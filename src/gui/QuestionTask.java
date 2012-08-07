@@ -56,8 +56,6 @@ public class QuestionTask implements RenderTask {
       q_tf.render(gl2);
       //q_tf.renderBorder(gl2);
       
-      //gl2.glPolygonMode(GL2.GL_FRONT_AND_BACK, GL2.GL_LINE);
-      //gl2.glPolygonMode(GL2.GL_FRONT_AND_BACK, GL2.GL_FILL);
    }
 
    @Override
@@ -255,32 +253,12 @@ public class QuestionTask implements RenderTask {
          }
          public void set() {
             SSM.selectedGroup.clear();
-            SSM.startYear = 1998;
-            SSM.endYear = 1998;
-            SSM.startMonth = 0;
-            SSM.endMonth = 11;
-            SSM.showLabels = false;
+            SSM.reset();
             SSM.dirty = 1;
             SSM.dirtyLoad = 1;
          }
          public String text() { 
-            return "Select the vehicle component with the highest rate\nof complaint.(Heatmap is disabled)"; 
-         }
-      });
-      
-      q.add(new Question() {
-         public boolean answered() {
-            return true;    
-         }
-         public void set() {
-            SSM.selectedGroup.clear();   
-            SSM.startYear = 1997;
-            SSM.endYear = 1997;
-            SSM.showLabels = true;
-            SSM.dirty = 1;
-         }
-         public String text() {
-            return "Select the vehicle component with the highest rate\nof complaint using the heatmap";      
+            return "Select the vehicle component with the highest rate of vehicle complaints";
          }
       });
       
@@ -290,27 +268,29 @@ public class QuestionTask implements RenderTask {
          }
          public void set() {
             SSM.selectedGroup.clear();
-            SSM.showLabels = true;
             SSM.dirty = 1; 
          }
          public String text() {
-            return "Select the component with the highest\nnumber of complaints";
+            return "Select the component with the highest rate of complaint in July.";
          }
          
       });
       
+      /* 
       q.add(new Question() {
          public boolean answered() {
             return true;
          }
          public void set() {
-            SSM.selectedGroup.clear(); SSM.showLabels = true;
+            SSM.selectedGroup.clear(); 
+            SSM.showLabels = false;
             SSM.dirty = 1;
          }
          public String text() {
-            return "Use the lens to hover the region of the vehicle\nthat contains the highest number of issues";
+            return "Use the lens widget to hover over the region of the vehicle that you believe to have the highest number of failures.";
          }
       });
+      */
       
       
       ////////////////////////////////////////////////////////////////////////////////
@@ -326,7 +306,35 @@ public class QuestionTask implements RenderTask {
             SSM.dirty = 1;
          }
          public String text() {
-            return "Identify the entities that failed\nwhen the wheel component also failed";
+            return "Tell us what components are related to complaints about wheels";
+         }
+      });
+      
+      q.add(new Question(){
+         public boolean answered() { return true; }
+         public void set() {
+            SSM.selectedGroup.clear();   
+            SSM.dirty = 1;
+            SSM.dirtyGL = 1;
+         }
+         public String text() {
+            return "Which manufacturer had the most complaints in the summer months(May to August)? What are these complaints about?";
+         }
+      });
+      
+      q.add(new Question() {
+         public boolean answered() { return true; }
+         public void set() {
+            SSM.selectedGroup.clear();   
+            SSM.showLabels = true;
+            SSM.dirty = 1;
+            SSM.startYear = 1997;
+            SSM.endYear = 1997;
+            SSM.startMonth = 0;
+            SSM.endMonth = 11;
+         }
+         public String text() {
+            return "Using the lens and heatmap widgets, observe for any trends or patterns, tell us your findings.";
          }
       });
       
@@ -338,19 +346,7 @@ public class QuestionTask implements RenderTask {
             SSM.dirty = 1;
          }
          public String text() {
-            return "TODO:";
-         }
-      });
-      
-      q.add(new Question() {
-         public boolean answered() { return true; }
-         public void set() {
-            SSM.selectedGroup.clear();   
-            SSM.showLabels = true;
-            SSM.dirty = 1;
-         }
-         public String text() {
-            return "Given a list of vehicles() of similar\ntype and price, which vehicle\nwould you purchase and why?";
+            return "Given a list of similarly priced vehicles, which one would you purchase and why? Are you free to use all available widgets";
          }
       });
      

@@ -158,7 +158,7 @@ public class Event {
             double ang = Math.toDegrees(Math.atan2( y, x+0.000001));
             ang = (-ang+360)%360;
             
-            if ( ang >= SSM.lensList.elementAt(i).handleAngle && ang <= SSM.lensList.elementAt(i).handleAngle+30 ) {
+            if ( ang >= SSM.lensList.elementAt(i).handleAngle && ang <= SSM.lensList.elementAt(i).handleAngle+40 ) {
                double angNew = Math.toDegrees(Math.atan2( ny, nx+0.000001));
                angNew = (-angNew+360)%360;
                
@@ -169,7 +169,7 @@ public class Event {
                
                //if (SSM.lensList.elementAt(i).nearPlane <= 1) SSM.lensList.elementAt(i).nearPlane = 1.0f;
                
-               System.out.println( "Near plane is: " + SSM.lensList.elementAt(i).nearPlane);
+               //System.out.println( "Near plane is: " + SSM.lensList.elementAt(i).nearPlane);
                SSM.refreshMagicLens = true;
             }
             
@@ -575,7 +575,7 @@ System.out.println("<Near plane: " + la.nearPlane);
          float r = (float)SSM.lensList.elementAt(i).magicLensRadius;
          float d = (float)Math.sqrt(x*x + y*y);
          
-         if (d <= (r+3)) { // Give some error threshold
+         if (d <= (r+LensAttrib.errorRange)) { // Give some error threshold
             SSM.lensList.elementAt(i).magicLensSelected = 1;
             SSM.topElement = SSM.ELEMENT_LENS;
             if ( SSM.lensList.elementAt(i).borderSize < SSM.lensList.elementAt(i).borderSizeSelected ) {
@@ -608,7 +608,7 @@ System.out.println("<Near plane: " + la.nearPlane);
             //ang = ang * 180.0 / Math.PI;
             //if (ang < 0) ang += 360.0;
             
-            if ( ang >= SSM.lensList.elementAt(i).handleAngle && ang <= SSM.lensList.elementAt(i).handleAngle+30 ) {
+            if ( ang >= SSM.lensList.elementAt(i).handleAngle && ang <= SSM.lensList.elementAt(i).handleAngle+40 ) {
                System.out.println("Selected a lens handle " + ang);
                
                SSM.lensList.elementAt(i).handleSelected = true;

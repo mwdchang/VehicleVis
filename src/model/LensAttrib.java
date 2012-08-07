@@ -64,6 +64,8 @@ public class LensAttrib {
    public boolean handleSelected = false;
    public boolean rimSelected = false;
    
+   public static float errorRange = 8;
+   
    
    // This really shouldn't be here because we created
    // a circular dependency...but works for now

@@ -461,7 +461,6 @@ public class ModelRenderer extends BaseModelRenderer {
             
             // Lets render a grid for aligning thingys
             GraphicUtil.drawGrid(gl2, 0, 0, SSM.windowWidth, SSM.windowHeight, 50);
-            
          }
          
       }         
@@ -496,13 +495,27 @@ public class ModelRenderer extends BaseModelRenderer {
                   gl2.glColor4fv( SchemeManager.selected.toArray(), 0);
                   GraphicUtil.drawArc(gl2, la.magicLensX, (SSM.windowHeight-la.magicLensY), 0, 
                         la.magicLensRadius, la.magicLensRadius+47, 
-                        la.handleAngle-1, la.handleAngle+31, 20);
+                        la.handleAngle-1, la.handleAngle+41, 20);
                } else {
                   gl2.glColor4fv( SchemeManager.unselected.toArray(), 0);
                   GraphicUtil.drawArc(gl2, la.magicLensX, (SSM.windowHeight-la.magicLensY), 0, 
                         la.magicLensRadius, la.magicLensRadius+45, 
-                        la.handleAngle, la.handleAngle+30, 20);
+                        la.handleAngle, la.handleAngle+40, 20);
                }
+               
+               double symbolX = la.magicLensX+(la.magicLensRadius+22)*Math.cos( (la.handleAngle+30)*Math.PI/180.0);
+               double symbolY = (SSM.windowHeight-la.magicLensY)+(la.magicLensRadius+22)*Math.sin( (la.handleAngle+30)*Math.PI/180.0 );
+               gl2.glColor4d(1, 1, 1, 0.5);
+                  
+               gl2.glLineWidth(5.0f);
+               gl2.glBegin(GL2.GL_LINES);
+                  gl2.glVertex2d( symbolX, symbolY+8 );
+                  gl2.glVertex2d( symbolX, symbolY-8 );
+                  
+                  gl2.glVertex2d( symbolX+8, symbolY );
+                  gl2.glVertex2d( symbolX-8, symbolY );
+               gl2.glEnd();
+               gl2.glLineWidth(1.0f);
                   
                // Draw a special marker if the near plane is at the minimum or at the maximum
                /*
@@ -961,10 +974,10 @@ System.out.println("After ModelRenderer Picking : " + SSM.stopPicking);
       
       // check if the paddings are out of bound (ie: when we are close up)
       // default the padding space to space padding
-      if ( rpadding + lensX > SSM.windowWidth ) {
+      if ( rpadding + lensX + SSM.sparkLineWidth + spadding >= SSM.windowWidth ) {
          rpadding = spadding;   
       }
-      if (lensX - lpadding < 0) {
+      if (lensX - lpadding - SSM.sparkLineWidth - spadding <= 0) {
          lpadding = spadding;   
       }      
       
@@ -1278,12 +1291,14 @@ System.out.println("After ModelRenderer Picking : " + SSM.stopPicking);
          lpadding = vpadding;
       }
       
+      
+      
       // check if the paddings are out of bound (ie: when we are close up)
       // default the padding space to space padding
-      if ( rpadding + lensX + SSM.sparkLineWidth > SSM.windowWidth ) {
+      if ( rpadding + lensX + SSM.sparkLineWidth + spadding >= SSM.windowWidth ) {
          rpadding = spadding;   
       }
-      if (lensX - lpadding - SSM.sparkLineWidth < 0) {
+      if (lensX - lpadding - SSM.sparkLineWidth - spadding <= 0) {
          lpadding = spadding;   
       }
       

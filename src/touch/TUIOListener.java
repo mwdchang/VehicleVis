@@ -236,7 +236,7 @@ public class TUIOListener implements TuioListener {
                LensAttrib la = wc.lensReference;       
                if (la != null) {
                   float dist = (float)Math.sqrt((posX - la.magicLensX)*(posX - la.magicLensX)  + (posY - la.magicLensY)*(posY - la.magicLensY));       
-                  if (dist < la.magicLensRadius+50) {
+                  if (dist < la.magicLensRadius+80) {
                      System.err.println("H3 Lens " + eventTable.size());    
                      return;
                   }
@@ -284,7 +284,7 @@ public class TUIOListener implements TuioListener {
          if (w.element != SSM.ELEMENT_LENS && w.element != SSM.ELEMENT_LENS_RIM && w.element != SSM.ELEMENT_DOCUMENT && w.state != WCursor.STATE_MOVE) {
             for (WCursor deadCursor : deadzone.values()) {
                System.err.println( w.x*width + " " + w.y*height + " | " + deadCursor.x*width + " " + deadCursor.y*height);
-               if ( this.dist(deadCursor.x*width, deadCursor.y*height, w.x*width, w.y*height, 1, 1) < 100) {
+               if ( this.dist(deadCursor.x*width, deadCursor.y*height, w.x*width, w.y*height, 1, 1) < 200) {
                   System.err.println("HX.1 ");   
                   return;
                }
@@ -300,7 +300,7 @@ public class TUIOListener implements TuioListener {
                float r = (float)SSM.lensList.elementAt(i).magicLensRadius;
                float d = (float)Math.sqrt(x*x + y*y);
                
-               if (d <= r) {
+               if (d <= (r+LensAttrib.errorRange)) {
                   SSM.lensList.elementAt(i).magicLensSelected = 1;
                   SSM.topElement = SSM.ELEMENT_LENS;
                   w.lensReference = SSM.lensList.elementAt(i);
@@ -344,7 +344,11 @@ public class TUIOListener implements TuioListener {
       float width  = SSM.windowWidth;
       float height = SSM.windowHeight;
       // 1) Remove touch point jitters
-      if (dist(wcursor.x, wcursor.y, o.getX(), o.getY(), width, height) < 1.0 && wcursor.element != SSM.ELEMENT_LENS_RIM) {
+      if (dist(wcursor.x, wcursor.y, o.getX(), o.getY(), width, height) < 1.0 && wcursor.element != SSM.ELEMENT_LENS_RIM && wcursor.element != SSM.ELEMENT_LENS_HANDLE && wcursor.element != SSM.ELEMENT_DOCUMENT) {
+         System.err.println("H1 " + eventTable.size());
+         return;   
+      }
+      if (dist(wcursor.x, wcursor.y, o.getX(), o.getY(), width, height) < 4.0 && wcursor.element == SSM.ELEMENT_DOCUMENT) {
          System.err.println("H1 " + eventTable.size());
          return;   
       }
