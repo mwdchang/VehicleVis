@@ -34,6 +34,9 @@ public class SSM {
    public static String database = "demo";
    //public static String database = "projectv3";
    
+   public static double HOLD_DELAY = 350;
+   public static DCTriple waitMarker = null;
+   
    
    ////////////////////////////////////////////////////////////////////////////////
    // Default constructor
@@ -127,7 +130,7 @@ public class SSM {
       
       selectedGroup = new Hashtable<Integer, Integer>();
       
-      c_manufactureAttrib.selected = null;
+      c_manufactureAttrib.selected = "None";
       c_manufactureAttrib.active =false;
       
       c_makeAttrib.selected = null;
@@ -491,6 +494,19 @@ public class SSM {
    public static int PART_CHANGE_DURATION = 1000;
    public static int TIME_CHANGE_DURATION = 1000;
    public static int FADE_DURATION = 2500;
+   
+   
+   ////////////////////////////////////////////////////////////////////////////////
+   // Big brother
+   ////////////////////////////////////////////////////////////////////////////////
+   public static int sceneRotate = 0;
+   public static int sceneZoom = 0;
+   public static int selectObjHeatmap = 0;
+   public static int selectObj3D = 0;
+   public static int lensMove = 0;
+   public static int lensResize = 0;
+   public static int lensZoom = 0;
+   
    
    
    

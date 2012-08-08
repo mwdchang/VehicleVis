@@ -135,11 +135,11 @@ public class GLRenderer implements GLEventListener {
          //}
          for (int i=0; i < SSM.pickPoints.size(); i++) {
             DCTriple point = SSM.pickPoints.elementAt(i);
-            domain_task.picking(gl2, point.x, point.y);
-            filter_task.picking(gl2, point.x, point.y);
-            legend_task.picking(gl2, point.x, point.y);
-            question_task.picking(gl2, point.x, point.y);
-            model_task.picking(gl2, point.x, point.y);
+            domain_task.picking(gl2, point.x, point.y, point.z);
+            filter_task.picking(gl2, point.x, point.y, point.z);
+            legend_task.picking(gl2, point.x, point.y, point.z);
+            question_task.picking(gl2, point.x, point.y, point.z);
+            model_task.picking(gl2, point.x, point.y, point.z);
          }
          SSM.l_mouseClicked = false;
          SSM.pickPoints.clear();
@@ -153,6 +153,21 @@ public class GLRenderer implements GLEventListener {
          }
       }
       SSM.stopPicking = 0;
+      
+      
+      if (SSM.waitMarker != null) {
+         GraphicUtil.setOrthonormalView(gl2, 0, SSM.windowWidth, 0, SSM.windowHeight, -10, 10); {
+            gl2.glColor4d(1, 0, 0, SSM.waitMarker.z/20.0);
+            gl2.glBegin(GL2.GL_QUADS);   
+               gl2.glVertex2d(SSM.waitMarker.x, SSM.waitMarker.y);
+               gl2.glVertex2d(SSM.waitMarker.x+50, SSM.waitMarker.y);
+               gl2.glVertex2d(SSM.waitMarker.x+50, SSM.waitMarker.y+50);
+               gl2.glVertex2d(SSM.waitMarker.x, SSM.waitMarker.y+50);
+            gl2.glEnd();
+         }
+         SSM.waitMarker.z -= 1;
+         if ( SSM.waitMarker.z <= 0) SSM.waitMarker = null;
+      }
       
       
       if (SSM.captureScreen) {
@@ -236,6 +251,7 @@ public class GLRenderer implements GLEventListener {
       
       // Hack test
       if (SSM.useScenario) {
+         question_task.q.firstElement().startTime = System.currentTimeMillis();
          question_task.q.firstElement().set();
       }
       

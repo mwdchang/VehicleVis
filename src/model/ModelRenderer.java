@@ -789,7 +789,7 @@ public class ModelRenderer extends BaseModelRenderer {
    // 2) If object A is picked and B is currently selected, then de-select A and select B
    // 3) If object A is picked and nothing is currently selected, then select A
    ////////////////////////////////////////////////////////////////////////////////
-   public void picking(GL2 gl2, float px, float py) {
+   public void picking(GL2 gl2, float px, float py, float pz) {
       // Quickie way to get out and save unnecessary rendering 
       if (SSM.l_mouseClicked == false) return;
 System.out.println("Before ModelRenderer Picking : " + SSM.stopPicking);      
@@ -879,8 +879,11 @@ System.out.println("After ModelRenderer Picking : " + SSM.stopPicking);
             //Event.handleMouseSelect(obj);
          }
          
+         SSM.waitMarker = new DCTriple(mx, my, 20);
+         
       } else {
          if (SSM.useTUIO == false) return;
+         if (pz >= 0) return;
          
          // Check if we are hitting the bounding box of the objects
          // if we are than do nothing
@@ -892,9 +895,7 @@ System.out.println("After ModelRenderer Picking : " + SSM.stopPicking);
             MM.currentModel.mbox.renderBoundingBox(gl2); 
          gl2.glPopMatrix();   
          Integer obj2 = this.finishPicking(gl2, buffer);
-         System.out.println("Obj 2: " + obj2);
          if (obj2 != null) return;
-         System.out.println("Obj 2: " + obj2);
          
          
          boolean canCreateDocumentPanel = true;
@@ -1508,7 +1509,11 @@ System.out.println("After ModelRenderer Picking : " + SSM.stopPicking);
             
          }
          
-         gl2.glLineWidth(2.0f);
+         if (SSM.useTUIO == true) {
+            gl2.glLineWidth(1.0f);
+         } else {
+            gl2.glLineWidth(2.0f);
+         }
          gl2.glLineStipple(2, SSM.stipplePattern);
          if (SSM.useStipple) gl2.glEnable(GL2.GL_LINE_STIPPLE);
          gl2.glBegin(GL2.GL_LINES);
@@ -1655,7 +1660,12 @@ System.out.println("After ModelRenderer Picking : " + SSM.stopPicking);
          
          gl2.glLineStipple(2, SSM.stipplePattern);
          if (SSM.useStipple) gl2.glEnable(GL2.GL_LINE_STIPPLE);
-         gl2.glLineWidth(2.0f);
+         
+         if (SSM.useTUIO == true) {
+            gl2.glLineWidth(1.0f);
+         } else {
+            gl2.glLineWidth(2.0f);
+         }
          gl2.glBegin(GL2.GL_LINES);
             float tx = lensX  - (lensX  - comp.projCenter.x)*la.zoomFactor;
             float ty = (SSM.windowHeight-lensY)  - ((SSM.windowHeight-lensY) - comp.projCenter.y)*la.zoomFactor;

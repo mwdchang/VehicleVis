@@ -277,7 +277,7 @@ public class FilterTask implements RenderTask {
    // Position the select-able parts and render
    ////////////////////////////////////////////////////////////////////////////////
    @Override
-   public void picking(GL2 gl2, float px, float py) {
+   public void picking(GL2 gl2, float px, float py, float pz) {
       //pickSliderIndicator(gl2, px, py);
       pickingSlider2(gl2, px, py);
    }

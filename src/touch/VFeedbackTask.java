@@ -24,12 +24,24 @@ public class VFeedbackTask implements RenderTask {
       gl2.glBlendFunc(GL2.GL_SRC_ALPHA, GL2.GL_ONE_MINUS_SRC_ALPHA);
       GraphicUtil.setOrthonormalView(gl2, 0, SSM.windowWidth, 0, SSM.windowHeight, -10, 10);
       synchronized(SSM.touchPoint) {
-         gl2.glColor4d(0, 0.35, 0.45, 0.12);
          
          for (WCursor p : SSM.touchPoint.values()) {
+            gl2.glColor4d(0, 0.35, 0.45, 0.12);
             for (int i = 0; i < 10; i++) {
                GraphicUtil.drawPie(gl2, p.x*SSM.windowWidth, (1.0-p.y)*SSM.windowHeight, 0, (i+1)*1.7, 0, 360, 36);   
             }
+            // Start counting
+            if (p.state == WCursor.STATE_NOTHING || p.state == WCursor.STATE_HOLD) {
+               long diff = System.currentTimeMillis() - p.startTimestamp;
+               if (diff >= 360) diff = 360;
+               //if (diff < 100) continue;
+               double angle = diff*360.0/SSM.HOLD_DELAY;
+               
+               gl2.glColor4d(0, 0.35, 0.45, 0.5*angle/360.0);
+               GraphicUtil.drawArc(gl2, p.x*SSM.windowWidth, (1.0-p.y)*SSM.windowHeight, 0, 13*1.7, 15*1.7, 
+                     0, angle, 36);   
+            }
+
             // Trail
             int c = 0;
             for (int idx=(p.points.size()-1); idx > 0; idx -=2) {
@@ -47,7 +59,7 @@ public class VFeedbackTask implements RenderTask {
    }
 
    @Override
-   public void picking(GL2 gl2, float px, float py) {
+   public void picking(GL2 gl2, float px, float py, float pz) {
       // There shouldn't be any interactions for feedback tasks
    }
 

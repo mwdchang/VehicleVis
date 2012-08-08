@@ -154,7 +154,7 @@ public class SaveLoadTask implements RenderTask {
 	
 
 	@Override
-	public void picking(GL2 gl2, float px, float py) {
+	public void picking(GL2 gl2, float px, float py, float pz) {
       if (SSM.instance().l_mouseClicked == false) return;
       
       float mx = px;

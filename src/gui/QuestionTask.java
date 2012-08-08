@@ -90,7 +90,7 @@ public class QuestionTask implements RenderTask {
    // Just checking that the button is pressed ... somehow
    ////////////////////////////////////////////////////////////////////////////////
    @Override
-   public void picking(GL2 gl2, float px, float py) {
+   public void picking(GL2 gl2, float px, float py, float pz) {
       if (SSM.useScenario == false) return;
       if (SSM.l_mouseClicked == false) return;
       
@@ -104,7 +104,9 @@ public class QuestionTask implements RenderTask {
             
             if (q.elementAt(qIdx).answered() && qIdx < q.size()) {
                System.out.println("about to log.................");
-               log(qIdx+"");
+               q.elementAt(qIdx).endTime = System.currentTimeMillis();
+               
+               log( q.elementAt(qIdx) );
                qIdx ++;   
                q_tf.clearMark();
                
@@ -115,6 +117,7 @@ public class QuestionTask implements RenderTask {
                
                
                q_tf.renderToTexture(null);
+               q.elementAt(qIdx).startTime = System.currentTimeMillis();
                q.elementAt(qIdx).set();
                SSM.stopPicking = 1;
                
@@ -134,13 +137,29 @@ public class QuestionTask implements RenderTask {
    ////////////////////////////////////////////////////////////////////////////////
    // Generic logging procedure
    ////////////////////////////////////////////////////////////////////////////////
-   public void log(String taskStr) {
-      ALogger.instance().log("Task: " + taskStr);
-      ALogger.instance().log("Range: " + SSM.startYear + " " + SSM.endYear + " " + SSM.startMonth + " " + SSM.endMonth);
+   public void log(Question q) {
+      ALogger.instance().log("Task: " + q.text() );
+      ALogger.instance().log("Duration : " + (q.endTime-q.startTime));
+      //ALogger.instance().log("Start Time: "+ q.startTime);
+      //ALogger.instance().log("End Time: "+ q.endTime);
+      ALogger.instance().log("Start Year: " + SSM.startYear);
+      ALogger.instance().log("End   Year: " + SSM.endYear);
+      ALogger.instance().log("Start Month: " + SSM.startMonth);
+      ALogger.instance().log("End   Month: " + SSM.endMonth);
+      ALogger.instance().log("Use Comparison: " + SSM.useComparisonMode);
+      ALogger.instance().log("Use Aggregation: " + SSM.useAggregate);
+      ALogger.instance().log("Heatmap Perspective: " + SSM.chartMode);
+      ALogger.instance().log("1 Manufacturer: " + SSM.manufactureAttrib.selected);
+      ALogger.instance().log("1 Make        : " + SSM.makeAttrib.selected);
+      ALogger.instance().log("1 Model       : " + SSM.modelAttrib.selected);
+      ALogger.instance().log("1 Year        : " + SSM.yearAttrib.selected);
+      ALogger.instance().log("2 Manufacturer: " + SSM.c_manufactureAttrib.selected);
+      ALogger.instance().log("2 Make        : " + SSM.c_makeAttrib.selected);
+      ALogger.instance().log("2 Model       : " + SSM.c_modelAttrib.selected);
+      ALogger.instance().log("2 Year        : " + SSM.c_yearAttrib.selected);
       ALogger.instance().log("Perspective: " + DCCamera.instance().eye + " " + SSM.rotateX + " " + SSM.rotateY);
-      for ( Integer i : SSM.selectedGroup.values()) {
-         ALogger.instance().log(i + "");   
-      }
+      ALogger.instance().log("Selected Entities: " + SSM.selectedGroup.values().toString() );
+      
       for (int i=0; i < SSM.lensList.size(); i++) {
          ALogger.instance().log("Lens: " +  
             SSM.lensList.elementAt(i).magicLensX + " " +
@@ -148,7 +167,7 @@ public class QuestionTask implements RenderTask {
             SSM.lensList.elementAt(i).magicLensRadius 
          );   
       }
-      System.out.println(".........................................logging..................");
+      ALogger.instance().log("................................................................................");
    }
    
    
@@ -162,6 +181,12 @@ public class QuestionTask implements RenderTask {
       public abstract void set();
       public abstract String text();
       //public String txt;
+      
+      // Not really tracking performance here, but might as well
+      // squeeze it in just in case we do use timing metrics
+      // Use system milliseconds
+      public long startTime;
+      public long endTime;
    }
    
    //public Question[] q = new Question[3];

@@ -53,8 +53,8 @@ public class TUIOListener implements TuioListener {
       System.out.println("Starting timer thread");
       Thread t1 = new Thread(update);
       t1.start();
-      Thread t2 = new Thread(delayTaps);
-      t2.start();
+      //Thread t2 = new Thread(delayTaps);
+      //t2.start();
    }
    
    
@@ -356,12 +356,12 @@ public class TUIOListener implements TuioListener {
       
       // 4) Reinforce intention to actually move
       if (wcursor.numUpdate < 1 && wcursor.element != SSM.ELEMENT_LENS && wcursor.element != SSM.ELEMENT_LENS_RIM && wcursor.element != SSM.ELEMENT_LENS_HANDLE && wcursor.element != SSM.ELEMENT_DOCUMENT) {
-         if ( o.getTuioTime().getTotalMilliseconds() - wcursor.timestamp < 350)  {
+         //if ( o.getTuioTime().getTotalMilliseconds() - wcursor.timestamp < 350)  {
             if (dist(wcursor.x, wcursor.y, o.getX(), o.getY(), width, height) < 20) {
                System.err.println("H4 " + eventTable.size());
                return;   
             }
-         }
+         //}
       } 
       // 4.1) Lens Update: Reinforce intention to actually move for lens
       if (wcursor.numUpdate < 1 && (wcursor.element == SSM.ELEMENT_LENS || wcursor.element == SSM.ELEMENT_LENS_RIM)) {
@@ -565,10 +565,11 @@ System.out.println("Pinch detected");
       // Check to see if we are activating lens or the document panel
       // If there are exactly 2 points currently, and they are sufficiently close to each other, and 
       // they are over the same type of element then create a document panel
-      if (w.state == WCursor.STATE_NOTHING && w.element == SSM.ELEMENT_NONE) {
+      //if (w.state == WCursor.STATE_NOTHING && w.element == SSM.ELEMENT_NONE) {
+      if ( (w.state == WCursor.STATE_HOLD) && w.element == SSM.ELEMENT_NONE) {
          Vector<WCursor> len = this.findSimilarCursorPixel(w, 100, 500);
          if (len.size() == 1) {
-            if (len.size() == 1 && len.elementAt(0).state == WCursor.STATE_NOTHING) {
+            if (len.size() == 1 && (len.elementAt(0).state == WCursor.STATE_HOLD)) {
                // Adjust the lens coordinate such that the 2 points are on the circumference of the lens
                System.out.print("activate lens");   
                float xx = w.x*SSM.windowWidth;
@@ -621,18 +622,24 @@ System.out.println("Pinch detected");
             
             // Only set a tap if the touch point is "fresh", that is, the touch points are
             // within certain time limits
-            if (o.getTuioTime().getTotalMilliseconds() - w.timestamp < 1000) {
+            //if (o.getTuioTime().getTotalMilliseconds() - w.timestamp < 1000) {
                System.out.println("\tSending out tap event");
                
-               if (w.element == SSM.ELEMENT_DOCUMENT && SSM.docActive == true) {
-                  SSM.docActive = false;
-                  SSM.resizePanel = 1;
+               if (w.endTimestamp - w.startTimestamp > SSM.HOLD_DELAY) {
+                  if (w.element == SSM.ELEMENT_DOCUMENT && SSM.docActive == true) {
+                     SSM.docActive = false;
+                     SSM.resizePanel = 1;
+                  } else {
+                     // massive hack, a negative number in the z denotes it is a document picking
+                     SSM.pickPoints.add(new DCTriple(w.x*SSM.windowWidth, w.y*SSM.windowHeight, -1));
+                     SSM.l_mouseClicked = true;
+                  }
                } else {
                   SSM.pickPoints.add(new DCTriple(w.x*SSM.windowWidth, w.y*SSM.windowHeight, 0));
                   SSM.l_mouseClicked = true;
                }
                
-            }
+            //}
             
          }
          
@@ -691,7 +698,7 @@ System.out.println("Pinch detected");
             try {
                synchronized(eventTable) {
                   for (WCursor w : eventTable.values()) {
-                     if ( Math.abs(w.timestamp - w.cursor.getTuioTime().getTotalMilliseconds()) > 250 && w.state == WCursor.STATE_NOTHING) {
+                     if ( Math.abs(w.timestamp - w.cursor.getTuioTime().getTotalMilliseconds()) > SSM.HOLD_DELAY && w.state == WCursor.STATE_NOTHING) {
                         w.state = WCursor.STATE_HOLD;   
                         SSM.hoverPoints.put(w.sessionID, new DCTriple(w.x*SSM.windowWidth, w.y*SSM.windowHeight, 0));
                      } else if (w.state == WCursor.STATE_HOLD){

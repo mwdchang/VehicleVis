@@ -64,7 +64,7 @@ public abstract class BaseModelRenderer implements RenderTask {
    public abstract void render(GL2 gl2);
 
    @Override
-   public abstract void picking(GL2 gl2, float px, float py);
+   public abstract void picking(GL2 gl2, float px, float py, float pz);
    
    @Override
    public void init(GL2 gl2) {
@@ -669,6 +669,7 @@ public abstract class BaseModelRenderer implements RenderTask {
 //      ALogger.instance().log("Selected Month:" + SSM.startMonth + "-" + SSM.endMonth);
 //      ALogger.instance().log("Selected Group:" + SSM.selectedGroup);
       
+      //SSM.waitMarker = null;
    }   
    
    

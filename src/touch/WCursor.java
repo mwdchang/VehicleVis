@@ -19,6 +19,7 @@ public class WCursor {
       x = y = 0;
       oldX = 0;
       oldY = 0;
+      startTimestamp = System.currentTimeMillis();
    }
    
    
@@ -32,6 +33,7 @@ public class WCursor {
       sessionID = c.getSessionID();
       oldX = 0;
       oldY = 0;
+      startTimestamp = System.currentTimeMillis();
    }
    
    
@@ -39,6 +41,8 @@ public class WCursor {
    public long sessionID = 0;
    //public int tap = 0;
    public long timestamp;      // start timestamp
+   
+   public long startTimestamp; // start timestamp
    public long updTimestamp;   // updated timestamp
    public long endTimestamp;   // timestamp of removal
    
