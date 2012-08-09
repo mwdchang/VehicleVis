@@ -879,7 +879,7 @@ System.out.println("After ModelRenderer Picking : " + SSM.stopPicking);
             //Event.handleMouseSelect(obj);
          }
          
-         SSM.waitMarker = new DCTriple(mx, my, 20);
+         SSM.waitMarker = new DCTriple(mx, my, 40);
          
       } else {
          if (SSM.useTUIO == false) return;

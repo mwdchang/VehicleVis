@@ -31,6 +31,19 @@ public class VFeedbackTask implements RenderTask {
                GraphicUtil.drawPie(gl2, p.x*SSM.windowWidth, (1.0-p.y)*SSM.windowHeight, 0, (i+1)*1.7, 0, 360, 36);   
             }
             // Start counting
+            if (p.element == SSM.ELEMENT_LENS) continue;
+            if (p.element == SSM.ELEMENT_LENS_HANDLE) continue;
+            if (p.element == SSM.ELEMENT_LENS_RIM) continue; 
+            if (p.element == SSM.ELEMENT_MANUFACTURE_SCROLL) continue;
+            if (p.element == SSM.ELEMENT_MAKE_SCROLL) continue;
+            if (p.element == SSM.ELEMENT_MODEL_SCROLL) continue;
+            if (p.element == SSM.ELEMENT_YEAR_SCROLL) continue;
+            if (p.element == SSM.ELEMENT_CMANUFACTURE_SCROLL) continue;
+            if (p.element == SSM.ELEMENT_CMAKE_SCROLL) continue;
+            if (p.element == SSM.ELEMENT_CMODEL_SCROLL) continue;
+            if (p.element == SSM.ELEMENT_CYEAR_SCROLL) continue;
+            if (p.element == SSM.ELEMENT_FILTER)continue; 
+            
             if (p.state == WCursor.STATE_NOTHING || p.state == WCursor.STATE_HOLD) {
                long diff = System.currentTimeMillis() - p.startTimestamp;
                if (diff >= 360) diff = 360;
@@ -38,7 +51,8 @@ public class VFeedbackTask implements RenderTask {
                double angle = diff*360.0/SSM.HOLD_DELAY;
                
                gl2.glColor4d(0, 0.35, 0.45, 0.5*angle/360.0);
-               GraphicUtil.drawArc(gl2, p.x*SSM.windowWidth, (1.0-p.y)*SSM.windowHeight, 0, 13*1.7, 15*1.7, 
+               GraphicUtil.drawArc(gl2, p.x*SSM.windowWidth, (1.0-p.y)*SSM.windowHeight, 9.9, 
+                     diff==360?13*1.7:15*1.7, diff==360?15*1.7:17*1.7, 
                      0, angle, 36);   
             }
 
@@ -52,6 +66,31 @@ public class VFeedbackTask implements RenderTask {
             }
          }
       } // end synchronize
+      
+      // Draw wait markers
+      if (SSM.waitMarker != null) {
+         gl2.glColor4d(1, 1, 1, 0.6*SSM.waitMarker.z/20.0);
+         GraphicUtil.drawPie(gl2, SSM.waitMarker.x, SSM.waitMarker.y, 9.9, 
+               33, 0, 360, 36);
+         gl2.glColor4d(0, 0, 0, 0.6*SSM.waitMarker.z/20.0);
+         GraphicUtil.drawArc(gl2, SSM.waitMarker.x, SSM.waitMarker.y, 9.9, 
+               30, 33, 0, 360, 36, 1);
+         
+         GraphicUtil.drawArc(gl2, SSM.waitMarker.x, SSM.waitMarker.y, 9.9, 
+               0, 5, 0, 360, 36, 1);
+         
+         gl2.glLineWidth(4.0f);
+         gl2.glBegin(GL2.GL_LINES);
+            gl2.glVertex3d(SSM.waitMarker.x, SSM.waitMarker.y, 9.9);
+            gl2.glVertex3d(SSM.waitMarker.x, SSM.waitMarker.y+25, 9.9);
+            
+            gl2.glVertex3d(SSM.waitMarker.x, SSM.waitMarker.y, 9.9);
+            gl2.glVertex3d(SSM.waitMarker.x+15, SSM.waitMarker.y, 9.9);
+         gl2.glEnd();
+         gl2.glLineWidth(1.0f);
+         SSM.waitMarker.z -= 1;
+         if ( SSM.waitMarker.z <= 0) SSM.waitMarker = null;
+      }      
    } 
 
    @Override

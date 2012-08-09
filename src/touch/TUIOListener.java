@@ -355,7 +355,8 @@ public class TUIOListener implements TuioListener {
       
       
       // 4) Reinforce intention to actually move
-      if (wcursor.numUpdate < 1 && wcursor.element != SSM.ELEMENT_LENS && wcursor.element != SSM.ELEMENT_LENS_RIM && wcursor.element != SSM.ELEMENT_LENS_HANDLE && wcursor.element != SSM.ELEMENT_DOCUMENT) {
+      //if (wcursor.numUpdate < 1 && wcursor.element != SSM.ELEMENT_LENS && wcursor.element != SSM.ELEMENT_LENS_RIM && wcursor.element != SSM.ELEMENT_LENS_HANDLE && wcursor.element != SSM.ELEMENT_DOCUMENT) {
+      if (wcursor.numUpdate < 1 && wcursor.element != SSM.ELEMENT_LENS && wcursor.element != SSM.ELEMENT_LENS_RIM && wcursor.element != SSM.ELEMENT_LENS_HANDLE ) {
          //if ( o.getTuioTime().getTotalMilliseconds() - wcursor.timestamp < 350)  {
             if (dist(wcursor.x, wcursor.y, o.getX(), o.getY(), width, height) < 20) {
                System.err.println("H4 " + eventTable.size());
