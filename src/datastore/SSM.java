@@ -631,5 +631,6 @@ public class SSM {
    // To store the touch points - as a visual aid, it does not have any logic in itself
    // Store this in OpenGL coordinate system ( bottom left is 0,0 )
    public static Hashtable<Long, WCursor> touchPoint = new Hashtable<Long, WCursor> ();
+   public static Vector<DCTriple> invalidPoint = new Vector<DCTriple>();
    
 }

@@ -63,6 +63,7 @@ public class WCursor {
    public static int STATE_MOVE = 10;
    public static int STATE_SWIPE = 11;
    public static int STATE_HOLD = 12;
+   
    public Vector<TuioPoint> points = new Vector<TuioPoint>();
    
    public int swipeCount = 0;

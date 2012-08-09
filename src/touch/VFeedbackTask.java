@@ -1,6 +1,10 @@
 package touch;
 
+import java.util.Iterator;
+
 import javax.media.opengl.GL2;
+
+import model.DCTriple;
 
 import util.GraphicUtil;
 import datastore.SSM;
@@ -91,6 +95,23 @@ public class VFeedbackTask implements RenderTask {
          SSM.waitMarker.z -= 1;
          if ( SSM.waitMarker.z <= 0) SSM.waitMarker = null;
       }      
+      
+      // Draw the points that are no longer invalid
+      synchronized( SSM.invalidPoint ) {
+         for (int i=0; i < SSM.invalidPoint.size(); i++) {
+            gl2.glColor4d(0, 0.35, 0.45, 0.5);
+            SSM.invalidPoint.elementAt(i).z -= 0.5;
+            DCTriple t = SSM.invalidPoint.elementAt(i);
+            GraphicUtil.drawArc(gl2, t.x, t.y, 9.9, 
+               t.z, t.z+1, 0, 360, 36, 1);
+         }
+         
+         Iterator<DCTriple> iter = SSM.invalidPoint.iterator();
+         while (iter.hasNext()) {
+            if (iter.next().z <= 0) iter.remove();   
+         }
+         
+      }
    } 
 
    @Override

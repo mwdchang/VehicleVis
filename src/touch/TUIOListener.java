@@ -529,6 +529,7 @@ System.out.println("Pinch detected");
       // Remove a touch point - since removal of nothing is nothing, we will just
       // remove at the top for simplicity sake rather than removal at every single 
       // conditions that we have
+      synchronized(SSM.invalidPoint) { SSM.invalidPoint.add( new DCTriple(o.getX()*SSM.windowWidth, SSM.windowHeight-o.getY()*SSM.windowHeight, 25)); }
       synchronized(SSM.touchPoint)  { SSM.touchPoint.remove(o.getSessionID()); }
       synchronized(SSM.hoverPoints) { SSM.hoverPoints.remove(o.getSessionID()); }
       synchronized(SSM.tooltips) { SSM.tooltips.remove(o.getSessionID()); }
