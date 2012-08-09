@@ -142,6 +142,10 @@ public class Event {
       }
    }
    
+   
+   ////////////////////////////////////////////////////////////////////////////////
+   // Rotate the lens handle to change the depth parameter
+   ////////////////////////////////////////////////////////////////////////////////
    public static void moveLensHandle(int posX, int posY, int oldPosX, int oldPosY) {
       for (int i=0; i < SSM.lensList.size(); i++) {
          float x = (float)oldPosX - (float)SSM.lensList.elementAt(i).magicLensX;

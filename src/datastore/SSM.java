@@ -35,6 +35,9 @@ public class SSM {
    //public static String database = "projectv3";
    
    public static double HOLD_DELAY = 350;
+   public static double INVALID_DELAY_FRAME = 50;
+   public static double WAIT_DELAY_FRAME = 50;
+   
    public static DCTriple waitMarker = null;
    
    

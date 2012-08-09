@@ -19,6 +19,7 @@ public class VFeedbackTask implements RenderTask {
    @Override
    public void render(GL2 gl2) {
       if (SSM.useTUIO == false) return;
+      
       ////////////////////////////////////////////////////////////////////////////////
       // Draw any active touch points
       ////////////////////////////////////////////////////////////////////////////////
@@ -34,7 +35,6 @@ public class VFeedbackTask implements RenderTask {
             for (int i = 0; i < 10; i++) {
                GraphicUtil.drawPie(gl2, p.x*SSM.windowWidth, (1.0-p.y)*SSM.windowHeight, 0, (i+1)*1.7, 0, 360, 36);   
             }
-            // Start counting
             if (p.element == SSM.ELEMENT_LENS) continue;
             if (p.element == SSM.ELEMENT_LENS_HANDLE) continue;
             if (p.element == SSM.ELEMENT_LENS_RIM) continue; 
@@ -48,6 +48,8 @@ public class VFeedbackTask implements RenderTask {
             if (p.element == SSM.ELEMENT_CYEAR_SCROLL) continue;
             if (p.element == SSM.ELEMENT_FILTER)continue; 
             
+            // If the state is not moving, consider it a holding state, draw the holding 
+            // counter. Once the counter is finished it will "lock" into place
             if (p.state == WCursor.STATE_NOTHING || p.state == WCursor.STATE_HOLD) {
                long diff = System.currentTimeMillis() - p.startTimestamp;
                if (diff >= 360) diff = 360;
@@ -71,12 +73,16 @@ public class VFeedbackTask implements RenderTask {
          }
       } // end synchronize
       
+      ////////////////////////////////////////////////////////////////////////////////
       // Draw wait markers
+      // Draw a clock like symbol to let the viewers know that the system is processing
+      // Note: The interface is not actually disabled during this phase
+      ////////////////////////////////////////////////////////////////////////////////
       if (SSM.waitMarker != null) {
-         gl2.glColor4d(1, 1, 1, 0.6*SSM.waitMarker.z/20.0);
+         gl2.glColor4d(1, 1, 1, 0.6*SSM.waitMarker.z/SSM.WAIT_DELAY_FRAME);
          GraphicUtil.drawPie(gl2, SSM.waitMarker.x, SSM.waitMarker.y, 9.9, 
                33, 0, 360, 36);
-         gl2.glColor4d(0, 0, 0, 0.6*SSM.waitMarker.z/20.0);
+         gl2.glColor4d(0, 0, 0, 0.6*SSM.waitMarker.z/SSM.WAIT_DELAY_FRAME);
          GraphicUtil.drawArc(gl2, SSM.waitMarker.x, SSM.waitMarker.y, 9.9, 
                30, 33, 0, 360, 36, 1);
          
@@ -96,14 +102,17 @@ public class VFeedbackTask implements RenderTask {
          if ( SSM.waitMarker.z <= 0) SSM.waitMarker = null;
       }      
       
+      ////////////////////////////////////////////////////////////////////////////////
       // Draw the points that are no longer invalid
+      ////////////////////////////////////////////////////////////////////////////////
       synchronized( SSM.invalidPoint ) {
+         gl2.glEnable(GL2.GL_BLEND);
          for (int i=0; i < SSM.invalidPoint.size(); i++) {
-            gl2.glColor4d(0, 0.35, 0.45, 0.5);
-            SSM.invalidPoint.elementAt(i).z -= 0.5;
+            SSM.invalidPoint.elementAt(i).z -= 1.0;
             DCTriple t = SSM.invalidPoint.elementAt(i);
+            gl2.glColor4d(0, 0.35, 0.45, 0.05 + 0.1*t.z/SSM.INVALID_DELAY_FRAME);
             GraphicUtil.drawArc(gl2, t.x, t.y, 9.9, 
-               t.z, t.z+1, 0, 360, 36, 1);
+               t.z/3, t.z/3+1, 0, 360, 36, 1);
          }
          
          Iterator<DCTriple> iter = SSM.invalidPoint.iterator();

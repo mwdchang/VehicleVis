@@ -529,7 +529,7 @@ System.out.println("Pinch detected");
       // Remove a touch point - since removal of nothing is nothing, we will just
       // remove at the top for simplicity sake rather than removal at every single 
       // conditions that we have
-      synchronized(SSM.invalidPoint) { SSM.invalidPoint.add( new DCTriple(o.getX()*SSM.windowWidth, SSM.windowHeight-o.getY()*SSM.windowHeight, 25)); }
+      synchronized(SSM.invalidPoint) { SSM.invalidPoint.add( new DCTriple(o.getX()*SSM.windowWidth, SSM.windowHeight-o.getY()*SSM.windowHeight, SSM.INVALID_DELAY_FRAME)); }
       synchronized(SSM.touchPoint)  { SSM.touchPoint.remove(o.getSessionID()); }
       synchronized(SSM.hoverPoints) { SSM.hoverPoints.remove(o.getSessionID()); }
       synchronized(SSM.tooltips) { SSM.tooltips.remove(o.getSessionID()); }
@@ -632,13 +632,16 @@ System.out.println("Pinch detected");
                      SSM.docActive = false;
                      SSM.resizePanel = 1;
                   } else {
-                     // massive hack, a negative number in the z denotes it is a document picking
+                     // HACKHACK: Massive hack, a negative number in the z denotes it is a document picking
                      SSM.pickPoints.add(new DCTriple(w.x*SSM.windowWidth, w.y*SSM.windowHeight, -1));
                      SSM.l_mouseClicked = true;
                   }
                } else {
-                  SSM.pickPoints.add(new DCTriple(w.x*SSM.windowWidth, w.y*SSM.windowHeight, 0));
-                  SSM.l_mouseClicked = true;
+                  // Do not send through tap into the document if it is occluding something else
+                  if (w.element != SSM.ELEMENT_DOCUMENT) {
+                     SSM.pickPoints.add(new DCTriple(w.x*SSM.windowWidth, w.y*SSM.windowHeight, 0));
+                     SSM.l_mouseClicked = true;
+                  }
                }
                
             //}
