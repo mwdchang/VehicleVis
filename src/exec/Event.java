@@ -159,11 +159,13 @@ public class Event {
          
          //if ( d >=r && d <= (r+40) ) {
          if (SSM.lensList.elementAt(i).handleSelected == true) {
-            double ang = Math.toDegrees(Math.atan2( y, x+0.000001));
+            //double ang = Math.toDegrees(Math.atan2( y, x+0.000001));
+            double ang = Math.toDegrees(DCUtil.atan2( y, x+0.000001));
             ang = (-ang+360)%360;
             
             if ( ang >= SSM.lensList.elementAt(i).handleAngle && ang <= SSM.lensList.elementAt(i).handleAngle+40 ) {
-               double angNew = Math.toDegrees(Math.atan2( ny, nx+0.000001));
+               //double angNew = Math.toDegrees(Math.atan2( ny, nx+0.000001));
+               double angNew = Math.toDegrees(DCUtil.atan2( ny, nx+0.000001));
                angNew = (-angNew+360)%360;
                
                if (SSM.lensList.elementAt(i).nearPlane + ((float)angNew - (float)ang)/4.0f < 1) return; 
@@ -587,6 +589,7 @@ System.out.println("<Near plane: " + la.nearPlane);
                SSM.lensList.elementAt(i).selectAnimator.start();
             }
             if ( d >= r*0.8) {
+               SSM.lensList.elementAt(i).rimSelected = true;
                return SSM.ELEMENT_LENS_RIM;   
             }
             return SSM.ELEMENT_LENS;

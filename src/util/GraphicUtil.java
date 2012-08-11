@@ -33,40 +33,42 @@ import datastore.Const;
 /////////////////////////////////////////////////////////////////////////////////
 public class GraphicUtil {
    
+   
+   ////////////////////////////////////////////////////////////////////////////////
+   // Draw an arc with width defined by r1 and r2
+   ////////////////////////////////////////////////////////////////////////////////
    public static void drawArc(GL2 gl2, double x, double y, double z, double r1, double r2, double start, double end, int seg) {
       drawArc(gl2, x, y, z, r1, r2, start, end, seg, 1);    
    }
-   
    public static void drawArc(GL2 gl2, double x, double y, double z, double r1, double r2, double start, double end, int seg, int step) {
       double ang = (end - start)/(double)seg;
       
       gl2.glBegin(GL2.GL_TRIANGLE_STRIP);
          for (int i=0; i <= seg; i+=step ) {
-            double rx = r1*Math.cos( (start+ang*i)*3.1416/180.0 );
-            double ry = r1*Math.sin( (start+ang*i)*3.1416/180.0 );
+            double rx = r1*Math.cos( (start+ang*i)*Math.PI/180.0 );
+            double ry = r1*Math.sin( (start+ang*i)*Math.PI/180.0 );
             gl2.glVertex3d(x + rx, y + ry, z);         
             
-            double rx2 = r2*Math.cos( (start+ang*i)*3.1416/180.0 );
-            double ry2 = r2*Math.sin( (start+ang*i)*3.1416/180.0 );
+            double rx2 = r2*Math.cos( (start+ang*i)*Math.PI/180.0 );
+            double ry2 = r2*Math.sin( (start+ang*i)*Math.PI/180.0 );
             gl2.glVertex3d(x + rx2, y + ry2, z);         
          }
      gl2.glEnd();
-      
-      /*
-      gl2.glBegin(GL2.GL_POLYGON);
-         for (int i=0; i <= seg; i++) {
-            double rx = r1*Math.cos( (start+ang*i)*3.1416/180.0 );
-            double ry = r1*Math.sin( (start+ang*i)*3.1416/180.0 );
-            gl2.glVertex3d(x + rx, y + ry, z);         
-         }
-         for (int i=seg; i >= 0; i-=1) {
-            double rx = r2*Math.cos( (start+ang*i)*3.1416/180.0 );
-            double ry = r2*Math.sin( (start+ang*i)*3.1416/180.0 );
-            gl2.glVertex3d(x + rx, y + ry, z);         
-         }
-     gl2.glEnd();
-     */
    }   
+   
+   ////////////////////////////////////////////////////////////////////////////////
+   // Draw an arc that is one single pixel wide
+   ////////////////////////////////////////////////////////////////////////////////
+   public static void drawArcLine(GL2 gl2, double x, double y, double z, double r, double start, double end, int seg, int step) {
+      double ang = (end - start)/(double)seg;
+      gl2.glBegin(GL2.GL_LINES);
+      for (int i=0; i <= seg; i+=step ) {
+         double rx = r*Math.cos( (start+ang*i)*Math.PI/180.0 );
+         double ry = r*Math.sin( (start+ang*i)*Math.PI/180.0 );
+         gl2.glVertex3d(x + rx, y + ry, z);         
+      }
+      gl2.glEnd();
+   }
    
    ////////////////////////////////////////////////////////////////////////////////
    // Draws a grid

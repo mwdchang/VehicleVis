@@ -665,12 +665,96 @@ public abstract class BaseModelRenderer implements RenderTask {
       
       
       // Log the changes
-//      ALogger.instance().log("Selected Year :" + SSM.startYear + "-" + SSM.endYear);
-//      ALogger.instance().log("Selected Month:" + SSM.startMonth + "-" + SSM.endMonth);
-//      ALogger.instance().log("Selected Group:" + SSM.selectedGroup);
-      
       //SSM.waitMarker = null;
    }   
+   
+   
+   ////////////////////////////////////////////////////////////////////////////////
+   // Reset the heatmap widget
+   ////////////////////////////////////////////////////////////////////////////////
+   public void resetHeatmap(GL2 gl2, String s) {
+      DCComponent comp = MM.currentModel.componentTable.get(s);
+      if (comp == null) return;
+      if (comp.id < 0) return;
+         
+      MM.currentModel.componentTable.get(s).cchart.active = true;
+      if (SSM.selectedGroup.size() > 0 && ! SSM.relatedList.contains(comp.id))  {
+         MM.currentModel.componentTable.get(s).cchart.active = false;
+      }
+      
+      int occ = CacheManager.instance().groupOccurrence.get(comp.id); 
+      int c_occ = CacheManager.instance().c_groupOccurrence.get(comp.id);
+      
+      int relatedOccNew = 0;
+      int c_relatedOccNew = 0;
+      if (SSM.selectedGroup.size() >= 0 ) {
+         
+         if (SSM.useAggregate == true) {
+            Vector<Integer> selectedGroup =  new Vector<Integer>();
+            selectedGroup.addAll( SSM.selectedGroup.values());
+         
+            relatedOccNew = CacheManager.instance().getCoOccurringAgg(
+                  startIdx, endIdx, 
+                  SSM.startMonth, SSM.endMonth, 
+                  HierarchyTable.instance().getAgg(comp.id),
+                  selectedGroup,
+                  SSM.manufactureAttrib.selected,
+                  SSM.makeAttrib.selected, 
+                  SSM.modelAttrib.selected,
+                  SSM.yearAttrib.selected);
+            
+            c_relatedOccNew = CacheManager.instance().getCoOccurringAgg(
+                  startIdx, endIdx, 
+                  SSM.startMonth, SSM.endMonth, 
+                  HierarchyTable.instance().getAgg(comp.id),
+                  selectedGroup,
+                  SSM.c_manufactureAttrib.selected,
+                  SSM.c_makeAttrib.selected, 
+                  SSM.c_modelAttrib.selected,
+                  SSM.c_yearAttrib.selected);
+           
+         } else {
+            Vector<Integer> related =  new Vector<Integer>();
+            related.addAll( SSM.selectedGroup.values());
+            
+            Vector<Integer> t = new Vector<Integer>();
+            t.add(comp.id);
+            
+            relatedOccNew = CacheManager.instance().getCoOccurring(
+                  startIdx, endIdx, 
+                  SSM.startMonth, SSM.endMonth, 
+                  t,
+                  related,
+                  SSM.manufactureAttrib.selected,
+                  SSM.makeAttrib.selected, 
+                  SSM.modelAttrib.selected,
+                  SSM.yearAttrib.selected);              
+            
+            c_relatedOccNew = CacheManager.instance().getCoOccurring(
+                  startIdx, endIdx, 
+                  SSM.startMonth, SSM.endMonth, 
+                  t,
+                  related,
+                  SSM.c_manufactureAttrib.selected,
+                  SSM.c_makeAttrib.selected, 
+                  SSM.c_modelAttrib.selected,
+                  SSM.c_yearAttrib.selected);              
+         }
+      }
+      String txt = "";
+      if (SSM.useComparisonMode == true) {
+         txt = comp.baseName+" (" + (relatedOccNew+c_relatedOccNew) + "/" + (c_occ+occ) + ")";
+      } else {
+         txt = comp.baseName+" (" + relatedOccNew + "/" + occ + ")";
+      }
+      
+      //comp.cchart.setLabel(txt);
+      MM.currentModel.componentTable.get(s).cchart.tf.width = MM.currentModel.componentTable.get(s).cchart.width;
+      MM.currentModel.componentTable.get(s).cchart.tf.height = MM.currentModel.componentTable.get(s).cchart.height;
+      MM.currentModel.componentTable.get(s).cchart.setLabel(txt);
+      
+   }
+   
    
    
    ////////////////////////////////////////////////////////////////////////////////
@@ -688,11 +772,11 @@ public abstract class BaseModelRenderer implements RenderTask {
    public void resetDataGL1(GL2 gl2) {
 
          
-      int startIdx = CacheManager.instance().getDateKey( SSM.startTimeFrame ) == null ? 0:
+      startIdx = CacheManager.instance().getDateKey( SSM.startTimeFrame ) == null ? 0:
                      CacheManager.instance().getDateKey( SSM.startTimeFrame );
       
       //TODO: Need to fix this later, as dates may not be exact
-      int endIdx   = CacheManager.instance().getDateKey( SSM.endTimeFrame) == null ? CacheManager.instance().timeLineSize:
+      endIdx   = CacheManager.instance().getDateKey( SSM.endTimeFrame) == null ? CacheManager.instance().timeLineSize:
                      CacheManager.instance().getDateKey( SSM.endTimeFrame );
       int size = (endIdx - startIdx) + 1;      
       
@@ -818,6 +902,12 @@ public abstract class BaseModelRenderer implements RenderTask {
          
          short h[] = new short[chartSize];
          
+         
+         
+         
+         
+         
+         // Calculate periodical maxes
          float localMax = 0.0f;
          for (int idx = chartStartIdx; idx <= chartEndIdx; idx++) {
             float value = 0;
@@ -962,7 +1052,13 @@ public abstract class BaseModelRenderer implements RenderTask {
                if ( SSM.instance().segmentMax < tmp) SSM.instance().segmentMax = tmp; 
             }
          }
-      }
+         
+         
+         // Calculate heatmap charts
+         this.resetHeatmap(gl2, clist[i]);
+         
+         
+      } //end clist
       
       
       
@@ -1694,13 +1790,10 @@ public abstract class BaseModelRenderer implements RenderTask {
      
   	  public int g_quadDisplayList;
      public final static float MAX_DEPTH = 1.0f;  	  
-//     public boolean g_useOQ = true;
      public boolean g_useOQ = false;
      public int[] g_queryId = new int[1];
 //     public float[] g_opacity = new float[]{0.6f};     
      public float[] g_opacity = new float[]{0.5f};     
-//     public int g_numPasses = 4;
-//     public int g_numPasses = 8;
      
      
      public ShaderObj g_shaderDualInit;
@@ -1709,6 +1802,8 @@ public abstract class BaseModelRenderer implements RenderTask {
      public ShaderObj g_shaderDualFinal;    
        
    
+     public int startIdx = 0;
+     public int endIdx = 0;
    
    
 }

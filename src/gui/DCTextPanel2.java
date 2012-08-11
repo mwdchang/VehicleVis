@@ -55,6 +55,17 @@ public class DCTextPanel2 {
             40.0, 7,                                                                       // corner and segments 
             DCColour.fromDouble(0.90, 0.90, 0.90, 0.6).toArray(), 
             DCColour.fromDouble(0.65, 0.65, 0.65, 0.6).toArray());
+      
+      
+      // Have a bar to indicate a different region
+      GraphicUtil.drawRoundedRect(gl2, 
+            (double)(anchorX+displayW), (double)(anchorY+(displayH/2)), (double)0.0,   // xyz
+            (double)2, (double)(displayH/2.0),                                            // width and height
+            2.0, 7,                                                                      // corner and segments 
+            DCColour.fromDouble(0.90, 0.90, 0.90, 0.3).toArray(), 
+            DCColour.fromDouble(0.65, 0.65, 0.65, 0.3).toArray());
+     
+      
       /*
       gl2.glBegin(GL2.GL_QUADS);
          gl2.glVertex3d(anchorX,          anchorY, 0);

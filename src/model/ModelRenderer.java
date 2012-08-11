@@ -485,8 +485,15 @@ public class ModelRenderer extends BaseModelRenderer {
                gl2.glColor4fv( SchemeManager.unselected.toArray(), 0);
             }
             
-            GraphicUtil.drawArc(gl2, la.magicLensX, (SSM.windowHeight-la.magicLensY), 0, 
-                  la.magicLensRadius, la.magicLensRadius+la.borderSize, 0, 360, 72, 1);
+            if (la.rimSelected == false) {
+               GraphicUtil.drawArc(gl2, la.magicLensX, (SSM.windowHeight-la.magicLensY), 0, 
+                     la.magicLensRadius, la.magicLensRadius+la.borderSize, 0, 360, 72, 1);
+            } else {
+               GraphicUtil.drawArcLine(gl2, la.magicLensX, (SSM.windowHeight-la.magicLensY), 0, 
+                     la.magicLensRadius, 0, 360, 120, 2);
+               GraphicUtil.drawArcLine(gl2, la.magicLensX, (SSM.windowHeight-la.magicLensY), 0, 
+                     la.magicLensRadius+la.borderSize, 0, 360, 120, 2);
+            }
             
             // If the handle is selected, we rendered it in the selected colour
             // and make it slightly bigger so the users would know
@@ -507,6 +514,7 @@ public class ModelRenderer extends BaseModelRenderer {
                double symbolY = (SSM.windowHeight-la.magicLensY)+(la.magicLensRadius+22)*Math.sin( (la.handleAngle+30)*Math.PI/180.0 );
                gl2.glColor4d(1, 1, 1, 0.5);
                   
+               // Draw a plus marker
                gl2.glLineWidth(5.0f);
                gl2.glBegin(GL2.GL_LINES);
                   gl2.glVertex2d( symbolX, symbolY+8 );
@@ -545,25 +553,7 @@ public class ModelRenderer extends BaseModelRenderer {
          }
          */
          
-         // Render lens tip
-         /*
-         for (int i=0; i < SSM.lensList.size(); i++) {
-            LensAttrib la = SSM.lensList.elementAt(i);         
-            if (la.mlen != null) {
-               if (la.tip.tf == null) la.tip.init(gl2);
-               la.tip.clear();
-               la.tip.addText(la.nearPlane+"");
-               la.tip.tf.opacity = la.tip.opacity;
-               //la.tip.setTip( 400, 400, SSM.windowWidth, SSM.windowHeight);                
-               la.tip.setTip( la.magicLensX,
-                     SSM.windowHeight-la.magicLensY,
-                     SSM.windowWidth, SSM.windowHeight);                
-               la.tip.render(gl2);               
-            }
-         }
-         */
       } // end setOrtho
-      
       
 
             
@@ -608,14 +598,14 @@ public class ModelRenderer extends BaseModelRenderer {
             
             
             // If local mode than don't render components that are not related
-            comp.cchart.active = true;
-            if (SSM.useLocalFocus == true) {
-               if (SSM.selectedGroup.size() > 0 && ! SSM.relatedList.contains(comp.id))  {
-                  comp.cchart.active = false;
-               } else {
-                  comp.cchart.active = true;   
-               }
-            }             
+//            comp.cchart.active = true;
+//            if (SSM.useLocalFocus == true) {
+//               if (SSM.selectedGroup.size() > 0 && ! SSM.relatedList.contains(comp.id))  {
+//                  comp.cchart.active = false;
+//               } else {
+//                  comp.cchart.active = true;   
+//               }
+//            }             
             
 
             // Check parent and model table capability in aggregation mode
@@ -723,14 +713,14 @@ public class ModelRenderer extends BaseModelRenderer {
          if (comp.id < 0) continue;
          
          // If local mode than don't render components that are not related
-         comp.cchart.active = true;
-         if (SSM.useLocalFocus == true) {
-            if (SSM.selectedGroup.size() > 0 && ! SSM.relatedList.contains(comp.id))  {
-               comp.cchart.active = false;
-            } else {
-               comp.cchart.active = true;   
-            }
-         }             
+//         comp.cchart.active = true;
+//         if (SSM.useLocalFocus == true) {
+//            if (SSM.selectedGroup.size() > 0 && ! SSM.relatedList.contains(comp.id))  {
+//               comp.cchart.active = false;
+//            } else {
+//               comp.cchart.active = true;   
+//            }
+//         }             
          
 
          // Check parent and model table capability in aggregation mode
@@ -928,45 +918,27 @@ System.out.println("After ModelRenderer Picking : " + SSM.stopPicking);
          SSM.docMaxSize = 0;
          */
       }
-      
-      
    }
    
    
-   
-   
    ////////////////////////////////////////////////////////////////////////////////
-   // Picking with more or less balanced labels
+   // Set the border boundary heuristics
    ////////////////////////////////////////////////////////////////////////////////
-   public Integer picking2DBalanced(GL2 gl2, LensAttrib la, float px, float py) {
-      //if (SSM.instance().l_mouseClicked == false) return;
-      IntBuffer buffer = (IntBuffer)GLBuffers.newDirectGLBuffer(GL2.GL_UNSIGNED_INT, 512);
-      this.startPickingOrtho(gl2, buffer, px, py);      
-      
-      String list[] = this.getComponentSortedByProjY(gl2);    
-      float rightHeight = 0;
-      float leftHeight = 0;
-      
-      
-      
-      Vector<DCComponent> rightList = new Vector<DCComponent>();
-      Vector<DCComponent> leftList  = new Vector<DCComponent>();
-      
+   public void initLensLayout(LensAttrib la) {
       float lensRadius = la.magicLensRadius;
       float lensX = la.magicLensX;
       float lensY = la.magicLensY;
-      
-      
-      
-      // New padding, always apply outside of the 3D model, in addition 
-      // position with respect to the radius size ie: do not go "insde" the circumference
       rpadding = Math.abs( MM.currentModel.maxx - lensX);
       lpadding = Math.abs( MM.currentModel.minx - lensX);
+      
+      // Make sure we have sufficient padding
       if (rpadding > lensRadius) {
          rpadding -= lensRadius;
       } else {
          rpadding = vpadding;
       }
+      
+      // Make sure we have sufficient padding
       if (lpadding > lensRadius) {
          lpadding -= lensRadius;
       } else { 
@@ -981,6 +953,34 @@ System.out.println("After ModelRenderer Picking : " + SSM.stopPicking);
       if (lensX - lpadding - SSM.sparkLineWidth - spadding <= 0) {
          lpadding = spadding;   
       }      
+     
+   }
+   
+   
+   
+   ////////////////////////////////////////////////////////////////////////////////
+   // Picking with more or less balanced labels
+   ////////////////////////////////////////////////////////////////////////////////
+   public Integer picking2DBalanced(GL2 gl2, LensAttrib la, float px, float py) {
+      //if (SSM.instance().l_mouseClicked == false) return;
+      IntBuffer buffer = (IntBuffer)GLBuffers.newDirectGLBuffer(GL2.GL_UNSIGNED_INT, 512);
+      this.startPickingOrtho(gl2, buffer, px, py);      
+      
+      String list[] = this.getComponentSortedByProjY(gl2);    
+      float rightHeight = 0;
+      float leftHeight = 0;
+      float lensRadius = la.magicLensRadius;
+      float lensX = la.magicLensX;
+      float lensY = la.magicLensY;
+      
+      
+      Vector<DCComponent> rightList = new Vector<DCComponent>();
+      Vector<DCComponent> leftList  = new Vector<DCComponent>();
+      
+      initLensLayout(la);
+      
+      
+      
       
       Hashtable<String, String> tmp = new Hashtable<String, String>();
       
@@ -999,14 +999,14 @@ System.out.println("After ModelRenderer Picking : " + SSM.stopPicking);
          if (comp.hasContext == false) continue;         
          
          // If local mode than don't render components that are not related
-         comp.cchart.active = true;
-         if (SSM.useLocalFocus == true) {
-            if (SSM.selectedGroup.size() > 0 && ! SSM.relatedList.contains(comp.id)) {
-               comp.cchart.active = false;   
-            } else {
-               comp.cchart.active = true;   
-            }
-         }
+//         comp.cchart.active = true;
+//         if (SSM.useLocalFocus == true) {
+//            if (SSM.selectedGroup.size() > 0 && ! SSM.relatedList.contains(comp.id)) {
+//               comp.cchart.active = false;   
+//            } else {
+//               comp.cchart.active = true;   
+//            }
+//         }
          
          
          
@@ -1276,32 +1276,7 @@ System.out.println("After ModelRenderer Picking : " + SSM.stopPicking);
       float lensX = la.magicLensX;
       float lensY = la.magicLensY;
       
-      
-      // New padding, always apply outside of the 3D model, in addition 
-      // position with respect to the radius size ie: do not go "inside" the circumference
-      rpadding = Math.abs( MM.currentModel.maxx - lensX);
-      lpadding = Math.abs( MM.currentModel.minx - lensX);
-      if (rpadding > lensRadius) {
-         rpadding -= lensRadius;
-      } else  {
-         rpadding = vpadding;
-      }
-      if (lpadding > lensRadius) {
-         lpadding -= lensRadius;
-      } else  {
-         lpadding = vpadding;
-      }
-      
-      
-      
-      // check if the paddings are out of bound (ie: when we are close up)
-      // default the padding space to space padding
-      if ( rpadding + lensX + SSM.sparkLineWidth + spadding >= SSM.windowWidth ) {
-         rpadding = spadding;   
-      }
-      if (lensX - lpadding - SSM.sparkLineWidth - spadding <= 0) {
-         lpadding = spadding;   
-      }
+      this.initLensLayout(la);
       
       
       Hashtable<String, String> tmp = new Hashtable<String, String>();
@@ -1323,14 +1298,14 @@ System.out.println("After ModelRenderer Picking : " + SSM.stopPicking);
          
          
          // If local mode than don't render components that are not related
-         comp.cchart.active = true;
-         if (SSM.useLocalFocus == true) {
-            if (SSM.selectedGroup.size() > 0 && ! SSM.relatedList.contains(comp.id))  {
-               comp.cchart.active = false;
-            } else {
-               comp.cchart.active = true;   
-            }
-         } 
+//         comp.cchart.active = true;
+//         if (SSM.useLocalFocus == true) {
+//            if (SSM.selectedGroup.size() > 0 && ! SSM.relatedList.contains(comp.id))  {
+//               comp.cchart.active = false;
+//            } else {
+//               comp.cchart.active = true;   
+//            }
+//         } 
             
          
          
@@ -1398,82 +1373,10 @@ System.out.println("After ModelRenderer Picking : " + SSM.stopPicking);
       for (int i=0; i < rightList.size(); i++) {
          DCComponent comp = rightList.elementAt(i);
          if (comp.id < 0) continue;
-         
             
-         int occ = CacheManager.instance().groupOccurrence.get(comp.id); 
-         int c_occ = CacheManager.instance().c_groupOccurrence.get(comp.id);
-         
-         int relatedOcc = 0;
-         int relatedOccNew = 0;
-         int c_relatedOccNew = 0;
-         if (SSM.selectedGroup.size() >= 0 ) {
-            
-            if (SSM.useAggregate == true) {
-               Vector<Integer> selectedGroup =  new Vector<Integer>();
-               selectedGroup.addAll( SSM.selectedGroup.values());
-            
-               relatedOccNew = CacheManager.instance().getCoOccurringAgg(
-                     startIdx, endIdx, 
-                     SSM.startMonth, SSM.endMonth, 
-                     HierarchyTable.instance().getAgg(comp.id),
-                     selectedGroup,
-                     SSM.manufactureAttrib.selected,
-                     SSM.makeAttrib.selected, 
-                     SSM.modelAttrib.selected,
-                     SSM.yearAttrib.selected);
-               
-               c_relatedOccNew = CacheManager.instance().getCoOccurringAgg(
-                     startIdx, endIdx, 
-                     SSM.startMonth, SSM.endMonth, 
-                     HierarchyTable.instance().getAgg(comp.id),
-                     selectedGroup,
-                     SSM.c_manufactureAttrib.selected,
-                     SSM.c_makeAttrib.selected, 
-                     SSM.c_modelAttrib.selected,
-                     SSM.c_yearAttrib.selected);
-              
-            } else {
-               Vector<Integer> related =  new Vector<Integer>();
-               related.addAll( SSM.selectedGroup.values());
-               
-               Vector<Integer> t = new Vector<Integer>();
-               t.add(comp.id);
-               
-               relatedOccNew = CacheManager.instance().getCoOccurring(
-                     startIdx, endIdx, 
-                     SSM.startMonth, SSM.endMonth, 
-                     t,
-                     related,
-                     SSM.manufactureAttrib.selected,
-                     SSM.makeAttrib.selected, 
-                     SSM.modelAttrib.selected,
-                     SSM.yearAttrib.selected);              
-               
-               c_relatedOccNew = CacheManager.instance().getCoOccurring(
-                     startIdx, endIdx, 
-                     SSM.startMonth, SSM.endMonth, 
-                     t,
-                     related,
-                     SSM.c_manufactureAttrib.selected,
-                     SSM.c_makeAttrib.selected, 
-                     SSM.c_modelAttrib.selected,
-                     SSM.c_yearAttrib.selected);              
-              
-            }
-         }
-         String txt = "";
-         if (SSM.useComparisonMode == true) {
-            //txt = comp.baseName+"(" + (relatedOccNew+c_relatedOccNew) + "/" + relatedOcc + "/" + (c_occ+occ) + ")";
-            txt = comp.baseName+" (" + (relatedOccNew+c_relatedOccNew) + "/" + (c_occ+occ) + ")";
-         } else {
-            //txt = comp.baseName+"(" + relatedOccNew + "/" + relatedOcc + "/" + occ + ")";
-            txt = comp.baseName+" (" + relatedOccNew + "/" + occ + ")";
-         }
-            
-         double size[] = GraphicUtil.getFontDim(txt);
+         double size[] = GraphicUtil.getFontDim("Dummy");
          rightHeight -= Math.max(size[1], comp.cchart.height);
          rightHeight -= vpadding;
-               
                
          //FontRenderer.instance().setColour(SchemeManager.font_default);
          //comp.sparkLine.label = txt;
@@ -1486,7 +1389,6 @@ System.out.println("After ModelRenderer Picking : " + SSM.stopPicking);
          comp.cchart.tf.anchorX = comp.cchart.anchorX;
          comp.cchart.tf.anchorY = comp.cchart.anchorY;
          
-         comp.cchart.setLabel(txt);
          comp.cchart.tf.render(gl2);
          //comp.cchart.tf.renderBorder(gl2);
          
@@ -1554,78 +1456,7 @@ System.out.println("After ModelRenderer Picking : " + SSM.stopPicking);
          DCComponent comp = leftList.elementAt(i);
          if (comp.id < 0) continue;
             
-         int occ = CacheManager.instance().groupOccurrence.get(comp.id); 
-         int c_occ = CacheManager.instance().c_groupOccurrence.get(comp.id);
-         
-         int relatedOcc = 0;
-         int relatedOccNew = 0;
-         int c_relatedOccNew = 0;
-         
-         if (SSM.selectedGroup.size() >= 0 ) {
-            
-            if (SSM.useAggregate == true) {
-               Vector<Integer> selectedGroup =  new Vector<Integer>();
-               selectedGroup.addAll( SSM.selectedGroup.values());
-               
-               relatedOccNew = CacheManager.instance().getCoOccurringAgg(
-                     startIdx, endIdx, 
-                     SSM.startMonth, SSM.endMonth, 
-                     HierarchyTable.instance().getAgg(comp.id),
-                     selectedGroup,
-                     SSM.manufactureAttrib.selected,
-                     SSM.makeAttrib.selected, 
-                     SSM.modelAttrib.selected,
-                     SSM.yearAttrib.selected);               
-               
-               c_relatedOccNew = CacheManager.instance().getCoOccurringAgg(
-                     startIdx, endIdx, 
-                     SSM.startMonth, SSM.endMonth, 
-                     HierarchyTable.instance().getAgg(comp.id),
-                     selectedGroup,
-                     SSM.c_manufactureAttrib.selected,
-                     SSM.c_makeAttrib.selected, 
-                     SSM.c_modelAttrib.selected,
-                     SSM.c_yearAttrib.selected);               
-               
-            } else {
-               Vector<Integer> related =  new Vector<Integer>();
-               related.addAll(SSM.selectedGroup.keySet());
-               Vector<Integer> t = new Vector<Integer>();
-               t.add(comp.id);
-               
-               relatedOccNew = CacheManager.instance().getCoOccurring(
-                     startIdx, endIdx, 
-                     SSM.startMonth, SSM.endMonth, 
-                     t,
-                     related,
-                     SSM.manufactureAttrib.selected,
-                     SSM.makeAttrib.selected, 
-                     SSM.modelAttrib.selected,
-                     SSM.yearAttrib.selected);                   
-               
-               c_relatedOccNew = CacheManager.instance().getCoOccurring(
-                     startIdx, endIdx, 
-                     SSM.startMonth, SSM.endMonth, 
-                     t,
-                     related,
-                     SSM.c_manufactureAttrib.selected,
-                     SSM.c_makeAttrib.selected, 
-                     SSM.c_modelAttrib.selected,
-                     SSM.c_yearAttrib.selected);                   
-              
-            }
-         }
-         String txt = "";
-         if (SSM.useComparisonMode == true) {
-            //txt = comp.baseName+"(" + (relatedOccNew+c_relatedOccNew) + "/" + relatedOcc + "/" + (occ+c_occ) + ")";
-            txt = comp.baseName+" (" + (relatedOccNew+c_relatedOccNew) + "/" + (occ+c_occ) + ")";
-         } else {
-            //txt = comp.baseName+"(" + relatedOccNew + "/" + relatedOcc + "/" + occ + ")";
-            txt = comp.baseName+" (" + relatedOccNew + "/" + occ + ")";
-         }
-            
-            
-         double size[] = GraphicUtil.getFontDim(txt);
+         double size[] = GraphicUtil.getFontDim("Dummy");
          leftHeight -= Math.max(size[1], comp.cchart.height);
          leftHeight -= vpadding;
         
@@ -1637,7 +1468,6 @@ System.out.println("After ModelRenderer Picking : " + SSM.stopPicking);
          comp.cchart.tf.height = comp.cchart.height;
          comp.cchart.tf.anchorX = comp.cchart.anchorX;
          comp.cchart.tf.anchorY = comp.cchart.anchorY;         
-         comp.cchart.setLabel(txt);
          comp.cchart.tf.render(gl2);
          
             

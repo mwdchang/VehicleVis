@@ -70,11 +70,7 @@ public class SSM {
       // Parse runtime parameters
       useTUIO         = Boolean.parseBoolean(System.getProperty("UseTUIO", "true"));
       useFullScreen   = Boolean.parseBoolean(System.getProperty("UseFullScreen", "true"));
-      refreshRate     = Long.parseLong(System.getProperty("RefreshRate", "800"));
-      nearThreshold   = Float.parseFloat(System.getProperty("NearThreshold", "0.2f")); 
-      downsampleRate  = Integer.parseInt(System.getProperty("DownsampleRate", "3"));
       useScenario     = Boolean.parseBoolean(System.getProperty("UseScenario", "true"));
-      
    }
    
    
@@ -89,9 +85,6 @@ public class SSM {
    
    public static boolean useTUIO = false;
    public static boolean useFullScreen = false;
-   public static long refreshRate = 800L;
-   public static float nearThreshold = 0.2f;
-   public static int downsampleRate = 3;
    
    
    // This should be a multiple of 2 due to the rounded rectangle thingy
@@ -200,6 +193,7 @@ public class SSM {
    
    public static void clearLens() {
       for (int i=0; i < lensList.size(); i++) {
+         lensList.elementAt(i).rimSelected = false;
          lensList.elementAt(i).handleSelected = false;
          lensList.elementAt(i).magicLensSelected = 0;
          lensList.elementAt(i).deSelectAnimator = PropertySetter.createAnimator(200, lensList.elementAt(i), "borderSize", new FloatEval(), lensList.elementAt(i).borderSizeNormal);

@@ -22,6 +22,7 @@ import model.DCTriple;
 /////////////////////////////////////////////////////////////////////////////////
 // Miscellaneous stuff that doesn't really belong in any categories
 //
+//  atan2                   - NVidia's ATAN2 approximation
 //  pointInTriangle         - Check if point is in triangle
 //  areaTriangle            - Calculate area of triangle with cross product
 //  dist                    - Calculate the pythagorean distance
@@ -61,6 +62,38 @@ public class DCUtil {
 //      System.out.println(DCUtil.areaTriangle(a, b, c));
 //      System.out.println(DCUtil.pointInTriangle(test, a, b, c));
 //   }
+   
+   
+   ////////////////////////////////////////////////////////////////////////////////
+   // NVidia's Atan2 approximation algorithm
+   // http://http.developer.nvidia.com/Cg/atan2.html
+   ////////////////////////////////////////////////////////////////////////////////
+   public static double atan2(double y, double x) {
+      double t0, t1, t2, t3, t4;   
+      
+      t3 = Math.abs( x );
+      t1 = Math.abs( y );
+      t0 = Math.max(t3, t1);
+      t1 = Math.min(t3, t1);
+      t3 = 1.0/t0;
+      t3 = t1*t3;
+      
+      t4 = t3 * t3;
+      t0 =         - (0.013480470);
+      t0 = t0 * t4 + (0.057477314);
+      t0 = t0 * t4 - (0.121239071);
+      t0 = t0 * t4 + (0.195635925);
+      t0 = t0 * t4 - (0.332994597);
+      t0 = t0 * t4 + (0.999995630);
+      t3 = t0 * t3;
+
+      t3 = (Math.abs(y) > Math.abs(x)) ? (1.570796327) - t3 : t3;
+      t3 = (x < 0) ?  Math.PI - t3 : t3;
+      t3 = (y < 0) ? -t3 : t3;
+
+      return t3;      
+      
+   }
    
    
    ////////////////////////////////////////////////////////////////////////////////

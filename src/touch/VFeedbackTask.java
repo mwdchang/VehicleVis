@@ -73,22 +73,28 @@ public class VFeedbackTask implements RenderTask {
          }
       } // end synchronize
       
+      
       ////////////////////////////////////////////////////////////////////////////////
       // Draw wait markers
       // Draw a clock like symbol to let the viewers know that the system is processing
       // Note: The interface is not actually disabled during this phase
       ////////////////////////////////////////////////////////////////////////////////
       if (SSM.waitMarker != null) {
+         // White background
          gl2.glColor4d(1, 1, 1, 0.6*SSM.waitMarker.z/SSM.WAIT_DELAY_FRAME);
          GraphicUtil.drawPie(gl2, SSM.waitMarker.x, SSM.waitMarker.y, 9.9, 
                33, 0, 360, 36);
+         
+         // Outer rim
          gl2.glColor4d(0, 0, 0, 0.6*SSM.waitMarker.z/SSM.WAIT_DELAY_FRAME);
          GraphicUtil.drawArc(gl2, SSM.waitMarker.x, SSM.waitMarker.y, 9.9, 
                30, 33, 0, 360, 36, 1);
          
+         // Inner rim
          GraphicUtil.drawArc(gl2, SSM.waitMarker.x, SSM.waitMarker.y, 9.9, 
                0, 5, 0, 360, 36, 1);
          
+         // Hands
          gl2.glLineWidth(4.0f);
          gl2.glBegin(GL2.GL_LINES);
             gl2.glVertex3d(SSM.waitMarker.x, SSM.waitMarker.y, 9.9);
@@ -115,6 +121,7 @@ public class VFeedbackTask implements RenderTask {
                t.z/3, t.z/3+1, 0, 360, 36, 1);
          }
          
+         // Save removal while iterating
          Iterator<DCTriple> iter = SSM.invalidPoint.iterator();
          while (iter.hasNext()) {
             if (iter.next().z <= 0) iter.remove();   

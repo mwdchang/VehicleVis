@@ -289,14 +289,14 @@ public class Heatmap extends ComponentChart {
    
    
    public void setLabel(String label) {
-      if (tf.marks.size() == 0 || ! tf.marks.elementAt(0).str.equalsIgnoreCase(label)) {
+      //if (tf.marks.size() == 0 || ! tf.marks.elementAt(0).str.equalsIgnoreCase(label)) {
          tf.clearMark();
          //tf.addMark(label, labelColour, new Font("Consolas", Font.PLAIN, 11), 1, height-labelBuffer+5);
          if (active) 
             tf.addMark(label, labelColour, smallFont, 1, height-labelBuffer+1);
          else 
             tf.addMark(label, labelColourInactive, smallFont, 1, height-labelBuffer+1);
-      }
+      //}
    }   
    
    

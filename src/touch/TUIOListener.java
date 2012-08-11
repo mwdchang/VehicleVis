@@ -34,22 +34,17 @@ import TimingFrameExt.FloatEval;
 ////////////////////////////////////////////////////////////////////////////////
 public class TUIOListener implements TuioListener {
    
-   
-   public static long  REFRESH_INTERVAL = SSM.refreshRate;
-   public static int   DOWNSAMPLE_RATE  = SSM.downsampleRate;
-   public static float NEAR_THRESHOLD   = SSM.nearThreshold;
 
+   // Tracks the active events
    public Hashtable<Long, WCursor> eventTable = new Hashtable<Long, WCursor>();
    
+   // Tracks expired events, create a zone around the point to prevent  toggling multiple times
    public Hashtable<Long, WCursor> deadzone = new Hashtable<Long, WCursor>();
    
    
-   public float sensitivity = 0;
    
    public TUIOListener() {
       super();   
-      sensitivity = Float.valueOf(System.getProperty("TUIOSensitivity", "0.002")); 
-      System.out.println("TUIO Sensitivity : " + sensitivity);
       System.out.println("Starting timer thread");
       Thread t1 = new Thread(update);
       t1.start();
@@ -98,14 +93,16 @@ public class TUIOListener implements TuioListener {
       return result;
    }
    
-   public Vector<WCursor> findSimilarCursor(WCursor w) {
-      Vector<WCursor> result = new Vector<WCursor>();
-      for (WCursor k : eventTable.values()) {
-         if (k.sessionID == w.sessionID) continue;   
-         if (k.element == w.element && distance(k, w) < NEAR_THRESHOLD) result.add(k);
-      }
-      return result;
-   }
+   
+//   public Vector<WCursor> findSimilarCursor(WCursor w) {
+//      Vector<WCursor> result = new Vector<WCursor>();
+//      for (WCursor k : eventTable.values()) {
+//         if (k.sessionID == w.sessionID) continue;   
+//         if (k.element == w.element && distance(k, w) < NEAR_THRESHOLD) result.add(k);
+//      }
+//      return result;
+//   }
+   
    
    public Vector<WCursor> findSimilarCursor(WCursor w, float low, float high) {
       Vector<WCursor> result = new Vector<WCursor>();
@@ -315,7 +312,8 @@ public class TUIOListener implements TuioListener {
          
          
          // Register a point for the filter widget dragging
-         SSM.dragPoints.put(o.getSessionID(), new DCTriple(posX, posY, 0));
+         if (w.element == SSM.ELEMENT_FILTER)
+            SSM.dragPoints.put(o.getSessionID(), new DCTriple(posX, posY, 0));
          
          // Register a point for hover effects
          // synchronized(SSM.hoverPoints) { SSM.hoverPoints.put(o.getSessionID(), new DCTriple(posX, posY, 0)); }
@@ -386,7 +384,9 @@ public class TUIOListener implements TuioListener {
       
       float ox = o.getX();
       float oy = o.getY();
-      SSM.dragPoints.put(o.getSessionID(), new DCTriple(ox*SSM.windowWidth, oy*SSM.windowHeight, 0));
+      
+      if (wcursor.element == SSM.ELEMENT_FILTER)
+         SSM.dragPoints.put(o.getSessionID(), new DCTriple(ox*SSM.windowWidth, oy*SSM.windowHeight, 0));
       
       int x1 = (int)(o.getX()*SSM.windowWidth);
       int y1 = (int)(o.getY()*SSM.windowHeight);
@@ -568,10 +568,10 @@ System.out.println("Pinch detected");
       // If there are exactly 2 points currently, and they are sufficiently close to each other, and 
       // they are over the same type of element then create a document panel
       //if (w.state == WCursor.STATE_NOTHING && w.element == SSM.ELEMENT_NONE) {
-      if ( (w.state == WCursor.STATE_HOLD) && w.element == SSM.ELEMENT_NONE) {
+      if ( (w.state == WCursor.STATE_HOLD) && w.element == SSM.ELEMENT_NONE && w.points.size() < 8) {
          Vector<WCursor> len = this.findSimilarCursorPixel(w, 100, 500);
          if (len.size() == 1) {
-            if (len.size() == 1 && (len.elementAt(0).state == WCursor.STATE_HOLD)) {
+            if (len.size() == 1 && (len.elementAt(0).state == WCursor.STATE_HOLD && len.elementAt(0).points.size() < 8 )) {
                // Adjust the lens coordinate such that the 2 points are on the circumference of the lens
                System.out.print("activate lens");   
                float xx = w.x*SSM.windowWidth;
@@ -726,6 +726,7 @@ System.out.println("Pinch detected");
    };
    
 
+   // Not implemented
    public void addTuioObject(TuioObject arg0) {}
    public void refresh(TuioTime arg0) {}
    public void removeTuioObject(TuioObject arg0) {}
