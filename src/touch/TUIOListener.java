@@ -201,7 +201,17 @@ public class TUIOListener implements TuioListener {
       float width =  SSM.windowWidth;
       float height = SSM.windowHeight;
       
+      
+      // General rules
+      // 1) Prevent 3 touch points in the same vicinity
+      // 2) Prevent ANY touch points from occurring in the four corners (Corners are just way too flaky to be used)
+      float borderTolerance = 30;
+      
       if (findSimilarCursorPixel(w, 0, 300).size() >= 2) return;
+      if ( DCUtil.between(posX, 0, borderTolerance) && DCUtil.between(posY, 0, borderTolerance)) return;
+      if ( DCUtil.between(posX, SSM.windowWidth-borderTolerance, SSM.windowWidth) && DCUtil.between(posY, 0, borderTolerance)) return;
+      if ( DCUtil.between(posX, 0, borderTolerance) && DCUtil.between(posY, SSM.windowHeight-borderTolerance, SSM.windowHeight)) return;
+      if ( DCUtil.between(posX, SSM.windowWidth-borderTolerance, SSM.windowWidth) && DCUtil.between(posY, SSM.windowHeight-borderTolerance, SSM.windowHeight)) return;
       
       
       synchronized(eventTable) {
