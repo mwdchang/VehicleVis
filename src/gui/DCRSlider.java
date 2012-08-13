@@ -150,7 +150,8 @@ public class DCRSlider {
       if (this.isSelected == true)
          gl2.glColor4fv(SchemeManager.selected.toArray(), 0);
       else 
-         gl2.glColor4d(0.5, 0.5, 0.5, 1.0);
+         gl2.glColor4fv(SchemeManager.unselected.toArray(), 0);
+         //gl2.glColor4d(0.5, 0.5, 0.5, 1.0);
       
       gl2.glBegin(GL2.GL_TRIANGLES);     
          gl2.glVertex2d(anchorX+lowIdx * interval - markerSize, anchorY-markerSize);
@@ -168,7 +169,7 @@ public class DCRSlider {
       if (this.isSelected == true)
          gl2.glColor4fv(SchemeManager.selected.toArray(), 0);
       else
-         gl2.glColor4d(0.5, 0.5, 0.5, 1.0);
+         gl2.glColor4fv(SchemeManager.unselected.toArray(), 0);
       
       gl2.glBegin(GL2.GL_TRIANGLES);     
          gl2.glVertex2d( anchorX+(highIdx+1) * interval + markerSize, anchorY-markerSize);

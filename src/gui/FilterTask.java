@@ -638,6 +638,11 @@ System.out.println("In Unfocus");
           SSM.endYear != Integer.parseInt(yearData[ (int)yearSlider.highIdx ].key)) {
          SSM.dirty = 1;
          SSM.dirtyGL = 1;
+         
+         // We have a new date rate, so reset document panel
+         SSM.t1Start = 0;
+         SSM.t2Start = SSM.globalFetchSize;
+         SSM.yoffset = SSM.docHeight;         
       }
       DWin.instance().msg("New data rage " + str_lowIdx + " to " + str_highIdx);
       SSM.startTimeFrame = str_lowIdx;

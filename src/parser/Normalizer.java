@@ -10,6 +10,7 @@ import java.util.Vector;
 import datastore.Const;
 
 import util.DCUtil;
+import util.DWin;
 
 /////////////////////////////////////////////////////////////////////////////////
 // This class is responsible for normalizing the input data into a sensible format
@@ -62,6 +63,14 @@ public class Normalizer {
       SimpleDateFormat sdfIn = null;
       SimpleDateFormat sdfOut   = null;
       
+      // Used to avoid repeated text description
+      // Hashcode -> Last unique document identifier
+      Hashtable<Long, String> collisionTable = new Hashtable<Long, String>();
+      int collision = 0;
+      
+      DWin.instance().debug("File name: " + filename);
+      DWin.instance().debug("White List: " + whiteList);
+      DWin.instance().debug("Using replacement: " + replaceNames);
       
       int counter = 0;
       try {
@@ -77,12 +86,19 @@ public class Normalizer {
          Hashtable<String, String> replacementTable = new Hashtable<String, String>();
          
          while ( (line = reader.readLine()) != null ) {
+            
             if (  num > 0 && counter >= num) { 
                break;
             }
             counter++;
             line = line.replaceAll("\t", "\t ");
             segments = line.split("\t");   
+            
+            if (counter % 10000 == 0) {
+               System.out.println("Processed : " + counter + " rows");
+            }            
+            
+            boolean isCollision = false;
             
             
             ////////////////////////////////////////////////////////////////////////////////
@@ -106,14 +122,13 @@ public class Normalizer {
             }
             
             
-
             
             
-//            segments[Const.DESC_IDX] = segments[Const.DESC_IDX].replaceAll("Tt.$", "");        // Clean up trailing characters
-//            segments[Const.DESC_IDX] = segments[Const.DESC_IDX].replaceAll("\\*ak.$", "");     // Clean up trailing characters
-//            segments[Const.DESC_IDX] = segments[Const.DESC_IDX].replaceAll("\\*skd.$", "");    // Clean up trailing characters
-//            segments[Const.DESC_IDX] = segments[Const.DESC_IDX].replaceAll("\\*jb.$", "");     // Clean up trailing characters
-//            segments[Const.DESC_IDX] = segments[Const.DESC_IDX].replaceAll("\\*aw.$", "");     // Clean up trailing characters
+            segments[Const.DESC_IDX] = segments[Const.DESC_IDX].replaceAll("Tt.$", "");        // Clean up trailing characters
+            segments[Const.DESC_IDX] = segments[Const.DESC_IDX].replaceAll("\\*ak.$", "");     // Clean up trailing characters
+            segments[Const.DESC_IDX] = segments[Const.DESC_IDX].replaceAll("\\*skd.$", "");    // Clean up trailing characters
+            segments[Const.DESC_IDX] = segments[Const.DESC_IDX].replaceAll("\\*jb.$", "");     // Clean up trailing characters
+            segments[Const.DESC_IDX] = segments[Const.DESC_IDX].replaceAll("\\*aw.$", "");     // Clean up trailing characters
             
             
             // Hacky replacement scheme to rub out identifiable names
@@ -153,6 +168,20 @@ public class Normalizer {
             segments[Const.DATEA_IDX] = sdfOut.format(sdfIn.parse(segments[Const.DATEA_IDX]));            
             
             
+            // Check to see if there are any collisions (Same repeated 
+            long hashCode = segments[Const.DESC_IDX].hashCode();
+            if (collisionTable.get(hashCode) != null) {
+               String complaintId = collisionTable.get( hashCode );
+               // now check if the ids are too close apart
+               if ( Math.abs(Integer.valueOf(segments[Const.CMPL_IDX]).intValue() - Integer.valueOf(complaintId).intValue()) < 10 ) {
+                  System.err.println("Collision detected at : " + segments[Const.CMPL_IDX]);   
+                  collision++;
+                  isCollision = true;
+               }
+            }
+            collisionTable.put(hashCode, segments[Const.CMPL_IDX]);
+            
+            
             // Recreate a lean and mean version of the raw data
             String subArray[] = DCUtil.range(segments, 
                Const.CMPL_IDX, 
@@ -164,16 +193,19 @@ public class Normalizer {
                Const.DESC_IDX
             );
             
-            writer.write( DCUtil.fromArray(subArray, "\t"));
-            writer.newLine();
-            if (counter % 10000 == 0) {
-               System.out.println("Processed : " + counter + " rows");
+            // Only write the record if it is unique
+            if (isCollision == false) {
+               writer.write( DCUtil.fromArray(subArray, "\t"));
+               writer.newLine();
             }
+
          }
          System.out.println("Processed : " + counter + " rows");
          reader.close();
          writer.flush();
          writer.close();
+         
+         DWin.instance().debug("Found: " + collision + " collisions");
          
          
          // Write out the key-value pairs

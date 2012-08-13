@@ -284,6 +284,16 @@ System.out.println("<Near plane: " + la.nearPlane);
    
    
    ////////////////////////////////////////////////////////////////////////////////
+   // Performs camera zoom function 
+   // The max and min should be controlled at a higher level
+   ////////////////////////////////////////////////////////////////////////////////
+   public static void setCameraZoom(float amt) {
+      DCCamera.instance().move(amt); 
+      SSM.refreshOITTexture = true;
+      SSM.refreshMagicLens = true;
+   }
+   
+   ////////////////////////////////////////////////////////////////////////////////
    // Change camera position - axis aligned rotation
    ////////////////////////////////////////////////////////////////////////////////
    public static void setCameraTUIO(int posX, int posY, int oldPosX, int oldPosY) {
@@ -599,6 +609,9 @@ System.out.println("<Near plane: " + la.nearPlane);
    }
    
    
+   ////////////////////////////////////////////////////////////////////////////////
+   // Check to see if the point (posX, posY) is in any of the magic lens handles
+   ////////////////////////////////////////////////////////////////////////////////
    public static int checkLensHandle(int posX, int posY) {
       float mx = posX;
       float my = posY;

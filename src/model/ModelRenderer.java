@@ -490,9 +490,9 @@ public class ModelRenderer extends BaseModelRenderer {
                      la.magicLensRadius, la.magicLensRadius+la.borderSize, 0, 360, 72, 1);
             } else {
                GraphicUtil.drawArcLine(gl2, la.magicLensX, (SSM.windowHeight-la.magicLensY), 0, 
-                     la.magicLensRadius, 0, 360, 120, 2);
+                     la.magicLensRadius, 0, 360, 180, 2);
                GraphicUtil.drawArcLine(gl2, la.magicLensX, (SSM.windowHeight-la.magicLensY), 0, 
-                     la.magicLensRadius+la.borderSize, 0, 360, 120, 2);
+                     la.magicLensRadius+la.borderSize, 0, 360, 180, 2);
             }
             
             // If the handle is selected, we rendered it in the selected colour
@@ -510,11 +510,24 @@ public class ModelRenderer extends BaseModelRenderer {
                         la.handleAngle, la.handleAngle+40, 20);
                }
                
-               double symbolX = la.magicLensX+(la.magicLensRadius+22)*Math.cos( (la.handleAngle+30)*Math.PI/180.0);
-               double symbolY = (SSM.windowHeight-la.magicLensY)+(la.magicLensRadius+22)*Math.sin( (la.handleAngle+30)*Math.PI/180.0 );
-               gl2.glColor4d(1, 1, 1, 0.5);
-                  
+               //double symbolX = la.magicLensX+(la.magicLensRadius+22)*Math.cos( (la.handleAngle+30)*Math.PI/180.0);
+               //double symbolY = (SSM.windowHeight-la.magicLensY)+(la.magicLensRadius+22)*Math.sin( (la.handleAngle+30)*Math.PI/180.0 );
+               gl2.glColor4d(1, 1, 1, 0.6);
+               // Draw an arrow marker
+               gl2.glBegin(GL2.GL_TRIANGLES);
+                  gl2.glVertex2d( 
+                        la.magicLensX + (la.magicLensRadius+20) * Math.cos((la.handleAngle+35)*Math.PI/180),
+                        (SSM.windowHeight-la.magicLensY) + (la.magicLensRadius+20) * Math.sin((la.handleAngle+35)*Math.PI/180));
+                  gl2.glVertex2d( 
+                        la.magicLensX + (la.magicLensRadius+5) * Math.cos((la.handleAngle+30)*Math.PI/180),
+                        (SSM.windowHeight-la.magicLensY) + (la.magicLensRadius+5) * Math.sin((la.handleAngle+30)*Math.PI/180));
+                  gl2.glVertex2d( 
+                        la.magicLensX + (la.magicLensRadius+35) * Math.cos((la.handleAngle+30)*Math.PI/180),
+                        (SSM.windowHeight-la.magicLensY) + (la.magicLensRadius+35) * Math.sin((la.handleAngle+30)*Math.PI/180));
+               gl2.glEnd();
+               
                // Draw a plus marker
+               /*
                gl2.glLineWidth(5.0f);
                gl2.glBegin(GL2.GL_LINES);
                   gl2.glVertex2d( symbolX, symbolY+8 );
@@ -524,6 +537,7 @@ public class ModelRenderer extends BaseModelRenderer {
                   gl2.glVertex2d( symbolX-8, symbolY );
                gl2.glEnd();
                gl2.glLineWidth(1.0f);
+               */
                   
                // Draw a special marker if the near plane is at the minimum or at the maximum
                /*
@@ -1974,7 +1988,6 @@ System.out.println("After ModelRenderer Picking : " + SSM.stopPicking);
       }
       return res;
    }
-   
    
 }
 

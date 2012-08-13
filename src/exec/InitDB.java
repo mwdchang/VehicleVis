@@ -7,6 +7,7 @@ import datastore.SSM;
 import parser.HierarchyParser;
 import parser.KeywordParser;
 import parser.Normalizer;
+import util.DWin;
 import util.TableLoader;
 
 
@@ -114,6 +115,7 @@ public class InitDB {
          e.printStackTrace();
          System.exit(0);
       }
+      DWin.instance().debug("All Done");
       
       
       ////////////////////////////////////////////////////////////////////////////////

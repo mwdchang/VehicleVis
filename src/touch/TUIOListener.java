@@ -235,6 +235,11 @@ public class TUIOListener implements TuioListener {
                   float dist = (float)Math.sqrt((posX - la.magicLensX)*(posX - la.magicLensX)  + (posY - la.magicLensY)*(posY - la.magicLensY));       
                   if (dist < la.magicLensRadius+80) {
                      System.err.println("H3 Lens " + eventTable.size());    
+                     
+                     // reverse, if lens is selected, don't handle rim at the same time
+                     // little hacky here, w and wc refer to the same instance, but w cannot
+                     // be used yet, so we will use wc
+                     if (w.element == SSM.ELEMENT_LENS_RIM) wc.lensReference.rimSelected = !wc.lensReference.rimSelected;
                      return;
                   }
                }
@@ -249,15 +254,35 @@ public class TUIOListener implements TuioListener {
                   }
                }
             }
-            
-            
          }
+         
+         
+         // If the type is lens, register which lens
+         if (w.element == SSM.ELEMENT_LENS || w.element == SSM.ELEMENT_LENS_RIM) {
+            for (int i=0; i < SSM.lensList.size(); i++) {
+               float x = (float)w.x*width - (float)SSM.lensList.elementAt(i).magicLensX;
+               float y = (float)w.y*height - (float)SSM.lensList.elementAt(i).magicLensY;
+               float r = (float)SSM.lensList.elementAt(i).magicLensRadius;
+               float d = (float)Math.sqrt(x*x + y*y);
+               
+               if (d <= (r+LensAttrib.errorRange)) {
+                  //SSM.lensList.elementAt(i).magicLensSelected = 1;
+                  SSM.topElement = SSM.ELEMENT_LENS;
+                  w.lensReference = SSM.lensList.elementAt(i);
+                  w.lensIndex = i;
+                  w.lensReference.offsetX = (int)x;
+                  w.lensReference.offsetY = (int)y;
+                  break;
+               }
+            }              
+         }         
+         
             
          // 3.1) Remove new touch points if it overflows the Zone maximum
          // There should be a maximum of two touch points for document zone and
          // the lens zone
          if (w.element == SSM.ELEMENT_LENS || w.element == SSM.ELEMENT_LENS_RIM) {
-            if (this.findSimilarCursorPixel(w, 0, 999).size() >= 1) {
+            if (this.findSimilarCursorPixel(w, 0, (int)w.lensReference.magicLensRadius).size() >= 1) {
                System.err.println("H3.1 " + eventTable.size());
                return;
             }
@@ -289,25 +314,7 @@ public class TUIOListener implements TuioListener {
          }
          
          
-         // If the type is lens, register which lens
-         if (w.element == SSM.ELEMENT_LENS || w.element == SSM.ELEMENT_LENS_RIM) {
-            for (int i=0; i < SSM.lensList.size(); i++) {
-               float x = (float)w.x*width - (float)SSM.lensList.elementAt(i).magicLensX;
-               float y = (float)w.y*height - (float)SSM.lensList.elementAt(i).magicLensY;
-               float r = (float)SSM.lensList.elementAt(i).magicLensRadius;
-               float d = (float)Math.sqrt(x*x + y*y);
-               
-               if (d <= (r+LensAttrib.errorRange)) {
-                  SSM.lensList.elementAt(i).magicLensSelected = 1;
-                  SSM.topElement = SSM.ELEMENT_LENS;
-                  w.lensReference = SSM.lensList.elementAt(i);
-                  w.lensIndex = i;
-                  w.lensReference.offsetX = (int)x;
-                  w.lensReference.offsetY = (int)y;
-                  break;
-               }
-            }              
-         }
+
          
          
          
@@ -458,14 +465,16 @@ System.out.println("Spread detected");
             if (wcursor.element == SSM.ELEMENT_NONE) {
                double dist = DCCamera.instance().eye.sub(new DCTriple(0,0,0)).mag();
                if (dist < 15) return;
-               DCCamera.instance().move(1.1f);
+               Event.setCameraZoom(1.0f);
+               //DCCamera.instance().move(1.1f);
             }
          } else if (oldDistance > newDistance) {
 System.out.println("Pinch detected");
             if (wcursor.element == SSM.ELEMENT_NONE) {
                double dist = DCCamera.instance().eye.sub(new DCTriple(0,0,0)).mag();
                if (dist > 90) return;
-               DCCamera.instance().move(-1.1f);
+               Event.setCameraZoom(-1.0f);
+               //DCCamera.instance().move(-1.1f);
             }
          }
          

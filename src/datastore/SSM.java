@@ -138,11 +138,14 @@ public class SSM {
       c_yearAttrib.selected = null;
       c_yearAttrib.active = false;
       
-      
       relatedList.clear();
+      
       
       // Clear buffers
       pickPoints.clear();
+      dragPoints.clear();
+      hoverPoints.clear();
+      tooltips.clear();
       lensList.clear();
    }
    

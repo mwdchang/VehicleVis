@@ -13,7 +13,6 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 import TUIO.TuioClient;
-import TUIO.TuioListener;
 
 import touch.TUIOListener;
 import util.ALogger;
@@ -52,8 +51,6 @@ public class ProjectDriver {
             System.exit(0);   
          }
       }
-      
-      
       
       
       CacheManager.instance().initSystem();

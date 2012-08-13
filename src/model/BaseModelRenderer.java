@@ -676,6 +676,11 @@ public abstract class BaseModelRenderer implements RenderTask {
       DCComponent comp = MM.currentModel.componentTable.get(s);
       if (comp == null) return;
       if (comp.id < 0) return;
+      
+      // Sanity check 
+      if (comp.active == false) return; 
+      if (CacheManager.instance().groupOccurrence.get(comp.id) == null) return;
+      //if (CacheManager.instance().c_groupOccurrence.get(comp.id) == null) return;
          
       MM.currentModel.componentTable.get(s).cchart.active = true;
       if (SSM.selectedGroup.size() > 0 && ! SSM.relatedList.contains(comp.id))  {
