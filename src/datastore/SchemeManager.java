@@ -163,7 +163,7 @@ public class SchemeManager {
    public static DCColour selected    = DCColour.fromInt(1, 71, 189, 175); 
    public static DCColour unselected  = DCColour.fromInt(128, 128, 128, 128); 
    
-   public static DCColour sparkline_guideline = new DCColour(0.3, 0.3, 0.3, 0.8);
+   public static DCColour sparkline_guideline = new DCColour(0.0, 0.0, 0.0, 0.2);
    
    public static DCColour car_normal1        = new DCColour(0.3, 0.3, 0.3, 0.1);     
    public static DCColour component_selected = new DCColour(1.0f, 0.8f, 0.0f, 0.5f);  

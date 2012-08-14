@@ -233,8 +233,8 @@ public class QuestionTask implements RenderTask {
       ////////////////////////////////////////////////////////////////////////////////
       q.add( new Question() {
          public boolean answered() {
-            return SSM.startYear == 1995 && 
-                   SSM.endYear   == 1996;
+            return SSM.startYear == 2000 && 
+                   SSM.endYear   == 2001;
          }
          public void set() {
             SSM.startMonth = 5;
@@ -242,7 +242,7 @@ public class QuestionTask implements RenderTask {
             SSM.dirty = 1;
             SSM.dirtyLoad = 1;
          }
-         public String text() { return "Warm up task: Select years 1995 and 1996 on the year slider"; }
+         public String text() { return "Warm up task: Select years 2000 and 2001 on the year slider"; }
       });
       
       q.add(new Question() {

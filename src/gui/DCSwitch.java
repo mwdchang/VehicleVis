@@ -11,6 +11,7 @@ import util.DCUtil;
 import util.GraphicUtil;
 import util.TextureFont;
 import datastore.Const;
+import datastore.SchemeManager;
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -60,8 +61,9 @@ public class DCSwitch {
       // Render an "on" or "off" state
       if (this.state == true) {
          GraphicUtil.drawRoundedRect(gl2, anchorX+width+(switchWidth/2), anchorY, 0, (switchWidth/2), 10, 4, 6,
-               DCColour.fromDouble(0.0, 0.4, 0.9, 0.65).toArray(), 
-               DCColour.fromDouble(0.0, 0.6, 0.7, 0.65).toArray());
+               SchemeManager.selected.toArray(), SchemeManager.selected.toArray());
+               //DCColour.fromDouble(0.0, 0.4, 0.9, 0.65).toArray(), 
+               //DCColour.fromDouble(0.0, 0.6, 0.7, 0.65).toArray());
          
          tf_on.anchorX = anchorX+width;
          tf_on.anchorY = anchorY-8;

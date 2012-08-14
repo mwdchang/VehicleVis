@@ -146,10 +146,10 @@ public class Heatmap extends ComponentChart {
                      int cMonth = (int)((1+tmpX) + SSM.startMonth);
                      tip.addText("Time:" + DCTip.translateTable.get(cMonth+"") + "-" + cYear); 
                      if (SSM.useComparisonMode == true) {
-                        tip.addText("Value:" + (int)(c_v), SchemeManager.comp_2);
-                        tip.addText("Value:" + (int)(v), SchemeManager.comp_1);
+                        tip.addText("# Occurrence: " + (int)(c_v), SchemeManager.comp_2);
+                        tip.addText("# Occurrence: " + (int)(v), SchemeManager.comp_1);
                      } else {
-                        tip.addText("Value:" + (int)v);
+                        tip.addText("# Occurrence: " + (int)v);
                      }
                      tip.setTip( point.x,
                            SSM.windowHeight-point.y,
@@ -177,9 +177,13 @@ public class Heatmap extends ComponentChart {
                   
                   
                   if (v > c_v) {
-                     gl2.glColor4fv(SchemeManager.comp_1.toArray(), 0);
+                     //gl2.glColor4fv(SchemeManager.comp_1.toArray(), 0);
+                     float alpha = 0.4f + 0.6f*(v-c_v)/v;
+                     gl2.glColor4f( SchemeManager.comp_1.r, SchemeManager.comp_1.g, SchemeManager.comp_1.b, alpha);
                   } else if (v < c_v) {
-                     gl2.glColor4fv(SchemeManager.comp_2.toArray(), 0);
+                     float alpha = 0.4f + 0.6f*(c_v-v)/c_v;
+                     gl2.glColor4f( SchemeManager.comp_2.r, SchemeManager.comp_2.g, SchemeManager.comp_2.b, alpha);
+                     //gl2.glColor4fv(SchemeManager.comp_2.toArray(), 0);
                   } else {
                      gl2.glColor4fv(SchemeManager.silhouette_default.adjustAlpha(0.5f).toArray(), 0);
                   }

@@ -676,9 +676,31 @@ public abstract class BaseModelRenderer implements RenderTask {
       DCComponent comp = MM.currentModel.componentTable.get(s);
       if (comp == null) return;
       if (comp.id < 0) return;
+      int occ = CacheManager.instance().groupOccurrence.get(comp.id); 
+      int c_occ = CacheManager.instance().c_groupOccurrence.get(comp.id);
+      int relatedOccNew = 0;
+      int c_relatedOccNew = 0;
       
-      // Sanity check 
-      if (comp.active == false) return; 
+      // If component is not active, we need to manually set the children 
+      // element (heatmap) to inactive as well and refresh the text labels
+      if (comp.active == false) {
+         comp.cchart.active = false;
+         String txt = "";
+         if (SSM.useComparisonMode == true) {
+            txt = comp.baseName+" (" + (relatedOccNew+c_relatedOccNew) + "/" + (c_occ+occ) + ")";
+         } else {
+            txt = comp.baseName+" (" + relatedOccNew + "/" + occ + ")";
+         }
+         
+         //comp.cchart.setLabel(txt);
+         MM.currentModel.componentTable.get(s).cchart.tf.width = MM.currentModel.componentTable.get(s).cchart.width;
+         MM.currentModel.componentTable.get(s).cchart.tf.height = MM.currentModel.componentTable.get(s).cchart.height;
+         MM.currentModel.componentTable.get(s).cchart.setLabel(txt);
+        
+         return; 
+      }
+      
+      
       if (CacheManager.instance().groupOccurrence.get(comp.id) == null) return;
       //if (CacheManager.instance().c_groupOccurrence.get(comp.id) == null) return;
          
@@ -687,11 +709,7 @@ public abstract class BaseModelRenderer implements RenderTask {
          MM.currentModel.componentTable.get(s).cchart.active = false;
       }
       
-      int occ = CacheManager.instance().groupOccurrence.get(comp.id); 
-      int c_occ = CacheManager.instance().c_groupOccurrence.get(comp.id);
       
-      int relatedOccNew = 0;
-      int c_relatedOccNew = 0;
       if (SSM.selectedGroup.size() >= 0 ) {
          
          if (SSM.useAggregate == true) {
