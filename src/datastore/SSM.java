@@ -42,6 +42,19 @@ public class SSM {
    
    
    ////////////////////////////////////////////////////////////////////////////////
+   // Big Brother Statistics ?? Are these even useful? what do they say??
+   ////////////////////////////////////////////////////////////////////////////////
+   public static double lensResizeStat = 0;
+   public static double lensMoveStat   = 0;
+   public static double lensDepthStat  = 0;
+   
+   public static void resetStat() {
+      lensResizeStat = 0;   
+      lensMoveStat   = 0;
+      lensDepthStat  = 0;
+   }
+   
+   ////////////////////////////////////////////////////////////////////////////////
    // Default constructor
    //   Just make sure all the variable have some sort of default value
    ////////////////////////////////////////////////////////////////////////////////
@@ -167,8 +180,8 @@ public class SSM {
    
    public static boolean  renderSihoulette;
    public static boolean  useLight = true;
-   public static float rotateX = 0.0f;
-   public static float rotateY = 0.0f;
+   public static float rotateX = 20.0f;
+   public static float rotateY = 120.0f;
    
    
 //   
@@ -494,21 +507,6 @@ public class SSM {
    public static int PART_CHANGE_DURATION = 1000;
    public static int TIME_CHANGE_DURATION = 1000;
    public static int FADE_DURATION = 2500;
-   
-   
-   ////////////////////////////////////////////////////////////////////////////////
-   // Big brother
-   ////////////////////////////////////////////////////////////////////////////////
-   public static int sceneRotate = 0;
-   public static int sceneZoom = 0;
-   public static int selectObjHeatmap = 0;
-   public static int selectObj3D = 0;
-   public static int lensMove = 0;
-   public static int lensResize = 0;
-   public static int lensZoom = 0;
-   
-   
-   
    
    
    ////////////////////////////////////////////////////////////////////////////////

@@ -8,6 +8,7 @@ import org.jdesktop.animation.timing.interpolation.PropertySetter;
 import model.DCTriple;
 import model.LensAttrib;
 
+import util.ALogger;
 import util.DCCamera;
 import util.DCUtil;
 import util.DWin;
@@ -559,6 +560,26 @@ System.out.println("Pinch detected");
       
       System.err.println("=== Removing TUIO Cursor [" + o.getSessionID() + "] " + w.points.size());
       
+      
+      // Big Brother Stuff - tracking interaction movements
+      if (w.element == SSM.ELEMENT_LENS || w.element == SSM.ELEMENT_LENS_RIM || w.element == SSM.ELEMENT_LENS_HANDLE)  {
+         if (w.state == WCursor.STATE_MOVE) {
+            ALogger.instance().log( "[Lens Move] " + (System.currentTimeMillis() - w.startTimestamp));
+         }
+      } else if (w.element == SSM.ELEMENT_DOCUMENT) {
+         if (w.state == WCursor.STATE_MOVE) {
+            ALogger.instance().log( "[Document Move] " + (System.currentTimeMillis() - w.startTimestamp));
+         }
+      } else if (w.element == SSM.ELEMENT_NONE) {
+         if (w.state == WCursor.STATE_MOVE) {
+            ALogger.instance().log("[Scene Move] " + (System.currentTimeMillis() - w.startTimestamp));
+         } else if (w.state == WCursor.STATE_NOTHING) {
+            ALogger.instance().log("[Click]");
+         }
+      }
+      
+      
+      
       SSM.checkDragEvent = true;
       
       // Create a dead zone
@@ -566,19 +587,6 @@ System.out.println("Pinch detected");
       //if ( w.element != SSM.ELEMENT_DOCUMENT && w.element != SSM.ELEMENT_LENS) {
          deadzone.put(w.sessionID, w);   
       //}
-      
-      
-      // Are there too many fingers down ? We only support 2 touch gestures, so if
-      // there are too many lets just remove them all
-//      Vector<WCursor> sim = this.findSimilarCursorPixel(w, 0, 300);
-//      if (sim.size() > 1) {
-//         System.out.println("Killing extra touch points");
-//         for (int i=0; i < sim.size(); i++) {
-//            eventTable.remove(sim.elementAt(i).sessionID);
-//         }
-//         eventTable.remove(o.getSessionID());
-//         return; 
-//      }
       
       
       

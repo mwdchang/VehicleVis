@@ -1380,6 +1380,9 @@ System.out.println("After ModelRenderer Picking : " + SSM.stopPicking);
                               SSM.windowHeight-SSM.sparkLineHeight-vpadding); 
       
       
+      
+      
+      
       gl2.glEnable(GL2.GL_BLEND);
       gl2.glBlendFunc(GL2.GL_SRC_ALPHA, GL2.GL_ZERO);
       
@@ -1438,11 +1441,13 @@ System.out.println("After ModelRenderer Picking : " + SSM.stopPicking);
             
                         
             gl2.glVertex2d( tx, ty);
-            gl2.glVertex2d( lensX + edgeX, comp.projCenter.y);
+            gl2.glVertex2d(lensX+lensRadius + rpadding, ty);
             
-            // Original
-            //gl2.glVertex2d( comp.projCenter.x, comp.projCenter.y);
-            //gl2.glVertex2d( lensX + edgeX, comp.projCenter.y);
+            gl2.glVertex2d(lensX+lensRadius + rpadding, ty);
+            gl2.glVertex2d(lensX+lensRadius + rpadding+spadding-1, rightHeight + 0.5*comp.cchart.height);
+            /*
+            gl2.glVertex2d( tx, ty);
+            gl2.glVertex2d( lensX + edgeX, comp.projCenter.y);
             
             gl2.glVertex2d( lensX + edgeX, comp.projCenter.y);
             gl2.glVertex2d(lensX+lensRadius + rpadding, rightHeight + 0.5*comp.cchart.height);
@@ -1450,15 +1455,8 @@ System.out.println("After ModelRenderer Picking : " + SSM.stopPicking);
             // Connect the line to the center
             gl2.glVertex2d(lensX+lensRadius + rpadding, rightHeight + 0.5*comp.cchart.height);
             gl2.glVertex2d(lensX+lensRadius + rpadding+spadding-1, rightHeight + 0.5*comp.cchart.height);
-            
-            
-            // Connect the line to the top and the bottom
-            /*
-            gl2.glVertex2d(lensX+lensRadius + rpadding, rightHeight + 0.5*comp.cchart.height);
-            gl2.glVertex2d(lensX+lensRadius + rpadding+spadding, rightHeight + comp.cchart.height);
-            gl2.glVertex2d(lensX+lensRadius + rpadding, rightHeight + 0.5*comp.cchart.height);
-            gl2.glVertex2d(lensX+lensRadius + rpadding+spadding, rightHeight );
             */
+            
          gl2.glEnd();
          gl2.glLineWidth(1.0f);
          gl2.glDisable(GL2.GL_LINE_STIPPLE);
@@ -1515,11 +1513,13 @@ System.out.println("After ModelRenderer Picking : " + SSM.stopPicking);
             float ty = (SSM.windowHeight-lensY)  - ((SSM.windowHeight-lensY) - comp.projCenter.y)*la.zoomFactor;
             
             gl2.glVertex2d( tx, ty );
-            gl2.glVertex2d( lensX - edgeX, comp.projCenter.y);
+            gl2.glVertex2d( lensX-lensRadius - lpadding, ty);
             
-            // Original
-            //gl2.glVertex2d( comp.projCenter.x, comp.projCenter.y);
-            //gl2.glVertex2d( lensX - edgeX, comp.projCenter.y);
+            gl2.glVertex2d( lensX-lensRadius - lpadding, ty);
+            gl2.glVertex2d( lensX-lensRadius - lpadding-spadding+1, leftHeight + 0.5*comp.cchart.height);
+            /*
+            gl2.glVertex2d( tx, ty );
+            gl2.glVertex2d( lensX - edgeX, comp.projCenter.y);
             
             gl2.glVertex2d( lensX - edgeX, comp.projCenter.y);
             gl2.glVertex2d( lensX-lensRadius - lpadding, leftHeight + 0.5*comp.cchart.height);
@@ -1527,14 +1527,8 @@ System.out.println("After ModelRenderer Picking : " + SSM.stopPicking);
             // Connect the line to the centre
             gl2.glVertex2d( lensX-lensRadius - lpadding, leftHeight + 0.5*comp.cchart.height);
             gl2.glVertex2d( lensX-lensRadius - lpadding-spadding+1, leftHeight + 0.5*comp.cchart.height);
-            
-            // Connect the line to the top and bottom
-            /*
-            gl2.glVertex2d( lensX-lensRadius - lpadding, leftHeight + 0.5*comp.cchart.height);
-            gl2.glVertex2d( lensX-lensRadius - lpadding-spadding, leftHeight + comp.cchart.height);
-            gl2.glVertex2d( lensX-lensRadius - lpadding, leftHeight + 0.5*comp.cchart.height);
-            gl2.glVertex2d( lensX-lensRadius - lpadding-spadding, leftHeight);
             */
+            
          gl2.glEnd();
          gl2.glLineWidth(1.0f);
          gl2.glDisable(GL2.GL_LINE_STIPPLE);

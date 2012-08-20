@@ -54,7 +54,8 @@ public class DCRSlider {
       renderMarkerHigh(gl2);
       gl2.glPushMatrix();
       for (int i=0; i < data.length; i++) {
-         if (i >= lowIdx && i <= highIdx) {
+         //if (i >= lowIdx && i <= highIdx) {
+         if (i > (lowIdx-1) && i < (highIdx+1) ) {
             if (barColour == null) {
                gl2.glColor4fv( SchemeManager.selected.toArray(), 0);
             } else {

@@ -676,8 +676,10 @@ public abstract class BaseModelRenderer implements RenderTask {
       DCComponent comp = MM.currentModel.componentTable.get(s);
       if (comp == null) return;
       if (comp.id < 0) return;
-      int occ = CacheManager.instance().groupOccurrence.get(comp.id); 
-      int c_occ = CacheManager.instance().c_groupOccurrence.get(comp.id);
+System.out.println(s + " " + comp.id + " " + CacheManager.instance().groupOccurrence);      
+
+      int occ = CacheManager.instance().groupOccurrence.get(comp.id) == null? 0 : CacheManager.instance().groupOccurrence.get(comp.id); 
+      int c_occ = CacheManager.instance().c_groupOccurrence.get(comp.id) == null? 0: CacheManager.instance().c_groupOccurrence.get(comp.id);
       int relatedOccNew = 0;
       int c_relatedOccNew = 0;
       

@@ -167,7 +167,11 @@ public class QuestionTask implements RenderTask {
             SSM.lensList.elementAt(i).magicLensRadius 
          );   
       }
+      ALogger.instance().log("Total Lens Move   : " + SSM.lensMoveStat);
+      ALogger.instance().log("Total Lens Resize : " + SSM.lensResizeStat);
       ALogger.instance().log("................................................................................");
+      
+      SSM.resetStat();
    }
    
    

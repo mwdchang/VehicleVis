@@ -40,16 +40,16 @@ public class ALogger {
    
    
    public void log(String s) {
-      if (active) {
-         Calendar cal = Calendar.getInstance();
-         String time = this.prefixFormatter.format(cal.getTime());
-         try {
-            writer.write(time + "\t" + s);    
-            writer.newLine();
-            writer.flush();
-         } catch (Exception e) { e.printStackTrace(); }
-      }
+      if (active == false) return;
+      Calendar cal = Calendar.getInstance();
+      String time = this.prefixFormatter.format(cal.getTime());
+      try {
+         writer.write(time + "\t" + s);    
+         writer.newLine();
+         writer.flush();
+      } catch (Exception e) { e.printStackTrace(); }
    }
+   
    
    
    protected ALogger() {

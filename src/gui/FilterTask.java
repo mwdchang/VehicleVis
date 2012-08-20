@@ -607,8 +607,15 @@ System.out.println("M " + SSM.endMonth );
    public void unfocus() {
 System.out.println("In Unfocus");
       yearSlider.isSelected = false;
-      yearSlider.highIdx = (int)yearSlider.highIdx;
-      yearSlider.lowIdx = (int)yearSlider.lowIdx;
+      //yearSlider.highIdx = (int)yearSlider.highIdx;
+      //yearSlider.lowIdx = (int)yearSlider.lowIdx;
+      
+      // Test 0.5 interpolate
+      yearSlider.highIdx = (int)Math.ceil(yearSlider.highIdx);
+      yearSlider.lowIdx  = (int)Math.floor(yearSlider.lowIdx);
+      monthSlider.highIdx = (int)Math.ceil(monthSlider.highIdx);
+      monthSlider.lowIdx  = (int)Math.floor(monthSlider.lowIdx);
+      
       yearSlider.sitem = -1;
       
 

@@ -74,6 +74,8 @@ public class Event {
             SSM.lensList.elementAt(i).magicLensX += (posX - oldPosX);   
             SSM.lensList.elementAt(i).magicLensY += (posY - oldPosY);   
             SSM.lensList.elementAt(i).start = 0;
+            
+            SSM.lensMoveStat += DCUtil.dist( (posX - oldPosX), (posY - oldPosY));
          }
       }      
    }
@@ -115,7 +117,9 @@ public class Event {
          if (cursor.element == SSM.ELEMENT_LENS) {
             la.magicLensX += posX - oldPosX;
             la.magicLensY += posY - oldPosY;
+            SSM.lensMoveStat += DCUtil.dist( (posX - oldPosX), (posY - oldPosY));
          } else if (cursor.element == SSM.ELEMENT_LENS_RIM){
+            SSM.lensResizeStat += Math.abs( la.magicLensRadius - newRadius );
             la.magicLensRadius = newRadius; 
             if (la.magicLensRadius < 30) {
                SSM.lensList.remove(la);
