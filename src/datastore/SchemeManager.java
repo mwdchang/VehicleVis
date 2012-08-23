@@ -43,7 +43,6 @@ public class SchemeManager {
       } 
       intensity = 0.2f + (occurrence/maxOccurrence)*0.8f;
       
-//      return new DCColour(0.0f, intensity, 1.0f, intensity*0.5f);
       return new DCColour(0.0f, intensity, 1.0f - intensity, intensity*0.5f);
    }
    
@@ -81,19 +80,12 @@ public class SchemeManager {
       }
       intensity = (occurrence/maxOccurrence);
       
-      
       // Check which 'bucket' this value falls into
-      // multiply by the size of the scale, then floor the result
-      //int bucket =   (int)Math.floor(intensity * YellowGreenBlue.length-1);
-      //int bucket =   (int)Math.round(intensity * YellowGreenBlue.length-1);
       int bucket =   (int)Math.floor(intensity * YellowGreenBlue.length);
       
       // sanity check
-      //bucket = bucket < 0 ? 0: bucket;
       bucket = bucket < 0 ? 0: bucket >= YellowGreenBlue.length ? (YellowGreenBlue.length-1) : bucket;
-      
       return YellowOrangeRedFixed[bucket]; 
-      
    }
    
    
@@ -107,10 +99,7 @@ public class SchemeManager {
          return DCColour.fromInt(255, 255, 255, 255);
       }
       intensity = (occurrence/maxOccurrence);
-      //int bucket =   (int)Math.round(intensity * YellowGreenBlue.length);
       int bucket =   (int)Math.floor(intensity * Red.length);
-      
-      
       
       // sanity check
       bucket = bucket < 0 ? 0: bucket >= Red.length ? (Red.length-1) : bucket;
@@ -125,21 +114,14 @@ public class SchemeManager {
       DCColour start  = new DCColour(255, 237, 160, 128);
       DCColour middle = new DCColour(254, 178, 76, 128);
       DCColour end    = new DCColour(240, 59, 32, 128);
-      /*
-      DCColour start = colour_blue;
-      DCColour middle = colour_green;
-      DCColour end  = colour_red;
-      */
       
       float intensity = (occurrence/maxOccurrence);
       float r, g, b, a;
       
       if (intensity < 0.5f) {
-         
          r = start.r + (middle.r-start.r)*(0.5f-(0.5f-intensity)); 
          g = start.g + (middle.g-start.g)*(0.5f-(0.5f-intensity)); 
          b = start.b + (middle.b-start.b)*(0.5f-(0.5f-intensity)); 
-         
       } else {
          r = middle.r + (end.r - middle.r)*intensity;
          g = middle.g + (end.g - middle.g)*intensity;
@@ -148,8 +130,6 @@ public class SchemeManager {
       
       // Lower threshold alpha
       a = 0.1f + 0.9f*intensity;
-      
-      
       return  new DCColour(r, g, b, a);
    }
    
@@ -234,61 +214,6 @@ public class SchemeManager {
       DCColour.fromInt(128, 0, 38, 120)       
    };   
    public static DCColour[] Red = new DCColour[] {
-      /*
-      DCColour.fromInt(103, 0, 13, 20),
-      DCColour.fromInt(103, 0, 13, 40),      
-      DCColour.fromInt(103, 0, 13, 60),      
-      DCColour.fromInt(103, 0, 13, 80),      
-      DCColour.fromInt(103, 0, 13, 100),      
-      DCColour.fromInt(103, 0, 13, 120),      
-      DCColour.fromInt(103, 0, 13, 140),      
-      DCColour.fromInt(103, 0, 13, 160),      
-      DCColour.fromInt(103, 0, 13, 180)      
-      */
-      /*
-      DCColour.fromInt(255, 245, 240, 20),
-      DCColour.fromInt(254, 224, 210, 40),
-      DCColour.fromInt(252, 187, 161, 60),
-      DCColour.fromInt(252, 146, 114, 80),
-      DCColour.fromInt(251, 106, 74, 100),
-      DCColour.fromInt(239, 59, 44, 120),
-      DCColour.fromInt(203, 24, 29, 140),
-      DCColour.fromInt(165, 15, 21, 160),
-      DCColour.fromInt(103, 0, 13, 180)      
-      */
-      
-      /*
-      DCColour.fromInt(255, 245, 240, 90),
-      DCColour.fromInt(254, 224, 210, 100),
-      DCColour.fromInt(252, 187, 161, 110),
-      DCColour.fromInt(252, 146, 114, 120),
-      DCColour.fromInt(251, 106, 74, 130),
-      DCColour.fromInt(239, 59, 44, 140),
-      DCColour.fromInt(203, 24, 29, 160),
-      DCColour.fromInt(165, 15, 21, 180),
-      DCColour.fromInt(103, 0, 13, 200)      
-      */
-      
-      /* Grey scale 6
-      DCColour.fromInt(180, 180, 180, 100),      
-      DCColour.fromInt(160, 160, 160, 110),      
-      DCColour.fromInt(140, 140, 140, 120),      
-      DCColour.fromInt(120, 120, 120, 140),      
-      DCColour.fromInt(100, 100, 100, 170),      
-      DCColour.fromInt(80, 80, 80, 200)      
-      */
-      
-      /*Yellow Green Blue*/
-      /*
-      DCColour.fromInt(255, 255, 204, 100),      
-      DCColour.fromInt(199, 233, 180, 110),      
-      DCColour.fromInt(127, 205, 187, 120),      
-      DCColour.fromInt(65, 182, 196, 140),      
-      DCColour.fromInt(44, 127, 184, 170),      
-      DCColour.fromInt(37, 52, 148, 200)      
-      */
-    
-      
       /* Red orange yellow */
       DCColour.fromInt(254, 240, 217, 100),      
       DCColour.fromInt(253, 212, 158, 110),      
@@ -296,6 +221,16 @@ public class SchemeManager {
       DCColour.fromInt(252, 141, 89, 140),      
       DCColour.fromInt(227, 74, 51, 170),      
       DCColour.fromInt(179, 0, 0, 200)      
+   };
+   
+   public static DCColour[] Set3 = new DCColour[] {
+      // Set3 qualitative colour from colourbrewer   
+      DCColour.fromInt(141, 211, 199, 100),
+      DCColour.fromInt(255, 255, 179, 110),
+      DCColour.fromInt(190, 186, 218, 120),
+      DCColour.fromInt(251, 128, 114, 140),
+      DCColour.fromInt(128, 177, 211, 170),
+      DCColour.fromInt(253, 180, 98, 200)
    };
    
    

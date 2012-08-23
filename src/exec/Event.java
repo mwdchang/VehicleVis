@@ -1,5 +1,7 @@
 package exec;
 
+import gui.DCScrollPane;
+
 import org.jdesktop.animation.timing.Animator;
 import org.jdesktop.animation.timing.interpolation.PropertySetter;
 
@@ -533,7 +535,7 @@ System.out.println("<Near plane: " + la.nearPlane);
       float anchorY = attrib.anchorY;
       
       if (DCUtil.between(mx, anchorX, anchorX+SSM.scrollWidth)) {
-         if (attrib.direction == 1) {
+         if (attrib.direction == DCScrollPane.UP) {
             if (DCUtil.between(my, anchorY-20, anchorY+attrib.height)) {
                if (attrib.active) SSM.topElement = id;
                return id;
@@ -790,20 +792,43 @@ System.out.println("<Near plane: " + la.nearPlane);
    // Hide the interactive panels
    ////////////////////////////////////////////////////////////////////////////////
    public static void hidePanel() {
-      if (SSM.hidePanel == true) return;
-      SSM.hidePanel = true;
-      Animator legend = PropertySetter.createAnimator(500, SSM.instance(), "DoffsetX", new FloatEval(), SSM.DoffsetX, SSM.DoffsetX-1000);
-      legend.start();      
+      //if (SSM.hidePanel == true) return;
+      //SSM.hidePanel = true;
+      //Animator legend = PropertySetter.createAnimator(500, SSM.instance(), "DoffsetX", new FloatEval(), SSM.DoffsetX, SSM.DoffsetX-1000);
+      //Animator legend = PropertySetter.createAnimator(900, SSM.instance(), "DoffsetY", new FloatEval(), SSM.DoffsetY, SSM.DoffsetY+1000);
+      //legend.start();      
+      if ( hideAnimator != null ) return;
+      if ( showAnimator != null && showAnimator.isRunning() == true) return;
+      
+      showAnimator = null;
+      hideAnimator = PropertySetter.createAnimator(900, SSM.instance(), "DoffsetY", new FloatEval(), SSM.DoffsetY, SSM.DoffsetY+1000);
+      hideAnimator.start();
+      Animator summary = PropertySetter.createAnimator(900, SSM.instance(), "summaryAnchorY", new FloatEval(), SSM.summaryAnchorY, SSM.summaryAnchorY-700);
+      summary.start();
    }
    
    ////////////////////////////////////////////////////////////////////////////////
    // Show the interactive panels
    ////////////////////////////////////////////////////////////////////////////////
    public static void showPanel() {
-      if (SSM.hidePanel == false) return;
-      SSM.hidePanel = false;
-      Animator legend = PropertySetter.createAnimator(500, SSM.instance(), "DoffsetX", new FloatEval(), SSM.DoffsetX, SSM.DoffsetX+1000);
-      legend.start();      
+      //if (SSM.hidePanel == false) return;
+      //SSM.hidePanel = false;
+      //Animator legend = PropertySetter.createAnimator(500, SSM.instance(), "DoffsetX", new FloatEval(), SSM.DoffsetX, SSM.DoffsetX+1000);
+      //Animator legend = PropertySetter.createAnimator(900, SSM.instance(), "DoffsetY", new FloatEval(), SSM.DoffsetY, SSM.DoffsetY-1000);
+      //legend.start();      
+      
+      if (showAnimator == null && hideAnimator == null) return; // Special default case
+      if (showAnimator != null) return;
+      if (hideAnimator != null && hideAnimator.isRunning() == true) return;
+      
+      hideAnimator = null;
+      showAnimator = PropertySetter.createAnimator(900, SSM.instance(), "DoffsetY", new FloatEval(), SSM.DoffsetY, SSM.DoffsetY-1000);
+      showAnimator.start();
+      Animator summary = PropertySetter.createAnimator(900, SSM.instance(), "summaryAnchorY", new FloatEval(), SSM.summaryAnchorY, SSM.summaryAnchorY+700);
+      summary.start();
    }
+   
+   static Animator hideAnimator;
+   static Animator showAnimator;
    
 }

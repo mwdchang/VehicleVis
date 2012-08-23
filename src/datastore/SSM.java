@@ -1,5 +1,6 @@
 package datastore;
 
+import gui.DCScrollPane;
 import gui.DCTip;
 
 import java.text.SimpleDateFormat;
@@ -14,6 +15,7 @@ import TimingFrameExt.FloatEval;
 
 import touch.WCursor;
 import util.DWin;
+import util.TextureFont;
 import model.DCTriple;
 import model.LensAttrib;
 import model.PaneAttrib;
@@ -78,6 +80,7 @@ public class SSM {
       useGuide = false;
       useCircularLabel = false;
       relatedList = new Vector<Integer>();
+      
       
       
       // Parse runtime parameters
@@ -206,6 +209,7 @@ public class SSM {
    //public short NUM_LENS = 1;   
    
    public static Vector<LensAttrib> lensList = new Vector<LensAttrib>();
+   public static TextureFont summaryLabel;
    
    public static void clearLens() {
       for (int i=0; i < lensList.size(); i++) {
@@ -334,8 +338,19 @@ public class SSM {
    ////////////////////////////////////////////////////////////////////////////////
    //public static float DoffsetX = 680;
    //public static float DoffsetY = 850;
-   public static float DoffsetX = 0;
-   public static float DoffsetY = 0;
+   public static float summaryAnchorX = 150;
+   public static float summaryAnchorY = 1700;
+   
+   public static void setSummaryAnchorX(float x) { summaryAnchorX = x;}
+   public static void setSummaryAnchorY(float x) { summaryAnchorY = x;}
+   public static float getSummaryAnchorX() { return summaryAnchorX; }
+   public static float getSummaryAnchorY() { return summaryAnchorY; }
+   
+   
+   
+   public static float DoffsetX = 650;
+   public static float DoffsetY = 850;
+   
    
    // Piggy back on the animator function
    public static void setDoffsetX(float x) { 
@@ -343,14 +358,17 @@ public class SSM {
       legendAnchorX = 30 + DoffsetX;
       filterControlAnchorX = 120f + DoffsetX;
       c_filterControlAnchorX = 120f + DoffsetX;
+      
       manufactureAttrib.anchorX = 180 + DoffsetX;
-      makeAttrib.anchorX = 400 + DoffsetX;
-      modelAttrib.anchorX = 620 + DoffsetX;
-      yearAttrib.anchorX = 840 + DoffsetX;
+      makeAttrib.anchorX = 380 + DoffsetX;
+      modelAttrib.anchorX = 580 + DoffsetX;
+      yearAttrib.anchorX = 780 + DoffsetX;
+      
       c_manufactureAttrib.anchorX = 180 + DoffsetX;
-      c_makeAttrib.anchorX = 400 + DoffsetX;
-      c_modelAttrib.anchorX = 620 + DoffsetX;
-      c_yearAttrib.anchorX = 840 + DoffsetX;
+      c_makeAttrib.anchorX = 380 + DoffsetX;
+      c_modelAttrib.anchorX = 580 + DoffsetX;
+      c_yearAttrib.anchorX = 780 + DoffsetX;
+      
       aggregationAnchorX = 100f + DoffsetX;
       perspectiveAttrib.anchorX = 180 + DoffsetX;
       
@@ -358,6 +376,31 @@ public class SSM {
       monthAnchorX = 30.0f + DoffsetX;
    }
    public static float getDoffsetX() { return DoffsetX; }
+   
+   
+   public static void setDoffsetY(float y) {
+      DoffsetY = y;   
+      
+      legendAnchorY = 20 + DoffsetY;
+      
+      manufactureAttrib.anchorY = 90 + DoffsetY;
+      makeAttrib.anchorY        = 90 + DoffsetY;
+      modelAttrib.anchorY       = 90 + DoffsetY;
+      yearAttrib.anchorY        = 90 + DoffsetY;
+      
+      c_manufactureAttrib.anchorY = 50 + DoffsetY;
+      c_makeAttrib.anchorY        = 50 + DoffsetY;
+      c_modelAttrib.anchorY       = 50 + DoffsetY;
+      c_yearAttrib.anchorY        = 50 + DoffsetY;
+     
+      aggregationAnchorY = 125f + DoffsetY;
+      perspectiveAttrib.anchorY = 170 + DoffsetY;
+      
+      yearAnchorY = 120.0f + DoffsetY;
+      monthAnchorY = 30.0f + DoffsetY;
+   }
+   public static float getDoffsetY() { return DoffsetY; }
+   
    
    public static float yearAnchorX = 60.0f;
    public static float yearAnchorY = 970;
@@ -371,18 +414,18 @@ public class SSM {
    
    
    public static float filterControlAnchorX = 120f + DoffsetX;
-   public static PaneAttrib manufactureAttrib = new PaneAttrib(180+DoffsetX, 90+DoffsetY, 200, 200, 1);
-   public static PaneAttrib makeAttrib        = new PaneAttrib(400+DoffsetX, 90+DoffsetY, 200, 200, 1);
-   public static PaneAttrib modelAttrib       = new PaneAttrib(620+DoffsetX, 90+DoffsetY, 200, 200, 1);
-   public static PaneAttrib yearAttrib        = new PaneAttrib(840+DoffsetX, 90+DoffsetY, 200, 200, 1);
+   public static PaneAttrib manufactureAttrib = new PaneAttrib(180+DoffsetX, 90+DoffsetY, 180, 200, DCScrollPane.DOWN);
+   public static PaneAttrib makeAttrib        = new PaneAttrib(380+DoffsetX, 90+DoffsetY, 180, 200, DCScrollPane.DOWN);
+   public static PaneAttrib modelAttrib       = new PaneAttrib(580+DoffsetX, 90+DoffsetY, 180, 200, DCScrollPane.DOWN);
+   public static PaneAttrib yearAttrib        = new PaneAttrib(780+DoffsetX, 90+DoffsetY, 180, 200, DCScrollPane.DOWN);
    
    public static float c_filterControlAnchorX = 120f + DoffsetX;
-   public static PaneAttrib c_manufactureAttrib = new PaneAttrib(180+DoffsetX, 50+DoffsetY, 200, 200, 1);
-   public static PaneAttrib c_makeAttrib        = new PaneAttrib(400+DoffsetX, 50+DoffsetY, 200, 200, 1);
-   public static PaneAttrib c_modelAttrib       = new PaneAttrib(620+DoffsetX, 50+DoffsetY, 200, 200, 1);
-   public static PaneAttrib c_yearAttrib        = new PaneAttrib(840+DoffsetX, 50+DoffsetY, 200, 200, 1);
+   public static PaneAttrib c_manufactureAttrib = new PaneAttrib(180+DoffsetX, 50+DoffsetY, 180, 200, DCScrollPane.DOWN);
+   public static PaneAttrib c_makeAttrib        = new PaneAttrib(380+DoffsetX, 50+DoffsetY, 180, 200, DCScrollPane.DOWN);
+   public static PaneAttrib c_modelAttrib       = new PaneAttrib(580+DoffsetX, 50+DoffsetY, 180, 200, DCScrollPane.DOWN);
+   public static PaneAttrib c_yearAttrib        = new PaneAttrib(780+DoffsetX, 50+DoffsetY, 180, 200, DCScrollPane.DOWN);
    
-   public static PaneAttrib perspectiveAttrib   = new PaneAttrib(180+DoffsetX, 170+DoffsetY, 150, 100, 1);
+   public static PaneAttrib perspectiveAttrib   = new PaneAttrib(180+DoffsetX, 170+DoffsetY, 150, 100, DCScrollPane.DOWN);
    
    public static float aggregationAnchorX = 100f + DoffsetX;
    public static float aggregationAnchorY = 125f + DoffsetY;

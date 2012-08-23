@@ -54,6 +54,10 @@ public class DomainFilterTask implements RenderTask {
    public TextureFont  perspectiveLabel;
    public DCScrollPane perspectiveScroll;
    
+   
+   // For summary information
+   public TextureFont summaryLabel;
+   
    public static Font labelFont = DCUtil.loadFont(Const.FONT_PATH+"din1451m.ttf", Font.PLAIN, 12f);
    
 
@@ -102,6 +106,7 @@ public class DomainFilterTask implements RenderTask {
    public void init(GL2 gl2) {
       
       perspectiveScroll = new DCScrollPane("Perspective");
+      perspectiveScroll.direction = DCScrollPane.DOWN;
       perspectiveScroll.depth = 0.5f;
       perspectiveScroll.calculate();
       perspectiveScroll.renderToTexture(null);
@@ -113,9 +118,9 @@ public class DomainFilterTask implements RenderTask {
       perspectiveLabel = new TextureFont();
       perspectiveLabel.height = 20;
       perspectiveLabel.width = 100;
-      perspectiveLabel.addMark("Perspective", Color.black, labelFont, 20, 10);
+      perspectiveLabel.addMark("Scoring Mode", Color.black, labelFont, 20, 10);
       perspectiveLabel.renderToTexture(null);
-
+      
       
       
       label = new TextureFont();
@@ -132,21 +137,25 @@ public class DomainFilterTask implements RenderTask {
       
       
       manufactureScroll = new DCScrollPane("MFR");
+      manufactureScroll.direction = DCScrollPane.DOWN;
       manufactureScroll.depth = 0.5f;
       manufactureScroll.calculate();
       manufactureScroll.renderToTexture(null);
       
       makeScroll = new DCScrollPane("MAKE");
+      makeScroll.direction = DCScrollPane.DOWN;
       makeScroll.depth = 0.5f;
       makeScroll.calculate();
       makeScroll.renderToTexture(null);
       
       modelScroll = new DCScrollPane("MODEL");
+      modelScroll.direction = DCScrollPane.DOWN;
       modelScroll.depth = 0.5f;
       modelScroll.calculate();
       modelScroll.renderToTexture(null);
       
       yearScroll = new DCScrollPane("YEAR");
+      yearScroll.direction = DCScrollPane.DOWN;
       yearScroll.depth = 0.5f;
       yearScroll.calculate();
       yearScroll.renderToTexture(null);
@@ -166,24 +175,24 @@ public class DomainFilterTask implements RenderTask {
       c_filterTexture.renderToTexture(null);
       
       c_manufactureScroll = new DCScrollPane("MFR");
-      c_manufactureScroll.direction = DCScrollPane.UP;
+      c_manufactureScroll.direction = DCScrollPane.DOWN;
       c_manufactureScroll.calculate();
       c_manufactureScroll.renderToTexture(null);
       SSM.c_manufactureAttrib.selected = "None";
       SSM.c_manufactureAttrib.hasNoneSelection = true;
       
       c_makeScroll = new DCScrollPane("MAKE");
-      c_makeScroll.direction = DCScrollPane.UP;
+      c_makeScroll.direction = DCScrollPane.DOWN;
       c_makeScroll.calculate();
       c_makeScroll.renderToTexture(null);
       
       c_modelScroll = new DCScrollPane("MODEL");
-      c_modelScroll.direction = DCScrollPane.UP;
+      c_modelScroll.direction = DCScrollPane.DOWN;
       c_modelScroll.calculate();
       c_modelScroll.renderToTexture(null);
       
       c_yearScroll = new DCScrollPane("YEAR");
-      c_yearScroll.direction = DCScrollPane.UP;
+      c_yearScroll.direction = DCScrollPane.DOWN;
       c_yearScroll.calculate();
       c_yearScroll.renderToTexture(null);
       

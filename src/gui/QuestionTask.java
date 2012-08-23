@@ -31,32 +31,30 @@ public class QuestionTask implements RenderTask {
 
    @Override
    public void render(GL2 gl2) {
-      
       if (SSM.useScenario == false) return;
       
       if (q.elementAt(qIdx).answered()) {
-         GraphicUtil.drawRoundedRect(gl2, (SSM.windowWidth - 150), (SSM.windowHeight - 100 + 20), 0,
+         //GraphicUtil.drawRoundedRect(gl2, (SSM.windowWidth - 150), (SSM.windowHeight - 100 + 20), 0,
+         GraphicUtil.drawRoundedRect(gl2, (SSM.windowWidth - 150), (100 + 20), 0,
                50, 25, 5, 5, 
                DCColour.fromDouble(0.0, 0.2, 0.8, 0.8).toArray(), 
                DCColour.fromDouble(0.0, 0.2, 0.6, 0.8).toArray());
       } else {
-         GraphicUtil.drawRoundedRect(gl2, (SSM.windowWidth - 150), (SSM.windowHeight - 100 + 20), 0,
+         //GraphicUtil.drawRoundedRect(gl2, (SSM.windowWidth - 150), (SSM.windowHeight - 100 + 20), 0,
+         GraphicUtil.drawRoundedRect(gl2, (SSM.windowWidth - 150), (100 + 20), 0,
                50, 25, 5, 5, 
                DCColour.fromDouble(0.8, 0.8, 0.8, 0.8).toArray(), 
                DCColour.fromDouble(0.6, 0.6, 0.6, 0.8).toArray());
       }
       
       tf.anchorX = SSM.windowWidth  - 200;
-      tf.anchorY = SSM.windowHeight - 100;
+      //tf.anchorY = SSM.windowHeight - 100;
+      tf.anchorY = 100;
       tf.render(gl2);
-      //tf.renderBorder(gl2);
       
-      //q_tf.anchorX = SSM.windowWidth - 500;
-      //q_tf.anchorY = SSM.windowHeight - 100;
       q_tf.render(gl2);
-      //q_tf.renderBorder(gl2);
-      
    }
+   
 
    @Override
    public void init(GL2 gl2) {
@@ -78,7 +76,8 @@ public class QuestionTask implements RenderTask {
       }
       q_tf.renderToTexture(null);
       q_tf.anchorX = SSM.windowWidth - 500;
-      q_tf.anchorY = SSM.windowHeight - 100;
+      //q_tf.anchorY = SSM.windowHeight - 100;
+      q_tf.anchorY = 100;
    }
 
    public float getHardFontHeight(Font f) {
@@ -98,7 +97,8 @@ public class QuestionTask implements RenderTask {
       float realY = SSM.windowHeight - py;
       
       if (DCUtil.between(realX, SSM.windowWidth-200, SSM.windowWidth-100)) {
-         if (DCUtil.between(realY, SSM.windowHeight-100, SSM.windowWidth-60)) {
+         //if (DCUtil.between(realY, SSM.windowHeight-100, SSM.windowWidth-60)) {
+         if (DCUtil.between(realY, 120-25, 120+25)) {
             // Set picking to true so we do not go through other tasks
             SSM.stopPicking = 1;
             
@@ -264,11 +264,12 @@ public class QuestionTask implements RenderTask {
             return (
                   SSM.makeAttrib.selected != null && 
                   SSM.c_makeAttrib.selected != null && 
-                  ! SSM.makeAttrib.selected.equals(SSM.c_makeAttrib.selected)
+                  ! SSM.makeAttrib.selected.equals(SSM.c_makeAttrib.selected) &&
+                  SSM.selectedGroup.size() > 0
                   );
          }
          public void set() { SSM.reset(); }
-         public String text() { return "Warm up task: Use the comparison functionality to compare two different vehicle Models"; }
+         public String text() { return "Warm up task: Use the comparison functionality to compare two different vehicle Models, then select an entity from the visualization."; }
       });
       
       
@@ -276,6 +277,8 @@ public class QuestionTask implements RenderTask {
       ////////////////////////////////////////////////////////////////////////////////
       // Objective Tasks
       ////////////////////////////////////////////////////////////////////////////////
+      
+      // Objective Q1
       q.add( new Question() {
          public boolean answered() {
             return true;
@@ -287,10 +290,11 @@ public class QuestionTask implements RenderTask {
             SSM.dirtyLoad = 1;
          }
          public String text() { 
-            return "Select the vehicle component with the highest rate of vehicle complaints";
+            return "Select the vehicle component with the highest rate of complaints overall";
          }
       });
       
+      // Objective Q2
       q.add(new Question() {
          public boolean answered() { 
             return true;
@@ -305,21 +309,45 @@ public class QuestionTask implements RenderTask {
          
       });
       
-      /* 
-      q.add(new Question() {
+      // Objective Q3
+      q.add( new Question() {
          public boolean answered() {
             return true;
          }
          public void set() {
-            SSM.selectedGroup.clear(); 
-            SSM.showLabels = false;
+            SSM.selectedGroup.clear();
             SSM.dirty = 1;
          }
          public String text() {
-            return "Use the lens widget to hover over the region of the vehicle that you believe to have the highest number of failures.";
+            return "Select from the list of manufacturers, the one with the highest rate of complaints regarding engine component.";
          }
       });
-      */
+      
+      // Objective Q4
+      q.add( new Question() {
+         public boolean answered() { return true; }    
+         public void set() {
+            SSM.selectedGroup.clear();
+            SSM.dirty = 1; 
+         }
+         public String text() {
+            return "Tell us verbally, what components are related to complaints about wheels?";      
+         }
+      });
+      
+      
+      // Objective Q5
+      q.add( new Question() {
+         public boolean answered() { return true; }   
+         public void set() {
+            SSM.selectedGroup.clear();
+            SSM.dirty = 1;
+         }
+         public String text() {
+            return "Find the latest complaint document that contains both engine and windshield failures. Read out the report aloud." ;  
+         }
+      });
+      
       
       
       ////////////////////////////////////////////////////////////////////////////////
@@ -327,18 +355,8 @@ public class QuestionTask implements RenderTask {
       // of convenience - these will always be true regardless, the investigators
       // will need to record the answers
       ////////////////////////////////////////////////////////////////////////////////
-      q.add(new Question() {
-         public boolean answered() { return true; }
-         public void set() {
-            SSM.selectedGroup.clear();   
-            SSM.showLabels = true;
-            SSM.dirty = 1;
-         }
-         public String text() {
-            return "Tell us what components are related to complaints about wheels";
-         }
-      });
       
+      // Subjective Q1
       q.add(new Question(){
          public boolean answered() { return true; }
          public void set() {
@@ -347,10 +365,11 @@ public class QuestionTask implements RenderTask {
             SSM.dirtyGL = 1;
          }
          public String text() {
-            return "Which manufacturer had the most complaints in the summer months(May to August)? What are these complaints about?";
+            return "Which manufacturer had the least complaints in the summer months(May to August)? What are these complaints about?";
          }
       });
       
+      // Subjective Q2
       q.add(new Question() {
          public boolean answered() { return true; }
          public void set() {
@@ -363,10 +382,11 @@ public class QuestionTask implements RenderTask {
             SSM.endMonth = 11;
          }
          public String text() {
-            return "Using the lens and heatmap widgets, observe for any trends or patterns, tell us your findings.";
+            return "Using the lens and heatmap widgets, observe for any trends or patterns, tell us about your findings.";
          }
       });
       
+      // Subjective Q3
       q.add(new Question() {
          public boolean answered() { return true; }
          public void set() {
@@ -375,7 +395,7 @@ public class QuestionTask implements RenderTask {
             SSM.dirty = 1;
          }
          public String text() {
-            return "Given a list of similarly priced vehicles, which one would you purchase and why? Are you free to use all available widgets";
+            return "Given a list of similarly priced vehicles, which one would you purchase and why? You  are free to use all available widgets";
          }
       });
      

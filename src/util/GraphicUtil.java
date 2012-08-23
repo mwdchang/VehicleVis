@@ -34,6 +34,71 @@ import datastore.Const;
 public class GraphicUtil {
    
    
+   public static int createVAO(GL2 gl2) {
+      int vao[] = new int[1];
+      int vbo[] = new int[3];        
+      float square[] = {
+            0.0f,  0.0f, 0.0f,      
+            200.0f,  0.0f, 0.0f,      
+            200.0f,  20.0f, 0.0f,      
+            0.0f,  20.0f, 0.0f       
+      };
+        
+      float color[] = {
+            1.0f, 0.0f, 0.0f, 1.0f, 
+            0.0f, 1.0f, 0.0f, 1.0f,
+            0.0f, 0.0f, 1.0f, 1.0f,
+            1.0f, 1.0f, 1.0f, 1.0f 
+      };
+        
+        
+      float texcoord[] = {
+            0.0f, 0.0f,
+            1.0f, 0.0f,
+            1.0f, 1.0f,
+            0.0f, 1.0f
+      };   
+      FloatBuffer quadBuffer = (FloatBuffer) GLBuffers.newDirectGLBuffer(GL2.GL_FLOAT, 4*3);
+      FloatBuffer colorBuffer   = (FloatBuffer) GLBuffers.newDirectGLBuffer(GL2.GL_FLOAT, 4*4);
+      FloatBuffer texBuffer     = (FloatBuffer) GLBuffers.newDirectGLBuffer(GL2.GL_FLOAT, 4*2);      
+      quadBuffer.put(square);
+      colorBuffer.put(color);
+      texBuffer.put(texcoord);
+      
+      // Reset ?
+      quadBuffer.flip();
+      colorBuffer.flip();
+      texBuffer.flip();
+      
+      // Generate vertex array
+      gl2.glGenVertexArrays(1, vao, 0);
+      gl2.glBindVertexArray(vao[0]);
+      
+      // Generate vertex buffer
+      gl2.glGenBuffers(3, vbo, 0);
+      
+      //System.out.println("FBT ... " + vbo[0] + " " + vbo[1] + " " + vbo[2]);
+      
+      gl2.glBindBuffer(GL2.GL_ARRAY_BUFFER, vbo[0]);
+      gl2.glBufferData(GL2.GL_ARRAY_BUFFER, 12*4, quadBuffer, GL2.GL_STATIC_DRAW);
+      gl2.glVertexAttribPointer(0, 3, GL2.GL_FLOAT, false, 0, 0);
+      gl2.glEnableVertexAttribArray(0);
+      
+      gl2.glBindBuffer(GL2.GL_ARRAY_BUFFER, vbo[1]);
+      gl2.glBufferData(GL2.GL_ARRAY_BUFFER, 16*4, colorBuffer, GL2.GL_STATIC_DRAW);
+      gl2.glVertexAttribPointer(1, 4, GL2.GL_FLOAT, false, 0, 0);
+      gl2.glEnableVertexAttribArray(1);
+      
+      gl2.glBindBuffer(GL2.GL_ARRAY_BUFFER, vbo[2]);
+      gl2.glBufferData(GL2.GL_ARRAY_BUFFER, 8*4, texBuffer, GL2.GL_STATIC_DRAW);
+      gl2.glVertexAttribPointer(2, 2, GL2.GL_FLOAT, false, 0, 0);
+      gl2.glEnableVertexAttribArray(2);      
+      gl2.glBindVertexArray(0);      
+      
+      return vao[0];
+   }
+   
+   
    ////////////////////////////////////////////////////////////////////////////////
    // Draw an arc with width defined by r1 and r2
    ////////////////////////////////////////////////////////////////////////////////

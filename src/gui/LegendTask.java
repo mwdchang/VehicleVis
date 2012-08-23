@@ -9,6 +9,7 @@ import datastore.SSM;
 import datastore.SchemeManager;
 
 import util.GraphicUtil;
+import util.TextureFont;
 
 import exec.RenderTask;
 
@@ -52,7 +53,8 @@ public class LegendTask implements RenderTask {
          }
          gl2.glEnd();
          
-         gl2.glColor4fv( SchemeManager.silhouette_default.toArray(), 0);
+         //gl2.glColor4fv( SchemeManager.silhouette_default.toArray(), 0);
+         gl2.glColor4d(0.4, 0.4, 0.4, 0.8);
          gl2.glBegin(GL2.GL_LINES);
             gl2.glVertex2d(startX+width+10, startY);
             gl2.glVertex2d(startX+width+10, startY+height);
@@ -141,16 +143,9 @@ public class LegendTask implements RenderTask {
    @Override
    public void render(GL2 gl2) {
       GraphicUtil.setOrthonormalView(gl2, 0, SSM.windowWidth, 0, SSM.windowHeight, -10, 10);
-      
-      //this.startX = 30;
-      //this.startY = 20;
       this.startX = (int)SSM.legendAnchorX;
       this.startY = (int)SSM.legendAnchorY;
       
-      /*
-      this.startX = SSM.instance().windowWidth - this.width - 50;
-      this.startY = SSM.instance().windowHeight - this.height - 20;
-      */
       
       // Render the legend content, this will be either a 
       // continuous rendering, or render into buckets
@@ -171,24 +166,11 @@ public class LegendTask implements RenderTask {
          gl2.glVertex2d(startX, startY+height);
       gl2.glEnd();      
       
-      // Draw a border around the legend
-//      gl2.glBegin(GL2.GL_LINE_LOOP);
-//         gl2.glColor4d(0, 0, 0, 1);
-//         gl2.glVertex3d(startX, startY, 0);
-//         gl2.glVertex3d(startX+width, startY, 0);
-//         gl2.glVertex3d(startX+width, startY+height, 0);
-//         gl2.glVertex3d(startX, startY+height, 0);
-//      gl2.glEnd();
+      // Render the summary label
+      SSM.summaryLabel.anchorX = SSM.summaryAnchorX;
+      SSM.summaryLabel.anchorY = SSM.summaryAnchorY;
+      SSM.summaryLabel.render(gl2);
       
-      /*
-      if (DIRECTION == HORIZONTAL) {
-         FontRenderer.instance().renderOnce(gl2, startX+width+2, startY-10, 0, SSM.instance().maxOccurrence+"");       
-         FontRenderer.instance().renderOnce(gl2, startX-10, startY-10, 0, "0");       
-      } else {
-         FontRenderer.instance().renderOnce(gl2, startX+width+2, startY+height, 0, SSM.instance().maxOccurrence+"");       
-         FontRenderer.instance().renderOnce(gl2, startX+width+2, startY-10, 0, "0");       
-      }
-      */
       
    }
 
@@ -202,12 +184,10 @@ public class LegendTask implements RenderTask {
          this.width  =  30;
          this.height = 150;
       }
-      /*
-      this.startX = 50;
-      this.startY = 50;
-      this.width = 200;
-      this.height = 40;
-      */
+      
+      SSM.summaryLabel = new TextureFont();
+      SSM.summaryLabel.height = 100;
+      SSM.summaryLabel.width  = 1100;
       
    }
 

@@ -129,6 +129,9 @@ public abstract class JOGLBase implements GLEventListener {
    @Override
    public void init(GLAutoDrawable glDrawable) {
        GL2 gl2 = glDrawable.getGL().getGL2();      
+       winHeight = glDrawable.getHeight();
+       winWidth  = glDrawable.getWidth();
+      
        gl2.glShadeModel(GL2.GL_SMOOTH);
        gl2.glClearColor(0, 0, 0, 0);
        gl2.glEnable(GL2.GL_DEPTH_TEST);

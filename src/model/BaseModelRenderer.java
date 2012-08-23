@@ -5,6 +5,7 @@ import java.awt.Font;
 import java.awt.geom.Rectangle2D;
 import java.nio.IntBuffer;
 import java.util.Enumeration;
+import java.util.GregorianCalendar;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Vector;
@@ -21,6 +22,7 @@ import util.DWin;
 import util.GraphicUtil;
 import util.MatrixUtil;
 import util.ShaderObj;
+import util.TextureFont;
 import Jama.Matrix;
 import TimingFrameExt.DCColourEval;
 
@@ -87,6 +89,7 @@ public abstract class BaseModelRenderer implements RenderTask {
          
          gl2.glGenQueries(1, g_queryId, 0);
          
+         
          //DCTip.init(gl2);
          StatusWindow.init(gl2);
          
@@ -102,7 +105,7 @@ public abstract class BaseModelRenderer implements RenderTask {
    // Translation and rotation of object model
    ////////////////////////////////////////////////////////////////////////////////  
    public void basicTransform(GL2 gl2) {
-      gl2.glTranslated(0, 0, 0);
+      gl2.glTranslated(0, -5, 0);
       gl2.glRotated(SSM.rotateX, 1, 0, 0);
       gl2.glRotated(SSM.rotateY, 0, 1, 0);
    }
@@ -663,6 +666,38 @@ public abstract class BaseModelRenderer implements RenderTask {
       
       MM.currentModel.startAnimation();
       
+      // Update summary now that we are done
+      if (SSM.summaryLabel != null) {
+         SSM.summaryLabel.clearMark();
+         
+         String monthString = "Month: " + DCUtil.getMonthTranslationTable().get(SSM.startMonth+"") + " - " + DCUtil.getMonthTranslationTable().get(SSM.endMonth+"");
+         String yearString  = "Year : " + SSM.startYear + " - " + SSM.endYear;
+         String scoreString = "Scoring Mode : " + (SSM.chartMode == 1? "Month" : SSM.chartMode == 2? "Component" : "Global");
+         String aggString   = "Use Aggregation : " + (SSM.useAggregate? "Yes" : "No");
+         
+         String v1String = "Vehicle 1 : " + (SSM.manufactureAttrib.selected == null? "All" : SSM.manufactureAttrib.selected);
+         if (SSM.makeAttrib.selected != null)  v1String += " , " + SSM.makeAttrib.selected;
+         if (SSM.modelAttrib.selected != null) v1String += " , " + SSM.modelAttrib.selected;
+         if (SSM.yearAttrib.selected != null)  v1String += " , " + SSM.yearAttrib.selected;
+         
+         String v2String = "Vehicle 2 : " + (SSM.c_manufactureAttrib.selected == null? "All" : SSM.c_manufactureAttrib.selected);
+         if (SSM.c_makeAttrib.selected != null)  v2String += " , " + SSM.c_makeAttrib.selected;
+         if (SSM.c_modelAttrib.selected != null) v2String += " , " + SSM.c_modelAttrib.selected;
+         if (SSM.c_yearAttrib.selected != null)  v2String += " , " + SSM.c_yearAttrib.selected;
+         
+         // 1st column
+         SSM.summaryLabel.addMark(monthString, Color.BLACK, GraphicUtil.labelFont, 10, 10);
+         SSM.summaryLabel.addMark(yearString, Color.BLACK, GraphicUtil.labelFont, 10, 40);
+         
+         // 2nd column
+         SSM.summaryLabel.addMark(aggString, Color.BLACK, GraphicUtil.labelFont, 250, 10);
+         SSM.summaryLabel.addMark(scoreString, Color.BLACK, GraphicUtil.labelFont, 250, 40);
+         
+         // 3rd column
+         SSM.summaryLabel.addMark(v2String, Color.BLACK, GraphicUtil.labelFont, 500, 10);
+         SSM.summaryLabel.addMark(v1String, Color.BLACK, GraphicUtil.labelFont, 500, 40);
+         
+      }
       
       // Log the changes
       //SSM.waitMarker = null;

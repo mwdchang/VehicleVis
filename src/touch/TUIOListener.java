@@ -629,12 +629,14 @@ System.out.println("Pinch detected");
       // Check if this is a swipe event
       if (w.swipeCount > 1) {
          if (w.swipeDirection == WCursor.DOWN || w.swipeDirection == WCursor.UP) {
-            SSM.selectedGroup.clear();
-            SSM.dirty = 1;
-            SSM.dirtyGL = 1;
+            if (w.swipeDirection == WCursor.UP) Event.hidePanel();
+            if (w.swipeDirection == WCursor.DOWN) Event.showPanel(); 
+            //SSM.selectedGroup.clear();
+            //SSM.dirty = 1;
+            //SSM.dirtyGL = 1;
          } else {
-            if (SSM.hidePanel == true) Event.showPanel();
-            else Event.hidePanel();
+            //if (SSM.hidePanel == true) Event.showPanel();
+            //else Event.hidePanel();
          }
       } else if (w.points.size() < 4 && findSimilarCursorPixel(w, 0, 400).size() == 0) {
          // Only clickable elements can send a tap event

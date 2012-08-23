@@ -212,14 +212,7 @@ System.err.println("Fixing y");
             //System.out.println("Channel = 3");
             channel = 3;
          }
-         
-//         System.out.println("Capacity = " + b.capacity());
-//         System.out.println("Height = " + h);
-//         System.out.println("Width  = " + w);
-         
-         
          return TextureIO.newTexture(textureData);
-         
       } catch (Exception e) {
          e.printStackTrace();
          System.exit(0);

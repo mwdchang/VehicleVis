@@ -1,10 +1,13 @@
 package exec;
 
 import java.awt.BorderLayout;
+import java.awt.Cursor;
 import java.awt.Dimension;
+import java.awt.Point;
 import java.awt.Toolkit;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.awt.image.BufferedImage;
 
 import javax.media.opengl.GLCapabilities;
 import javax.media.opengl.GLProfile;
@@ -121,6 +124,22 @@ public class ProjectDriver {
       frame.setExtendedState( frame.getExtendedState() | JFrame.MAXIMIZED_BOTH );
       /////////////////////////////////////////////////////////////////////////
       // End Hack test
+      
+      
+      // Hack to get rid of cursor
+      /////////////////////////////////////////////////////////////////////////
+      if (SSM.useTUIO == true) {
+         Cursor nullCursor = null;
+         Dimension d = tk.getBestCursorSize(1, 1);
+         if ( (d.width|d.height) != 0) {
+            nullCursor = tk.createCustomCursor(
+               new BufferedImage(d.width, d.height, BufferedImage.TYPE_INT_ARGB),
+               new Point(0,0), "nullCursor");
+         }
+         frame.setCursor(nullCursor); 
+      }
+      /////////////////////////////////////////////////////////////////////////
+      // End Hack to get rid of cursor
       
       
       frame.setVisible(true);
