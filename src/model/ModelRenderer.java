@@ -14,6 +14,7 @@ import org.jdesktop.animation.timing.interpolation.PropertySetter;
 
 import touch.WCursor;
 import util.DCCamera;
+import util.DWin;
 import util.GraphicUtil;
 import util.TextureFont;
 import TimingFrameExt.FloatEval;
@@ -297,7 +298,7 @@ public class ModelRenderer extends BaseModelRenderer {
             
             
          }
-         SSM.refreshMagicLens = false;
+         if (SSM.refreshMagicLens == true) SSM.refreshMagicLens = false;
       }
       
     

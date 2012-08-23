@@ -743,6 +743,8 @@ System.out.println("<Near plane: " + la.nearPlane);
          
          SSM.dirty = 1;
          SSM.dirtyGL = 1; // for the text panel
+         SSM.refreshMagicLens = true;
+         
          SSM.t1Start = 0;
          SSM.t2Start = SSM.globalFetchSize;
          SSM.yoffset = SSM.docHeight;
@@ -754,6 +756,8 @@ System.out.println("<Near plane: " + la.nearPlane);
          SSM.selectedGroup.put(obj,obj);
          SSM.dirty = 1;
          SSM.dirtyGL = 1; // for the text panel
+         SSM.refreshMagicLens = true;
+         
          SSM.t1Start = 0;
          SSM.t2Start = SSM.globalFetchSize;
          SSM.yoffset = SSM.docHeight;
@@ -778,6 +782,8 @@ System.out.println("<Near plane: " + la.nearPlane);
       
       SSM.dirty = 1;
       SSM.dirtyGL = 1; // for the text panel
+      SSM.refreshMagicLens = true;
+      
       SSM.t1Start = 0;
       SSM.t2Start = SSM.globalFetchSize;
       SSM.yoffset = SSM.docHeight;

@@ -105,7 +105,7 @@ public abstract class BaseModelRenderer implements RenderTask {
    // Translation and rotation of object model
    ////////////////////////////////////////////////////////////////////////////////  
    public void basicTransform(GL2 gl2) {
-      gl2.glTranslated(0, -5, 0);
+      gl2.glTranslated(0, -3.0, 0);
       gl2.glRotated(SSM.rotateX, 1, 0, 0);
       gl2.glRotated(SSM.rotateY, 0, 1, 0);
    }
@@ -499,11 +499,7 @@ public abstract class BaseModelRenderer implements RenderTask {
      }
       
       
-      
       System.out.println("Resetting Model Renderer Data : " + SSM.startIdx + " " + SSM.endIdx);
-      //System.out.println("Max occurrence : " + SSM.instance().maxOccurrence);
-      //System.out.println("Min occurrence : " + SSM.instance().minOccurrence);
-      //System.out.println("\n");
       
       
       // Calculate the colour for each component
@@ -686,16 +682,16 @@ public abstract class BaseModelRenderer implements RenderTask {
          if (SSM.c_yearAttrib.selected != null)  v2String += " , " + SSM.c_yearAttrib.selected;
          
          // 1st column
-         SSM.summaryLabel.addMark(monthString, Color.BLACK, GraphicUtil.labelFont, 10, 10);
-         SSM.summaryLabel.addMark(yearString, Color.BLACK, GraphicUtil.labelFont, 10, 40);
+         SSM.summaryLabel.addMark(monthString, Color.BLACK, GraphicUtil.labelFontSmall, 10, 10);
+         SSM.summaryLabel.addMark(yearString, Color.BLACK, GraphicUtil.labelFontSmall, 10, 30);
          
          // 2nd column
-         SSM.summaryLabel.addMark(aggString, Color.BLACK, GraphicUtil.labelFont, 250, 10);
-         SSM.summaryLabel.addMark(scoreString, Color.BLACK, GraphicUtil.labelFont, 250, 40);
+         SSM.summaryLabel.addMark(aggString, Color.BLACK, GraphicUtil.labelFontSmall, 250, 10);
+         SSM.summaryLabel.addMark(scoreString, Color.BLACK, GraphicUtil.labelFontSmall, 250, 30);
          
          // 3rd column
-         SSM.summaryLabel.addMark(v2String, Color.BLACK, GraphicUtil.labelFont, 500, 10);
-         SSM.summaryLabel.addMark(v1String, Color.BLACK, GraphicUtil.labelFont, 500, 40);
+         SSM.summaryLabel.addMark(v2String, Color.BLACK, GraphicUtil.labelFontSmall, 500, 10);
+         SSM.summaryLabel.addMark(v1String, Color.BLACK, GraphicUtil.labelFontSmall, 500, 30);
          
       }
       
@@ -711,7 +707,6 @@ public abstract class BaseModelRenderer implements RenderTask {
       DCComponent comp = MM.currentModel.componentTable.get(s);
       if (comp == null) return;
       if (comp.id < 0) return;
-System.out.println(s + " " + comp.id + " " + CacheManager.instance().groupOccurrence);      
 
       int occ = CacheManager.instance().groupOccurrence.get(comp.id) == null? 0 : CacheManager.instance().groupOccurrence.get(comp.id); 
       int c_occ = CacheManager.instance().c_groupOccurrence.get(comp.id) == null? 0: CacheManager.instance().c_groupOccurrence.get(comp.id);
@@ -1099,8 +1094,7 @@ System.out.println(s + " " + comp.id + " " + CacheManager.instance().groupOccurr
          // Need to loop again to get the global maxima
          int start = sYear - origin; 
          int end   = (eYear - origin)+1;
-         //System.out.println(sYear + "--" + origin);
-         //System.out.println("start " + start +  " end " + end);
+         
          for (int x=start; x < end; x++) {
             for (int y=sMonth; y <= eMonth; y++) {
                float tmp = 0;

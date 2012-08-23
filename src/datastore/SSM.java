@@ -82,11 +82,10 @@ public class SSM {
       relatedList = new Vector<Integer>();
       
       
-      
       // Parse runtime parameters
-      useTUIO         = Boolean.parseBoolean(System.getProperty("UseTUIO", "true"));
-      useFullScreen   = Boolean.parseBoolean(System.getProperty("UseFullScreen", "true"));
-      useScenario     = Boolean.parseBoolean(System.getProperty("UseScenario", "true"));
+      useTUIO       = Boolean.parseBoolean(System.getProperty("UseTUIO", "false"));
+      useFullScreen = Boolean.parseBoolean(System.getProperty("UseFullScreen", "true"));
+      useScenario   = Boolean.parseBoolean(System.getProperty("UseScenario", "true"));
    }
    
    

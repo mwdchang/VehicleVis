@@ -34,14 +34,14 @@ import datastore.Const;
 public class GraphicUtil {
    
    
-   public static int createVAO(GL2 gl2) {
+   public static int createVAO(GL2 gl2, float width, float height) {
       int vao[] = new int[1];
       int vbo[] = new int[3];        
       float square[] = {
-            0.0f,  0.0f, 0.0f,      
-            200.0f,  0.0f, 0.0f,      
-            200.0f,  20.0f, 0.0f,      
-            0.0f,  20.0f, 0.0f       
+            0.0f,   0.0f, 0.0f,      
+            width,  0.0f, 0.0f,      
+            width,  height, 0.0f,      
+            0.0f,   height, 0.0f       
       };
         
       float color[] = {
@@ -947,9 +947,10 @@ public class GraphicUtil {
    public static Graphics2D g2d = texture.createGraphics();
    public static FontMetrics fm = g2d.getFontMetrics();
    public static Font font = new Font("Arial", Font.PLAIN, 12);
-   public static Font fontLarge = new Font("Arial", Font.PLAIN, 16);
+   //public static Font fontLarge = new Font("Arial", Font.PLAIN, 16);
   
-   public static Font labelFont = DCUtil.loadFont(Const.FONT_PATH+"din1451m.ttf", Font.PLAIN, 20f);
+   public static Font labelFont      = DCUtil.loadFont(Const.FONT_PATH+"din1451m.ttf", Font.PLAIN, 20f);
+   public static Font labelFontSmall = DCUtil.loadFont(Const.FONT_PATH+"din1451m.ttf", Font.PLAIN, 14f);
    
 }
  

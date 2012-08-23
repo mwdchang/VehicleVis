@@ -42,13 +42,14 @@ public class Collage2 extends JOGLBase implements KeyListener {
       Collage2 collage = new Collage2();
       collage.isMaximized = true;
       collage.run("Collage 2", 800, 600);
-     
    }
    
    public Texture background = null;
    public FrameBufferTexture frameFBT = null;
    public ShaderObj shaderObj = new ShaderObj();
    public ShaderObj shaderTxt = new ShaderObj();
+   public boolean fbtInitDone = false;
+   public boolean fbtRefreshDone = true;
    
    public Vector<Location> locations = new Vector<Location>();
    
@@ -59,14 +60,31 @@ public class Collage2 extends JOGLBase implements KeyListener {
       this.basicClear(gl2);
       
       
-      if (this.fbtDone == false) {
-         fbtDone = true;
+      if (this.fbtInitDone == false) {
+         fbtInitDone = true;
+         this.seedLocation(gl2);
          this.initFBT(gl2);
       }      
       
+      if (this.fbtRefreshDone == false) {
+         //this.fbtRefreshDone = true;
+         
+         // test
+         for (int i=0; i < locations.size(); i++) {
+            locations.elementAt(i).rotation +=  (i%2 == 0? Math.random()*4 : -Math.random()*4);   
+            locations.elementAt(i).x += Math.random()*10-5;   
+            locations.elementAt(i).y += Math.random()*10-5;   
+            if (locations.elementAt(i).x > this.winWidth) locations.elementAt(i).x = this.winWidth;
+            if (locations.elementAt(i).x < 0) locations.elementAt(i).x = 0;
+            if (locations.elementAt(i).y > this.winHeight) locations.elementAt(i).y = this.winHeight;
+            if (locations.elementAt(i).y < 0) locations.elementAt(i).y = 0;
+         }
+         this.initFBT(gl2);
+      }
+      
       GraphicUtil.setOrthonormalView(gl2, 0, 1, 0, 1, -10, 10);
       gl2.glEnable(GL2.GL_BLEND);
-      gl2.glEnable(GL2.GL_TEXTURE_2D);
+      //gl2.glEnable(GL2.GL_TEXTURE_2D);
       
       
       gl2.glBindVertexArray(frameFBT.vao[0]);
@@ -97,11 +115,15 @@ public class Collage2 extends JOGLBase implements KeyListener {
       super.init(a);   
       this.canvas.addKeyListener(this);
       gl2.glEnable(GL2.GL_TEXTURE_2D);
-      background = loadTexture(gl2, "C:\\Users\\Daniel\\Pictures\\IMG_2487.JPG");
+      background = loadTexture(gl2, "C:\\Users\\Daniel\\Pictures\\IMG_4956.JPG");
+      
+      frameFBT = new FrameBufferTexture();
+      frameFBT.TEXTURE_SIZE_H = (int)this.winHeight;
+      frameFBT.TEXTURE_SIZE_W = (int)this.winWidth;
+      frameFBT.init(gl2);      
       
    }
    
-   boolean fbtDone = false;
    
    
    public void seedLocation(GL2 gl2) {
@@ -160,20 +182,17 @@ System.out.println("background : " + background.getTextureObject(gl2));
          l.tf.renderToTexture(null);
          l.tf.anchorX = -(float)(l.size);
          l.tf.anchorY = -(float)(l.size+21);
-         l.vao = GraphicUtil.createVAO(gl2);
+         l.vao = GraphicUtil.createVAO(gl2, (float)(2*l.size), (float)20);
       }
    }
    
    
    public void initFBT(GL2 gl2) {
-      seedLocation(gl2);
+      //seedLocation(gl2);
       shaderObj.clean(gl2);
       shaderTxt.clean(gl2);
       
-      frameFBT = new FrameBufferTexture();
-      frameFBT.TEXTURE_SIZE_H = (int)this.winHeight;
-      frameFBT.TEXTURE_SIZE_W = (int)this.winWidth;
-      frameFBT.init(gl2);
+
       
       
       shaderObj.createShader(gl2, Const.SHADER_PATH+"vert_fbt.glsl", GL2.GL_VERTEX_SHADER);
@@ -270,7 +289,7 @@ System.out.println("background : " + background.getTextureObject(gl2));
       this.registerStandardExit(e);
       
       if (e.getKeyChar() == KeyEvent.VK_SPACE) {
-         this.fbtDone = false;
+         this.fbtRefreshDone = ! this.fbtRefreshDone;
       }
    }
    
