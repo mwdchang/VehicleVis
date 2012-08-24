@@ -1,6 +1,7 @@
 package exec;
 
 import gui.DCTip;
+import gui.QuestionTask;
 import gui.StatusWindow;
 
 import java.awt.event.KeyEvent;
@@ -239,6 +240,23 @@ public class EventManager implements KeyListener, MouseListener, MouseMotionList
          if (e.getKeyChar() == '4') {
             SSM.showLabels = ! SSM.showLabels;   
          }
+         
+         if (e.getKeyCode() == KeyEvent.VK_UP) {
+            SSM.colouringMethod++;
+            SSM.dirty = 1;
+            SSM.dirtyGL = 1;
+            SSM.refreshMagicLens = true;
+            if (SSM.colouringMethod > 2) SSM.colouringMethod = 2;
+         }
+         if (e.getKeyCode() == KeyEvent.VK_DOWN) {
+            SSM.colouringMethod--;
+            SSM.dirty = 1;
+            SSM.dirtyGL = 1;
+            SSM.refreshMagicLens = true;
+            if (SSM.colouringMethod < 1) SSM.colouringMethod = 1;
+         }
+         return;
+         
       }
       
       if (e.getKeyCode() == KeyEvent.VK_LEFT) {
@@ -248,9 +266,7 @@ public class EventManager implements KeyListener, MouseListener, MouseMotionList
          Event.showPanel();   
       }
       
-      if (e.getKeyChar() == 'w') {
-         SSM.useGlow = ! SSM.useGlow;   
-      }
+
       if (e.getKeyCode() == KeyEvent.VK_UP) {
          System.out.println("Up Arrow");
          SSM.g_numPasses ++;   
@@ -275,33 +291,6 @@ public class EventManager implements KeyListener, MouseListener, MouseMotionList
          SSM.dirtyGL = 1;
          SSM.refreshMagicLens = true;
       }
-//      if (e.getKeyChar() == 'f') {
-//         SSM.useLocalFocus = ! SSM.useLocalFocus;    
-//         SSM.dirty = 1;
-//         SSM.dirtyGL = 1;
-//         SSM.refreshMagicLens = true;
-//      }
-//      if (e.getKeyChar() == ';') {
-//         SSM.sortingMethod ++;
-//         SSM.sortingMethod %= 3;
-//         SSM.refreshMagicLens = true;
-//         SSM.dirtyGL = 1;
-//      }
-//      if (e.getKeyChar() == 'c') {
-//         SSM.colouringMethod ++;
-//         SSM.colouringMethod %= 5;
-//         SSM.refreshMagicLens = true;
-//         SSM.dirty = 1; // Need to change this later
-//         SSM.dirtyGL = 1;
-//      }
-//      if (e.getKeyChar() == 'v') {
-//         SSM.colouringMethod --;
-//         if (SSM.colouringMethod < 0) SSM.colouringMethod = 4;
-//         SSM.colouringMethod %= 5;
-//         SSM.refreshMagicLens = true;
-//         SSM.dirty = 1; // Need to change this later
-//         SSM.dirtyGL = 1;
-//      }
       
       // Camera move
 //      if (e.getKeyChar() == 'w') {
@@ -371,6 +360,13 @@ public class EventManager implements KeyListener, MouseListener, MouseMotionList
          SSM.docActive = ! SSM.docActive;
          SSM.resizePanel = 1;
       }
+      
+      if (e.getKeyChar() == 'w') {
+         SSM.skipQuestion = true;
+         //SSM.useGlow = ! SSM.useGlow;   
+         //QuestionTask.qIdx ++;
+         //QuestionTask.q.elementAt(QuestionTask.qIdx).set();
+      }      
    }
    
 

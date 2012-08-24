@@ -51,6 +51,8 @@ public class Collage2 extends JOGLBase implements KeyListener {
    public boolean fbtInitDone = false;
    public boolean fbtRefreshDone = true;
    
+   public boolean showLabel = false;
+   
    public Vector<Location> locations = new Vector<Location>();
    
    @Override
@@ -115,7 +117,7 @@ public class Collage2 extends JOGLBase implements KeyListener {
       super.init(a);   
       this.canvas.addKeyListener(this);
       gl2.glEnable(GL2.GL_TEXTURE_2D);
-      background = loadTexture(gl2, "C:\\Users\\Daniel\\Pictures\\IMG_4956.JPG");
+      background = loadTexture(gl2, "C:\\Users\\Daniel\\Pictures\\IMG_1791.JPG");
       
       frameFBT = new FrameBufferTexture();
       frameFBT.TEXTURE_SIZE_H = (int)this.winHeight;
@@ -157,7 +159,7 @@ System.out.println("background : " + background.getTextureObject(gl2));
          
          //l.rotation = Math.random()*140 - 70;
          l.rotation = Math.random()*360;
-         l.size = Math.random()*30 + 100;
+         l.size = Math.random()*80 + 80;
          locations.add(l);
          
          // Get a random date 
@@ -233,14 +235,14 @@ System.out.println("background : " + background.getTextureObject(gl2));
                gl2.glDisable(GL2.GL_TEXTURE_2D);
                gl2.glBegin(GL2.GL_QUADS);
                   gl2.glColor4d(0.7, 0.7, 0.7, 0.8);
-                  gl2.glVertex2d(0-size-3, 0-size-23); 
-                  gl2.glVertex2d(0+size+3, 0-size-23); 
+                  gl2.glVertex2d(0-size-3, 0-size-(showLabel?23:3)); 
+                  gl2.glVertex2d(0+size+3, 0-size-(showLabel?23:3)); 
                   gl2.glVertex2d(0+size+3, 0+size+3); 
                   gl2.glVertex2d(0-size-3, 0+size+3); 
                   
                   gl2.glColor4d(0.95, 0.95, 0.95, 0.8 + 0.2* (float)i/(float)locations.size());
-                  gl2.glVertex2d(0-size-2, 0-size-22); 
-                  gl2.glVertex2d(0+size+2, 0-size-22); 
+                  gl2.glVertex2d(0-size-2, 0-size-(showLabel?22:2)); 
+                  gl2.glVertex2d(0+size+2, 0-size-(showLabel?22:2)); 
                   gl2.glVertex2d(0+size+2, 0+size+2); 
                   gl2.glVertex2d(0-size-2, 0+size+2); 
                gl2.glEnd();
@@ -254,27 +256,29 @@ System.out.println("background : " + background.getTextureObject(gl2));
                gl2.glEnd();
                
                
-               gl2.glEnable(GL2.GL_BLEND);
-               gl2.glBlendFunc(GL2.GL_SRC_ALPHA, GL2.GL_ONE_MINUS_SRC_ALPHA);
-               gl2.glColor4d(1, 1, 1, 1);
-               gl2.glBindVertexArray( l.vao );
-               shaderTxt.bind(gl2);
-                  gl2.glTranslated(l.tf.anchorX, l.tf.anchorY, 0);
-                  float buffer[] = new float[16];
-                  gl2.glGetFloatv(GL2.GL_PROJECTION_MATRIX, buffer, 0);
-                  shaderTxt.setUniform4x4(gl2, "projection_matrix", buffer);
-                  gl2.glGetFloatv(GL2.GL_MODELVIEW_MATRIX, buffer, 0);
-                  shaderTxt.setUniform4x4(gl2, "modelview_matrix", buffer);
-                  
-                  gl2.glActiveTexture(GL2.GL_TEXTURE0);
-                  gl2.glBindTexture(GL2.GL_TEXTURE_2D, l.tf.texture.getTexture().getTextureObject(gl2));
-                  shaderTxt.setUniform1i(gl2, "tex", 0);
-                  
-                  gl2.glDrawArrays(GL2.GL_QUADS, 0, 4);
-                  
-               shaderTxt.unbind(gl2);
-               gl2.glBindVertexArray( 0 );
-               gl2.glDisable(GL2.GL_BLEND);
+               if (showLabel == true) {
+                  gl2.glEnable(GL2.GL_BLEND);
+                  gl2.glBlendFunc(GL2.GL_SRC_ALPHA, GL2.GL_ONE_MINUS_SRC_ALPHA);
+                  gl2.glColor4d(1, 1, 1, 1);
+                  gl2.glBindVertexArray( l.vao );
+                  shaderTxt.bind(gl2);
+                     gl2.glTranslated(l.tf.anchorX, l.tf.anchorY, 0);
+                     float buffer[] = new float[16];
+                     gl2.glGetFloatv(GL2.GL_PROJECTION_MATRIX, buffer, 0);
+                     shaderTxt.setUniform4x4(gl2, "projection_matrix", buffer);
+                     gl2.glGetFloatv(GL2.GL_MODELVIEW_MATRIX, buffer, 0);
+                     shaderTxt.setUniform4x4(gl2, "modelview_matrix", buffer);
+                     
+                     gl2.glActiveTexture(GL2.GL_TEXTURE0);
+                     gl2.glBindTexture(GL2.GL_TEXTURE_2D, l.tf.texture.getTexture().getTextureObject(gl2));
+                     shaderTxt.setUniform1i(gl2, "tex", 0);
+                     
+                     gl2.glDrawArrays(GL2.GL_QUADS, 0, 4);
+                     
+                  shaderTxt.unbind(gl2);
+                  gl2.glBindVertexArray( 0 );
+                  gl2.glDisable(GL2.GL_BLEND);
+               }
                
                
             gl2.glPopMatrix();

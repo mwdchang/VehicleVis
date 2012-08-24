@@ -184,10 +184,9 @@ public class Event {
                //System.out.println( "Near plane is: " + SSM.lensList.elementAt(i).nearPlane);
                SSM.refreshMagicLens = true;
             }
-            
          }
-       
       }      
+      
    }
  
    ////////////////////////////////////////////////////////////////////////////////
@@ -807,9 +806,9 @@ System.out.println("<Near plane: " + la.nearPlane);
       if ( showAnimator != null && showAnimator.isRunning() == true) return;
       
       showAnimator = null;
-      hideAnimator = PropertySetter.createAnimator(900, SSM.instance(), "DoffsetY", new FloatEval(), SSM.DoffsetY, SSM.DoffsetY+1000);
+      hideAnimator = PropertySetter.createAnimator(900, SSM.instance(), "DoffsetX", new FloatEval(), SSM.DoffsetX, SSM.DoffsetX-1500);
       hideAnimator.start();
-      Animator summary = PropertySetter.createAnimator(900, SSM.instance(), "summaryAnchorY", new FloatEval(), SSM.summaryAnchorY, SSM.summaryAnchorY-700);
+      Animator summary = PropertySetter.createAnimator(900, SSM.instance(), "summaryAnchorX", new FloatEval(), SSM.summaryAnchorX, SSM.summaryAnchorX-2000);
       summary.start();
    }
    
@@ -828,9 +827,9 @@ System.out.println("<Near plane: " + la.nearPlane);
       if (hideAnimator != null && hideAnimator.isRunning() == true) return;
       
       hideAnimator = null;
-      showAnimator = PropertySetter.createAnimator(900, SSM.instance(), "DoffsetY", new FloatEval(), SSM.DoffsetY, SSM.DoffsetY-1000);
+      showAnimator = PropertySetter.createAnimator(900, SSM.instance(), "DoffsetX", new FloatEval(), SSM.DoffsetX, SSM.DoffsetX+1500);
       showAnimator.start();
-      Animator summary = PropertySetter.createAnimator(900, SSM.instance(), "summaryAnchorY", new FloatEval(), SSM.summaryAnchorY, SSM.summaryAnchorY+700);
+      Animator summary = PropertySetter.createAnimator(900, SSM.instance(), "summaryAnchorX", new FloatEval(), SSM.summaryAnchorX, SSM.summaryAnchorX+2000);
       summary.start();
    }
    

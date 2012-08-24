@@ -42,6 +42,7 @@ public class SSM {
    
    public static DCTriple waitMarker = null;
    
+   public static boolean skipQuestion = false;
    
    ////////////////////////////////////////////////////////////////////////////////
    // Big Brother Statistics ?? Are these even useful? what do they say??
@@ -285,7 +286,11 @@ public class SSM {
    public static boolean showLabels = true;        // Whether to show labels at all
    public static boolean captureScreen = false;
    public static int sortingMethod = 0;            // Controls how the components are sorted (with respect to rendering order)
-   public static int colouringMethod = 4;
+   
+   // 1 : Normal      (Yellow-to-Red)
+   // 2 : Qualitative (Set 3)
+   public static int colouringMethod = 1;
+   
    public static int sparklineMode = 1;
    public static boolean useAggregate = false;        // Whether the occurrence count should crawl the parts hierarchy
    public static boolean useFullTimeLine = true;      // Whether to use the entire timeline for the component chart
@@ -337,8 +342,8 @@ public class SSM {
    ////////////////////////////////////////////////////////////////////////////////
    //public static float DoffsetX = 680;
    //public static float DoffsetY = 850;
-   public static float summaryAnchorX = 150;
-   public static float summaryAnchorY = 1700;
+   public static float summaryAnchorX = 2250;
+   public static float summaryAnchorY = 1000;
    
    public static void setSummaryAnchorX(float x) { summaryAnchorX = x;}
    public static void setSummaryAnchorY(float x) { summaryAnchorY = x;}
@@ -371,8 +376,8 @@ public class SSM {
       aggregationAnchorX = 100f + DoffsetX;
       perspectiveAttrib.anchorX = 180 + DoffsetX;
       
-      yearAnchorX = 30.0f + DoffsetX;
-      monthAnchorX = 30.0f + DoffsetX;
+      yearAnchorX =  DoffsetX-590;
+      monthAnchorX = DoffsetX-590;
    }
    public static float getDoffsetX() { return DoffsetX; }
    

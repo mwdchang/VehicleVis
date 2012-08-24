@@ -47,6 +47,12 @@ public class QuestionTask implements RenderTask {
                DCColour.fromDouble(0.6, 0.6, 0.6, 0.8).toArray());
       }
       
+      if (SSM.skipQuestion == true) {
+         SSM.skipQuestion = false;
+         nextQuestion();
+      }
+      
+      
       tf.anchorX = SSM.windowWidth  - 200;
       //tf.anchorY = SSM.windowHeight - 100;
       tf.anchorY = 100;
@@ -107,31 +113,37 @@ public class QuestionTask implements RenderTask {
                q.elementAt(qIdx).endTime = System.currentTimeMillis();
                
                log( q.elementAt(qIdx) );
-               qIdx ++;   
-               q_tf.clearMark();
-               
-               Vector<StringBuffer> sb = tSplit(q.elementAt(qIdx).text());
-               for (int i=0; i < sb.size(); i++) {
-                  q_tf.addMark(sb.elementAt(i).toString(), Color.BLACK, GraphicUtil.font, 2, q_tf.height - (i+1)*getHardFontHeight(GraphicUtil.font));
-               }               
-               
-               
-               q_tf.renderToTexture(null);
-               q.elementAt(qIdx).startTime = System.currentTimeMillis();
-               q.elementAt(qIdx).set();
-               SSM.stopPicking = 1;
-               
-               
-               //q_tf.anchorX += 400;
-               Animator moveAnimator = PropertySetter.createAnimator(1000, q_tf, "anchorX", new FloatEval(), q_tf.anchorX+800, q_tf.anchorX);
-               moveAnimator.start();
+               nextQuestion();
                
                // Hack to clean up memory
                System.gc();
-               
             }
          }
       }
+   }
+   
+   
+   ////////////////////////////////////////////////////////////////////////////////
+   // Proceed to the next question
+   ////////////////////////////////////////////////////////////////////////////////
+   public void nextQuestion() {
+      qIdx ++;   
+      if (qIdx >= q.size()) return;
+      
+      q_tf.clearMark();
+      
+      Vector<StringBuffer> sb = tSplit(q.elementAt(qIdx).text());
+      for (int i=0; i < sb.size(); i++) {
+         q_tf.addMark(sb.elementAt(i).toString(), Color.BLACK, GraphicUtil.font, 2, q_tf.height - (i+1)*getHardFontHeight(GraphicUtil.font));
+      }               
+      
+      q_tf.renderToTexture(null);
+      q.elementAt(qIdx).startTime = System.currentTimeMillis();
+      q.elementAt(qIdx).set();
+      SSM.stopPicking = 1;
+      
+      Animator moveAnimator = PropertySetter.createAnimator(1000, q_tf, "anchorX", new FloatEval(), q_tf.anchorX+800, q_tf.anchorX);
+      moveAnimator.start();
    }
    
    ////////////////////////////////////////////////////////////////////////////////
@@ -194,8 +206,8 @@ public class QuestionTask implements RenderTask {
    }
    
    //public Question[] q = new Question[3];
-   public Vector<Question> q = new Vector<Question>();
-   public int qIdx = 0;
+   public static Vector<Question> q = new Vector<Question>();
+   public static int qIdx = 0;
    
    
    public boolean dcEquals(String a, String b) {

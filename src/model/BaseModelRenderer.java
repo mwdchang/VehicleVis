@@ -682,16 +682,16 @@ public abstract class BaseModelRenderer implements RenderTask {
          if (SSM.c_yearAttrib.selected != null)  v2String += " , " + SSM.c_yearAttrib.selected;
          
          // 1st column
-         SSM.summaryLabel.addMark(monthString, Color.BLACK, GraphicUtil.labelFontSmall, 10, 10);
-         SSM.summaryLabel.addMark(yearString, Color.BLACK, GraphicUtil.labelFontSmall, 10, 30);
+         SSM.summaryLabel.addMark(monthString, Color.BLACK, GraphicUtil.labelFontSmall, 50, 10);
+         SSM.summaryLabel.addMark(yearString, Color.BLACK, GraphicUtil.labelFontSmall, 50, 30);
          
          // 2nd column
-         SSM.summaryLabel.addMark(aggString, Color.BLACK, GraphicUtil.labelFontSmall, 250, 10);
-         SSM.summaryLabel.addMark(scoreString, Color.BLACK, GraphicUtil.labelFontSmall, 250, 30);
+         SSM.summaryLabel.addMark(aggString, Color.BLACK, GraphicUtil.labelFontSmall, 300, 10);
+         SSM.summaryLabel.addMark(scoreString, Color.BLACK, GraphicUtil.labelFontSmall, 300, 30);
          
          // 3rd column
-         SSM.summaryLabel.addMark(v2String, Color.BLACK, GraphicUtil.labelFontSmall, 500, 10);
-         SSM.summaryLabel.addMark(v1String, Color.BLACK, GraphicUtil.labelFontSmall, 500, 30);
+         SSM.summaryLabel.addMark(v2String, Color.BLACK, GraphicUtil.labelFontSmall, 600, 10);
+         SSM.summaryLabel.addMark(v1String, Color.BLACK, GraphicUtil.labelFontSmall, 600, 30);
          
       }
       

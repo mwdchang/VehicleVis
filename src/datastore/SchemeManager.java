@@ -22,6 +22,10 @@ public class SchemeManager {
    // Gateway method for getting a colour based on frequency
    ////////////////////////////////////////////////////////////////////////////////
    public DCColour getColour(Integer partId, float occurrence, float maxOccurrence) {
+      if (SSM.colouringMethod == 1) return intensityRamp05(partId, occurrence, maxOccurrence, Red); 
+      if (SSM.colouringMethod == 2) return intensityRamp05(partId, occurrence, maxOccurrence, Set3);
+      
+      /*
       switch (SSM.instance().colouringMethod) {
          case 0: return intensityRamp01(partId, occurrence, maxOccurrence);
          case 1: return intensityRamp02(partId, occurrence, maxOccurrence);
@@ -29,7 +33,15 @@ public class SchemeManager {
          case 3: return intensityRamp04(partId, occurrence, maxOccurrence);
          case 4: return intensityRamp05(partId, occurrence, maxOccurrence);
       }
+      */
+      
       return null;
+   }
+   
+   public int getScaleSize() {
+      if (SSM.colouringMethod == 1) return Red.length;
+      if (SSM.colouringMethod == 2) return Set3.length;
+      return 0;      
    }
    
    
@@ -92,18 +104,21 @@ public class SchemeManager {
    ////////////////////////////////////////////////////////////////////////////////
    // Returns the bucketed colour scale with preset alpha values
    ////////////////////////////////////////////////////////////////////////////////
-   public DCColour intensityRamp05(Integer partId, float occurrence, float maxOccurrence) {
+   public DCColour intensityRamp05(Integer partId, float occurrence, float maxOccurrence, DCColour scale[]) {
       float intensity = 0.0f;
       float val = 0.0f;
       if (partId == null || occurrence == 0) {
          return DCColour.fromInt(255, 255, 255, 255);
       }
       intensity = (occurrence/maxOccurrence);
-      int bucket =   (int)Math.floor(intensity * Red.length);
+      //int bucket =   (int)Math.floor(intensity * Red.length);
+      int bucket =   (int)Math.floor(intensity * scale.length);
       
       // sanity check
-      bucket = bucket < 0 ? 0: bucket >= Red.length ? (Red.length-1) : bucket;
-      return Red[bucket]; 
+      //bucket = bucket < 0 ? 0: bucket >= Red.length ? (Red.length-1) : bucket;
+      //return Red[bucket]; 
+      bucket = bucket < 0 ? 0: bucket >= scale.length ? (scale.length-1) : bucket;
+      return scale[bucket]; 
    }   
    
    
@@ -213,6 +228,10 @@ public class SchemeManager {
       DCColour.fromInt(189, 0, 38, 110), 
       DCColour.fromInt(128, 0, 38, 120)       
    };   
+   
+   
+   
+   
    public static DCColour[] Red = new DCColour[] {
       /* Red orange yellow */
       DCColour.fromInt(254, 240, 217, 100),      

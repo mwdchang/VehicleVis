@@ -23,7 +23,7 @@ public class LegendTask implements RenderTask {
    // Draws a bucketed scale, with distinct colour and outline for each bucket
    ////////////////////////////////////////////////////////////////////////////////
    public void drawBucket(GL2 gl2) {
-      int buckets = SchemeManager.Red.length;
+      int buckets = SchemeManager.instance().getScaleSize(); //SchemeManager.Red.length;
       float interval = 1.0f/(float)buckets;
       
       // Draws the distinct colours
@@ -150,11 +150,11 @@ public class LegendTask implements RenderTask {
       // Render the legend content, this will be either a 
       // continuous rendering, or render into buckets
       //gl2.glDisable(GL2.GL_BLEND);
-      if ( SSM.instance().colouringMethod == 4) {
+      //if ( SSM.instance().colouringMethod == 4) {
          drawBucket(gl2);
-      } else {
-         drawContinuous(gl2);
-      }
+      //} else {
+      //   drawContinuous(gl2);
+      //}
       
       // Draw a border around the legend to create a higher contrast
       gl2.glDisable(GL2.GL_DEPTH_TEST);
@@ -166,11 +166,46 @@ public class LegendTask implements RenderTask {
          gl2.glVertex2d(startX, startY+height);
       gl2.glEnd();      
       
+      
+      ////////////////////////////////////////////////////////////////////////////////
       // Render the summary label
+      ////////////////////////////////////////////////////////////////////////////////
       SSM.summaryLabel.anchorX = SSM.summaryAnchorX;
       SSM.summaryLabel.anchorY = SSM.summaryAnchorY;
       SSM.summaryLabel.render(gl2);
       
+      // Draw the legend horizontally - hijack the anchor for this render
+      int buckets = SchemeManager.instance().getScaleSize(); //SchemeManager.Red.length;
+      float interval = 1.0f/(float)buckets;
+      this.startX = (int)SSM.summaryAnchorX - 200;
+      this.startY = (int)SSM.summaryAnchorY + 10;
+      
+      gl2.glBegin(GL2.GL_QUADS);
+      for (float i=0; i < buckets; i++) {
+         DCColour c = SchemeManager.instance().getColour(1, i*interval, 1.0f);
+         gl2.glColor4fv(c.toArray(), 0);
+         gl2.glVertex2d( startX + i*interval*200, startY);
+         gl2.glVertex2d( startX + (i+1)*interval*200, startY);
+         gl2.glVertex2d( startX + (i+1)*interval*200, startY+30);
+         gl2.glVertex2d( startX + i*interval*200, startY+30);
+      }
+      gl2.glEnd();
+     
+      // Draw line separators
+      gl2.glDisable(GL2.GL_DEPTH_TEST);
+      gl2.glBegin(GL2.GL_LINE_LOOP);
+         gl2.glColor4d(0.4, 0.4, 0.4, 0.8);
+         gl2.glVertex2d(startX, startY);
+         gl2.glVertex2d(startX+200, startY);
+         gl2.glVertex2d(startX+200, startY+30);
+         gl2.glVertex2d(startX, startY+30);
+      gl2.glEnd();      
+      gl2.glBegin(GL2.GL_LINES);
+      for (float i=0; i < buckets; i++) {
+         gl2.glVertex2d( startX + (i+1)*interval*200, startY);
+         gl2.glVertex2d( startX + (i+1)*interval*200, startY+30);
+      }
+      gl2.glEnd();      
       
    }
 
