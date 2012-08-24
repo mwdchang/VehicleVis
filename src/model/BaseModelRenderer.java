@@ -666,32 +666,38 @@ public abstract class BaseModelRenderer implements RenderTask {
       if (SSM.summaryLabel != null) {
          SSM.summaryLabel.clearMark();
          
-         String monthString = "Month: " + DCUtil.getMonthTranslationTable().get(SSM.startMonth+"") + " - " + DCUtil.getMonthTranslationTable().get(SSM.endMonth+"");
-         String yearString  = "Year : " + SSM.startYear + " - " + SSM.endYear;
-         String scoreString = "Scoring Mode : " + (SSM.chartMode == 1? "Month" : SSM.chartMode == 2? "Component" : "Global");
-         String aggString   = "Use Aggregation : " + (SSM.useAggregate? "Yes" : "No");
+         String monthString = DCUtil.getMonthTranslationTable().get((1+SSM.startMonth)+"") + " - " + DCUtil.getMonthTranslationTable().get((1+SSM.endMonth)+"");
+         String yearString  = SSM.startYear + " - " + SSM.endYear;
+         String scoreString = (SSM.chartMode == 1? "Month" : SSM.chartMode == 2? "Component" : "Global");
+         String aggString   = (SSM.useAggregate? "Yes" : "No");
          
-         String v1String = "Vehicle 1 : " + (SSM.manufactureAttrib.selected == null? "All" : SSM.manufactureAttrib.selected);
+         String v1String = (SSM.manufactureAttrib.selected == null? "All" : SSM.manufactureAttrib.selected);
          if (SSM.makeAttrib.selected != null)  v1String += " , " + SSM.makeAttrib.selected;
          if (SSM.modelAttrib.selected != null) v1String += " , " + SSM.modelAttrib.selected;
          if (SSM.yearAttrib.selected != null)  v1String += " , " + SSM.yearAttrib.selected;
          
-         String v2String = "Vehicle 2 : " + (SSM.c_manufactureAttrib.selected == null? "All" : SSM.c_manufactureAttrib.selected);
+         String v2String = (SSM.c_manufactureAttrib.selected == null? "All" : SSM.c_manufactureAttrib.selected);
          if (SSM.c_makeAttrib.selected != null)  v2String += " , " + SSM.c_makeAttrib.selected;
          if (SSM.c_modelAttrib.selected != null) v2String += " , " + SSM.c_modelAttrib.selected;
          if (SSM.c_yearAttrib.selected != null)  v2String += " , " + SSM.c_yearAttrib.selected;
          
          // 1st column
-         SSM.summaryLabel.addMark(monthString, Color.BLACK, GraphicUtil.labelFontSmall, 50, 10);
-         SSM.summaryLabel.addMark(yearString, Color.BLACK, GraphicUtil.labelFontSmall, 50, 30);
+         SSM.summaryLabel.addMark("Month: ", Color.BLACK, GraphicUtil.labelFont16, 50, 10);
+         SSM.summaryLabel.addMark(monthString, Color.DARK_GRAY, GraphicUtil.labelFont14, 120, 10);
+         SSM.summaryLabel.addMark("Year: ", Color.BLACK, GraphicUtil.labelFont16, 50, 30);
+         SSM.summaryLabel.addMark(yearString, Color.DARK_GRAY, GraphicUtil.labelFont14, 120, 30);
          
          // 2nd column
-         SSM.summaryLabel.addMark(aggString, Color.BLACK, GraphicUtil.labelFontSmall, 300, 10);
-         SSM.summaryLabel.addMark(scoreString, Color.BLACK, GraphicUtil.labelFontSmall, 300, 30);
+         SSM.summaryLabel.addMark("Use Aggregation: ", Color.BLACK, GraphicUtil.labelFont16, 300, 10);
+         SSM.summaryLabel.addMark(aggString, Color.DARK_GRAY, GraphicUtil.labelFont14, 450, 10);
+         SSM.summaryLabel.addMark("Scoring Mode: ", Color.BLACK, GraphicUtil.labelFont16, 300, 30);
+         SSM.summaryLabel.addMark(scoreString, Color.DARK_GRAY, GraphicUtil.labelFont14, 450, 30);
          
          // 3rd column
-         SSM.summaryLabel.addMark(v2String, Color.BLACK, GraphicUtil.labelFontSmall, 600, 10);
-         SSM.summaryLabel.addMark(v1String, Color.BLACK, GraphicUtil.labelFontSmall, 600, 30);
+         SSM.summaryLabel.addMark("Vehicle 2: ", Color.BLACK, GraphicUtil.labelFont16, 600, 10);
+         SSM.summaryLabel.addMark(v2String, Color.DARK_GRAY, GraphicUtil.labelFont14, 700, 10);
+         SSM.summaryLabel.addMark("Vehicle 1: ", Color.BLACK, GraphicUtil.labelFont16, 600, 30);
+         SSM.summaryLabel.addMark(v1String, Color.DARK_GRAY, GraphicUtil.labelFont14, 700, 30);
          
       }
       

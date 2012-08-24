@@ -949,8 +949,9 @@ public class GraphicUtil {
    public static Font font = new Font("Arial", Font.PLAIN, 12);
    //public static Font fontLarge = new Font("Arial", Font.PLAIN, 16);
   
-   public static Font labelFont      = DCUtil.loadFont(Const.FONT_PATH+"din1451m.ttf", Font.PLAIN, 20f);
-   public static Font labelFontSmall = DCUtil.loadFont(Const.FONT_PATH+"din1451m.ttf", Font.PLAIN, 14f);
+   public static Font labelFont   = DCUtil.loadFont(Const.FONT_PATH+"din1451m.ttf", Font.PLAIN, 20f);
+   public static Font labelFont14 = DCUtil.loadFont(Const.FONT_PATH+"din1451m.ttf", Font.PLAIN, 12f);
+   public static Font labelFont16 = DCUtil.loadFont(Const.FONT_PATH+"din1451m.ttf", Font.PLAIN, 14f);
    
 }
  

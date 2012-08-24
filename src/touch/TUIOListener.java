@@ -433,8 +433,8 @@ public class TUIOListener implements TuioListener {
          // Check the approximate direction of the swipe
          if ( Math.abs(x2-x1) - Math.abs(y2-y1) > 0) {  
             // Horizontal   
-            if (x1 - x2 > 0) wcursor.swipeDirection = WCursor.LEFT;
-            else wcursor.swipeDirection = WCursor.RIGHT;
+            if (x1 - x2 > 0) wcursor.swipeDirection = WCursor.RIGHT;
+            else wcursor.swipeDirection = WCursor.LEFT;
          } else {
             // Vertical   
             if (y1 - y2 > 0) wcursor.swipeDirection = WCursor.DOWN;
@@ -629,12 +629,13 @@ System.out.println("Pinch detected");
       // Check if this is a swipe event
       if (w.swipeCount > 1) {
          if (w.swipeDirection == WCursor.DOWN || w.swipeDirection == WCursor.UP) {
-            if (w.swipeDirection == WCursor.UP) Event.hidePanel();
-            if (w.swipeDirection == WCursor.DOWN) Event.showPanel(); 
             //SSM.selectedGroup.clear();
             //SSM.dirty = 1;
             //SSM.dirtyGL = 1;
          } else {
+System.out.println("Detecting horizontal swipe " + w.swipeDirection);            
+            if (w.swipeDirection == WCursor.LEFT) Event.hidePanel();
+            if (w.swipeDirection == WCursor.RIGHT) Event.showPanel(); 
             //if (SSM.hidePanel == true) Event.showPanel();
             //else Event.hidePanel();
          }
