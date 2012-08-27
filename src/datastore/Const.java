@@ -10,7 +10,7 @@ public class Const {
    ////////////////////////////////////////////////////////////////////////////
    // Path for parser
    ////////////////////////////////////////////////////////////////////////////
-   public static final String PART_FILE =    "C:\\Users\\Daniel\\DropBox\\Resources\\component_04";
+   public static final String PART_FILE =    "C:\\Users\\Daniel\\DropBox\\Resources\\component_05";
    public static final String GRAMMAR_FILE = "C:\\Users\\Daniel\\DropBox\\Resources\\stanford-parser\\englishPCFG.ser.gz";   
    public static final String DATA_FILE =    "C:\\Users\\Daniel\\StaticResources\\FLAT_CMPL.txt";
    

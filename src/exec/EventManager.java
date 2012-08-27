@@ -361,11 +361,8 @@ public class EventManager implements KeyListener, MouseListener, MouseMotionList
          SSM.resizePanel = 1;
       }
       
-      if (e.getKeyChar() == 'w') {
+      if (e.getKeyChar() == 'w') { 
          SSM.skipQuestion = true;
-         //SSM.useGlow = ! SSM.useGlow;   
-         //QuestionTask.qIdx ++;
-         //QuestionTask.q.elementAt(QuestionTask.qIdx).set();
       }      
    }
    

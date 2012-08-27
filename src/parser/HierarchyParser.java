@@ -87,7 +87,7 @@ public class HierarchyParser {
       while (e2.hasMoreElements()) {
         Integer key = e2.nextElement();
         for (int i=0; i < partTable.get(key).size(); i++) {
-           partWriter.write(key + "\t" + partTable.get(key).elementAt(i) + "\r\n");
+           partWriter.write(key + "\t" + partTable.get(key).elementAt(i).trim() + "\r\n");
         }
       }
       partWriter.flush();

@@ -199,7 +199,7 @@ System.out.println("Debugging");
    /////////////////////////////////////////////////////////////////////////////////  
    protected CacheManager() {
       if (DEBUG == true) {
-         timeLineStartYear = 2000;         
+         timeLineStartYear = 1995;         
          timeLineEndYear   = 2005;         
       }
    }
@@ -524,6 +524,7 @@ System.out.println("Debugging");
    }   
    
    public Vector<DCDoc> setDocumentData(String from, String to, int fromMonth, int toMonth, Vector<Integer> groupIds, int idx) {
+System.out.println("SetDocumentData : " + from + " " + to);      
       Vector<DCDoc> result = new Vector<DCDoc>();
       DBWrapper dbh = new DBWrapper();
       try {

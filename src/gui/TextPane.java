@@ -75,9 +75,8 @@ public class TextPane {
          xcursor = 0;
          DCDoc d = documentList.elementAt(i);       
          
-         String idstr = "[" + DCUtil.formatDateYYYYMMDD(d.datea) + "] " + d.mfr + " - " + d.make + " - " + d.model + " - " + d.year ;
+         String idstr = "[" + DCUtil.formatDateTextPanel(d.datea) + "] " + d.mfr + " - " + d.make + " - " + d.model + " - " + d.year ;
          //String idstr = "[" + d.docId + " >" + d.mfr + " >" + d.make + " >" + d.model + " >" + d.year +  "] ";
-         
          
          float tmp0 = fm.stringWidth(idstr);
          Tag tag = new Tag(xcursor, ycursor, tokenHeight, idstr);

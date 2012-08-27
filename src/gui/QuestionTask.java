@@ -127,6 +127,8 @@ public class QuestionTask implements RenderTask {
    // Proceed to the next question
    ////////////////////////////////////////////////////////////////////////////////
    public void nextQuestion() {
+      SSM.captureScreen = true;
+      
       qIdx ++;   
       if (qIdx >= q.size()) return;
       
@@ -273,6 +275,18 @@ public class QuestionTask implements RenderTask {
       
       q.add(new Question() {
          public boolean answered() {
+            return SSM.selectedGroup.size() > 0 && SSM.lensList != null && SSM.lensList.size() > 0;
+         }
+         public void set() {
+            SSM.reset();
+            SSM.clearLens();
+         }
+         public String text() { return "Warm up task: Select a vehicle component using the lens' heatmap"; }
+      });
+      
+      
+      q.add(new Question() {
+         public boolean answered() {
             return (
                   SSM.makeAttrib.selected != null && 
                   SSM.c_makeAttrib.selected != null && 
@@ -392,6 +406,7 @@ public class QuestionTask implements RenderTask {
             SSM.endYear = 1997;
             SSM.startMonth = 0;
             SSM.endMonth = 11;
+            SSM.dirtyDateFilter = 1;
          }
          public String text() {
             return "Using the lens and heatmap widgets, observe for any trends or patterns, tell us about your findings.";

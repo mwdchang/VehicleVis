@@ -448,12 +448,21 @@ public class DCUtil {
    }
    
    
+   public static String formatDateTextPanel(Date d) {
+      try {
+         return sdfText.format(d);
+      } catch (Exception e) {
+         e.printStackTrace();
+         return null;   
+      }
+   }
    
    
    
    public static long timeStart;
    public static long timeEnd;
    public static SimpleDateFormat sdfIn  = new SimpleDateFormat("yyyyMMdd");
-   public static SimpleDateFormat sdfOut = new SimpleDateFormat("yyyy/MM/dd");
+   public static SimpleDateFormat sdfOut  = new SimpleDateFormat("yyyy/MM/dd");
+   public static SimpleDateFormat sdfText = new SimpleDateFormat("yyyy-MM-dd");
    
 }
