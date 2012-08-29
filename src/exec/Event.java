@@ -14,7 +14,6 @@ import util.DCUtil;
 import util.DWin;
 import util.MatrixUtil;
 import Jama.Matrix;
-import TimingFrameExt.DCColourEval;
 import TimingFrameExt.FloatEval;
 import datastore.CacheManager;
 import datastore.SSM;
@@ -434,10 +433,11 @@ System.out.println("<Near plane: " + la.nearPlane);
    // Scroll document panel
    ////////////////////////////////////////////////////////////////////////////////
    public static void checkDocumentScrollTUIO(int posX, int posY, int unit) {
-      if (posX > SSM.docAnchorX + SSM.docWidth*0.8)
+      if (posX > SSM.docAnchorX + SSM.docWidth*0.8) 
          checkDocumentScroll(posX, posY, unit);
    }
    public static void checkDocumentScroll(int posX, int posY, int unit) {
+      SSM.isDocScroll = true;
       if (unit < 0) {
          // Prevent underflow
          if (SSM.yoffset <= SSM.docHeight) return;
@@ -481,6 +481,7 @@ System.out.println("<Near plane: " + la.nearPlane);
       float mY = SSM.windowHeight - posY;
       if (DCUtil.between( mX, SSM.docAnchorX, SSM.docAnchorX+SSM.docWidth)) {
          if (DCUtil.between( mY, SSM.docAnchorY, SSM.docAnchorY+SSM.docHeight)) {
+            if (posX > SSM.docAnchorX + SSM.docWidth*0.8) SSM.isDocScroll = true;
             return true;   
          }
       }
@@ -568,12 +569,14 @@ System.out.println("<Near plane: " + la.nearPlane);
      // Detecting the document borders
      if (DCUtil.between(mx, anchorX-padding, anchorX) || DCUtil.between(mx, anchorX+docWidth, anchorX+docWidth+padding)) {
         if (DCUtil.between(my, anchorY-padding, anchorY+docHeight+padding)) {
+           if (posX > SSM.docAnchorX + SSM.docWidth*0.8) SSM.isDocScroll = true;
            SSM.topElement = SSM.ELEMENT_DOCUMENT;   
            return SSM.ELEMENT_DOCUMENT;
         }
      }
      if (DCUtil.between(my, anchorY-padding, anchorY) || DCUtil.between(my, anchorY+docHeight, anchorY+docHeight+padding)) {
         if (DCUtil.between(mx, anchorX-padding, anchorX+docWidth+padding)) {
+           if (posX > SSM.docAnchorX + SSM.docWidth*0.8) SSM.isDocScroll = true;
            SSM.topElement = SSM.ELEMENT_DOCUMENT;   
            return SSM.ELEMENT_DOCUMENT;
         }

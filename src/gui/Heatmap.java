@@ -85,13 +85,27 @@ public class Heatmap extends ComponentChart {
       blockWidth  = width / (1+eMonth-sMonth);
       blockHeight = (height-labelBuffer) / (1+eYear-sYear);
       
-      // Hack for max and min
+      
+      ////////////////////////////////////////////////////////////////////////////////
+      // Hack for component max and min
+      // The max for non-comparison view is just the max of data[]
+      // The max for comparison is of data[i]+c_data[i]
+      //
+      // Consider vehicle 1 : [1, 10, 100]
+      //          vehicle 2 : [100, 10, 1]
+      // 
+      // The component max for non-comparison is 100,
+      // while the comparison max is 101, NOT 200
+      ////////////////////////////////////////////////////////////////////////////////
       maxValue = Float.MIN_VALUE;
       minValue = Float.MAX_VALUE;
       for (int i=start; i < end; i++) {
          for (int j=sMonth; j <= eMonth; j++) {
-            if ( data[12*i+j] > maxValue) maxValue = data[12*i+j];
-            if ( c_data[12*i+j] > c_maxValue) c_maxValue = c_data[12*i+j];
+            if (SSM.useComparisonMode == true) {
+               if ( data[12*i+j] + c_data[12*i+j] > maxValue) maxValue = (c_data[12*i+j] + data[12*i+j]);
+            } else {
+               if ( data[12*i+j] > maxValue) maxValue = data[12*i+j];
+            }
          }
       }
       
@@ -100,7 +114,10 @@ public class Heatmap extends ComponentChart {
          float tmpY = i-start;
          for (int j=sMonth; j <= eMonth; j++) {
             float v = data[12*i + j];      
+            float vOrig = data[12*i + j];      
+            
             float c_v = c_data[12*i + j];
+            float c_vOrig = c_data[12*i + j];
             
             float max = 0;
             float c_max = 0;
@@ -115,7 +132,8 @@ public class Heatmap extends ComponentChart {
                case SSM.CHART_MODE_BY_COMPONENT_MAX: {
                   // month_score % max_component
                   max = this.maxValue;
-                  c_max = this.c_maxValue;
+                  c_max = 0;
+                  //c_max = this.c_maxValue;
                   break;
                }
                case SSM.CHART_MODE_BY_GLOBAL_MAX: {
@@ -163,7 +181,7 @@ public class Heatmap extends ComponentChart {
             
             
             // Render an out line to separate the grids
-            gl2.glPolygonMode(GL2.GL_FRONT_AND_BACK, GL2.GL_LINE);
+            gl2.glPolygonMode(GL2.GL_FRONT_AND_BACK, GL2.GL_FILL);
             gl2.glBegin(GL2.GL_QUADS);
                gl2.glLineWidth(1.0f);
                
@@ -177,13 +195,11 @@ public class Heatmap extends ComponentChart {
                   
                   
                   if (v > c_v) {
-                     //gl2.glColor4fv(SchemeManager.comp_1.toArray(), 0);
                      float alpha = 0.4f + 0.6f*(v-c_v)/v;
                      gl2.glColor4f( SchemeManager.comp_1.r, SchemeManager.comp_1.g, SchemeManager.comp_1.b, alpha);
                   } else if (v < c_v) {
                      float alpha = 0.4f + 0.6f*(c_v-v)/c_v;
                      gl2.glColor4f( SchemeManager.comp_2.r, SchemeManager.comp_2.g, SchemeManager.comp_2.b, alpha);
-                     //gl2.glColor4fv(SchemeManager.comp_2.toArray(), 0);
                   } else {
                      gl2.glColor4fv(SchemeManager.silhouette_default.adjustAlpha(0.5f).toArray(), 0);
                   }
@@ -206,17 +222,23 @@ public class Heatmap extends ComponentChart {
             
             // Render the individual grid
             gl2.glPolygonMode(GL2.GL_FRONT_AND_BACK, GL2.GL_FILL);
+            gl2.glDisable(GL2.GL_BLEND);
             gl2.glBegin(GL2.GL_QUADS);
                if (SSM.useComparisonMode == true) {
-                  gl2.glColor4fv(SchemeManager.instance().getColour(0, v+c_v, max+c_max).toArray(), 0);
+                  gl2.glColor4fv(SchemeManager.instance().getColour(0, vOrig+c_vOrig, max+c_max).toArray(), 0);
+                  gl2.glVertex2i((int)(anchorX + tmpX*blockWidth+2),     (int)(anchorY+height-tmpY*blockHeight-labelBuffer-2));
+                  gl2.glVertex2i((int)(anchorX + (1+tmpX)*blockWidth-2), (int)(anchorY+height-tmpY*blockHeight-labelBuffer-2));
+                  gl2.glVertex2i((int)(anchorX + (1+tmpX)*blockWidth-2), (int)(anchorY+height-(1+tmpY)*blockHeight-labelBuffer+2));
+                  gl2.glVertex2i((int)(anchorX + tmpX*blockWidth+2),     (int)(anchorY+height-(1+tmpY)*blockHeight-labelBuffer+2));
                } else {
-                  gl2.glColor4fv(SchemeManager.instance().getColour(0, v, max).toArray(), 0);
+                  gl2.glColor4fv(SchemeManager.instance().getColour(0, vOrig, max).toArray(), 0);
+                  gl2.glVertex2i((int)(anchorX + tmpX*blockWidth+1),     (int)(anchorY+height-tmpY*blockHeight-labelBuffer-1));
+                  gl2.glVertex2i((int)(anchorX + (1+tmpX)*blockWidth-1), (int)(anchorY+height-tmpY*blockHeight-labelBuffer-1));
+                  gl2.glVertex2i((int)(anchorX + (1+tmpX)*blockWidth-1), (int)(anchorY+height-(1+tmpY)*blockHeight-labelBuffer+1));
+                  gl2.glVertex2i((int)(anchorX + tmpX*blockWidth+1),     (int)(anchorY+height-(1+tmpY)*blockHeight-labelBuffer+1));
                }
-               gl2.glVertex2i((int)(anchorX + tmpX*blockWidth+1),     (int)(anchorY+height-tmpY*blockHeight-labelBuffer-1));
-               gl2.glVertex2i((int)(anchorX + (1+tmpX)*blockWidth-1), (int)(anchorY+height-tmpY*blockHeight-labelBuffer-1));
-               gl2.glVertex2i((int)(anchorX + (1+tmpX)*blockWidth-1), (int)(anchorY+height-(1+tmpY)*blockHeight-labelBuffer+1));
-               gl2.glVertex2i((int)(anchorX + tmpX*blockWidth+1),     (int)(anchorY+height-(1+tmpY)*blockHeight-labelBuffer+1));
             gl2.glEnd();
+            gl2.glEnable(GL2.GL_BLEND);
             tmpX++;
          }
       }
@@ -241,7 +263,6 @@ public class Heatmap extends ComponentChart {
          float tmpY = (float) Math.floor((float)i/12.0f);
          float gMax = CacheManager.instance().monthMaximum.elementAt(i);
          
-         //gl2.glColor4fv(SchemeManager.instance().getColour(0, data[i], maxValue).toArray(), 0);
          gl2.glColor4fv(SchemeManager.instance().getColour(0, data[i], gMax).toArray(), 0);
          
          gl2.glVertex2f(anchorX + tmpX*blockWidth,     anchorY+height-tmpY*blockHeight-labelBuffer);

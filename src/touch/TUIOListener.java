@@ -561,6 +561,10 @@ System.out.println("Pinch detected");
       System.err.println("=== Removing TUIO Cursor [" + o.getSessionID() + "] " + w.points.size());
       
       
+      // Remove scrolling indicator if on document
+      if (w.element == SSM.ELEMENT_DOCUMENT) SSM.isDocScroll = false;
+      
+      
       // Big Brother Stuff - tracking interaction movements
       if (w.element == SSM.ELEMENT_LENS || w.element == SSM.ELEMENT_LENS_RIM || w.element == SSM.ELEMENT_LENS_HANDLE)  {
          if (w.state == WCursor.STATE_MOVE) {
@@ -595,10 +599,10 @@ System.out.println("Pinch detected");
       // If there are exactly 2 points currently, and they are sufficiently close to each other, and 
       // they are over the same type of element then create a document panel
       //if (w.state == WCursor.STATE_NOTHING && w.element == SSM.ELEMENT_NONE) {
-      if ( (w.state == WCursor.STATE_HOLD) && w.element == SSM.ELEMENT_NONE && w.points.size() < 8) {
+      if ( (w.state == WCursor.STATE_HOLD) && w.element == SSM.ELEMENT_NONE && w.points.size() < 10) {
          Vector<WCursor> len = this.findSimilarCursorPixel(w, 100, 500);
          if (len.size() == 1) {
-            if (len.size() == 1 && (len.elementAt(0).state == WCursor.STATE_HOLD && len.elementAt(0).points.size() < 8 )) {
+            if (len.size() == 1 && (len.elementAt(0).state == WCursor.STATE_HOLD && len.elementAt(0).points.size() < 10 )) {
                // Adjust the lens coordinate such that the 2 points are on the circumference of the lens
                System.out.print("activate lens");   
                float xx = w.x*SSM.windowWidth;
@@ -633,11 +637,11 @@ System.out.println("Pinch detected");
             //SSM.dirty = 1;
             //SSM.dirtyGL = 1;
          } else {
-System.out.println("Detecting horizontal swipe " + w.swipeDirection);            
-            if (w.swipeDirection == WCursor.LEFT) Event.hidePanel();
-            if (w.swipeDirection == WCursor.RIGHT) Event.showPanel(); 
-            //if (SSM.hidePanel == true) Event.showPanel();
-            //else Event.hidePanel();
+            // Approximate the swipe to only work in the upper portion of the screen
+            if ( (SSM.windowHeight-w.y * SSM.windowHeight) > (SSM.DoffsetY - 50)) {
+               if (w.swipeDirection == WCursor.LEFT) Event.hidePanel();
+               if (w.swipeDirection == WCursor.RIGHT) Event.showPanel(); 
+            }
          }
       } else if (w.points.size() < 4 && findSimilarCursorPixel(w, 0, 400).size() == 0) {
          // Only clickable elements can send a tap event

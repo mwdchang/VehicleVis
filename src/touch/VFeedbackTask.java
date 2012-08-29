@@ -52,13 +52,13 @@ public class VFeedbackTask implements RenderTask {
             // counter. Once the counter is finished it will "lock" into place
             if (p.state == WCursor.STATE_NOTHING || p.state == WCursor.STATE_HOLD) {
                long diff = System.currentTimeMillis() - p.startTimestamp;
-               if (diff >= 360) diff = 360;
+               if (diff >= SSM.HOLD_DELAY) diff = (long)SSM.HOLD_DELAY;
                //if (diff < 100) continue;
                double angle = diff*360.0/SSM.HOLD_DELAY;
                
                gl2.glColor4d(0, 0.35, 0.45, 0.5*angle/360.0);
                GraphicUtil.drawArc(gl2, p.x*SSM.windowWidth, (1.0-p.y)*SSM.windowHeight, 9.9, 
-                     diff==360?13*1.7:15*1.7, diff==360?15*1.7:17*1.7, 
+                     diff==SSM.HOLD_DELAY?13*1.7:15*1.7, diff==SSM.HOLD_DELAY?15*1.7:17*1.7, 
                      0, angle, 36);   
             }
 

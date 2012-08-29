@@ -36,7 +36,7 @@ public class SSM {
    public static String database = "demo";
    //public static String database = "projectv3";
    
-   public static double HOLD_DELAY = 350;
+   public static double HOLD_DELAY = 500;
    public static double INVALID_DELAY_FRAME = 50;
    public static double WAIT_DELAY_FRAME = 50;
    
@@ -285,6 +285,9 @@ public class SSM {
    public static boolean useCircularLabel = false; // Whether to laybel the sparklines in a circular pattern 
    public static boolean showLabels = true;        // Whether to show labels at all
    public static boolean captureScreen = false;
+   public static String captureName = null;
+   
+   
    public static int sortingMethod = 0;            // Controls how the components are sorted (with respect to rendering order)
    
    // 1 : Normal      (Yellow-to-Red)
@@ -305,7 +308,7 @@ public class SSM {
    
    public static boolean checkDragEvent = false; 
    
-   public static int chartMode = 1;
+   public static int chartMode = 2;
    public static final int CHART_MODE_BY_MONTH_MAX     = 1;
    public static final int CHART_MODE_BY_COMPONENT_MAX = 2;
    public static final int CHART_MODE_BY_GLOBAL_MAX    = 3;
@@ -486,6 +489,9 @@ public class SSM {
    public static int docStartIdx = 0; 
    public static boolean docActive = false;
    public static int resizePanel = 0;
+   
+   public static boolean isDocScroll = false;
+   
    
    // All document sizes are measures in pixels
    public static float docAnchorX = 400;                 // Bottom left of the document panel

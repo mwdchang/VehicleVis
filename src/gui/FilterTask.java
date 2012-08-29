@@ -419,6 +419,7 @@ System.out.println("Selected something on the year bar");
          SSM.topElement = SSM.ELEMENT_FILTER;
          SSM.globalFetchIdx = 0;
          SSM.docStartIdx = 0;
+         this.unfocus();
          yearSlider.createTexture();
          monthSlider.createTexture();
       }

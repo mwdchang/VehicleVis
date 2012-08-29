@@ -160,11 +160,13 @@ public class GLRenderer implements GLEventListener {
 
       
       
+      // Handles screen-capture logic
       if (SSM.captureScreen) {
-         String s = SSM.instance().now();
+         String s = SSM.captureName == null? SSM.instance().now() : SSM.captureName;
          GraphicUtil.screenCap(gl2, s);
          DWin.instance().debug("Saving Screen Cap : " + s);
          SSM.captureScreen = false;
+         SSM.captureName = null;
       }
       
       

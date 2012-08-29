@@ -112,7 +112,15 @@ public class DomainFilterTask implements RenderTask {
       perspectiveScroll.renderToTexture(null);
       perspectiveScroll.width =  SSM.perspectiveAttrib.width;
       perspectiveScroll.texPanelWidth = SSM.perspectiveAttrib.width;
-      SSM.perspectiveAttrib.selected = "Month";
+      
+      if (SSM.chartMode == SSM.CHART_MODE_BY_MONTH_MAX) {
+         SSM.perspectiveAttrib.selected = "Month";
+      } else if (SSM.chartMode == SSM.CHART_MODE_BY_COMPONENT_MAX) {
+         SSM.perspectiveAttrib.selected = "Component";
+      } else {
+         SSM.perspectiveAttrib.selected = "Global";
+      }
+      
       SSM.perspectiveAttrib.hasAllSelection = false;
       
       perspectiveLabel = new TextureFont();

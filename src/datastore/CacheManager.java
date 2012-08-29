@@ -199,8 +199,8 @@ System.out.println("Debugging");
    /////////////////////////////////////////////////////////////////////////////////  
    protected CacheManager() {
       if (DEBUG == true) {
-         timeLineStartYear = 1995;         
-         timeLineEndYear   = 2005;         
+         timeLineStartYear = 1997;         
+         timeLineEndYear   = 2004;         
       }
    }
    

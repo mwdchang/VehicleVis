@@ -41,6 +41,7 @@ public class Collage2 extends JOGLBase implements KeyListener {
    public static void main(String[] args) {
       Collage2 collage = new Collage2();
       collage.isMaximized = true;
+      collage.sendToNextScreen = true;
       collage.run("Collage 2", 800, 600);
    }
    
@@ -117,7 +118,7 @@ public class Collage2 extends JOGLBase implements KeyListener {
       super.init(a);   
       this.canvas.addKeyListener(this);
       gl2.glEnable(GL2.GL_TEXTURE_2D);
-      background = loadTexture(gl2, "C:\\Users\\Daniel\\Pictures\\IMG_1791.JPG");
+      background = loadTexture(gl2, "C:\\Users\\Daniel\\Pictures\\IMG_4976.JPG");
       
       frameFBT = new FrameBufferTexture();
       frameFBT.TEXTURE_SIZE_H = (int)this.winHeight;
