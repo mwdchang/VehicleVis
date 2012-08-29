@@ -21,6 +21,7 @@ import datastore.SSM;
 import datastore.SchemeManager;
 import db.QueryObj;
 
+import util.ALogger;
 import util.DCUtil;
 import util.GraphicUtil;
 import util.TextureFont;
@@ -145,24 +146,28 @@ public class DomainFilterTask implements RenderTask {
       
       
       manufactureScroll = new DCScrollPane("MFR");
+      manufactureScroll.uLabel = "MFR1";
       manufactureScroll.direction = DCScrollPane.DOWN;
       manufactureScroll.depth = 0.5f;
       manufactureScroll.calculate();
       manufactureScroll.renderToTexture(null);
       
       makeScroll = new DCScrollPane("MAKE");
+      makeScroll.uLabel = "MAKE1";
       makeScroll.direction = DCScrollPane.DOWN;
       makeScroll.depth = 0.5f;
       makeScroll.calculate();
       makeScroll.renderToTexture(null);
       
       modelScroll = new DCScrollPane("MODEL");
+      modelScroll.uLabel = "MODEL1";
       modelScroll.direction = DCScrollPane.DOWN;
       modelScroll.depth = 0.5f;
       modelScroll.calculate();
       modelScroll.renderToTexture(null);
       
       yearScroll = new DCScrollPane("YEAR");
+      yearScroll.uLabel = "YEAR1";
       yearScroll.direction = DCScrollPane.DOWN;
       yearScroll.depth = 0.5f;
       yearScroll.calculate();
@@ -183,6 +188,7 @@ public class DomainFilterTask implements RenderTask {
       c_filterTexture.renderToTexture(null);
       
       c_manufactureScroll = new DCScrollPane("MFR");
+      c_manufactureScroll.uLabel = "MFR2";
       c_manufactureScroll.direction = DCScrollPane.DOWN;
       c_manufactureScroll.calculate();
       c_manufactureScroll.renderToTexture(null);
@@ -190,16 +196,19 @@ public class DomainFilterTask implements RenderTask {
       SSM.c_manufactureAttrib.hasNoneSelection = true;
       
       c_makeScroll = new DCScrollPane("MAKE");
+      c_makeScroll.uLabel = "MAKE2";
       c_makeScroll.direction = DCScrollPane.DOWN;
       c_makeScroll.calculate();
       c_makeScroll.renderToTexture(null);
       
       c_modelScroll = new DCScrollPane("MODEL");
+      c_modelScroll.uLabel = "MODEL2";
       c_modelScroll.direction = DCScrollPane.DOWN;
       c_modelScroll.calculate();
       c_modelScroll.renderToTexture(null);
       
       c_yearScroll = new DCScrollPane("YEAR");
+      c_yearScroll.uLabel = "YEAR2";
       c_yearScroll.direction = DCScrollPane.DOWN;
       c_yearScroll.calculate();
       c_yearScroll.renderToTexture(null);
@@ -706,7 +715,7 @@ public class DomainFilterTask implements RenderTask {
                      attrib.selected = t.val;
                   }
                   
-System.out.println(">>>>>>>>>>>>>>>> " + i + " " + t.val);                  
+//System.out.println(">>>>>>>>>>>>>>>> " + i + " " + t.val);                  
                   
                   // Clear the children
                   for (int j=0; j < childrenPair.length; j+=2) {
@@ -717,6 +726,11 @@ System.out.println(">>>>>>>>>>>>>>>> " + i + " " + t.val);
                   break;
                }
             }            
+            
+            // Hack
+            ALogger.instance().log( "Hierarchy Widget (" + widget.uLabel + ") :" + attrib.selected );
+            
+            
             return 1;
          }
       } 

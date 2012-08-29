@@ -500,7 +500,10 @@ System.out.println("Pinch detected");
       if (wcursor.numUpdate < 2) return; // Lag the update a bit to further distinguish swipe and move events
       
       if (wcursor.element == SSM.ELEMENT_NONE){
-         Event.setCameraTUIO(x1, y1, x2, y2);
+         // Disable the top portion of the screen from receiving rotation events
+         if ( (SSM.windowHeight - wcursor.y*SSM.windowHeight) < 0.85*SSM.windowHeight ) {
+            Event.setCameraTUIO(x1, y1, x2, y2);
+         }
       } else if (wcursor.element == SSM.ELEMENT_LENS || wcursor.element == SSM.ELEMENT_LENS_RIM){
          Event.moveLensTUIO(x1, y1, x2, y2, wcursor);
          if (wcursor.lensReference == null) {
@@ -578,7 +581,7 @@ System.out.println("Pinch detected");
          if (w.state == WCursor.STATE_MOVE) {
             ALogger.instance().log("[Scene Move] " + (System.currentTimeMillis() - w.startTimestamp));
          } else if (w.state == WCursor.STATE_NOTHING) {
-            ALogger.instance().log("[Click]");
+            //ALogger.instance().log("[Click]");
          }
       }
       

@@ -86,6 +86,10 @@ public class DCScrollPane {
    
    public String label = "";
    
+   
+   public String uLabel = ""; // Just a way of uniquely identifying the widget by string name, used for logging
+   
+   
    public boolean dirty = false;
    
    public Animator animator;

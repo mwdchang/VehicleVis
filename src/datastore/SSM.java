@@ -345,7 +345,7 @@ public class SSM {
    ////////////////////////////////////////////////////////////////////////////////
    //public static float DoffsetX = 680;
    //public static float DoffsetY = 850;
-   public static float summaryAnchorX = 2250;
+   public static float summaryAnchorX = 2550;
    public static float summaryAnchorY = 1000;
    
    public static void setSummaryAnchorX(float x) { summaryAnchorX = x;}

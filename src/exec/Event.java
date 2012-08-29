@@ -9,6 +9,7 @@ import model.DCTriple;
 import model.LensAttrib;
 import model.PaneAttrib;
 import touch.WCursor;
+import util.ALogger;
 import util.DCCamera;
 import util.DCUtil;
 import util.DWin;
@@ -16,6 +17,7 @@ import util.MatrixUtil;
 import Jama.Matrix;
 import TimingFrameExt.FloatEval;
 import datastore.CacheManager;
+import datastore.HierarchyTable;
 import datastore.SSM;
 
 
@@ -778,8 +780,14 @@ System.out.println("<Near plane: " + la.nearPlane);
    public static void handleTUIOSelect(Integer obj) {
       if (SSM.selectedGroup.contains(obj)) {
          SSM.selectedGroup.remove(obj);
+         
+         // Hack
+         ALogger.instance().log( "Removing " + obj + " " + HierarchyTable.instance().partTable.get( obj ).toString()) ;
       } else {
          SSM.selectedGroup.put(obj, obj);
+         
+         // Hack
+         ALogger.instance().log( "Adding " + obj + " " + HierarchyTable.instance().partTable.get( obj ).toString()) ;
       }
       
       SSM.dirty = 1;
@@ -809,9 +817,9 @@ System.out.println("<Near plane: " + la.nearPlane);
       if ( showAnimator != null && showAnimator.isRunning() == true) return;
       
       showAnimator = null;
-      hideAnimator = PropertySetter.createAnimator(900, SSM.instance(), "DoffsetX", new FloatEval(), SSM.DoffsetX, SSM.DoffsetX-1500);
+      hideAnimator = PropertySetter.createAnimator(1100, SSM.instance(), "DoffsetX", new FloatEval(), SSM.DoffsetX, SSM.DoffsetX-1800);
       hideAnimator.start();
-      Animator summary = PropertySetter.createAnimator(900, SSM.instance(), "summaryAnchorX", new FloatEval(), SSM.summaryAnchorX, SSM.summaryAnchorX-2000);
+      Animator summary = PropertySetter.createAnimator(1100, SSM.instance(), "summaryAnchorX", new FloatEval(), SSM.summaryAnchorX, SSM.summaryAnchorX-2300);
       summary.start();
    }
    
@@ -830,9 +838,9 @@ System.out.println("<Near plane: " + la.nearPlane);
       if (hideAnimator != null && hideAnimator.isRunning() == true) return;
       
       hideAnimator = null;
-      showAnimator = PropertySetter.createAnimator(900, SSM.instance(), "DoffsetX", new FloatEval(), SSM.DoffsetX, SSM.DoffsetX+1500);
+      showAnimator = PropertySetter.createAnimator(1100, SSM.instance(), "DoffsetX", new FloatEval(), SSM.DoffsetX, SSM.DoffsetX+1800);
       showAnimator.start();
-      Animator summary = PropertySetter.createAnimator(900, SSM.instance(), "summaryAnchorX", new FloatEval(), SSM.summaryAnchorX, SSM.summaryAnchorX+2000);
+      Animator summary = PropertySetter.createAnimator(1100, SSM.instance(), "summaryAnchorX", new FloatEval(), SSM.summaryAnchorX, SSM.summaryAnchorX+2300);
       summary.start();
    }
    

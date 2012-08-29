@@ -146,7 +146,7 @@ public class QuestionTask implements RenderTask {
       q.elementAt(qIdx).set();
       SSM.stopPicking = 1;
       
-      Animator moveAnimator = PropertySetter.createAnimator(1500, q_tf, "anchorX", new FloatEval(), q_tf.anchorX+800, q_tf.anchorX);
+      Animator moveAnimator = PropertySetter.createAnimator(2500, q_tf, "anchorX", new FloatEval(), q_tf.anchorX+800, q_tf.anchorX);
       moveAnimator.start();
    }
    
