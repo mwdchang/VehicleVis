@@ -84,7 +84,7 @@ public class SSM {
       
       
       // Parse runtime parameters
-      useTUIO       = Boolean.parseBoolean(System.getProperty("UseTUIO", "true"));
+      useTUIO       = Boolean.parseBoolean(System.getProperty("UseTUIO", "false"));
       useFullScreen = Boolean.parseBoolean(System.getProperty("UseFullScreen", "true"));
       useScenario   = Boolean.parseBoolean(System.getProperty("UseScenario", "true"));
    }
@@ -355,7 +355,7 @@ public class SSM {
    
    
    
-   public static float DoffsetX = 650;
+   public static float DoffsetX = 700;
    public static float DoffsetY = 850;
    
    

@@ -24,6 +24,7 @@ public class SchemeManager {
    public DCColour getColour(Integer partId, float occurrence, float maxOccurrence) {
       if (SSM.colouringMethod == 1) return intensityRamp05(partId, occurrence, maxOccurrence, Red); 
       if (SSM.colouringMethod == 2) return intensityRamp05(partId, occurrence, maxOccurrence, Set3);
+      if (SSM.colouringMethod == 3) return intensityRamp05(partId, occurrence, maxOccurrence, Gray);
       
       /*
       switch (SSM.instance().colouringMethod) {
@@ -41,6 +42,7 @@ public class SchemeManager {
    public int getScaleSize() {
       if (SSM.colouringMethod == 1) return Red.length;
       if (SSM.colouringMethod == 2) return Set3.length;
+      if (SSM.colouringMethod == 3) return Gray.length;
       return 0;      
    }
    
@@ -244,12 +246,30 @@ public class SchemeManager {
    
    public static DCColour[] Set3 = new DCColour[] {
       // Set3 qualitative colour from colourbrewer   
+      DCColour.fromInt(141, 211, 199, 150),
+      DCColour.fromInt(255, 255, 179, 150),
+      DCColour.fromInt(190, 186, 218, 150),
+      DCColour.fromInt(251, 128, 114, 150),
+      DCColour.fromInt(128, 177, 211, 150),
+      DCColour.fromInt(253, 180, 98, 150)
+      
+      /*
       DCColour.fromInt(141, 211, 199, 100),
       DCColour.fromInt(255, 255, 179, 110),
       DCColour.fromInt(190, 186, 218, 120),
       DCColour.fromInt(251, 128, 114, 140),
       DCColour.fromInt(128, 177, 211, 170),
       DCColour.fromInt(253, 180, 98, 200)
+      */
+   };
+   
+   public static DCColour[] Gray = new DCColour[] {
+      DCColour.fromInt(180, 180, 180, 100),      
+      DCColour.fromInt(160, 160, 160, 110),      
+      DCColour.fromInt(140, 140, 140, 120),      
+      DCColour.fromInt(120, 120, 120, 140),      
+      DCColour.fromInt(100, 100, 100, 170),      
+      DCColour.fromInt(80, 80, 80, 200)       
    };
    
    

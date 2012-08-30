@@ -246,7 +246,7 @@ public class EventManager implements KeyListener, MouseListener, MouseMotionList
             SSM.dirty = 1;
             SSM.dirtyGL = 1;
             SSM.refreshMagicLens = true;
-            if (SSM.colouringMethod > 2) SSM.colouringMethod = 2;
+            if (SSM.colouringMethod > 3) SSM.colouringMethod = 3;
          }
          if (e.getKeyCode() == KeyEvent.VK_DOWN) {
             SSM.colouringMethod--;

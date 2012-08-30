@@ -159,6 +159,11 @@ public class DCRSlider {
          gl2.glVertex2d(anchorX+lowIdx * interval, anchorY-markerSize);
          gl2.glVertex2d(anchorX+lowIdx * interval, anchorY);
       gl2.glEnd();
+      
+      gl2.glBegin(GL2.GL_LINES);
+         gl2.glVertex2d(anchorX+lowIdx*interval-1, anchorY-2);
+         gl2.glVertex2d(anchorX+lowIdx*interval-1, anchorY-(markerSize-1));
+      gl2.glEnd();
    }
      
    
@@ -176,6 +181,11 @@ public class DCRSlider {
          gl2.glVertex2d( anchorX+(highIdx+1) * interval + markerSize, anchorY-markerSize);
          gl2.glVertex2d( anchorX+(highIdx+1) * interval, anchorY);
          gl2.glVertex2d( anchorX+(highIdx+1) * interval, anchorY-markerSize);
+      gl2.glEnd();
+      
+      gl2.glBegin(GL2.GL_LINES);
+         gl2.glVertex2d(anchorX+(highIdx+1)*interval+1, anchorY-2);
+         gl2.glVertex2d(anchorX+(highIdx+1)*interval+1, anchorY-(markerSize-1));
       gl2.glEnd();
    }
   

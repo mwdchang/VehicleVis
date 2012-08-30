@@ -291,6 +291,24 @@ public class DCScrollPane {
             DCColour.fromDouble(0.68, 0.68, 0.68, 0.65).toArray(), 
             DCColour.fromDouble(0.77, 0.77, 0.77, 0.65).toArray());
       
+      
+      // Draw a indicator to tell whether the drop down is open or not
+      gl2.glColor4d(0.5, 0.5, 0.5, 0.5);
+      if (this.height > 0) {
+         gl2.glBegin(GL2.GL_TRIANGLES);
+            gl2.glVertex2d(anchorX+(width)-25, anchorY-(SSM.scrollHeight/2)-5);
+            gl2.glVertex2d(anchorX+(width)-5, anchorY-(SSM.scrollHeight/2)-5);
+            gl2.glVertex2d(anchorX+(width)-15, anchorY-(SSM.scrollHeight/2)+5);
+         gl2.glEnd();
+      } else {
+         gl2.glBegin(GL2.GL_TRIANGLES);
+            gl2.glVertex2d(anchorX+(width)-25, anchorY-(SSM.scrollHeight/2)+5);
+            gl2.glVertex2d(anchorX+(width)-5, anchorY-(SSM.scrollHeight/2)+5);
+            gl2.glVertex2d(anchorX+(width)-15, anchorY-(SSM.scrollHeight/2)-5);
+         gl2.glEnd();
+      }
+      
+      
       if (current >= 0 && tagList.size() > 0)  {
          tf.render(gl2, false); // Do not use blending for this, to prevent labels showing through multiple layers
       }
