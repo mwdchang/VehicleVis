@@ -20,6 +20,14 @@ public class VFeedbackTask implements RenderTask {
    public void render(GL2 gl2) {
       if (SSM.useTUIO == false) return;
       
+      //float sizeMultiple = 1.7f;
+      //float sizeTrail = 5.0f;
+      //int numCircles     = 10;
+      
+      float sizeMultiple = 1.7f;
+      float sizeTrail = 5.0f;
+      int numCircles     = 10;
+      
       ////////////////////////////////////////////////////////////////////////////////
       // Draw any active touch points
       ////////////////////////////////////////////////////////////////////////////////
@@ -32,8 +40,8 @@ public class VFeedbackTask implements RenderTask {
          
          for (WCursor p : SSM.touchPoint.values()) {
             gl2.glColor4d(0, 0.35, 0.45, 0.12);
-            for (int i = 0; i < 10; i++) {
-               GraphicUtil.drawPie(gl2, p.x*SSM.windowWidth, (1.0-p.y)*SSM.windowHeight, 0, (i+1)*1.7, 0, 360, 36);   
+            for (int i = 0; i < numCircles; i++) {
+               GraphicUtil.drawPie(gl2, p.x*SSM.windowWidth, (1.0-p.y)*SSM.windowHeight, 0, (i+1)*sizeMultiple, 0, 360, 36);   
             }
             if (p.element == SSM.ELEMENT_LENS) continue;
             if (p.element == SSM.ELEMENT_LENS_HANDLE) continue;
@@ -58,7 +66,7 @@ public class VFeedbackTask implements RenderTask {
                
                gl2.glColor4d(0, 0.35, 0.45, 0.5*angle/360.0);
                GraphicUtil.drawArc(gl2, p.x*SSM.windowWidth, (1.0-p.y)*SSM.windowHeight, 9.9, 
-                     diff==SSM.HOLD_DELAY?13*1.7:15*1.7, diff==SSM.HOLD_DELAY?15*1.7:17*1.7, 
+                     diff==SSM.HOLD_DELAY?(numCircles+3)*sizeMultiple:(numCircles+5)*sizeMultiple, diff==SSM.HOLD_DELAY?(numCircles+5)*sizeMultiple:(numCircles+7)*sizeMultiple, 
                      0, angle, 36);   
             }
 
@@ -68,7 +76,7 @@ public class VFeedbackTask implements RenderTask {
                c++;   
                if (c > 15) break;
                if (idx < 0) break;
-               GraphicUtil.drawPie(gl2, p.points.elementAt(idx).getX()*SSM.windowWidth, (1.0-p.points.elementAt(idx).getY())*SSM.windowHeight, 0, 5, 0, 360, 10);   
+               GraphicUtil.drawPie(gl2, p.points.elementAt(idx).getX()*SSM.windowWidth, (1.0-p.points.elementAt(idx).getY())*SSM.windowHeight, 0, sizeTrail, 0, 360, 10);   
             }
          }
       } // end synchronize

@@ -66,7 +66,9 @@ public class ModelRenderer extends BaseModelRenderer {
    // Rendering
    ////////////////////////////////////////////////////////////////////////////////
    public void render(GL2 gl2) {
+      gl2.glClearColor(1, 1, 1, 0);
       gl2.glClear(GL2.GL_COLOR_BUFFER_BIT);
+      
       // To avoid threading issues, lets
       // just put the update GL stuff here
       if (SSM.dirtyGL == 1) {

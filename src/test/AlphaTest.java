@@ -8,8 +8,8 @@ import javax.media.opengl.GLAutoDrawable;
 
 public class AlphaTest extends JOGLBase implements KeyListener {
    
-   boolean useTransparency = false;
-   boolean rightOrder = false;
+   boolean useTransparency = true;
+   boolean rightOrder = true;
    double alpha = 1.0f;
 
    public static void main(String args[]) {
@@ -20,6 +20,7 @@ public class AlphaTest extends JOGLBase implements KeyListener {
    @Override
    public void display(GLAutoDrawable a) {
       GL2 gl2 = a.getGL().getGL2();
+      gl2.glClearColor(1, 1, 1, 1);
       basicClear(gl2);      
       
       if (useTransparency) {

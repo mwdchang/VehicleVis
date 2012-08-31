@@ -21,7 +21,7 @@ import TUIO.TuioPoint;
 import TUIO.TuioTime;
 
 ////////////////////////////////////////////////////////////////////////////////
-// Similar to scorched earth but with TUIO?
+// Similar to scorched earth but with TUIO? Well...I guess not eh?
 ////////////////////////////////////////////////////////////////////////////////
 public class Scorch extends JOGLBase implements TuioListener, KeyListener {
    
