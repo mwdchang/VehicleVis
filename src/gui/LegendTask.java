@@ -54,7 +54,7 @@ public class LegendTask implements RenderTask {
          gl2.glEnd();
          
          //gl2.glColor4fv( SchemeManager.silhouette_default.toArray(), 0);
-         gl2.glColor4d(0.4, 0.4, 0.4, 0.8);
+         gl2.glColor4d(0.4, 0.4, 0.4, 0.6);
          gl2.glBegin(GL2.GL_LINES);
             gl2.glVertex2d(startX+width+10, startY);
             gl2.glVertex2d(startX+width+10, startY+height);

@@ -42,10 +42,13 @@ public class ModelRenderer extends BaseModelRenderer {
    public static GLU glu = new GLU();
    
    public float vpadding = 15.0f;
-   public float rpadding = 30.0f;
-   public float lpadding = 30.0f;
+   // Original
+   //public float rpadding = 30.0f;
+   //public float lpadding = 30.0f;
    public float spadding = 40.0f;
    
+   public float rpadding = 10.0f;
+   public float lpadding = 10.0f;
    
    public float OUTLINE_DOWN_SAMPLE = 1.5f;
    public float GLOW_DOWN_SAMPLE    = 1.5f;
@@ -500,7 +503,7 @@ public class ModelRenderer extends BaseModelRenderer {
             
             // If the handle is selected, we rendered it in the selected colour
             // and make it slightly bigger so the users would know
-            if (SSM.useTUIO == true) {
+            if (SSM.useTUIO == true || SSM.useTUIO == false) {
                if (SSM.lensList.elementAt(i).handleSelected) {
                   gl2.glColor4fv( SchemeManager.selected.toArray(), 0);
                   GraphicUtil.drawArc(gl2, la.magicLensX, (SSM.windowHeight-la.magicLensY), 0, 

@@ -82,7 +82,7 @@ public class QuestionTask implements RenderTask {
          q_tf.addMark(sb.elementAt(i).toString(), Color.BLACK, GraphicUtil.font, 2, q_tf.height - (i+1)*getHardFontHeight(GraphicUtil.font));
       }
       q_tf.renderToTexture(null);
-      q_tf.anchorX = SSM.windowWidth - 500;
+      q_tf.anchorX = SSM.windowWidth - 550;
       //q_tf.anchorY = SSM.windowHeight - 100;
       q_tf.anchorY = 100;
    }
@@ -297,7 +297,7 @@ public class QuestionTask implements RenderTask {
                   );
          }
          public void set() { SSM.reset(); }
-         public String text() { return "Warm up task: Use the comparison functionality to compare two different vehicle manufacturers, then select an entity from the visualization."; }
+         public String text() { return "Warm up task: Use the comparison functionality to compare two different vehicle manufacturers, then select an vehicle component from the visualization."; }
       });
       
       
@@ -346,7 +346,7 @@ public class QuestionTask implements RenderTask {
             SSM.dirty = 1;
          }
          public String text() {
-            return "Which manufacturer has the highest number of engine complaints in 1998, select this manufacturer.";
+            return "Which manufacturer has the highest number of engine complaints in 1998, select this manufacturer from the drop down.";
          }
       });
       
@@ -356,10 +356,15 @@ public class QuestionTask implements RenderTask {
          public void set() {
             SSM.selectedGroup.clear();
             SSM.reset();
+            SSM.startYear = 2001;
+            SSM.endYear = 2001;
+            SSM.startMonth = 0;
+            SSM.endMonth = 11;
+            SSM.dirtyDateFilter = 1;
             SSM.dirty = 1; 
          }
          public String text() {
-            return "Tell us verbally what other components in the vehicles are associated with complaints about windshield and wheel? Do not change the time or hierarchy filters";
+            return "Tell us verbally what other components in the vehicles are associated with complaints about wind-shield and wheel? Do not change the time or hierarchy filters";
          }
       });
       
@@ -394,7 +399,7 @@ public class QuestionTask implements RenderTask {
             SSM.dirtyGL = 1;
          }
          public String text() {
-            return "Which manufacturer had the least complaints in the summer months(May to August) between 1997 to 2000? What are these complaints about?";
+            return "Which manufacturer had the LEAST number of complaints in January, between 1997 and 1998? What are these complaints about?";
          }
       });
       
@@ -405,6 +410,7 @@ public class QuestionTask implements RenderTask {
             SSM.selectedGroup.clear();   
             SSM.showLabels = true;
             SSM.dirty = 1;
+            SSM.dirtyGL = 1;
             SSM.startYear = 1997;
             SSM.endYear = 1997;
             SSM.startMonth = 0;
@@ -412,7 +418,7 @@ public class QuestionTask implements RenderTask {
             SSM.dirtyDateFilter = 1;
          }
          public String text() {
-            return "Using the lens and heatmap widgets, observe for any trends or patterns in the year 1997, tell us about your findings.";
+            return "Using the lens and heatmap widgets, observe for any trends, patterns or outliers in the year 1997, tell us about your findings.";
          }
       });
       
@@ -423,10 +429,10 @@ public class QuestionTask implements RenderTask {
             SSM.selectedGroup.clear();   
             SSM.showLabels = true;
             SSM.dirty = 1;
+            SSM.dirtyGL = 1;
          }
          public String text() {
             return "Between 1997 and 2000, which of the following Make would you consider to purchase and why? MRF1->MAKE1 or MFR2->MAKE3? Assume they are similarly priced."; 
-            //return "Given a list of similarly priced vehicles, which one would you purchase and why? You  are free to use all available widgets";
          }
       });
      

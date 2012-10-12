@@ -1,5 +1,7 @@
 package exec;
 
+import java.util.Vector;
+
 import gui.DCScrollPane;
 
 import org.jdesktop.animation.timing.Animator;
@@ -778,6 +780,34 @@ System.out.println("<Near plane: " + la.nearPlane);
    // Toggle, selections are either on or off
    ////////////////////////////////////////////////////////////////////////////////
    public static void handleTUIOSelect(Integer obj) {
+      
+      Vector<Integer> selection = new Vector<Integer>();
+      int finalID = obj;
+      if (SSM.useAggregate == true) {
+         while (true) {
+            System.out.print(finalID + " > ");
+            if (HierarchyTable.instance().groupTable.get(finalID) == null || HierarchyTable.instance().groupTable.get(finalID) == 0) break;
+            finalID = HierarchyTable.instance().groupTable.get(finalID);
+         }
+         selection = HierarchyTable.instance().getAgg(finalID);
+      } else {
+         selection.add(obj);
+      }
+      
+      
+      for (int i=0; i < selection.size(); i++) {
+         int id = selection.elementAt(i);
+         if (SSM.selectedGroup.contains(id)) {
+            SSM.selectedGroup.remove(id);
+            ALogger.instance().log( "Removing " + id+ " " + HierarchyTable.instance().partTable.get( id ).toString()) ;
+         } else {
+            SSM.selectedGroup.put(id, id);
+            ALogger.instance().log( "Adding " + id + " " + HierarchyTable.instance().partTable.get( id ).toString()) ;
+         }
+      }
+     
+      
+      /*
       if (SSM.selectedGroup.contains(obj)) {
          SSM.selectedGroup.remove(obj);
          
@@ -789,6 +819,7 @@ System.out.println("<Near plane: " + la.nearPlane);
          // Hack
          ALogger.instance().log( "Adding " + obj + " " + HierarchyTable.instance().partTable.get( obj ).toString()) ;
       }
+      */
       
       SSM.dirty = 1;
       SSM.dirtyGL = 1; // for the text panel

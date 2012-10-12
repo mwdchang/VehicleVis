@@ -20,10 +20,12 @@ public class HierarchyTable {
       } catch (Exception e) {
          e.printStackTrace(); 
       }
+      /* 
       System.out.println(ht.partTable.get(10));
       System.out.println(ht.partTable.get(ht.groupTable.get(10)));
+      */
       
-      System.out.println( HierarchyTable.instance().getAgg(45));
+      System.out.println( HierarchyTable.instance().getAgg(25));
    }
    
    public static HierarchyTable instance() {

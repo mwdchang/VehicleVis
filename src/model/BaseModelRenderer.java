@@ -573,13 +573,27 @@ public abstract class BaseModelRenderer implements RenderTask {
                   
                }               
             } else {
-               if (null != CacheManager.instance().groupOccurrence.get(comp.id)) {
-                  occ =  CacheManager.instance().groupOccurrence.get(comp.id);     
-               }
                
+               // Hack for AGG
+               // There is a bug, if the parent does not exist the in query tables, it will return 0
+               int finalID = comp.id;
+               if (SSM.useAggregate == true) {
+                  while (true) {
+                     System.out.print(finalID + " > ");
+                     if (HierarchyTable.instance().groupTable.get(finalID) == null || HierarchyTable.instance().groupTable.get(finalID) == 0) break;
+                     finalID = HierarchyTable.instance().groupTable.get(finalID);
+                  }
+                  System.out.println("");
+               }
+               // End
+               
+               
+               if (null != CacheManager.instance().groupOccurrence.get(finalID)) {
+                  occ =  CacheManager.instance().groupOccurrence.get(finalID);     
+               }
                if (SSM.useComparisonMode == true) {
-                  if (null != CacheManager.instance().c_groupOccurrence.get(comp.id)) {
-                     occ += CacheManager.instance().c_groupOccurrence.get(comp.id);       
+                  if (null != CacheManager.instance().c_groupOccurrence.get(finalID)) {
+                     occ += CacheManager.instance().c_groupOccurrence.get(finalID);       
                   }
                }
             }
@@ -601,6 +615,8 @@ public abstract class BaseModelRenderer implements RenderTask {
             Integer t = CacheManager.instance().groupOccurrence.get(comp.id);
             if ( null == t || t == 0) comp.hasContext = false;
          }
+         
+         System.out.println(clist[i] + " " + occ);
          
          
          /*

@@ -264,8 +264,21 @@ System.out.println("Debugging");
             Integer idx = this.getDateKey( DCUtil.formatDateYYYYMMDD( datea ));
             if (idx == null) continue;
             
+            
+            
+            
+            
+            
             // Make sure the date table contains the proper keys
             Hashtable<Integer, QueryObj> t = queryTable.elementAt(idx);
+            
+            // Hack: Bootstrap
+            //for (int blah : HierarchyTable.instance().partTable.keySet()) {
+            //   t.put(blah, new QueryObj());   
+            //}
+            // End 
+            
+            
             //TIntObjectHashMap<QueryObj> t = queryTable.elementAt(idx);
             if ( t.get( groupid ) == null) t.put(groupid, new QueryObj());
             
@@ -663,15 +676,29 @@ System.out.println("SetDocumentData : " + from + " " + to);
          
 //System.out.println("Debug getPartOccurrenceFilterAgg");         
          synchronized(queryTable) {
-         Enumeration<Integer> partEnum = queryTable.elementAt(i).keys();
-         while (partEnum.hasMoreElements()) {
-            int partID= partEnum.nextElement();
-            int value     = this.getOccAgg(i, partID, params);
-            if (result.get(partID) != null) {
-               value += result.get(partID);   
-            } 
-            result.put(partID, value);
-         }
+            
+            Enumeration<Integer> partEnum = HierarchyTable.instance().partTable.keys();
+            while (partEnum.hasMoreElements()) {
+               int partID= partEnum.nextElement();
+               int value     = this.getOccAgg(i, partID, params);
+               if (result.get(partID) != null) {
+                  value += result.get(partID);   
+               } 
+               result.put(partID, value);
+            }
+
+            /*
+            Enumeration<Integer> partEnum = queryTable.elementAt(i).keys();
+            while (partEnum.hasMoreElements()) {
+               int partID= partEnum.nextElement();
+               int value     = this.getOccAgg(i, partID, params);
+               if (result.get(partID) != null) {
+                  value += result.get(partID);   
+               } 
+               result.put(partID, value);
+            }
+            */
+         
          }
       }
       return result;

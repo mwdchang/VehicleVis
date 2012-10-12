@@ -41,12 +41,14 @@ public class KeywordParser {
       
       //String s = "Windshield wipers are dangerous because of the furry cats on the elephant, says the gas gauge";
       //String s = "Bad gas gauge ia";
-      String s = "Bad gas gauge";
-      System.out.println("Orig: " + s);
-      s = sh.normalize(s);
-      System.out.println("Mutated: " + s);
+      //String s = "The driver's side automatic lap and shoulder belt latch will not release from the locked position, causing the seat belt to be inoperative. Please explain further details. *ak.";
+      String s = "When making a right hand turn, the steering wheel locked up, causing an accident. *ak.";
+
+//      System.out.println("Orig: " + s);
+//      s = sh.normalize(s);
+//      System.out.println("Mutated: " + s);
       
-      Vector<TagInfo> tagInfo = sh.tag2(0, s);
+      Vector<TagInfo> tagInfo = sh.tag2(0, normalize(s));
       for (int i=0; i < tagInfo.size(); i++) {
          tagInfo.elementAt(i).print();   
       }
@@ -55,7 +57,7 @@ public class KeywordParser {
       System.exit(0);
       
       try {
-         sh.parseKeyword();
+         sh.parseKeyword(-1);
       } catch (Exception e) {
          e.printStackTrace();
          System.exit(0);
@@ -96,9 +98,11 @@ public class KeywordParser {
    }
    
    
-   public void parseKeyword() throws Exception {
+   public void parseKeyword(int id) throws Exception {
       DBWrapper dbh = new DBWrapper();   
-      String sql = "select cmplid, cdescr from " + SSM.database + ".cmp_clean";
+      String sql = "select cmplid, cdescr from " + SSM.database + ".cmp_clean ";
+      if (id != -1 ) sql += " where cmplid = " + id;
+      
       ResultSet rs = dbh.execute( sql ); 
       
       BufferedWriter writer  = DCUtil.openWriter("new_cmp_x_grp.txt");
@@ -192,6 +196,8 @@ public class KeywordParser {
                tags.add(new TagInfo(id, groupId, tokenIdx, tokenIdx+size));  
             }
          } // end while
+         
+         
       } // end for i
       
       return tags;
@@ -339,6 +345,8 @@ public class KeywordParser {
          result += r; 
          result += " ";
       }
+      
+      //System.out.println("result : " + result);
       return result;
    }
    

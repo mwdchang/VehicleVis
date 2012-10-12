@@ -104,7 +104,9 @@ public class InitDB {
       ////////////////////////////////////////////////////////////////////////////////
       try {
          System.out.println("\n\nStarting phase 3");
-         keywordParser.parseKeyword();
+         //keywordParser.parseKeyword(70046); -- lock 
+         //keywordParser.parseKeyword(70146); -- steering wheel
+         keywordParser.parseKeyword(-1);
          
          System.out.println("\nStarting database load...");
          rc = TableLoader.loadData2Table(fileDir + "new_cmp_x_grp.txt", InitDB.getTable("cmp_x_grp"), true);  

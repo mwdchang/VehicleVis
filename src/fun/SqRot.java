@@ -17,6 +17,7 @@ public class SqRot extends JOGLBase implements KeyListener {
    
    public static void main(String[] args) {
       SqRot sqrot = new SqRot();
+      sqrot.unDecorated = false;
       sqrot.run("SQ Rot", 800, 800, 30);
    }
 
@@ -192,7 +193,8 @@ public class SqRot extends JOGLBase implements KeyListener {
       current = 0;
       startingColour = 0.3 + 0.7*Math.random();
       zpos = 0;
-      iteration = (int)Math.random()*150 + 150;
+      //iteration = (int)Math.random()*150 + 150;
+      iteration = (int)Math.random()*150 + 250;
       
       xvec = Math.random()*2 - 1.0;
       yvec = Math.random()*2 - 1.0;

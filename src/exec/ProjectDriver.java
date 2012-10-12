@@ -173,7 +173,8 @@ public class ProjectDriver {
          currentTime = System.currentTimeMillis();
          fps++;
          if (currentTime - lastTime >= updateFrequency) {
-            frame.setTitle(" Project V5.0 - FPS: " + fps);
+            //frame.setTitle(" Project V5.0 - FPS: " + fps);
+            frame.setTitle("Daniel");
             fps = 0;
             lastTime = currentTime; 
          }

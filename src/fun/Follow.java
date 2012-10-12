@@ -27,6 +27,7 @@ public class Follow extends JOGLBase implements KeyListener, MouseMotionListener
    
    public static void main(String args[]) {
       Follow l = new Follow();
+      l.unDecorated = false;
       l.run("Follow Me", 800, 800, 30);
    }
    

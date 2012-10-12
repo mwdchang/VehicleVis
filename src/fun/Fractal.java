@@ -31,7 +31,7 @@ public class Fractal extends JOGLBase implements MouseWheelListener, KeyListener
       f.run("Test Fractal", 800, 800);
    }
    
-   public boolean use64 = true;
+   public boolean use64 = false;
 
    @Override
    public void display(GLAutoDrawable a) {

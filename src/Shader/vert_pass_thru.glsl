@@ -43,7 +43,14 @@ void main() {
    vec3 light_pos = vec3(0, 100, 0);
 
    //vec3 light_pos = vec3(100, 100, 0);
+
+   // Original
    vec3 L = normalize(light_pos - in_position);
+
+   // Set the light to be perpendicular to the surface or pixel <== oh crap...this will give me a "1"
+   //vec3 L = normalize(pass_position + pass_normal);
+
+
    float diffuse = max(dot(in_normal, L), 0);
 
    if (mode == 0) {

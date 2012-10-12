@@ -37,10 +37,11 @@ public class Ascii extends JOGLBase implements KeyListener {
       ascii.run("Ascii", 1100, 900);
    }
    
-   public String[] symbols =  new String[]{ " ", ".", "`", "☺", "☻", "♥", "♦", "♣", "♠", "•", "◘", "○", "◙" };
+   //public String[] symbols =  new String[]{ " ", ".", "`", "☺", "☻", "♥", "♦", "♣", "♠", "•", "◘", "○", "◙" };
+   public String[] symbols =  new String[]{ " ", ".", "`", "|", "/", "1", "2", "3", "4", "5", "6", "8", "M" };
    public static int sample = 8;
-   public static int fontS = 9;
-   public Font f  = new Font( "Consolas", Font.PLAIN, 8);    
+   public static int fontS = 8;
+   public Font f  = new Font( "Consolas", Font.PLAIN, 11);    
    
       @Override
    public void display(GLAutoDrawable a) {
@@ -66,6 +67,7 @@ public class Ascii extends JOGLBase implements KeyListener {
       tf.render(gl2);
       
      
+      /*
       gl2.glMatrixMode(GL2.GL_PROJECTION);
       gl2.glLoadIdentity();
       gl2.glOrtho(0, width, 0, height, -10, 10);
@@ -84,6 +86,7 @@ public class Ascii extends JOGLBase implements KeyListener {
          gl2.glTexCoord2f(0, 0); gl2.glVertex2d(0, 200);
       gl2.glEnd();
       texture2.disable(gl2);
+      */
      
    }
    
@@ -104,7 +107,8 @@ public class Ascii extends JOGLBase implements KeyListener {
          int index = (int)(Math.random()*(s.length-1));
          //File file = new File(dirStr + "eye.jpg");
          //File file = new File(dirStr + "paint6.png");
-         File file = new File(dirStr + "jay.jpg");
+         //File file = new File(dirStr + "jay.jpg");
+         File file = new File(dirStr + "2490244411_1fd63ed0b1_b.jpg");
          
          
          // Parse image file to texture data
@@ -131,7 +135,7 @@ public class Ascii extends JOGLBase implements KeyListener {
          System.out.println("Width  = " + w);
          
          // Set up the ascii texture
-         Color cl = Color.MAGENTA;
+         Color cl = Color.WHITE;
          tf = new TextureFont();
          tf.width = (w/sample)*fontS;
          tf.height = (h/sample)*fontS;

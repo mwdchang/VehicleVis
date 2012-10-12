@@ -1,5 +1,6 @@
 package datastore;
 
+import exec.Event;
 import gui.DCScrollPane;
 import gui.DCTip;
 
@@ -84,9 +85,15 @@ public class SSM {
       
       
       // Parse runtime parameters
-      useTUIO       = Boolean.parseBoolean(System.getProperty("UseTUIO", "true"));
+      useTUIO       = Boolean.parseBoolean(System.getProperty("UseTUIO", "false"));
       useFullScreen = Boolean.parseBoolean(System.getProperty("UseFullScreen", "true"));
       useScenario   = Boolean.parseBoolean(System.getProperty("UseScenario", "true"));
+      
+      database      = (System.getProperty("UseDB", "demo"));
+      
+      
+      // Hack this to make the lens appear easier
+      Event.createLens(0, 200, 200);
    }
    
    
@@ -404,7 +411,7 @@ public class SSM {
       perspectiveAttrib.anchorY = 170 + DoffsetY;
       
       yearAnchorY = 120.0f + DoffsetY;
-      monthAnchorY = 30.0f + DoffsetY;
+      monthAnchorY = 20.0f + DoffsetY;
    }
    public static float getDoffsetY() { return DoffsetY; }
    
@@ -497,8 +504,10 @@ public class SSM {
    public static float docAnchorX = 400;                 // Bottom left of the document panel
    public static float docAnchorY = 400;                 // Bottom left of the document panel
    public static float docPadding = 25;                  // Padding area (for dragging)
+   
    public static float docWidth  = 550;                  
    public static float docHeight = 400;
+   
    public static float docHeader = 15;     // not currently used
    public static float docFooter = 15;     // not currently used
    public static float yoffset = docHeight;

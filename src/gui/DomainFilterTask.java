@@ -730,6 +730,9 @@ public class DomainFilterTask implements RenderTask {
             // Hack
             ALogger.instance().log( "Hierarchy Widget (" + widget.uLabel + ") :" + attrib.selected );
             
+            // Hack 2
+            widget.animator = PropertySetter.createAnimator(1100, widget, "height", new FloatEval(), widget.height, 0.0f); 
+            widget.animator.start();
             
             return 1;
          }
@@ -751,6 +754,13 @@ public class DomainFilterTask implements RenderTask {
       perspectiveLabel.anchorX = SSM.perspectiveAttrib.anchorX - perspectiveLabel.width;
       perspectiveLabel.anchorY = SSM.perspectiveAttrib.anchorY - 20;
       perspectiveLabel.render(gl2);      
+      
+      // Draw a horizontal line to segregate switch controls from the rest of the UI
+      gl2.glColor4d(0.4, 0.4, 0.4, 0.6);
+      gl2.glBegin(GL2.GL_LINES);
+         gl2.glVertex2d( aggSwitch.anchorX-15, aggSwitch.anchorY - 20);
+         gl2.glVertex2d( aggSwitch.anchorX+300, aggSwitch.anchorY - 20);
+      gl2.glEnd();
    }
    
    

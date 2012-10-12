@@ -82,7 +82,8 @@ public class Collage extends JOGLBase implements KeyListener {
          if (p.texture == null) {
             //File dir = new File("C:\\Users\\Daniel\\Pictures");
             //File dir = new File("C:\\Users\\Daniel\\temporary");
-            File dir = new File("C:\\Users\\Daniel\\Dropbox\\DCShare\\Canoe_June_16");
+            //File dir = new File("C:\\Users\\Daniel\\Dropbox\\DCShare\\Canoe_June_16");
+            File dir = new File("C:\\Users\\Daniel\\Pictures\\New Folder\\");
             String s[] = dir.list( new FilenameFilter() {
                public boolean accept(File dir, String name) {
                   String l = name.toLowerCase();
