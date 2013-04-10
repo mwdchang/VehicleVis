@@ -16,6 +16,7 @@ import TimingFrameExt.FloatEval;
 
 import touch.WCursor;
 import util.DWin;
+import util.ImageLoader;
 import util.TextureFont;
 import model.DCTriple;
 import model.LensAttrib;
@@ -34,8 +35,8 @@ import model.PaneAttrib;
 public class SSM {
    private static SSM instance;
    
-   public static String database = "demo";
-   //public static String database = "projectv3";
+   //public static String database = "demo";
+   public static String database = "projectv3";
    
    public static double HOLD_DELAY = 500;
    public static double INVALID_DELAY_FRAME = 50;
@@ -43,7 +44,11 @@ public class SSM {
    
    public static DCTriple waitMarker = null;
    
+   
    public static boolean skipQuestion = false;
+   public static boolean presentationMode = false;
+   public static ImageLoader slides[];
+   public static String slideFile = "";
    
    ////////////////////////////////////////////////////////////////////////////////
    // Big Brother Statistics ?? Are these even useful? what do they say??
@@ -87,9 +92,11 @@ public class SSM {
       // Parse runtime parameters
       useTUIO       = Boolean.parseBoolean(System.getProperty("UseTUIO", "false"));
       useFullScreen = Boolean.parseBoolean(System.getProperty("UseFullScreen", "true"));
-      useScenario   = Boolean.parseBoolean(System.getProperty("UseScenario", "true"));
+      useScenario   = Boolean.parseBoolean(System.getProperty("UseScenario", "false"));
       
       database      = (System.getProperty("UseDB", "demo"));
+      
+      slideFile = System.getProperty("UseSlide", "C:\\Users\\Daniel\\Pictures\\IMG_0917.jpg");
       
       
       // Hack this to make the lens appear easier

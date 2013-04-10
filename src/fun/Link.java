@@ -40,6 +40,8 @@ public class Link extends JOGLBase implements KeyListener {
       
       gl2.glColor4f(1, 1, 1, 0.5f);
       gl2.glEnable(GL2.GL_TEXTURE_2D);
+      gl2.glBlendFunc(GL2.GL_SRC_ALPHA, GL2.GL_ONE_MINUS_SRC_ALPHA); 
+      gl2.glDisable(GL2.GL_DEPTH_TEST);
       gl2.glEnable(GL2.GL_BLEND);
       for (int i=0; i < testTexture.length; i++) {
          testTexture[i].enable(gl2);

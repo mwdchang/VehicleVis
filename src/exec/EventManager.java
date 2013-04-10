@@ -266,6 +266,11 @@ public class EventManager implements KeyListener, MouseListener, MouseMotionList
          Event.showPanel();   
       }
       
+      if (e.getKeyChar() == '5') {
+         SSM.presentationMode = ! SSM.presentationMode;
+            
+      }
+      
 
       if (e.getKeyCode() == KeyEvent.VK_UP) {
          System.out.println("Up Arrow");

@@ -67,6 +67,8 @@ public class TestModel extends JOGLBase implements KeyListener {
          gl2.glPushMatrix();
             gl2.glRotated(rotY, 0, 1, 0);
             for (DCComponent d : MM.currentModel.componentTable.values()) {
+               if ( !d.baseName.contains("whee") && ( !d.baseName.contains("eng"))) continue;
+               
                switch (mode) {
                   //case 0: { d.renderBuffer(gl2, DCColour.fromDouble(1.0, 0, 0, 1)); break; }        
                   case 0: { d.renderVNormal(gl2); break; }
@@ -75,6 +77,7 @@ public class TestModel extends JOGLBase implements KeyListener {
                   case 3: { d.renderBufferToon(gl2); break; }
                   case 4: { d.renderFNormal(gl2); break; }
                   case 5: { d.renderEdgeWithNoAdjacent(gl2); break; }
+                  case 6: { d.renderBuffer(gl2); break; }
                   default: break;
                }
             }
@@ -102,7 +105,8 @@ public class TestModel extends JOGLBase implements KeyListener {
          gl2.glPushMatrix();
             gl2.glRotated(rotY, 0, 1, 0);
             for (DCComponent d : MM.currentModel.componentTable.values()) {
-               if ( !d.baseName.contains("exh")) continue;
+               if ( !d.baseName.contains("whee") && ( !d.baseName.contains("eng"))) continue;
+               
                switch (mode) {
                   //case 0: { d.renderBuffer(gl2, DCColour.fromDouble(1.0, 0, 0, 1)); break; }        
                   case 0: { d.renderFNormal(gl2); d.renderBuffer(gl2, SchemeManager.silhouette_default); break; }
@@ -111,6 +115,11 @@ public class TestModel extends JOGLBase implements KeyListener {
                   case 3: { d.renderBufferToon(gl2); break; }
                   case 4: { d.renderFNormal(gl2); break; }
                   case 5: { d.renderEdgeWithNoAdjacent(gl2); break; }
+                  case 6: { 
+                     System.out.println("blah");
+                     if (d.baseName.contains("whee")) { d.renderBuffer(gl2, SchemeManager.Red[2]); break; }
+                     if (d.baseName.contains("eng"))  { d.renderBuffer(gl2, SchemeManager.Red[5]); break; }
+                  }
                   default: break;
                }
             }
@@ -203,7 +212,8 @@ public class TestModel extends JOGLBase implements KeyListener {
       if (e.getKeyChar() == KeyEvent.VK_SPACE) {
          mode ++;
          //if (mode > 5) mode = 0;
-         if (mode > 2) mode = 0;
+         if (mode > 6) mode = 0;
+         //if (mode > 2) mode = 0;
          tf.clearMark();
          tf.addMark("Testing car rendering mode : " + mode, Color.YELLOW, f, 5, 5);
       }

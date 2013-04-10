@@ -639,6 +639,7 @@ System.out.println("Pinch detected");
             //SSM.selectedGroup.clear();
             //SSM.dirty = 1;
             //SSM.dirtyGL = 1;
+            SSM.presentationMode = ! SSM.presentationMode;
          } else {
             // Approximate the swipe to only work in the upper portion of the screen
             if ( (SSM.windowHeight-w.y * SSM.windowHeight) > (SSM.DoffsetY - 50)) {

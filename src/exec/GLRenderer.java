@@ -20,6 +20,7 @@ import model.ModelRenderer;
 import touch.VFeedbackTask;
 import util.DWin;
 import util.GraphicUtil;
+import util.ImageLoader;
 
 import datastore.SSM;
 import datastore.SchemeManager;
@@ -65,6 +66,8 @@ public class GLRenderer implements GLEventListener {
    public void display(GLAutoDrawable glDrawable) {
       GL2 gl2 = glDrawable.getGL().getGL2();   
       
+      
+
  
       synchronized( SSM.dragPoints ) {
          for (DCTriple point : SSM.dragPoints.values()) {
@@ -170,6 +173,24 @@ public class GLRenderer implements GLEventListener {
       }
       
       
+      //if (SSM.presentationMode == true) {
+         //gl2.glClearColor(0, 0, 0, 0);
+         //gl2.glClear(GL2.GL_COLOR_BUFFER_BIT);
+         //gl2.glClear(GL2.GL_DEPTH_BUFFER_BIT);
+         //gl2.glDisable(GL2.GL_DEPTH_TEST);
+         //gl2.glDisable(GL2.GL_BLEND);
+         //gl2.glEnable(GL2.GL_TEXTURE_2D);
+         //gl2.glDisable(GL2.GL_LIGHTING);
+         
+         GraphicUtil.setOrthonormalView(gl2, 0, SSM.windowWidth, 0, SSM.windowHeight, -10, 10);
+         
+         SSM.slides[0].render(glDrawable);
+         gl2.glViewport(0, 0, (int)SSM.windowWidth, (int)SSM.windowHeight);
+         //glDrawable.swapBuffers();
+         //return;
+      //}      
+      
+      
       // Because we can...
       //gl2.glClearColor( SchemeManager.gl_clear.r, SchemeManager.gl_clear.g, SchemeManager.gl_clear.b, SchemeManager.gl_clear.a);
       glDrawable.swapBuffers();
@@ -246,6 +267,15 @@ public class GLRenderer implements GLEventListener {
          question_task.q.firstElement().startTime = System.currentTimeMillis();
          question_task.q.firstElement().set();
       }
+      
+      
+      
+      // Get them slides (test)
+      SSM.slides = new ImageLoader[1];
+      SSM.slides[0] = new ImageLoader();
+      SSM.slides[0].fileName = SSM.slideFile;
+      SSM.slides[0].init(glDrawable);
+      
       
       // Attemp to free some memory after all initializations
       System.gc();

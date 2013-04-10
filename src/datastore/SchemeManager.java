@@ -157,7 +157,8 @@ public class SchemeManager {
    public static DCColour related = DCColour.fromInt(240, 140, 10, 200);
    //ROYALBLUE2: java.awt.Color[r=61,g=130,b=246]
    
-   public static DCColour selected    = DCColour.fromInt(1, 71, 189, 175); 
+   //public static DCColour selected    = DCColour.fromInt(1, 71, 189, 175); 
+   public static DCColour selected    = DCColour.fromInt(1, 71, 189, 225); 
    public static DCColour unselected  = DCColour.fromInt(128, 128, 128, 128); 
    
    public static DCColour sparkline_guideline = new DCColour(0.0, 0.0, 0.0, 0.2);

@@ -35,6 +35,8 @@ public class InitDB {
       
       // Build a white list here - anything outside of the
       // white list will not get parsed into the system
+      // use replacement will replace identifiers
+      //boolean useReplacement = true;
       boolean useReplacement = true;
       Vector<String> whiteList = new Vector<String>();
       whiteList.add("GENERAL MOTORS CORP.");

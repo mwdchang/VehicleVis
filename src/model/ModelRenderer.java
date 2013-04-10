@@ -79,11 +79,11 @@ public class ModelRenderer extends BaseModelRenderer {
          SSM.dirtyGL = 0;
       }
       
-      //if (SSM.use3DModel == true) {
+      if (SSM.use3DModel == true) {
          this.renderIntegratedView(gl2);
-      //} else {
-      //   this.renderChartsOnly(gl2);
-      //}
+      } else {
+         this.renderChartsOnly(gl2);
+      }
       
    }
    
@@ -676,7 +676,7 @@ public class ModelRenderer extends BaseModelRenderer {
             
             startY += (comp.cchart.height + 10);
             if (startY > 700) {
-               startX += 200;
+               startX += 210;
                startY = CHART_ANCHOR_Y;
             }
             
@@ -776,7 +776,7 @@ public class ModelRenderer extends BaseModelRenderer {
          
          startY += (comp.cchart.height + 10);
          if (startY > 700) {
-            startX += 200;
+            startX += 210;
             startY = CHART_ANCHOR_Y;
          }
      
